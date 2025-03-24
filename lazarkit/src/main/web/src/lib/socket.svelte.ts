@@ -1,5 +1,5 @@
-export type Handler = (data: string[]) => void
-
+export type Handler = (data: GenericData) => void
+export type GenericData = { kind: string; [key: string]: any }
 export class SocketManager {
   private socket: WebSocket | null = null
   private url: string = `ws://${window.location.hostname}:8002`
@@ -27,17 +27,10 @@ export class SocketManager {
       }
 
       this.socket.onmessage = (event) => {
-        const data = event.data.split(".")
-
-        if (data.length < 2) return
-
-        const type = data.shift()
-        if (type != "time")
-          console.log({
-            type,
-            data,
-          })
-        this.handleMessage(type, data)
+        const data = JSON.parse(event.data)
+        const kind = data.kind
+        if (kind != "time") console.log(data)
+        this.handleMessage(kind, data)
       }
 
       this.socket.onerror = (event) => {
@@ -60,14 +53,12 @@ export class SocketManager {
     }
   }
 
-  sendMessage(type: string, data: string[] = []) {
-    const message = data.length ? `${type}.${data.join(".")}` : type
-
+  sendMessage(message: GenericData) {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(message)
+      this.socket.send(JSON.stringify(message))
     } else {
       console.warn("WebSocket not open. Queuing message.")
-      this.messageQueue.push(message)
+      this.messageQueue.push(JSON.stringify(message))
     }
   }
 
@@ -80,33 +71,33 @@ export class SocketManager {
     }
   }
 
-  private handleMessage(type: string, data: string[]) {
-    const handler = this.messageHandlers[type]
+  private handleMessage(kind: string, data: GenericData) {
+    const handler = this.messageHandlers[kind]
     if (handler) {
       handler(data)
     } else {
-      console.warn(`No handler for message type: ${type}`)
+      console.warn(`No handler for message kind: ${kind}`)
     }
   }
 
-  public addMessageHandler(type: string, handler: Handler) {
-    this.messageHandlers[type] = handler
+  public addMessageHandler(kind: string, handler: Handler) {
+    this.messageHandlers[kind] = handler
   }
 
-  public removeMessageHandler(type: string) {
-    delete this.messageHandlers[type]
+  public removeMessageHandler(kind: string) {
+    delete this.messageHandlers[kind]
   }
 }
 
 export type OpMode = {
   name: string
   group: string
-  flavor: "AUTONOMOUS" | "TELEOP"
+  flavour: "AUTONOMOUS" | "TELEOP"
 }
 
 export class InfoManager {
   time = $state("")
   opModes = $state<OpMode[]>([])
-  currentOpMode = $state("$Stop$Robot$")
-  currentOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
+  activeOpMode = $state("$Stop$Robot$")
+  activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
 }
