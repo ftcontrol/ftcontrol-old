@@ -1,7 +1,7 @@
 package lol.lazar.lazarkit.panels
 
 import org.firstinspires.ftc.robotcore.external.Telemetry
-
+//TODO: send every x ms for performance improvements
 class TelemetryManager(
     private val sendTelemetry: (lines: List<String>) -> Unit,
 ) {
