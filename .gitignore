@@ -80,3 +80,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 gradle.properties
+/lazarkit/src/main/assets/web
+/lazarkit/src/main/assets/web

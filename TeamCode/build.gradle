@@ -14,6 +14,7 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -23,6 +24,20 @@ android {
     }
 }
 
+repositories {
+    maven {
+        name = "lazarkit"
+        url = "https://maven.lazar.lol/private"
+        credentials(PasswordCredentials)
+        authentication {
+            basic(BasicAuthentication)
+        }
+    }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
+
+    implementation "lol.lazar:lazarkit:0.1.2"
+//    implementation project(':lazarkit')
 }

@@ -1,1 +1,0 @@
-import{t,a as o}from"../chunks/B7fCNQFO.js";import"../chunks/fmykijIb.js";import{n as r}from"../chunks/S3wTCJs2.js";var h=t('<h1>Welcome to Custom Dashboard</h1> <p>Check the time: <a href="/time">Click here</a></p> <p>Check the dash: <a href="/dash">Click here</a></p> <p>Hello: <a href="/hello">Click here</a></p>',1);function l(e){var a=h();r(6),o(e,a)}export{l as component};
