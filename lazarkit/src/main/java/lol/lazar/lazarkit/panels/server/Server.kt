@@ -5,6 +5,7 @@ import android.content.res.AssetManager
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.File
 
 class Server(var context: Context) : NanoHTTPD(8001) {
     private val assetManager: AssetManager = context.assets
@@ -12,6 +13,9 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
     init {
         println("DASH: ${assetManager.list("web")?.joinToString(", ")}")
+        //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
+        val file = File(context.filesDir, "myfile.txt")
+        file.writeText("Hello, world!")
     }
 
 
