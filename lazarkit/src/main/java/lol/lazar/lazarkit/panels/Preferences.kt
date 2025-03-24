@@ -12,7 +12,9 @@ object Preferences {
 
         prefs = activity.getSharedPreferences("LazarKit Panels", Context.MODE_PRIVATE)
 
-        isEnabled = prefs!!.getBoolean("autoEnable", true)
+        val prefsInstance = prefs ?: error("DASH: Preferences not initialized!")
+
+        isEnabled = prefsInstance.getBoolean("autoEnable", true)
     }
     var isEnabled: Boolean = true
         set(value) {
@@ -20,3 +22,7 @@ object Preferences {
             prefs!!.edit().putBoolean("autoEnable", value).apply()
         }
 }
+
+data class UserPreferences(
+    var colorTheme: String = ""
+)
