@@ -56,8 +56,8 @@ class UIManager {
         val textView = connectionStatusTextView ?: return
         AppUtil.getInstance().runOnUiThread({
             textView.text = when (Preferences.isEnabled) {
-                true -> "Lazar's Dash: enabled"
-                false -> "Lazar's Dash: disabled"
+                true -> "Panels: enabled"
+                false -> "Panels: disabled"
             }
         })
     }

@@ -10,7 +10,7 @@ object Preferences {
     fun init(){
         val activity = AppUtil.getInstance().activity ?: return
 
-        prefs = activity.getSharedPreferences("Lazar's Dashboard", Context.MODE_PRIVATE)
+        prefs = activity.getSharedPreferences("LazarKit Panels", Context.MODE_PRIVATE)
 
         isEnabled = prefs!!.getBoolean("autoEnable", true)
     }

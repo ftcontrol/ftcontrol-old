@@ -19,16 +19,19 @@ import org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
-public class DashboardRegistrar implements OpModeManagerImpl.Notifications {
-    private final Dashboard dashboard = new Dashboard();
-    private static DashboardRegistrar registrar;
+public class Panels implements OpModeManagerImpl.Notifications {
+    private final CorePanels corePanels = new CorePanels();
+    private static Panels registrar;
 
-    public static DashboardRegistrar getInstance() {
+    public static Panels getInstance() {
         return registrar;
     }
+    public static TelemetryManager getTelemetry() {
+        return getInstance().corePanels.getTelemetryManager();
+    }
 
-    public void send(){
-        dashboard.socket.sendTest();
+    public void sendTest(){
+        corePanels.socket.sendTest();
     }
     
     @OpModeRegistrar
@@ -41,7 +44,7 @@ public class DashboardRegistrar implements OpModeManagerImpl.Notifications {
     @OnCreate
     public static void start(Context context) {
         if (registrar == null) {
-            registrar = new DashboardRegistrar();
+            registrar = new Panels();
         }
     }
 
@@ -79,43 +82,43 @@ public class DashboardRegistrar implements OpModeManagerImpl.Notifications {
         }
     }
 
-    private DashboardRegistrar() {
-        dashboard.start();
+    private Panels() {
+        corePanels.start();
     }
 
     private void internalAttachWebServer(Context context, WebServer webServer) {
-        dashboard.attachWebServer(context, webServer);
+        corePanels.attachWebServer(context, webServer);
     }
 
     private void internalAttachEventLoop(FtcEventLoop eventLoop) {
-        dashboard.attachEventLoop(eventLoop, this);
+        corePanels.attachEventLoop(eventLoop, this);
     }
 
     private void internalPopulateMenu(Menu menu) {
-        dashboard.createMenu(menu);
+        corePanels.createMenu(menu);
     }
 
     private void internalRegisterOpMode(OpModeManager manager) {
-        dashboard.registerOpMode(manager);
+        corePanels.registerOpMode(manager);
     }
 
     private void close() {
-        dashboard.close(this);
+        corePanels.close(this);
     }
 
     private void internalOnOpModeInit(OpMode opMode) {
-        dashboard.getOpModeData().setInit(opMode);
-        dashboard.socket.broadcastActiveOpMode();
+        corePanels.getOpModeData().setInit(opMode);
+        corePanels.socket.broadcastActiveOpMode();
     }
 
     private void internalOnOpModeStart(OpMode opMode) {
-        dashboard.getOpModeData().setRunning(opMode);
-        dashboard.socket.broadcastActiveOpMode();
+        corePanels.getOpModeData().setRunning(opMode);
+        corePanels.socket.broadcastActiveOpMode();
     }
 
     private void internalOnOpModeStop(OpMode opMode) {
-        dashboard.getOpModeData().setStopped(opMode);
-        dashboard.socket.broadcastActiveOpMode();
+        corePanels.getOpModeData().setStopped(opMode);
+        corePanels.socket.broadcastActiveOpMode();
     }
 
     @Override

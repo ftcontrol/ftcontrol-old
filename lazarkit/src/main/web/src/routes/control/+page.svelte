@@ -109,11 +109,21 @@
   </div>
 </section>
 
+<section>
+  <h3>Telemetry</h3>
+  {#each info.telemetry as line}
+    <p>{line}</p>
+  {/each}
+</section>
+
 {#if gamepads.current != null}
   <GamepadDrawing gamepad={gamepads.gamepads[0]} />
 {/if}
 
 <style>
+  h3 {
+    text-align: center;
+  }
   div.flex {
     display: flex;
     gap: 1rem;

@@ -12,7 +12,7 @@ class OpModeRegistrar(
     fun registerOpMode(manager: OpModeManager) {
         manager.register(
             OpModeMeta.Builder()
-                .setName("Enable/Disable Lazar's Dash")
+                .setName("Enable/Disable Panels")
                 .setFlavor(OpModeMeta.Flavor.TELEOP)
                 .setGroup("dash")
                 .build(),

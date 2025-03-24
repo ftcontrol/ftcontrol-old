@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import lol.lazar.lazarkit.panels.DashboardRegistrar
+import lol.lazar.lazarkit.panels.Panels
 
 @TeleOp(name = "Testing OpMode", group = "Dashboard")
 class TestingOpMode : OpMode(
 ) {
     override fun init() {
-        DashboardRegistrar.getInstance().send()
+        Panels.getInstance().sendTest()
     }
 
     override fun loop() {

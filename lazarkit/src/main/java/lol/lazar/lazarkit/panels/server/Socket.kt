@@ -12,6 +12,7 @@ import lol.lazar.lazarkit.panels.data.JSONData
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
 import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.StopActiveOpModeRequest
+import lol.lazar.lazarkit.panels.data.TelemetryPacket
 import lol.lazar.lazarkit.panels.data.TestObject
 import lol.lazar.lazarkit.panels.data.TimeObject
 import lol.lazar.lazarkit.panels.data.json
@@ -35,6 +36,7 @@ class Socket(
     private val clients: MutableSet<TimeWebSocket> = mutableSetOf()
 
     fun broadcastActiveOpMode() {
+        if(!isAlive) return
         for (client in clients) {
             try {
                 client.updateCurrentOpMode()
@@ -45,9 +47,18 @@ class Socket(
     }
 
     fun sendTest() {
+        if(!isAlive) return
         println("DASH: sent test")
         for (client in clients) {
             client.send(TestObject(data = "info"))
+        }
+    }
+
+    fun sendTelemetry(lines: List<String>) {
+        if(!isAlive) return
+        println("DASH: sent telemetry")
+        for (client in clients) {
+            client.send(TelemetryPacket(lines))
         }
     }
 
