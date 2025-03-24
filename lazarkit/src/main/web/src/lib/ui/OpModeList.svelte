@@ -5,13 +5,13 @@
   let {
     flavour,
     onselect,
-  }: { flavour: OpMode["flavor"]; onselect: (opMode: OpMode) => void } =
+  }: { flavour: OpMode["flavour"]; onselect: (opMode: OpMode) => void } =
     $props()
 </script>
 
-<!-- TODO: handle empty -->
+<!-- TODO: handle empty / too long -->
 <section>
-  {#each info.opModes.filter((it) => it.flavor == flavour) as opMode}
+  {#each info.opModes.filter((it) => it.flavour == flavour) as opMode}
     <button onclick={() => onselect(opMode)}>
       {opMode.name} / {opMode.group}
     </button>

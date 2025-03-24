@@ -20,8 +20,8 @@
   }
 
   $effect(() => {
-    console.log(info.currentOpMode)
-    if (info.currentOpMode == "$Stop$Robot$") {
+    console.log(info.activeOpMode)
+    if (info.activeOpMode == " ") {
       return
     }
     console.log("Length: ", info.opModes.length)
@@ -29,7 +29,7 @@
     let found = null
 
     for (const item of info.opModes) {
-      if (item.name == info.currentOpMode) {
+      if (item.name == info.activeOpMode) {
         found = item
       }
     }
@@ -42,7 +42,7 @@
   let currentOpMode = $state<OpMode>({
     name: "",
     group: "",
-    flavor: "AUTONOMOUS",
+    flavour: "AUTONOMOUS",
   })
 </script>
 
@@ -67,7 +67,7 @@
     <p class="title">Nothing selected</p>
   {:else}
     <p class="title">
-      <span class="title_small">{currentOpMode.flavor}</span>
+      <span class="title_small">{currentOpMode.flavour}</span>
       {currentOpMode.name}
     </p>
   {/if}
@@ -75,31 +75,34 @@
   <div class="flex">
     <button
       disabled={currentOpMode.name == "" ||
-        (info.currentOpModeStatus == "running" &&
-          info.currentOpMode != "$Stop$Robot$") ||
-        (info.currentOpModeStatus == "stopped" &&
-          info.currentOpMode != "$Stop$Robot$") ||
-        (currentOpMode.name != "" && info.currentOpModeStatus == "init")}
+        (info.activeOpModeStatus == "running" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (info.activeOpModeStatus == "stopped" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
       onclick={() => {
-        socket.sendMessage("init_opmode", [currentOpMode.name])
+        socket.sendMessage({
+          kind: "initOpMode",
+          opModeName: currentOpMode.name,
+        })
       }}
       >Initialize
     </button>
     <button
-      disabled={info.currentOpMode == "$Stop$Robot$" ||
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
         currentOpMode.name == "" ||
-        info.currentOpModeStatus != "init"}
+        info.activeOpModeStatus != "init"}
       onclick={() => {
-        socket.sendMessage("start_opmode")
+        socket.sendMessage({ kind: "startActiveOpMode" })
       }}
       >Start
     </button>
     <button
-      disabled={info.currentOpMode == "$Stop$Robot$" ||
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
         currentOpMode.name == "" ||
-        info.currentOpModeStatus == "stopped"}
+        info.activeOpModeStatus == "stopped"}
       onclick={() => {
-        socket.sendMessage("stop_opmode")
+        socket.sendMessage({ kind: "stopActiveOpMode" })
       }}
       >Stop
     </button>

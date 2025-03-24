@@ -1,37 +1,30 @@
 import { GamepadManager } from "./gamepad.svelte"
-import { InfoManager, SocketManager, type OpMode } from "./socket.svelte"
+import {
+  InfoManager,
+  SocketManager,
+  type GenericData,
+  type OpMode,
+} from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
 
 export const socket = new SocketManager()
 
-socket.addMessageHandler("time", (data: string[]) => {
-  info.time = data[0]
+socket.addMessageHandler("time", (data: GenericData) => {
+  info.time = data.time
 })
-socket.addMessageHandler("opmodes", (data: string[]) => {
-  var answer: OpMode[] = []
-
-  for (let i = 0; i < data.length; i += 3) {
-    if (i + 2 < data.length) {
-      answer.push({
-        name: data[i],
-        group: data[i + 1],
-        flavor: data[i + 2] as OpMode["flavor"],
-      })
-    }
-  }
-
-  info.opModes = answer
+socket.addMessageHandler("opmodes", (data: GenericData) => {
+  info.opModes = data.opModes
 })
-socket.addMessageHandler("current_opmode", (data: string[]) => {
-  info.currentOpMode = data[0]
-  info.currentOpModeStatus = data[1] as "init" | "running" | "stopped"
+socket.addMessageHandler("activeOpMode", (data: GenericData) => {
+  info.activeOpMode = data.opMode.name
+  info.activeOpModeStatus = data.status as "init" | "running" | "stopped"
 })
 
 export const info = new InfoManager()
 
 setTimeout(() => {
-  socket.sendMessage("get_opmodes")
-  socket.sendMessage("get_current_opmode")
+  socket.sendMessage({ kind: "getOpmodes" })
+  socket.sendMessage({ kind: "getActiveOpMode" })
 }, 1000)
 
 export const gamepads = new GamepadManager()

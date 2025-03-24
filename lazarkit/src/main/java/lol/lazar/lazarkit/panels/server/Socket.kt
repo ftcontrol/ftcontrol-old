@@ -1,9 +1,21 @@
 package lol.lazar.lazarkit.panels.server
 
 import fi.iki.elonen.NanoWSD
+import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
-import lol.lazar.lazarkit.panels.GlobalGamepad
 import lol.lazar.lazarkit.panels.OpModeData
+import lol.lazar.lazarkit.panels.data.ActiveOpMode
+import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
+import lol.lazar.lazarkit.panels.data.GetOpModesRequest
+import lol.lazar.lazarkit.panels.data.InitOpModeRequest
+import lol.lazar.lazarkit.panels.data.JSONData
+import lol.lazar.lazarkit.panels.data.ReceivedOpModes
+import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
+import lol.lazar.lazarkit.panels.data.StopActiveOpModeRequest
+import lol.lazar.lazarkit.panels.data.TestObject
+import lol.lazar.lazarkit.panels.data.TimeObject
+import lol.lazar.lazarkit.panels.data.json
+import lol.lazar.lazarkit.panels.data.toJson
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,11 +47,7 @@ class Socket(
     fun sendTest() {
         println("DASH: sent test")
         for (client in clients) {
-            try {
-                client.send("test.info")
-            } catch (e: IOException) {
-                println("DASH: Error sending message to client: ${e.message}")
-            }
+            client.send(TestObject(data = "info"))
         }
     }
 
@@ -47,6 +55,14 @@ class Socket(
         private var timer: Timer = Timer()
 
         private var ping: TimerTask? = null
+
+        fun send(data: JSONData) {
+            try {
+                send(data.toJson())
+            } catch (e: IOException) {
+                println("DASH: Error sending message to client: ${e.message}")
+            }
+        }
 
         override fun onOpen() {
             startSendingTime()
@@ -72,7 +88,7 @@ class Socket(
                 override fun run() {
                     try {
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
-                        send("time.$time")
+                        send(TimeObject(time = time))
                     } catch (e: IOException) {
                         stopTimer()
                     }
@@ -103,69 +119,48 @@ class Socket(
                 OpModeData.OpModeStatus.RUNNING -> "running"
                 OpModeData.OpModeStatus.STOPPED -> "stopped"
             }
-            send("current_opmode.${GlobalData.activeOpModeName}.$status")
-        }
-
-        fun setTriangle(value: Boolean) {
-            val currentOpMode = GlobalData.activeOpMode
-            if (currentOpMode == null) {
-                println("DASH: No active opmode")
-                return
-            }
-
-            println("DASH: Triangle (before): ${GlobalGamepad.dpad_up} / $value / ${currentOpMode.time}")
-
-            currentOpMode.gamepad1?.dpad_up = value
-            GlobalGamepad.dpad_up = value
-            currentOpMode.gamepad1?.refreshTimestamp()
-
-            println("DASH: Triangle (after): ${GlobalGamepad.dpad_up} / $value / ${currentOpMode.time}")
+            send(
+                ActiveOpMode(
+                    GlobalData.activeOpModeInfo,
+                    status
+                )
+            )
         }
 
         override fun onMessage(message: WebSocketFrame) {
+            println("DASH: Received message: ${message.textPayload}")
             try {
-                println("DASH: Received message: ${message.textPayload}")
-                val parts = message.textPayload.split(".")
-                if (parts.isEmpty()) {
-                    println("DASH: Ignoring malformed message: ${message.textPayload}")
-                    return
-                }
-                val type = parts[0]
-                val data = parts.subList(1, parts.size)
-
-                when (type) {
-                    "get_opmodes" -> {
-                        send("opmodes.${GlobalData.opModeListString}")
+                val decoded = json.decodeFromString(
+                    PolymorphicSerializer(JSONData::class),
+                    message.textPayload
+                )
+                when (decoded) {
+                    is GetOpModesRequest -> {
+                        send(ReceivedOpModes(GlobalData.opModeList))
                     }
 
-                    "get_current_opmode" -> {
+                    is GetActiveOpModeRequest -> {
                         updateCurrentOpMode()
                     }
 
-                    "init_opmode" -> {
-                        initOpMode(data[0])
+                    is InitOpModeRequest -> {
+                        initOpMode(decoded.opModeName)
                     }
 
-                    "start_opmode" -> {
+                    is StartActiveOpModeRequest -> {
                         startOpMode()
                     }
 
-                    "stop_opmode" -> {
+                    is StopActiveOpModeRequest -> {
                         stopOpMode()
                     }
 
-                    "triangle" -> {
-                        when (data[0]) {
-                            "1" -> setTriangle(true)
-                            "0" -> setTriangle(false)
-                        }
+                    else -> {
+                        println("DASH: Unknown message type: ${decoded::class.simpleName}")
                     }
-
-                    else -> println("DASH: Unknown command $type")
                 }
             } catch (e: Exception) {
-                println("DASH: Error processing WebSocket message: ${e.message}")
-                e.printStackTrace()
+                println("DASH: Error decoding JSON: ${e.message}")
                 close(
                     WebSocketFrame.CloseCode.InternalServerError,
                     "Error in message handling",

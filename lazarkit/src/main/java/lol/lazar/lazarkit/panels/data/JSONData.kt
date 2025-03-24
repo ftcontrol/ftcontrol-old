@@ -1,6 +1,7 @@
 package lol.lazar.lazarkit.panels.data
 
 import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.PolymorphicSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
@@ -9,7 +10,6 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta.Flavor
-import kotlinx.serialization.PolymorphicSerializer
 
 @Serializable
 @Polymorphic
@@ -22,6 +22,12 @@ data class TestObject(
 ) : JSONData()
 
 @Serializable
+@SerialName("time")
+data class TimeObject(
+    val time: String
+) : JSONData()
+
+@Serializable
 @SerialName("opModeInfo")
 data class OpModeInfo(
     var name: String,
@@ -29,11 +35,54 @@ data class OpModeInfo(
     var flavour: Flavor
 ) : JSONData()
 
+@Serializable
+@SerialName("activeOpMode")
+data class ActiveOpMode(
+    var opMode: OpModeInfo,
+    var status: String
+) : JSONData()
+
+@Serializable
+@SerialName("getOpmodes")
+data object GetOpModesRequest : JSONData()
+
+@Serializable
+@SerialName("opmodes")
+data class ReceivedOpModes(
+    var opModes: List<OpModeInfo>
+) : JSONData()
+
+@Serializable
+@SerialName("getActiveOpMode")
+data object GetActiveOpModeRequest : JSONData()
+
+@Serializable
+@SerialName("initOpMode")
+data class InitOpModeRequest(
+    var opModeName: String
+) : JSONData()
+
+@Serializable
+@SerialName("startActiveOpMode")
+data object StartActiveOpModeRequest : JSONData()
+
+@Serializable
+@SerialName("stopActiveOpMode")
+data object StopActiveOpModeRequest : JSONData()
+
 val json = Json {
     serializersModule = SerializersModule {
         polymorphic(JSONData::class) {
             subclass(TestObject::class)
+            subclass(TimeObject::class)
             subclass(OpModeInfo::class)
+            subclass(ActiveOpMode::class)
+            subclass(GetOpModesRequest::class)
+            subclass(ReceivedOpModes::class)
+            subclass(GetActiveOpModeRequest::class)
+            subclass(InitOpModeRequest::class)
+            subclass(StartActiveOpModeRequest::class)
+            subclass(StopActiveOpModeRequest::class)
         }
     }
     useArrayPolymorphism = false
@@ -53,5 +102,8 @@ inline fun <reified T : JSONData> List<T>.toJson(): String {
 }
 
 inline fun <reified T : JSONData> String.fromJsonToList(): List<T> {
-    return json.decodeFromString(ListSerializer(PolymorphicSerializer(JSONData::class)), this) as List<T>
+    return json.decodeFromString(
+        ListSerializer(PolymorphicSerializer(JSONData::class)),
+        this
+    ) as List<T>
 }
