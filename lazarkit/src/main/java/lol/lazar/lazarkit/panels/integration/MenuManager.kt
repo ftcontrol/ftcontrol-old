@@ -12,8 +12,8 @@ class MenuManager(
     private val disableMenuItems: MutableList<MenuItem> = arrayListOf()
 
     fun createMenu(menu: Menu) {
-        val enable = menu.add(Menu.NONE, Menu.NONE, 700, "Enable Lazar's Dash")
-        val disable = menu.add(Menu.NONE, Menu.NONE, 700, "Disable Lazar's Dash")
+        val enable = menu.add(Menu.NONE, Menu.NONE, 700, "Enable Panels")
+        val disable = menu.add(Menu.NONE, Menu.NONE, 700, "Disable Panels")
 
         enable.setVisible(!Preferences.isEnabled)
         disable.setVisible(Preferences.isEnabled)

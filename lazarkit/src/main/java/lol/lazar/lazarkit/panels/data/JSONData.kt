@@ -70,6 +70,12 @@ data object StartActiveOpModeRequest : JSONData()
 @SerialName("stopActiveOpMode")
 data object StopActiveOpModeRequest : JSONData()
 
+@Serializable
+@SerialName("telemetryPacket")
+data class TelemetryPacket(
+    var lines: List<String>
+) : JSONData()
+
 val json = Json {
     serializersModule = SerializersModule {
         polymorphic(JSONData::class) {
@@ -83,6 +89,7 @@ val json = Json {
             subclass(InitOpModeRequest::class)
             subclass(StartActiveOpModeRequest::class)
             subclass(StopActiveOpModeRequest::class)
+            subclass(TelemetryPacket::class)
         }
     }
     useArrayPolymorphism = false

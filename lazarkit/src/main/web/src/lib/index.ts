@@ -22,6 +22,10 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
 
 export const info = new InfoManager()
 
+socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
+  info.telemetry = data.lines
+})
+
 setTimeout(() => {
   socket.sendMessage({ kind: "getOpmodes" })
   socket.sendMessage({ kind: "getActiveOpMode" })

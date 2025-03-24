@@ -14,7 +14,7 @@ import lol.lazar.lazarkit.panels.server.Server
 import lol.lazar.lazarkit.panels.server.Socket
 import java.io.IOException
 
-class Dashboard {
+class CorePanels {
     var uiManager = UIManager()
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
@@ -24,6 +24,8 @@ class Dashboard {
     lateinit var socket: Socket
 
     lateinit var limelightServer: LimelightServer
+
+    var telemetryManager = TelemetryManager({ lines -> socket.sendTelemetry(lines)})
 
 
     fun attachWebServer(context: Context, webServer: WebServer) {
@@ -45,7 +47,7 @@ class Dashboard {
 
     private var opModeManager: OpModeManagerImpl? = null
 
-    fun attachEventLoop(eventLoop: FtcEventLoop, registrar: DashboardRegistrar) {
+    fun attachEventLoop(eventLoop: FtcEventLoop, registrar: Panels) {
         opModeManager?.unregisterListener(registrar)
 
         opModeManager = eventLoop.opModeManager
@@ -65,7 +67,7 @@ class Dashboard {
         uiManager.injectText()
     }
 
-    fun close(registrar: DashboardRegistrar) {
+    fun close(registrar: Panels) {
         server.stopServer()
         socket.stopServer()
 

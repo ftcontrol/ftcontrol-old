@@ -100,4 +100,5 @@ export class InfoManager {
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
+  telemetry = $state<string[]>([])
 }
