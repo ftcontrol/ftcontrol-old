@@ -1,4 +1,4 @@
-package org.lazarkit.panels.server
+package lol.lazar.lazarkit.panels.server
 
 import android.content.Context
 import android.content.res.AssetManager

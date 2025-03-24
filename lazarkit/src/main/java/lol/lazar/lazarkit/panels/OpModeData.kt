@@ -1,11 +1,11 @@
-package org.lazarkit.panels
+package lol.lazar.lazarkit.panels
 
 import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
+import lol.lazar.lazarkit.panels.data.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes
-import org.lazarkit.panels.data.OpModeInfo
 
 class OpModeData {
     enum class OpModeStatus {
@@ -53,9 +53,9 @@ class OpModeData {
                 if (opModeMeta.flavor != OpModeMeta.Flavor.SYSTEM) {
                     GlobalData.opModeList.add(
                         OpModeInfo(
-                            opModeMeta.name,
-                            opModeMeta.group,
-                            opModeMeta.flavor
+                            name = opModeMeta.name,
+                            group = opModeMeta.group,
+                            flavour = opModeMeta.flavor,
                         )
                     )
                 }

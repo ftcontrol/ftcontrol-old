@@ -1,8 +1,8 @@
-package org.lazarkit.panels
+package lol.lazar.lazarkit.panels
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import org.lazarkit.panels.OpModeData.OpModeStatus
-import org.lazarkit.panels.data.OpModeInfo
+import lol.lazar.lazarkit.panels.OpModeData.OpModeStatus
+import lol.lazar.lazarkit.panels.data.OpModeInfo
 
 object GlobalData {
     val opModeList: MutableList<OpModeInfo> = mutableListOf()

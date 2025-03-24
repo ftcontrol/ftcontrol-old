@@ -1,9 +1,9 @@
-package org.lazarkit.panels.server
+package lol.lazar.lazarkit.panels.server
 
 import fi.iki.elonen.NanoWSD
-import org.lazarkit.panels.GlobalData
-import org.lazarkit.panels.GlobalGamepad
-import org.lazarkit.panels.OpModeData
+import lol.lazar.lazarkit.panels.GlobalData
+import lol.lazar.lazarkit.panels.GlobalGamepad
+import lol.lazar.lazarkit.panels.OpModeData
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date

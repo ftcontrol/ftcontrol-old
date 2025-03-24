@@ -1,10 +1,10 @@
-package org.lazarkit.panels.integration
+package lol.lazar.lazarkit.panels.integration
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.system.Misc
-import org.lazarkit.panels.Preferences
+import lol.lazar.lazarkit.panels.Preferences
 
 class OpModeRegistrar(
     private val toggle: () -> Unit,

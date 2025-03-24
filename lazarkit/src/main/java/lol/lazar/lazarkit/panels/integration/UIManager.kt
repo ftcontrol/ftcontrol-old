@@ -1,11 +1,11 @@
-package org.lazarkit.panels.integration
+package lol.lazar.lazarkit.panels.integration
 
 import android.graphics.Color
 import android.graphics.Typeface
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil
-import org.lazarkit.panels.Preferences
+import lol.lazar.lazarkit.panels.Preferences
 
 class UIManager {
     private var connectionStatusTextView: TextView? = null
