@@ -1,4 +1,4 @@
-package org.lazarkit.panels
+package lol.lazar.lazarkit.panels
 
 import org.firstinspires.ftc.robotcore.external.Func
 import org.firstinspires.ftc.robotcore.external.Telemetry

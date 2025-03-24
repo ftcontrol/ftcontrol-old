@@ -1,4 +1,4 @@
-package org.lazarkit.panels
+package lol.lazar.lazarkit.panels
 
 import android.content.Context
 import android.content.SharedPreferences

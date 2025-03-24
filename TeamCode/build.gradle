@@ -38,6 +38,6 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
 
-    implementation "lol.lazar:lazarkit:0.1.2"
-//    implementation project(':lazarkit')
+//    implementation "lol.lazar:lazarkit:0.1.2"
+    implementation project(':lazarkit')
 }

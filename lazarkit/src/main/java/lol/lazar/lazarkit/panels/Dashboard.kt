@@ -6,15 +6,12 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
-import org.lazarkit.panels.GlobalGamepad
-import org.lazarkit.panels.OpModeData
-import org.lazarkit.panels.Preferences
-import org.lazarkit.panels.integration.MenuManager
-import org.lazarkit.panels.integration.OpModeRegistrar
-import org.lazarkit.panels.integration.UIManager
-import org.lazarkit.panels.server.LimelightServer
-import org.lazarkit.panels.server.Server
-import org.lazarkit.panels.server.Socket
+import lol.lazar.lazarkit.panels.integration.MenuManager
+import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
+import lol.lazar.lazarkit.panels.integration.UIManager
+import lol.lazar.lazarkit.panels.server.LimelightServer
+import lol.lazar.lazarkit.panels.server.Server
+import lol.lazar.lazarkit.panels.server.Socket
 import java.io.IOException
 
 class Dashboard {
