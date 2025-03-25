@@ -20,14 +20,14 @@ class CorePanels {
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData()
-    var configurablesManager = ConfigurablesManager()
+    var configurablesMenu = ConfigurablesManager()
 
     lateinit var server: Server
     lateinit var socket: Socket
 
     lateinit var limelightServer: LimelightServer
 
-    var telemetryManager = TelemetryManager({ lines -> socket.sendTelemetry(lines)})
+    var telemetryManager = TelemetryManager({ lines -> socket.sendTelemetry(lines) })
 
 
     fun attachWebServer(context: Context, webServer: WebServer) {
@@ -40,12 +40,12 @@ class CorePanels {
         }
         limelightServer.startServer()
 
-        if(!Preferences.isEnabled) return
+        if (!Preferences.isEnabled) return
 
         server.startServer()
         socket.startServer()
 
-        configurablesManager.findConfigurables(context)
+        configurablesMenu.findConfigurables(context)
     }
 
     private var opModeManager: OpModeManagerImpl? = null
@@ -102,20 +102,20 @@ class CorePanels {
         else enable()
     }
 
-    fun initOpMode(name: String){
+    fun initOpMode(name: String) {
         GlobalGamepad.reset()
         opModeManager?.initOpMode(name) ?: run {
             println("DASH: opModeManager is null")
         }
     }
 
-    fun startOpMode(){
+    fun startOpMode() {
         opModeManager?.startActiveOpMode() ?: run {
             println("DASH: opModeManager is null")
         }
     }
 
-    fun stopOpMode(){
+    fun stopOpMode() {
         opModeManager?.stopActiveOpMode() ?: run {
             println("DASH: opModeManager is null")
         }
