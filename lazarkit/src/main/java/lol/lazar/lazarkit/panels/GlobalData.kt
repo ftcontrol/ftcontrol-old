@@ -6,7 +6,7 @@ import lol.lazar.lazarkit.panels.data.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 
 object GlobalData {
-    val opModeList: MutableList<OpModeInfo> = mutableListOf()
+    var opModeList: MutableList<OpModeInfo> = mutableListOf()
 
     var status = OpModeStatus.STOPPED
 

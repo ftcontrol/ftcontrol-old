@@ -54,6 +54,14 @@ class Socket(
         }
     }
 
+    fun sendOpModesList() {
+        if(!isAlive) return
+        println("DASH: sent opmodes")
+        for (client in clients) {
+            client.send(ReceivedOpModes(GlobalData.opModeList))
+        }
+    }
+
     fun sendTelemetry(lines: List<String>) {
         if(!isAlive) return
         println("DASH: sent telemetry")

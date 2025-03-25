@@ -9,7 +9,6 @@
 </script>
 
 <!-- TODO: predictive UI updates -->
-<!-- TODO: fix empty opmodes list -->
 {#await socket.init()}
   <p>Loading...</p>
 {:then}

@@ -19,7 +19,7 @@ class CorePanels {
     var uiManager = UIManager()
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
-    var opModeData = OpModeData()
+    var opModeData = OpModeData({ data -> socket.sendOpModesList() })
     var configurablesMenu = ConfigurablesManager()
 
     lateinit var server: Server
