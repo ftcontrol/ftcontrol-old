@@ -33,7 +33,7 @@
 
 <style>
   svg {
-    height: 48px;
+    height: 32px;
     width: fit-content;
   }
 </style>

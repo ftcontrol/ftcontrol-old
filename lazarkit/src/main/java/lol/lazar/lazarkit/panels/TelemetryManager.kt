@@ -1,18 +1,28 @@
 package lol.lazar.lazarkit.panels
 
 import org.firstinspires.ftc.robotcore.external.Telemetry
-//TODO: send every x ms for performance improvements
+
 class TelemetryManager(
     private val sendTelemetry: (lines: List<String>) -> Unit,
 ) {
     var lines = mutableListOf<String>()
+
+    var lastUpdate = 0L
+    var updateInterval = 100L
+    val timeSinceLastUpdate: Long
+        get() = System.currentTimeMillis() - lastUpdate
+    val shouldUpdate: Boolean
+        get() = timeSinceLastUpdate >= updateInterval
 
     fun debug(vararg data: String) {
         data.forEach { lines.add(it) }
     }
 
     fun update() {
-        sendTelemetry(lines)
+        if (shouldUpdate) {
+            sendTelemetry(lines)
+            lastUpdate = System.currentTimeMillis()
+        }
         lines.clear()
     }
 
