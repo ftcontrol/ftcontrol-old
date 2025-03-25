@@ -2,22 +2,31 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import lol.lazar.lazarkit.panels.Panels
+import lol.lazar.lazarkit.panels.configurables.Configurable
+import kotlin.jvm.JvmField
 
+@Configurable
 @Autonomous(name = "Testing Auto OpMode", group = "Dashboard")
 class TestingAuto : OpMode(
 ) {
-    var lastTime = System.currentTimeMillis()
+    companion object {
+        @JvmField
+        var number = 0
+    }
+
+    var panelsTelemetry = Panels.getTelemetry()
+
     override fun init() {
+        panelsTelemetry.debug("Hi, init was ran!")
+        panelsTelemetry.update(telemetry)
     }
 
     override fun start() {
-        lastTime = System.currentTimeMillis()
     }
 
     override fun loop() {
-        telemetry.addLine("Hi!")
-        telemetry.update()
-        println("DASH: Auto OpMode${System.currentTimeMillis() - lastTime}")
+        panelsTelemetry.debug("Number is $number")
+        panelsTelemetry.update(telemetry)
     }
 }
