@@ -11,44 +11,87 @@ class ConfigurablesManager {
         mutableListOf(
             "com.google",
             "com.sun",
-            "com.qualcomm.robotcore",
-            "org.opencv"
+            "sun",
+            "com.qualcomm",
+            "org.opencv",
+            "java",
+            "javax",
+            "android",
+            "com.android",
+            "kotlin",
+            "dalvik",
+            "org.firstinspires.ftc.robotcore",
+            "org.intellij",
+            "org.firstinspires.inspection",
+            "org.firstinspires.ftc.robotserver",
+            "org.firstinspires.ftc.ftccommon",
+            "org.firstinspires.ftc.robotcontroller",
+            "org.firstinspires.ftc.onbotjava",
+            "org.firstinspires.ftc.vision",
+            "org.firstinspires.ftc.apriltag",
+            "org.slf4j",
+            "org.threeten",
+            "org.w3c",
+            "org.xmlpull",
+            "org.java_websocket",
+            "fi.iki",
+            "okhttp3",
+            "com.journeyapps",
+            "dk.sgjesse",
+            "org.openjsse",
+            "com.jakewharton",
+            "org.openftc",
+            "jdk.Exported",
+            "org.json",
+            "org.xml",
+            "nl.minvws",
+            "okio",
+            "org.bouncycastle",
+            "org.conscrypt",
+            "org.jetbrains"
         )
     )
 
-    fun findConfigurables(context: Context) {
-        try {
-            val apkPath = context.packageCodePath
-
-            ZipFile(apkPath).use { zipFile ->
-                val entries = zipFile.entries()
-                var dexCount = 0
-                while (entries.hasMoreElements()) {
-                    val entry = entries.nextElement()
-                    if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
-                        dexCount++
-                        zipFile.getInputStream(entry).use { inputStream ->
-                            val dexBytes = inputStream.readBytes()
-                            val dexBuffer = ByteBuffer.wrap(dexBytes).order(ByteOrder.LITTLE_ENDIAN)
-                            val classNames = extractClassNamesFromDex(dexBuffer)
-
-                            classNames.forEach { className ->
-                                for (prefix in ignored) {
-                                    if (className.startsWith(prefix)) {
-                                        return@forEach
-                                    }
-                                }
+    private val allClasses: List<String> by lazy {
+        mutableListOf<String>().apply {
+            try {
+                val apkPath = context.packageCodePath
+                ZipFile(apkPath).use { zipFile ->
+                    val entries = zipFile.entries()
+                    while (entries.hasMoreElements()) {
+                        val entry = entries.nextElement()
+                        if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
+                            zipFile.getInputStream(entry).use { inputStream ->
+                                val dexBytes = inputStream.readBytes()
+                                val dexBuffer =
+                                    ByteBuffer.wrap(dexBytes).order(ByteOrder.LITTLE_ENDIAN)
+                                val classNames = extractClassNamesFromDex(dexBuffer)
+                                addAll(classNames.filter { className ->
+                                    ignored.none { prefix -> className.startsWith(prefix) }
+                                })
                             }
                         }
                     }
                 }
+            } catch (e: IOException) {
+                println("DASH: IOException occurred: ${e.message}")
+                e.printStackTrace()
+            } catch (e: IllegalArgumentException) {
+                println("DASH: IllegalArgumentException occurred: ${e.message}")
+                e.printStackTrace()
             }
-        } catch (e: IOException) {
-            println("DASH: IOException occurred: ${e.message}")
-            e.printStackTrace()
-        } catch (e: IllegalArgumentException) {
-            println("DASH: IllegalArgumentException occurred: ${e.message}")
-            e.printStackTrace()
+        }
+    }
+
+    private lateinit var context: Context
+
+    val getAllClasses: List<String>
+        get() = allClasses
+
+    fun findConfigurables(context: Context) {
+        this.context = context
+        getAllClasses.forEach { className ->
+            println("DASH: $className")
         }
     }
 
@@ -83,7 +126,8 @@ class ConfigurablesManager {
         // Validate sizes and offsets
         if (stringIdsSize <= 0 || typeIdsSize <= 0 ||
             stringIdsOffset < headerSize || typeIdsOffset < headerSize ||
-            stringIdsOffset > fileSize || typeIdsOffset > fileSize) {
+            stringIdsOffset > fileSize || typeIdsOffset > fileSize
+        ) {
             throw IllegalArgumentException("Invalid table sizes or offsets: stringIdsSize=$stringIdsSize, typeIdsSize=$typeIdsSize, stringIdsOffset=$stringIdsOffset, typeIdsOffset=$typeIdsOffset")
         }
 
