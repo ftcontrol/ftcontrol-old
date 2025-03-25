@@ -25,9 +25,11 @@
     right: 1rem;
     top: 1rem;
     text-align: right;
+    z-index: 100;
   }
   p {
     border: 1px solid black;
+    background-color: white;
     padding: 1rem;
   }
 </style>

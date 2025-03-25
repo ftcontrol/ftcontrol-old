@@ -26,7 +26,7 @@
 <style>
   div {
     display: grid;
-    grid-template-columns: 300px auto;
+    grid-template-columns: auto 1fr;
     height: 100vh;
   }
   section {
