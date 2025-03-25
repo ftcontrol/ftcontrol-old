@@ -7,7 +7,9 @@ import lol.lazar.lazarkit.panels.data.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes
 
-class OpModeData {
+class OpModeData(
+    private val onListChanged: (data: List<OpModeInfo>) -> Unit
+) {
     enum class OpModeStatus {
         INIT,
         RUNNING,
@@ -48,10 +50,10 @@ class OpModeData {
         override fun run() {
             RegisteredOpModes.getInstance().waitOpModesRegistered()
 
-            GlobalData.opModeList.clear()
+            val opModeList = ArrayList<OpModeInfo>()
             for (opModeMeta in RegisteredOpModes.getInstance().opModes) {
                 if (opModeMeta.flavor != OpModeMeta.Flavor.SYSTEM) {
-                    GlobalData.opModeList.add(
+                    opModeList.add(
                         OpModeInfo(
                             name = opModeMeta.name,
                             group = opModeMeta.group,
@@ -60,6 +62,10 @@ class OpModeData {
                     )
                 }
             }
+
+            GlobalData.opModeList = opModeList
+
+            onListChanged(opModeList)
 
             println("DASH OPMODES: ${GlobalData.opModeList.joinToString(", ")}")
         }
