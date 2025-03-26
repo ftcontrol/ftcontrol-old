@@ -1,9 +1,12 @@
 package lol.lazar.lazarkit.panels.data
 
+import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import lol.lazar.lazarkit.panels.GlobalData
 
 @Serializable
+@Polymorphic
 sealed class JvmFieldInfoBase
 
 @Serializable
@@ -14,12 +17,22 @@ data class JvmFieldInfoString(
     val currentValue: String
 ) : JvmFieldInfoBase()
 
+fun setField(item: JvmFieldInfoString) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
 @Serializable
 @SerialName("unknown")
 data class JvmFieldInfoUnknown(
     val className: String,
     val fieldName: String,
 ) : JvmFieldInfoBase()
+
+fun setField(item: JvmFieldInfoUnknown) {
+}
 
 @Serializable
 @SerialName("int")
@@ -29,6 +42,13 @@ data class JvmFieldInfoInt(
     val currentValue: Int
 ) : JvmFieldInfoBase()
 
+fun setField(item: JvmFieldInfoInt) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
 @Serializable
 @SerialName("double")
 data class JvmFieldInfoDouble(
@@ -37,6 +57,13 @@ data class JvmFieldInfoDouble(
     val currentValue: Double
 ) : JvmFieldInfoBase()
 
+fun setField(item: JvmFieldInfoDouble) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
 @Serializable
 @SerialName("array")
 data class JvmFieldInfoArray(
@@ -44,6 +71,39 @@ data class JvmFieldInfoArray(
     val fieldName: String,
     val values: List<JvmFieldInfoBase>
 ) : JvmFieldInfoBase()
+
+fun setField(item: JvmFieldInfoArray) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+
+    when (field.field.type.componentType) {
+        Int::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoInt>()
+                    .map { it.currentValue }.toIntArray()
+            )
+        }
+
+        Double::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoDouble>()
+                    .map { it.currentValue }.toDoubleArray()
+            )
+        }
+
+        String::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoString>()
+                    .map { it.currentValue }.toTypedArray()
+            )
+        }
+    }
+}
+
 
 @Serializable
 @SerialName("getJvmFieldsRequest")

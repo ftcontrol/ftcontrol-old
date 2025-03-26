@@ -22,6 +22,7 @@ import lol.lazar.lazarkit.panels.data.TelemetryPacket
 import lol.lazar.lazarkit.panels.data.TestObject
 import lol.lazar.lazarkit.panels.data.TimeObject
 import lol.lazar.lazarkit.panels.data.json
+import lol.lazar.lazarkit.panels.data.setField
 import lol.lazar.lazarkit.panels.data.toJson
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -202,47 +203,13 @@ class Socket(
                     is ReceivedJvmFields -> {
                         println("DASH: Received JvmFields: ${decoded.fields}")
 
-                        decoded.fields.filterIsInstance<JvmFieldInfoInt>().forEach { entry ->
-                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
-                                ?.field?.set(null, entry.currentValue)
-                        }
-
-                        decoded.fields.filterIsInstance<JvmFieldInfoString>().forEach { entry ->
-                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
-                                ?.field?.set(null, entry.currentValue)
-                        }
-
-                        decoded.fields.filterIsInstance<JvmFieldInfoDouble>().forEach { entry ->
-                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
-                                ?.field?.set(null, entry.currentValue)
-                        }
-
-                        decoded.fields.filterIsInstance<JvmFieldInfoArray>().forEach { entry ->
-                            val field =
-                                GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
-                            if (field == null) return@forEach
-
-                            when (field.field.type.componentType) {
-                                Int::class.java -> {
-                                    field.field.set(null,
-                                        entry.values.filterIsInstance<JvmFieldInfoInt>()
-                                            .map { it.currentValue }.toIntArray()
-                                    )
-                                }
-
-                                Double::class.java -> {
-                                    field.field.set(null,
-                                        entry.values.filterIsInstance<JvmFieldInfoDouble>()
-                                            .map { it.currentValue }.toDoubleArray()
-                                    )
-                                }
-
-                                String::class.java -> {
-                                    field.field.set(null,
-                                        entry.values.filterIsInstance<JvmFieldInfoString>()
-                                            .map { it.currentValue }.toTypedArray()
-                                    )
-                                }
+                        decoded.fields.forEach {
+                            when(it){
+                                is JvmFieldInfoString -> setField(it)
+                                is JvmFieldInfoInt -> setField(it)
+                                is JvmFieldInfoDouble -> setField(it)
+                                is JvmFieldInfoArray -> setField(it)
+                                else -> {}
                             }
                         }
                     }
