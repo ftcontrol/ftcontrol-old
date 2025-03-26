@@ -26,9 +26,14 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
   info.telemetry = data.lines
 })
 
+socket.addMessageHandler("jvmFields", (data: GenericData) => {
+  info.jvmFields = data.fields
+})
+
 setTimeout(() => {
   socket.sendMessage({ kind: "getOpmodes" })
   socket.sendMessage({ kind: "getActiveOpMode" })
+  socket.sendMessage({ kind: "getJvmFieldsRequest" })
 }, 1000)
 
 export const gamepads = new GamepadManager()

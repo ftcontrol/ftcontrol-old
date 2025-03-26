@@ -6,9 +6,12 @@ import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
+import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
 import lol.lazar.lazarkit.panels.data.InitOpModeRequest
 import lol.lazar.lazarkit.panels.data.JSONData
+import lol.lazar.lazarkit.panels.data.JvmFieldInfo
+import lol.lazar.lazarkit.panels.data.ReceivedJvmFields
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
 import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.StopActiveOpModeRequest
@@ -35,8 +38,19 @@ class Socket(
 
     private val clients: MutableSet<TimeWebSocket> = mutableSetOf()
 
+    fun send(data: JSONData) {
+        if (!isAlive) return
+        for (client in clients) {
+            try {
+                client.send(data)
+            } catch (e: IOException) {
+                println("DASH: Error sending message to client: ${e.message}")
+            }
+        }
+    }
+
     fun broadcastActiveOpMode() {
-        if(!isAlive) return
+        if (!isAlive) return
         for (client in clients) {
             try {
                 client.updateCurrentOpMode()
@@ -47,23 +61,15 @@ class Socket(
     }
 
     fun sendTest() {
-        if(!isAlive) return
-        println("DASH: sent test")
-        for (client in clients) {
-            client.send(TestObject(data = "info"))
-        }
+        send(TestObject(data = "info"))
     }
 
     fun sendOpModesList() {
-        if(!isAlive) return
-        println("DASH: sent opmodes")
-        for (client in clients) {
-            client.send(ReceivedOpModes(GlobalData.opModeList))
-        }
+        send(ReceivedOpModes(GlobalData.opModeList))
     }
 
     fun sendTelemetry(lines: List<String>) {
-        if(!isAlive) return
+        if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
             client.send(TelemetryPacket(lines))
@@ -172,6 +178,12 @@ class Socket(
 
                     is StopActiveOpModeRequest -> {
                         stopOpMode()
+                    }
+
+                    is GetJvmFieldsRequest -> {
+                        send(ReceivedJvmFields(
+                            GlobalData.jvmFields.map { JvmFieldInfo(it.className) }
+                        ))
                     }
 
                     else -> {

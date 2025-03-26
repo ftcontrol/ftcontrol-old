@@ -57,6 +57,22 @@ data class ReceivedOpModes(
 data object GetActiveOpModeRequest : JSONData()
 
 @Serializable
+@SerialName("getJvmFieldsRequest")
+data object GetJvmFieldsRequest : JSONData()
+
+@Serializable
+@SerialName("jvmFieldInfo")
+data class JvmFieldInfo(
+    val className: String,
+) : JSONData()
+
+@Serializable
+@SerialName("jvmFields")
+data class ReceivedJvmFields(
+    var fields: List<JvmFieldInfo>
+) : JSONData()
+
+@Serializable
 @SerialName("initOpMode")
 data class InitOpModeRequest(
     var opModeName: String
@@ -90,6 +106,9 @@ val json = Json {
             subclass(StartActiveOpModeRequest::class)
             subclass(StopActiveOpModeRequest::class)
             subclass(TelemetryPacket::class)
+            subclass(GetJvmFieldsRequest::class)
+            subclass(JvmFieldInfo::class)
+            subclass(ReceivedJvmFields::class)
         }
     }
     useArrayPolymorphism = false
