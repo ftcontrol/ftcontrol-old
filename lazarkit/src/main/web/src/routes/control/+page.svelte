@@ -51,6 +51,55 @@
   })
 </script>
 
+<button
+  onclick={() => {
+    socket.sendMessage({
+      kind: "jvmFields",
+      fields: [
+        {
+          kind: "int",
+          className: "org.firstinspires.ftc.teamcode.TestingAuto",
+          fieldName: "number",
+          currentValue: (Math.random() * 100).toFixed(),
+        },
+        {
+          kind: "array",
+          className: "org.firstinspires.ftc.teamcode.TestingAuto",
+          fieldName: "testArray",
+          values: [
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+          ],
+        },
+      ],
+    })
+  }}
+>
+  Test Fields Update
+</button>
+
 <section>
   <div class="flex">
     <button onclick={() => toggle("autos")}>Autos</button>
@@ -138,55 +187,6 @@
 {#if gamepads.current != null}
   <GamepadDrawing gamepad={gamepads.gamepads[0]} />
 {/if}
-
-<button
-  onclick={() => {
-    socket.sendMessage({
-      kind: "jvmFields",
-      fields: [
-        {
-          kind: "int",
-          className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "number",
-          currentValue: (Math.random() * 100).toFixed(),
-        },
-        {
-          kind: "array",
-          className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "testArray",
-          values: [
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-          ],
-        },
-      ],
-    })
-  }}
->
-  Test Fields Update
-</button>
 
 <style>
   h3 {
