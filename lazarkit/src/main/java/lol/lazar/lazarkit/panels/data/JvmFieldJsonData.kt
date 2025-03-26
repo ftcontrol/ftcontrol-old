@@ -10,7 +10,7 @@ import lol.lazar.lazarkit.panels.GlobalData
 sealed class JvmFieldInfoBase
 
 @Serializable
-@SerialName("string")
+@SerialName("boolean")
 data class JvmFieldInfoBoolean(
     val className: String,
     val fieldName: String,
@@ -25,7 +25,7 @@ fun setField(item: JvmFieldInfoBoolean) {
 }
 
 @Serializable
-@SerialName("string")
+@SerialName("float")
 data class JvmFieldInfoFloat(
     val className: String,
     val fieldName: String,
@@ -40,7 +40,7 @@ fun setField(item: JvmFieldInfoFloat) {
 }
 
 @Serializable
-@SerialName("string")
+@SerialName("long")
 data class JvmFieldInfoLong(
     val className: String,
     val fieldName: String,
