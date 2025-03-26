@@ -10,7 +10,12 @@ import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
 import lol.lazar.lazarkit.panels.data.InitOpModeRequest
 import lol.lazar.lazarkit.panels.data.JSONData
-import lol.lazar.lazarkit.panels.data.JvmFieldInfo
+import lol.lazar.lazarkit.panels.data.JvmFieldArray
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoBase
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoUnknown
 import lol.lazar.lazarkit.panels.data.ReceivedJvmFields
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
 import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
@@ -161,9 +166,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedJvmFields(
-                GlobalData.jvmFields.map { JvmFieldInfo(it.className) }
-            ))
+            send(ReceivedJvmFields(GlobalData.jvmFields.map { it.toJsonType() }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
@@ -196,6 +199,27 @@ class Socket(
 
                     is GetJvmFieldsRequest -> {
                         sendJvmFields()
+                    }
+
+                    is ReceivedJvmFields -> {
+                        println("DASH: Received JvmFields: ${decoded.fields}")
+
+                        decoded.fields.filterIsInstance<JvmFieldInfoInt>().forEach { entry ->
+                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
+                                ?.field?.set(null, entry.currentValue)
+                        }
+
+                        decoded.fields.filterIsInstance<JvmFieldInfoString>().forEach { entry ->
+                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
+                                ?.field?.set(null, entry.currentValue)
+                        }
+
+                        decoded.fields.filterIsInstance<JvmFieldInfoDouble>().forEach { entry ->
+                            GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
+                                ?.field?.set(null, entry.currentValue)
+                        }
+
+                        //handle arrays
                     }
 
                     else -> {

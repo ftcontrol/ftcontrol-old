@@ -1,6 +1,6 @@
 <script lang="ts">
   import { socket, info, gamepads } from "$lib"
-  import type { OpMode } from "$lib/socket.svelte"
+  import { SocketManager, type OpMode } from "$lib/socket.svelte"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import OpModeList from "$lib/ui/OpModeList.svelte"
 
@@ -119,13 +119,32 @@
 <section>
   <h3>Variables</h3>
   {#each info.jvmFields as line}
-    <p>{line.className}</p>
+    <p>{line.className} | {line.kind}</p>
+    <p>{line.currentValue}</p>
   {/each}
 </section>
 
 {#if gamepads.current != null}
   <GamepadDrawing gamepad={gamepads.gamepads[0]} />
 {/if}
+
+<button
+  onclick={() => {
+    socket.sendMessage({
+      kind: "jvmFields",
+      fields: [
+        {
+          kind: "int",
+          className: "org.firstinspires.ftc.teamcode.TestingAuto",
+          fieldName: "number",
+          currentValue: (Math.random() * 100).toFixed(),
+        },
+      ],
+    })
+  }}
+>
+  Test Fields Update
+</button>
 
 <style>
   h3 {

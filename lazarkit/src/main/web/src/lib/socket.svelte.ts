@@ -97,6 +97,8 @@ export type OpMode = {
 
 export type JvmFieldInfo = {
   className: string
+  kind: string
+  currentValue: any
 }
 
 export class InfoManager {
