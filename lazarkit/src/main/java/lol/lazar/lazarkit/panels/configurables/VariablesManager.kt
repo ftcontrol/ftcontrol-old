@@ -1,5 +1,10 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoBase
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoUnknown
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
@@ -10,7 +15,41 @@ class VariablesManager(
         val className: String,
         val field: Field,
         val currentValue: Any?
-    )
+    ) {
+        fun toJsonType(): JvmFieldInfoBase {
+            when (this.field.type) {
+                Int::class.java -> {
+                    return JvmFieldInfoInt(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as Int)
+                    )
+                }
+
+                String::class.java -> {
+                    return JvmFieldInfoString(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as String)
+                    )
+                }
+
+                Double::class.java -> {
+                    return JvmFieldInfoDouble(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as Double)
+                    )
+                }
+            }
+
+            println("DASH: Unknown field type: ${this.field.type.name}")
+            return JvmFieldInfoUnknown(
+                className = this.className,
+                fieldName = this.field.name,
+            )
+        }
+    }
 
     private val jvmFields: List<JvmFieldInfo> by lazy {
         mutableListOf<JvmFieldInfo>().apply {
@@ -42,7 +81,6 @@ class VariablesManager(
         fields.forEach { field ->
             val annotations = field.annotations.map { it.toString() } // Full annotation details
             println("DASH: Checking field: ${field.name}, annotations: $annotations")
-            var isJvmField = field.isAnnotationPresent(JvmField::class.java)
 
             val isFinal = Modifier.isFinal(field.modifiers)
             val isStatic = Modifier.isStatic(field.modifiers)
@@ -50,7 +88,7 @@ class VariablesManager(
             println("DASH: Is ${field.name} final? $isFinal")
             println("DASH: Is ${field.name} static? $isStatic")
 
-            isJvmField = !isFinal && isStatic
+            var isJvmField = !isFinal && isStatic
 
             println("DASH: Is ${field.name} a JvmField? $isJvmField")
             if (isJvmField) {

@@ -6,6 +6,38 @@ import lol.lazar.lazarkit.panels.configurables.Configurable
 class TestClass {
     companion object {
         @JvmField
-        var testField = 42
+        var testIntField = 42
+
+        @JvmField
+        var testDoubleField: Double = 42.5
+
+        @JvmField
+        var testArray = intArrayOf(1, 2, 3)
+
+        data class CustomType(
+            val name: String,
+            val age: Int
+        )
+
+        @JvmField
+        var testObject = CustomType("John", 30)
+
+        @JvmField
+        var testString = "Hello, world!"
+
+        @JvmField
+        var testObjectArray = arrayOf(
+            CustomType("Alice", 25),
+            CustomType("Bob", 35)
+        )
+
+        enum class TestEnum {
+            VALUE1,
+            VALUE2,
+            VALUE3
+        }
+
+        @JvmField
+        var testEnum = TestEnum.VALUE1
     }
 }
