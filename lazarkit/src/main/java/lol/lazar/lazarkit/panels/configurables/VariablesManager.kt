@@ -43,7 +43,7 @@ class VariablesManager(
             println("DASH: Is ${field.name} final? $isFinal")
             println("DASH: Is ${field.name} static? $isStatic")
 
-            var isJvmField = !isFinal && isStatic
+            val isJvmField = !isFinal && isStatic
 
             println("DASH: Is ${field.name} a JvmField? $isJvmField")
             if (isJvmField) {

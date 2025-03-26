@@ -100,6 +100,7 @@ export type JvmFieldInfo = {
   fieldName: string
   type: string
   currentValueString: string
+  possibleValues: string[]
 }
 
 export class InfoManager {

@@ -57,6 +57,13 @@
           type: "INT",
           currentValueString: (Math.random() * 100).toString(),
         },
+        {
+          className: "org.firstinspires.ftc.teamcode.TestClass",
+          fieldName: "testEnum",
+          type: "ENUM",
+          currentValueString: "VALUE2",
+          possibleValues: ["VALUE1", "VALUE2", "VALUE3"],
+        },
       ],
     })
   }}
@@ -139,7 +146,11 @@
   {#each info.jvmFields as line}
     <div style={line.type == "UNKNOWN" ? "opacity: 0.5;" : ""}>
       <p>{line.className} | {line.fieldName} | {line.type}</p>
-      <p>{line.type == "UNKNOWN" ? "" : line.currentValueString}</p>
+      <p>
+        {line.type == "UNKNOWN" ? "" : line.currentValueString} / {JSON.stringify(
+          line.possibleValues
+        )}
+      </p>
     </div>
   {/each}
 </section>
