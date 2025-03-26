@@ -1,11 +1,6 @@
 <script lang="ts">
   import { socket, info, gamepads } from "$lib"
-  import {
-    SocketManager,
-    type JvmFieldInfoArray,
-    type JvmFieldInfoGeneric,
-    type OpMode,
-  } from "$lib/socket.svelte"
+  import { type OpMode } from "$lib/socket.svelte"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import OpModeList from "$lib/ui/OpModeList.svelte"
 
@@ -57,41 +52,10 @@
       kind: "jvmFields",
       fields: [
         {
-          kind: "int",
           className: "org.firstinspires.ftc.teamcode.TestingAuto",
           fieldName: "number",
-          currentValue: (Math.random() * 100).toFixed(),
-        },
-        {
-          kind: "array",
-          className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "testArray",
-          values: [
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-            {
-              kind: "int",
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "testArray",
-              currentValue: (Math.random() * 100).toFixed(),
-            },
-          ],
+          type: "INT",
+          currentValueString: (Math.random() * 100).toString(),
         },
       ],
     })
@@ -173,14 +137,10 @@
 <section>
   <h3>Variables</h3>
   {#each info.jvmFields as line}
-    <p>{line.className} | {line.kind}</p>
-    {#if line.kind != "array"}
-      <p>{(line as JvmFieldInfoGeneric).currentValue}</p>
-    {:else}
-      {#each (line as JvmFieldInfoArray).values as value}
-        <p>{JSON.stringify(value)}</p>
-      {/each}
-    {/if}
+    <div style={line.type == "UNKNOWN" ? "opacity: 0.5;" : ""}>
+      <p>{line.className} | {line.fieldName} | {line.type}</p>
+      <p>{line.type == "UNKNOWN" ? "" : line.currentValueString}</p>
+    </div>
   {/each}
 </section>
 
