@@ -2,8 +2,11 @@ package lol.lazar.lazarkit.panels.configurables
 
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoArray
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoBase
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoBoolean
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoFloat
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoLong
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoUnknown
 import java.lang.reflect.Field
@@ -43,6 +46,30 @@ class VariablesManager(
                     )
                 }
 
+                Boolean::class.java -> {
+                    return JvmFieldInfoBoolean(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as Boolean)
+                    )
+                }
+
+                Float::class.java -> {
+                    return JvmFieldInfoFloat(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as Float)
+                    )
+                }
+
+                Long::class.java -> {
+                    return JvmFieldInfoLong(
+                        className = this.className,
+                        fieldName = this.field.name,
+                        currentValue = (this.currentValue as Long)
+                    )
+                }
+
                 else -> {
                     if (this.field.type.isArray) {
                         val componentType = field.type.componentType
@@ -65,6 +92,30 @@ class VariablesManager(
 
                             String::class.java -> (currentValue as Array<String>).map {
                                 JvmFieldInfoString(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            Boolean::class.java -> (currentValue as BooleanArray).map {
+                                JvmFieldInfoBoolean(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            Float::class.java -> (currentValue as FloatArray).map {
+                                JvmFieldInfoFloat(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            Long::class.java -> (currentValue as LongArray).map {
+                                JvmFieldInfoLong(
                                     className,
                                     field.name,
                                     it

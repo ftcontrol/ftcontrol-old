@@ -11,8 +11,11 @@ import lol.lazar.lazarkit.panels.data.GetOpModesRequest
 import lol.lazar.lazarkit.panels.data.InitOpModeRequest
 import lol.lazar.lazarkit.panels.data.JSONData
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoArray
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoBoolean
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoFloat
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoLong
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
 import lol.lazar.lazarkit.panels.data.ReceivedJvmFields
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
@@ -208,6 +211,9 @@ class Socket(
                                 is JvmFieldInfoString -> setField(it)
                                 is JvmFieldInfoInt -> setField(it)
                                 is JvmFieldInfoDouble -> setField(it)
+                                is JvmFieldInfoBoolean -> setField(it)
+                                is JvmFieldInfoFloat -> setField(it)
+                                is JvmFieldInfoLong -> setField(it)
                                 is JvmFieldInfoArray -> setField(it)
                                 else -> {}
                             }
