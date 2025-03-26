@@ -99,6 +99,7 @@ export type JvmFieldInfo = {
   className: string
   fieldName: string
   type: string
+  arrayType: string
   currentValueString: string
   possibleValues: string[]
 }

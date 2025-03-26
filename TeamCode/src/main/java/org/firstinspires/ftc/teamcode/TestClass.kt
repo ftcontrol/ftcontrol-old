@@ -14,9 +14,24 @@ class TestClass {
         @JvmField
         var testArray = intArrayOf(1, 2, 3)
 
+        @JvmField
+        var testArray2 = arrayOf(1, 2, 3)
+
         data class CustomType(
             val name: String,
             val age: Int
+        )
+
+        @JvmField
+        var crazyArray = arrayOf(
+            1,
+            2,
+            3,
+            CustomType("Alice", 25),
+            CustomType("Bob", 35),
+            "Hello, world!",
+            TestEnum.VALUE1,
+            true
         )
 
         @JvmField
