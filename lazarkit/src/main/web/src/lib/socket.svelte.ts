@@ -95,11 +95,19 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
-export type JvmFieldInfo = {
+export type JvmFieldInfoGeneric = {
   className: string
   kind: string
   currentValue: any
 }
+
+export type JvmFieldInfoArray = {
+  className: string
+  kind: "array"
+  values: JvmFieldInfo[]
+}
+
+export type JvmFieldInfo = JvmFieldInfoGeneric | JvmFieldInfoArray
 
 export class InfoManager {
   time = $state("")
