@@ -116,6 +116,13 @@
   {/each}
 </section>
 
+<section>
+  <h3>Variables</h3>
+  {#each info.jvmFields as line}
+    <p>{line.className}</p>
+  {/each}
+</section>
+
 {#if gamepads.current != null}
   <GamepadDrawing gamepad={gamepads.gamepads[0]} />
 {/if}

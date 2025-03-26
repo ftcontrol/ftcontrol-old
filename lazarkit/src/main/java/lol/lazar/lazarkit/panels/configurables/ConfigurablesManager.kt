@@ -3,6 +3,7 @@ package lol.lazar.lazarkit.panels.configurables
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import lol.lazar.lazarkit.panels.GlobalData
 import kotlin.random.Random
 
 class ConfigurablesManager {
@@ -22,6 +23,8 @@ class ConfigurablesManager {
         variables.getJvmFields.forEach { info ->
             println("DASH: ${info.className}.${info.field.name} = ${info.currentValue}")
         }
+
+        GlobalData.jvmFields = variables.getJvmFields
 
 //        startRandomUpdates()
     }

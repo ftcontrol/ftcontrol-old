@@ -95,10 +95,15 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
+export type JvmFieldInfo = {
+  className: string
+}
+
 export class InfoManager {
   time = $state("")
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
   telemetry = $state<string[]>([])
+  jvmFields = $state<JvmFieldInfo[]>([])
 }
