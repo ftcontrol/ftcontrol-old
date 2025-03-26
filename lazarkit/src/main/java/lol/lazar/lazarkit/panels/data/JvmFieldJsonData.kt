@@ -11,6 +11,51 @@ sealed class JvmFieldInfoBase
 
 @Serializable
 @SerialName("string")
+data class JvmFieldInfoBoolean(
+    val className: String,
+    val fieldName: String,
+    val currentValue: Boolean
+) : JvmFieldInfoBase()
+
+fun setField(item: JvmFieldInfoBoolean) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
+@Serializable
+@SerialName("string")
+data class JvmFieldInfoFloat(
+    val className: String,
+    val fieldName: String,
+    val currentValue: Float
+) : JvmFieldInfoBase()
+
+fun setField(item: JvmFieldInfoFloat) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
+@Serializable
+@SerialName("string")
+data class JvmFieldInfoLong(
+    val className: String,
+    val fieldName: String,
+    val currentValue: Long
+) : JvmFieldInfoBase()
+
+fun setField(item: JvmFieldInfoLong) {
+    val field =
+        GlobalData.jvmFields.find { it.className == item.className && it.field.name == item.fieldName }
+    if (field == null) return
+    field.field.set(null, item.currentValue)
+}
+
+@Serializable
+@SerialName("string")
 data class JvmFieldInfoString(
     val className: String,
     val fieldName: String,
@@ -99,6 +144,30 @@ fun setField(item: JvmFieldInfoArray) {
                 null,
                 item.values.filterIsInstance<JvmFieldInfoString>()
                     .map { it.currentValue }.toTypedArray()
+            )
+        }
+
+        Boolean::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoBoolean>()
+                    .map { it.currentValue }.toBooleanArray()
+            )
+        }
+
+        Float::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoFloat>()
+                    .map { it.currentValue }.toFloatArray()
+            )
+        }
+
+        Long::class.java -> {
+            field.field.set(
+                null,
+                item.values.filterIsInstance<JvmFieldInfoLong>()
+                    .map { it.currentValue }.toLongArray()
             )
         }
     }
