@@ -21,7 +21,7 @@ class ConfigurablesManager {
 
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
         variables.getJvmFields.forEach { info ->
-            println("DASH: ${info.className}.${info.field.name} = ${info.currentValue}")
+            println("DASH: ${info.className}.${info.reference.name} = ${info.currentValue}")
         }
 
         GlobalData.jvmFields = variables.getJvmFields
@@ -40,13 +40,13 @@ class ConfigurablesManager {
 
     private fun updateIntegerVariables() {
         variables.getJvmFields.forEach { info ->
-            if (info.field.type == Int::class.java) {
+            if (info.reference.type == Int::class.java) {
                 try {
                     val randomValue = Random.nextInt(0, 100) // Generate a random number
-                    info.field.set(null, randomValue)
-                    println("DASH: Updated ${info.className}.${info.field.name} = $randomValue")
+                    info.reference.set(null, randomValue)
+                    println("DASH: Updated ${info.className}.${info.reference.name} = $randomValue")
                 } catch (e: Exception) {
-                    println("DASH: Failed to update ${info.className}.${info.field.name}: ${e.message}")
+                    println("DASH: Failed to update ${info.className}.${info.reference.name}: ${e.message}")
                 }
             }
         }

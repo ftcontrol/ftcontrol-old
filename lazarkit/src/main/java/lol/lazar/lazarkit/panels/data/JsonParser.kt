@@ -24,13 +24,6 @@ val json = Json {
             subclass(GetJvmFieldsRequest::class)
             subclass(ReceivedJvmFields::class)
         }
-
-        polymorphic(JvmFieldInfoBase::class) {
-            subclass(JvmFieldInfoString::class)
-            subclass(JvmFieldInfoInt::class)
-            subclass(JvmFieldInfoDouble::class)
-            subclass(JvmFieldInfoArray::class)
-        }
     }
     useArrayPolymorphism = false
     classDiscriminator = "kind"
