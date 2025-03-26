@@ -11,7 +11,8 @@ class JsonJvmField(
     val className: String,
     val fieldName: String,
     val type: GenericType.Types,
-    val currentValueString: String
+    val currentValueString: String,
+    val possibleValues: List<String>? = null
 ) {
     fun toReference(): GenericType? {
         return GlobalData.jvmFields.find { it.className == className && it.reference.name == fieldName }
@@ -30,6 +31,7 @@ class GenericType(
         BOOLEAN,
         FLOAT,
         LONG,
+        ENUM,
         UNKNOWN,
         CUSTOM
     }
@@ -43,11 +45,26 @@ class GenericType(
                 Boolean::class.java -> Types.BOOLEAN
                 Float::class.java -> Types.FLOAT
                 Long::class.java -> Types.LONG
-                else -> Types.UNKNOWN
+                else -> {
+                    if(reference.type.isEnum){
+                        return Types.ENUM
+                    }
+                    Types.UNKNOWN
+                }
             }
         }
 
     fun toJsonType(): JsonJvmField {
-        return JsonJvmField(className, reference.name, type, currentValue.toString())
+        val possibleValues: List<String>? = when (type) {
+            Types.ENUM -> reference.type.enumConstants.map { it.toString() }
+            else -> null
+        }
+        return JsonJvmField(
+            className = className,
+            fieldName = reference.name,
+            type = type,
+            currentValueString = currentValue.toString(),
+            possibleValues = possibleValues
+        )
     }
 }
