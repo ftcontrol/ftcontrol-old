@@ -13,6 +13,9 @@ class TestingAuto : OpMode(
     companion object {
         @JvmField
         var number = 0
+
+        @JvmField
+        var testArray = intArrayOf(1, 2, 3)
     }
 
     var panelsTelemetry = Panels.getTelemetry()
@@ -27,6 +30,9 @@ class TestingAuto : OpMode(
 
     override fun loop() {
         panelsTelemetry.debug("Number is $number")
+
+        panelsTelemetry.debug("Array is ${testArray.joinToString()}")
+
         panelsTelemetry.update(telemetry)
     }
 }

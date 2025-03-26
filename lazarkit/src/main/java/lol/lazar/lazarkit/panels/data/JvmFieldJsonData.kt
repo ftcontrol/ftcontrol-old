@@ -39,7 +39,7 @@ data class JvmFieldInfoDouble(
 
 @Serializable
 @SerialName("array")
-data class JvmFieldArray(
+data class JvmFieldInfoArray(
     val className: String,
     val fieldName: String,
     val values: List<JvmFieldInfoBase>

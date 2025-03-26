@@ -29,7 +29,7 @@ val json = Json {
             subclass(JvmFieldInfoString::class)
             subclass(JvmFieldInfoInt::class)
             subclass(JvmFieldInfoDouble::class)
-            subclass(JvmFieldArray::class)
+            subclass(JvmFieldInfoArray::class)
         }
     }
     useArrayPolymorphism = false

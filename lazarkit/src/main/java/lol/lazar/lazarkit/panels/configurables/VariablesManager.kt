@@ -1,5 +1,6 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoArray
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoBase
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
@@ -40,6 +41,43 @@ class VariablesManager(
                         fieldName = this.field.name,
                         currentValue = (this.currentValue as Double)
                     )
+                }
+
+                else -> {
+                    if (this.field.type.isArray) {
+                        val componentType = field.type.componentType
+                        val values = when (componentType) {
+                            Int::class.java -> (currentValue as IntArray).map {
+                                JvmFieldInfoInt(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            Double::class.java -> (currentValue as DoubleArray).map {
+                                JvmFieldInfoDouble(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            String::class.java -> (currentValue as Array<String>).map {
+                                JvmFieldInfoString(
+                                    className,
+                                    field.name,
+                                    it
+                                )
+                            }
+
+                            else -> {
+                                emptyList()
+                            }
+                        }
+
+                        return JvmFieldInfoArray(className, field.name, values)
+                    }
                 }
             }
 

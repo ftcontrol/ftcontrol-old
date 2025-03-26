@@ -10,12 +10,10 @@ import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
 import lol.lazar.lazarkit.panels.data.InitOpModeRequest
 import lol.lazar.lazarkit.panels.data.JSONData
-import lol.lazar.lazarkit.panels.data.JvmFieldArray
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoBase
+import lol.lazar.lazarkit.panels.data.JvmFieldInfoArray
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
 import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoUnknown
 import lol.lazar.lazarkit.panels.data.ReceivedJvmFields
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
 import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
@@ -219,7 +217,34 @@ class Socket(
                                 ?.field?.set(null, entry.currentValue)
                         }
 
-                        //handle arrays
+                        decoded.fields.filterIsInstance<JvmFieldInfoArray>().forEach { entry ->
+                            val field =
+                                GlobalData.jvmFields.find { it.className == entry.className && it.field.name == entry.fieldName }
+                            if (field == null) return@forEach
+
+                            when (field.field.type.componentType) {
+                                Int::class.java -> {
+                                    field.field.set(null,
+                                        entry.values.filterIsInstance<JvmFieldInfoInt>()
+                                            .map { it.currentValue }.toIntArray()
+                                    )
+                                }
+
+                                Double::class.java -> {
+                                    field.field.set(null,
+                                        entry.values.filterIsInstance<JvmFieldInfoDouble>()
+                                            .map { it.currentValue }.toDoubleArray()
+                                    )
+                                }
+
+                                String::class.java -> {
+                                    field.field.set(null,
+                                        entry.values.filterIsInstance<JvmFieldInfoString>()
+                                            .map { it.currentValue }.toTypedArray()
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     else -> {

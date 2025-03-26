@@ -1,6 +1,11 @@
 <script lang="ts">
   import { socket, info, gamepads } from "$lib"
-  import { SocketManager, type OpMode } from "$lib/socket.svelte"
+  import {
+    SocketManager,
+    type JvmFieldInfoArray,
+    type JvmFieldInfoGeneric,
+    type OpMode,
+  } from "$lib/socket.svelte"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import OpModeList from "$lib/ui/OpModeList.svelte"
 
@@ -120,7 +125,13 @@
   <h3>Variables</h3>
   {#each info.jvmFields as line}
     <p>{line.className} | {line.kind}</p>
-    <p>{line.currentValue}</p>
+    {#if line.kind != "array"}
+      <p>{(line as JvmFieldInfoGeneric).currentValue}</p>
+    {:else}
+      {#each (line as JvmFieldInfoArray).values as value}
+        <p>{JSON.stringify(value)}</p>
+      {/each}
+    {/if}
   {/each}
 </section>
 
@@ -138,6 +149,37 @@
           className: "org.firstinspires.ftc.teamcode.TestingAuto",
           fieldName: "number",
           currentValue: (Math.random() * 100).toFixed(),
+        },
+        {
+          kind: "array",
+          className: "org.firstinspires.ftc.teamcode.TestingAuto",
+          fieldName: "testArray",
+          values: [
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+            {
+              kind: "int",
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "testArray",
+              currentValue: (Math.random() * 100).toFixed(),
+            },
+          ],
         },
       ],
     })
