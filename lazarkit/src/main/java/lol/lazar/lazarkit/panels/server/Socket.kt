@@ -53,7 +53,7 @@ class Socket(
         if (!isAlive) return
         for (client in clients) {
             try {
-                client.updateCurrentOpMode()
+                client.sendActiveOpMode()
             } catch (e: IOException) {
                 println("DASH: Error sending message to client: ${e.message}")
             }
@@ -106,6 +106,10 @@ class Socket(
                 }
                 Timer().schedule(ping, 1000, 2000)
             }
+
+            sendOpModesList()
+            sendActiveOpMode()
+            sendJvmFields()
         }
 
         fun startSendingTime() {
@@ -138,7 +142,7 @@ class Socket(
             clients.remove(this)
         }
 
-        fun updateCurrentOpMode() {
+        fun sendActiveOpMode() {
             val status = when (GlobalData.status) {
                 OpModeData.OpModeStatus.INIT -> "init"
                 OpModeData.OpModeStatus.RUNNING -> "running"
@@ -152,6 +156,16 @@ class Socket(
             )
         }
 
+        fun sendOpModesList() {
+            send(ReceivedOpModes(GlobalData.opModeList))
+        }
+
+        fun sendJvmFields() {
+            send(ReceivedJvmFields(
+                GlobalData.jvmFields.map { JvmFieldInfo(it.className) }
+            ))
+        }
+
         override fun onMessage(message: WebSocketFrame) {
             println("DASH: Received message: ${message.textPayload}")
             try {
@@ -161,11 +175,11 @@ class Socket(
                 )
                 when (decoded) {
                     is GetOpModesRequest -> {
-                        send(ReceivedOpModes(GlobalData.opModeList))
+                        sendOpModesList()
                     }
 
                     is GetActiveOpModeRequest -> {
-                        updateCurrentOpMode()
+                        sendActiveOpMode()
                     }
 
                     is InitOpModeRequest -> {
@@ -181,9 +195,7 @@ class Socket(
                     }
 
                     is GetJvmFieldsRequest -> {
-                        send(ReceivedJvmFields(
-                            GlobalData.jvmFields.map { JvmFieldInfo(it.className) }
-                        ))
+                        sendJvmFields()
                     }
 
                     else -> {

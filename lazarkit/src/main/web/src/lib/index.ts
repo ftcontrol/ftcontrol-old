@@ -34,7 +34,7 @@ setTimeout(() => {
   socket.sendMessage({ kind: "getOpmodes" })
   socket.sendMessage({ kind: "getActiveOpMode" })
   socket.sendMessage({ kind: "getJvmFieldsRequest" })
-}, 1000)
+}, 1500)
 
 export const gamepads = new GamepadManager()
 
