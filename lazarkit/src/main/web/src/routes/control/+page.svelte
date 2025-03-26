@@ -145,7 +145,9 @@
   <h3>Variables</h3>
   {#each info.jvmFields as line}
     <div style={line.type == "UNKNOWN" ? "opacity: 0.5;" : ""}>
-      <p>{line.className} | {line.fieldName} | {line.type}</p>
+      <p>
+        {line.className} | {line.fieldName} | {line.type} | {line.arrayType}
+      </p>
       <p>
         {line.type == "UNKNOWN" ? "" : line.currentValueString} / {JSON.stringify(
           line.possibleValues

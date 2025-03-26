@@ -199,13 +199,13 @@ class Socket(
                     is ReceivedJvmFields -> {
                         println("DASH: Received JvmFields: ${decoded.fields}")
 
-                        decoded.fields.forEach { jsonJvmField ->
-                            val field = jsonJvmField.toReference()
+                        decoded.fields.forEach {
+                            val field = it.toReference()
 
                             if (field != null) {
-                                val value = jsonJvmField.currentValueString
+                                val value = it.currentValueString
 
-                                when (jsonJvmField.type) {
+                                when (it.type) {
                                     GenericType.Types.INT -> {
                                         field.reference.set(
                                             null, when {
@@ -243,9 +243,10 @@ class Socket(
                                     )
 
                                     GenericType.Types.ENUM -> {
-                                        val enumValue = field.reference.type.enumConstants.firstOrNull {
-                                            it.toString() == value
-                                        }
+                                        val enumValue =
+                                            field.reference.type.enumConstants.firstOrNull {
+                                                it.toString() == value
+                                            }
                                         if (enumValue != null) {
                                             field.reference.set(null, enumValue)
                                         } else {
@@ -255,6 +256,7 @@ class Socket(
 
                                     GenericType.Types.UNKNOWN -> TODO()
                                     GenericType.Types.CUSTOM -> TODO()
+                                    GenericType.Types.ARRAY -> TODO()
                                 }
 
                             }
