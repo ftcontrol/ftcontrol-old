@@ -18,13 +18,13 @@ class TestClass {
         var testArray2 = arrayOf(1, 2, 3)
 
         data class CustomType(
-            val name: String,
-            val age: Int
+            @JvmField var name: String,
+            @JvmField var age: Int
         )
 
-        data class NedtedType(
-            val name: String,
-            val custom: CustomType
+        data class NestedType(
+            @JvmField var name: String,
+            @JvmField var custom: CustomType
         )
 
         @JvmField
@@ -43,7 +43,7 @@ class TestClass {
         var testObject = CustomType("John", 30)
 
         @JvmField
-        var nestedTestObject = NedtedType(
+        var nestedTestObject = NestedType(
             "John",
             CustomType("Alice", 25)
         )
