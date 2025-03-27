@@ -27,7 +27,8 @@ class TestClass {
         @ConfigurableCustomType
         data class NestedType(
             @JvmField var name: String,
-            @JvmField var custom: CustomType
+            @JvmField var custom: CustomType,
+            @JvmField var enumClass: TestEnum = TestEnum.VALUE1
         )
 
         data class UnknownType(
