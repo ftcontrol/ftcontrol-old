@@ -79,30 +79,33 @@ class GenericType(
 
         return when (type) {
             Types.CUSTOM -> {
-                println("DASH: Found custom type: ${reference.type.name}")
-                println("DASH: Custom type fields: ${reference.type.declaredFields.map { it.name }}")
-                println("DASH: Custom type fields types: ${reference.type.declaredFields.map { it.type }}")
-                println("DASH: Custom type fields types enums: ${reference.type.declaredFields.map { it.type.isEnum }}")
-                println("DASH: Custom type fields my types: ${reference.type.declaredFields.map { getType(it.type) }}")
-                println("DASH: Custom type fields values: ${reference.type.declaredFields.map { it.get(currentValue) }}")
+                try {
+                    println("DASH: Found custom type: ${reference.name} ${reference.type.name}")
+                    val nestedFields = reference.type.declaredFields.map {
+                        println("DASH: Custom type field: ${it.name}")
+                        println("DASH: Custom type field type: ${it.type}")
+                        println("DASH: Custom type fields my types: ${getType(it.type)}")
+                        println("DASH: Custom type field value: ${it.get(currentValue)}")
 
-
-                val nestedFields = reference.type.declaredFields.mapNotNull { field ->
-                    try {
-                        field.isAccessible = true
-                        val fieldValue = currentValue?.let { field.get(it) }
-                        GenericType(field.declaringClass.name, field, fieldValue).toJsonType()
-                    } catch (e: Exception) {
-                        null
+                        GenericType(it.declaringClass.name, it, it.get(currentValue))
+                            .toJsonType()
                     }
-                }
 
-                JsonJvmField(
-                    className = className,
-                    fieldName = reference.name,
-                    type = type,
-                    customValues = null
-                )
+                    JsonJvmField(
+                        className = className,
+                        fieldName = reference.name,
+                        type = type,
+                        customValues = nestedFields
+                    )
+                }catch (e: Exception){
+                    println("DASH: Error getting custom type: ${e.message}")
+                    e.printStackTrace()
+                    JsonJvmField(
+                        className = className,
+                        fieldName = reference.name,
+                        type = type,
+                    )
+                }
             }
 
             Types.ARRAY -> JsonJvmField(
