@@ -12,8 +12,9 @@ class JsonJvmField(
     val fieldName: String,
     val type: GenericType.Types,
     val arrayType: GenericType.Types? = null,
-    val currentValueString: String,
-    val possibleValues: List<String>? = null
+    val currentValueString: String = "",
+    val possibleValues: List<String>? = null,
+    val customValues: List<JsonJvmField>? = null
 ) {
     fun toReference(): GenericType? {
         return GlobalData.jvmFields.find { it.className == className && it.reference.name == fieldName }
@@ -43,7 +44,7 @@ class GenericType(
             return Types.UNKNOWN
         }
         return when (classType) {
-            Int::class.java, java.lang.Integer::class.java -> Types.INT
+            Int::class.java, Integer::class.java -> Types.INT
             Double::class.java, java.lang.Double::class.java -> Types.DOUBLE
             String::class.java -> Types.STRING
             Boolean::class.java, java.lang.Boolean::class.java -> Types.BOOLEAN
@@ -57,7 +58,8 @@ class GenericType(
                 if (reference.type.isArray) {
                     return Types.ARRAY
                 }
-                Types.UNKNOWN
+
+                Types.CUSTOM
             }
         }
     }
@@ -66,6 +68,35 @@ class GenericType(
         get() = getType(reference.type)
 
     fun toJsonType(): JsonJvmField {
+        val currentValue: Any? = try {
+            if (reference.isAccessible) {
+                reference.get(null)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+
+        if (type == Types.CUSTOM) {
+            val nestedFields = reference.type.declaredFields.mapNotNull { field ->
+                try {
+                    field.isAccessible = true
+                    val fieldValue = field.get(currentValue) // Get value from current object
+                    GenericType(field.declaringClass.name, field, fieldValue).toJsonType()
+                } catch (e: Exception) {
+                    null // Ignore fields that cannot be accessed
+                }
+            }
+
+            return JsonJvmField(
+                className = className,
+                fieldName = reference.name,
+                type = type,
+                customValues = nestedFields
+            )
+
+        }
         if (type == Types.ARRAY) {
             val arrayType = getType(reference.type.componentType)
 
