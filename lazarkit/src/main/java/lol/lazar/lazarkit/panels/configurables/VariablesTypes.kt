@@ -77,21 +77,24 @@ class GenericType(
         }.getOrNull()
 
         return when (type) {
-            Types.CUSTOM -> JsonJvmField(
-                className = className,
-                fieldName = reference.name,
-                type = type,
-                customValues = reference.type.declaredFields.mapNotNull { field ->
-                    runCatching {
+            Types.CUSTOM -> {
+                val nestedFields = reference.type.declaredFields.mapNotNull { field ->
+                    try {
                         field.isAccessible = true
-                        GenericType(
-                            field.declaringClass.name,
-                            field,
-                            field.get(currentValue)
-                        ).toJsonType()
-                    }.getOrNull()
+                        val fieldValue = currentValue?.let { field.get(it) }
+                        GenericType(field.declaringClass.name, field, fieldValue).toJsonType()
+                    } catch (e: Exception) {
+                        null
+                    }
                 }
-            )
+
+                JsonJvmField(
+                    className = className,
+                    fieldName = reference.name,
+                    type = type,
+                    customValues = nestedFields.takeIf { it.isNotEmpty() } // Only add if not empty
+                )
+            }
 
             Types.ARRAY -> JsonJvmField(
                 className = className,
