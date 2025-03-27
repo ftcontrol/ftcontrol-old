@@ -41,6 +41,7 @@ class GenericType(
 
     fun getType(classType: Class<*>?): Types {
         if (classType == null) {
+            println("DASH: Type is null")
             return Types.UNKNOWN
         }
         return when (classType) {
@@ -52,10 +53,10 @@ class GenericType(
             Long::class.java, java.lang.Long::class.java -> Types.LONG
             IntArray::class.java, DoubleArray::class.java, BooleanArray::class.java, FloatArray::class.java, LongArray::class.java -> Types.ARRAY
             else -> {
-                if (reference.type.isEnum) {
+                if (classType.isEnum) {
                     return Types.ENUM
                 }
-                if (reference.type.isArray) {
+                if (classType.isArray) {
                     return Types.ARRAY
                 }
 
@@ -81,6 +82,8 @@ class GenericType(
                 println("DASH: Found custom type: ${reference.type.name}")
                 println("DASH: Custom type fields: ${reference.type.declaredFields.map { it.name }}")
                 println("DASH: Custom type fields types: ${reference.type.declaredFields.map { it.type }}")
+                println("DASH: Custom type fields types enums: ${reference.type.declaredFields.map { it.type.isEnum }}")
+                println("DASH: Custom type fields my types: ${reference.type.declaredFields.map { getType(it.type) }}")
                 println("DASH: Custom type fields values: ${reference.type.declaredFields.map { it.get(currentValue) }}")
 
 
@@ -98,7 +101,7 @@ class GenericType(
                     className = className,
                     fieldName = reference.name,
                     type = type,
-                    customValues = nestedFields.takeIf { it.isNotEmpty() }
+                    customValues = null
                 )
             }
 
