@@ -1,6 +1,5 @@
 package lol.lazar.lazarkit.panels.configurables
 
-import android.content.Context
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -52,10 +51,16 @@ class ClassFinder {
         )
     )
 
+    data class ClassEntry(
+        val className: String,
+        val isConfigurable: Boolean = false,
+        val isCustomType: Boolean = false,
+    )
+
     lateinit var apkPath: String
 
-    private val allClasses: List<String> by lazy {
-        mutableListOf<String>().apply {
+    private val allClasses: List<ClassEntry> by lazy {
+        mutableListOf<ClassEntry>().apply {
             try {
                 ZipFile(apkPath).use { zipFile ->
                     val entries = zipFile.entries()
@@ -67,26 +72,39 @@ class ClassFinder {
                                 val dexBuffer =
                                     ByteBuffer.wrap(dexBytes).order(ByteOrder.LITTLE_ENDIAN)
                                 val classNames = dexBuffer.extractClassNamesFromDex()
-                                addAll(classNames.filter { className ->
+                                val filteredClassNames = classNames.filter { className ->
                                     val isNotIgnored =
                                         ignored.none { prefix -> className.startsWith(prefix) }
-                                    if (!isNotIgnored) return@filter false
-
+                                    return@filter isNotIgnored
+                                }
+                                val processedClassNames = filteredClassNames.mapNotNull {
                                     try {
-                                        val clazz = Class.forName(className)
+                                        val clazz = Class.forName(it)
                                         val hasConfigurable =
                                             clazz.isAnnotationPresent(Configurable::class.java)
                                         val hasIgnoreConfigurable =
                                             clazz.isAnnotationPresent(IgnoreConfigurable::class.java)
-                                        hasConfigurable && !hasIgnoreConfigurable
+                                        val hasCustomType =
+                                            clazz.isAnnotationPresent(ConfigurableCustomType::class.java)
+                                        val shouldKeep =
+                                            (hasConfigurable || hasCustomType) && !hasIgnoreConfigurable
+                                        if (!shouldKeep) {
+                                            return@mapNotNull null
+                                        }
+                                        ClassEntry(
+                                            className = it,
+                                            isConfigurable = hasConfigurable,
+                                            isCustomType = hasCustomType,
+                                        )
                                     } catch (e: ClassNotFoundException) {
-                                        println("DASH: Class not found: $className")
-                                        false
+                                        println("DASH: Class not found: $it")
+                                        null
                                     } catch (e: Exception) {
-                                        println("DASH: Error loading class $className: ${e.message}")
-                                        false
+                                        println("DASH: Error loading class $it: ${e.message}")
+                                        null
                                     }
-                                })
+                                }
+                                addAll(processedClassNames)
                             }
                         }
                     }
@@ -101,6 +119,13 @@ class ClassFinder {
         }
     }
 
-    val getAllClasses: List<String>
+
+    val getAllClasses: List<ClassEntry>
         get() = allClasses
+
+    val configurableClasses: List<ClassEntry>
+        get() = allClasses.filter { it.isConfigurable }
+
+    val customTypeClasses: List<ClassEntry>
+        get() = allClasses.filter { it.isCustomType }
 }
