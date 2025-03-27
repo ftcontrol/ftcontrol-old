@@ -18,11 +18,12 @@ class ConfigurablesManager {
         finder.configurableClasses.forEach { className ->
             println("DASH: $className")
         }
+        GlobalData.configurableClasses = finder.configurableClasses
         println("DASH: Found ${finder.customTypeClasses.size} custom type classes:")
         finder.customTypeClasses.forEach { className ->
             println("DASH: $className")
         }
-
+        GlobalData.customTypeClasses = finder.customTypeClasses
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
         variables.getJvmFields.forEach { info ->
             println("DASH: ${info.className}.${info.reference.name} = ${info.currentValue}")
