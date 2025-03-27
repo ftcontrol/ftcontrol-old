@@ -22,6 +22,11 @@ class TestClass {
             val age: Int
         )
 
+        data class NedtedType(
+            val name: String,
+            val custom: CustomType
+        )
+
         @JvmField
         var crazyArray = arrayOf(
             1,
@@ -36,6 +41,12 @@ class TestClass {
 
         @JvmField
         var testObject = CustomType("John", 30)
+
+        @JvmField
+        var nestedTestObject = NedtedType(
+            "John",
+            CustomType("Alice", 25)
+        )
 
         @JvmField
         var testString = "Hello, world!"
