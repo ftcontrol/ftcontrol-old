@@ -2,6 +2,7 @@ package lol.lazar.lazarkit.panels
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.OpModeData.OpModeStatus
+import lol.lazar.lazarkit.panels.configurables.ClassFinder
 import lol.lazar.lazarkit.panels.configurables.GenericType
 import lol.lazar.lazarkit.panels.configurables.VariablesManager
 import lol.lazar.lazarkit.panels.data.OpModeInfo
@@ -27,6 +28,9 @@ object GlobalData {
             )
         }
     var activeOpModeName = ""
+
+    var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
+    var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
 
     var jvmFields = listOf<GenericType>()
 }

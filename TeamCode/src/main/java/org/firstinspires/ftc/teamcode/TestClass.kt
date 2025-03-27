@@ -30,6 +30,14 @@ class TestClass {
             @JvmField var custom: CustomType
         )
 
+        data class UnknownType(
+            @JvmField var name: String,
+            @JvmField var age: Int
+        )
+
+        @JvmField
+        var unknownObject = UnknownType("John", 30)
+
         @JvmField
         var crazyArray = arrayOf(
             1,

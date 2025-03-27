@@ -59,7 +59,11 @@ class GenericType(
                     return Types.ARRAY
                 }
 
-                Types.CUSTOM
+                if (GlobalData.customTypeClasses.any { it.className == classType.name }) {
+                    return Types.CUSTOM
+                }
+
+                Types.UNKNOWN
             }
         }
     }
@@ -68,67 +72,59 @@ class GenericType(
         get() = getType(reference.type)
 
     fun toJsonType(): JsonJvmField {
-        val currentValue: Any? = try {
-            if (reference.isAccessible) {
-                reference.get(null)
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            null
-        }
+        val currentValue: Any? = runCatching {
+            if (reference.isAccessible) reference.get(null) else null
+        }.getOrNull()
 
-        if (type == Types.CUSTOM) {
-            val nestedFields = reference.type.declaredFields.mapNotNull { field ->
-                try {
-                    field.isAccessible = true
-                    val fieldValue = field.get(currentValue) // Get value from current object
-                    GenericType(field.declaringClass.name, field, fieldValue).toJsonType()
-                } catch (e: Exception) {
-                    null // Ignore fields that cannot be accessed
+        return when (type) {
+            Types.CUSTOM -> JsonJvmField(
+                className = className,
+                fieldName = reference.name,
+                type = type,
+                customValues = reference.type.declaredFields.mapNotNull { field ->
+                    runCatching {
+                        field.isAccessible = true
+                        GenericType(
+                            field.declaringClass.name,
+                            field,
+                            field.get(currentValue)
+                        ).toJsonType()
+                    }.getOrNull()
                 }
-            }
+            )
 
-            return JsonJvmField(
+            Types.ARRAY -> JsonJvmField(
                 className = className,
                 fieldName = reference.name,
                 type = type,
-                customValues = nestedFields
+                arrayType = getType(reference.type.componentType),
+                possibleValues = getArrayValues(currentValue)
             )
 
-        }
-        if (type == Types.ARRAY) {
-            val arrayType = getType(reference.type.componentType)
-
-            val arrayValues: List<String> = when (reference.type) {
-                IntArray::class.java -> (currentValue as? IntArray)?.map { it.toString() }
-                DoubleArray::class.java -> (currentValue as? DoubleArray)?.map { it.toString() }
-                BooleanArray::class.java -> (currentValue as? BooleanArray)?.map { it.toString() }
-                FloatArray::class.java -> (currentValue as? FloatArray)?.map { it.toString() }
-                LongArray::class.java -> (currentValue as? LongArray)?.map { it.toString() }
-                else -> (currentValue as? Array<*>)?.map { it.toString() }
-            } ?: emptyList()
-
-            return JsonJvmField(
+            Types.ENUM -> JsonJvmField(
                 className = className,
                 fieldName = reference.name,
                 type = type,
-                arrayType = arrayType,
-                currentValueString = arrayValues.joinToString(", "),
-                possibleValues = arrayValues
+                currentValueString = currentValue.toString(),
+                possibleValues = reference.type.enumConstants.map { it.toString() }
+            )
+
+            else -> JsonJvmField(
+                className = className,
+                fieldName = reference.name,
+                type = type,
+                currentValueString = currentValue.toString(),
             )
         }
+    }
 
-        val possibleValues: List<String>? = when (type) {
-            Types.ENUM -> reference.type.enumConstants.map { it.toString() }
-            else -> null
-        }
-        return JsonJvmField(
-            className = className,
-            fieldName = reference.name,
-            type = type,
-            currentValueString = currentValue.toString(),
-            possibleValues = possibleValues
-        )
+    private fun getArrayValues(value: Any?): List<String> = when (value) {
+        is IntArray -> value.map { it.toString() }
+        is DoubleArray -> value.map { it.toString() }
+        is BooleanArray -> value.map { it.toString() }
+        is FloatArray -> value.map { it.toString() }
+        is LongArray -> value.map { it.toString() }
+        is Array<*> -> value.mapNotNull { it?.toString() }
+        else -> emptyList()
     }
 }

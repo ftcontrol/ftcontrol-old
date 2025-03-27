@@ -30,11 +30,11 @@ socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
 })
 
-setTimeout(() => {
-  socket.sendMessage({ kind: "getOpmodes" })
-  socket.sendMessage({ kind: "getActiveOpMode" })
-  socket.sendMessage({ kind: "getJvmFieldsRequest" })
-}, 1500)
+// setTimeout(() => {
+//   socket.sendMessage({ kind: "getOpmodes" })
+//   socket.sendMessage({ kind: "getActiveOpMode" })
+//   socket.sendMessage({ kind: "getJvmFieldsRequest" })
+// }, 1500)
 
 export const gamepads = new GamepadManager()
 
