@@ -14,8 +14,12 @@ class ConfigurablesManager {
 
     fun findConfigurables(context: Context) {
         finder.apkPath = context.packageCodePath
-        println("DASH: Found ${finder.getAllClasses.size} configurable classes:")
-        finder.getAllClasses.forEach { className ->
+        println("DASH: Found ${finder.configurableClasses.size} configurable classes:")
+        finder.configurableClasses.forEach { className ->
+            println("DASH: $className")
+        }
+        println("DASH: Found ${finder.customTypeClasses.size} custom type classes:")
+        finder.customTypeClasses.forEach { className ->
             println("DASH: $className")
         }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import lol.lazar.lazarkit.panels.configurables.Configurable
+import lol.lazar.lazarkit.panels.configurables.ConfigurableCustomType
 
 @Configurable
 class TestClass {
@@ -17,11 +18,13 @@ class TestClass {
         @JvmField
         var testArray2 = arrayOf(1, 2, 3)
 
+        @ConfigurableCustomType
         data class CustomType(
             @JvmField var name: String,
             @JvmField var age: Int
         )
 
+        @ConfigurableCustomType
         data class NestedType(
             @JvmField var name: String,
             @JvmField var custom: CustomType

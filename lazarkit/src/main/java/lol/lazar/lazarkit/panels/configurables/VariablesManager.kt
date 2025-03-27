@@ -3,25 +3,25 @@ package lol.lazar.lazarkit.panels.configurables
 import java.lang.reflect.Modifier
 
 class VariablesManager(
-    private val allClasses: () -> List<String>
+    private val allClasses: () -> List<ClassFinder.ClassEntry>
 ) {
 
     private val jvmFields: List<GenericType> by lazy {
         mutableListOf<GenericType>().apply {
-            allClasses().forEach { className ->
+            allClasses().forEach { entry ->
                 try {
-                    val clazz = Class.forName(className)
-                    println("DASH: Inspecting outer class: $className")
-                    addFieldsFromClass(clazz, className)
+                    val clazz = Class.forName(entry.className)
+                    println("DASH: Inspecting outer class: ${entry.className}")
+                    addFieldsFromClass(clazz, entry.className)
                     try {
-                        val companionClazz = Class.forName("$className\$Companion")
-                        println("DASH: Found and inspecting Companion class: $className\$Companion")
-                        addFieldsFromClass(companionClazz, className)
+                        val companionClazz = Class.forName("${entry.className}\$Companion")
+                        println("DASH: Found and inspecting Companion class: ${entry.className}\$Companion")
+                        addFieldsFromClass(companionClazz, entry.className)
                     } catch (e: ClassNotFoundException) {
-                        println("DASH: No Companion class found for $className")
+                        println("DASH: No Companion class found for ${entry.className}")
                     }
                 } catch (e: Exception) {
-                    println("DASH: Error inspecting class $className: ${e.message}")
+                    println("DASH: Error inspecting class ${entry.className}: ${e.message}")
                 }
             }
         }
