@@ -78,6 +78,12 @@ class GenericType(
 
         return when (type) {
             Types.CUSTOM -> {
+                println("DASH: Found custom type: ${reference.type.name}")
+                println("DASH: Custom type fields: ${reference.type.declaredFields.map { it.name }}")
+                println("DASH: Custom type fields types: ${reference.type.declaredFields.map { it.type }}")
+                println("DASH: Custom type fields values: ${reference.type.declaredFields.map { it.get(currentValue) }}")
+
+
                 val nestedFields = reference.type.declaredFields.mapNotNull { field ->
                     try {
                         field.isAccessible = true
@@ -92,7 +98,7 @@ class GenericType(
                     className = className,
                     fieldName = reference.name,
                     type = type,
-                    customValues = nestedFields.takeIf { it.isNotEmpty() } // Only add if not empty
+                    customValues = nestedFields.takeIf { it.isNotEmpty() }
                 )
             }
 

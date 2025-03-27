@@ -153,6 +153,7 @@
           line.possibleValues
         )}
       </p>
+      <p>{JSON.stringify(line)}</p>
     </div>
   {/each}
 </section>
