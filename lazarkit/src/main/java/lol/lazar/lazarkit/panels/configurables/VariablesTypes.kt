@@ -107,13 +107,39 @@ class GenericType(
                 }
             }
 
-            Types.ARRAY -> JsonJvmField(
-                className = className,
-                fieldName = reference.name,
-                type = type,
-                arrayType = getType(reference.type.componentType),
-                possibleValues = getArrayValues(currentValue)
-            )
+            Types.ARRAY -> {
+                println("DASH: ")
+                println("DASH: Found an array of name: ${reference.name}")
+                println("DASH: Found an array of type: ${reference.type.componentType}")
+                println("DASH: Found an array of my type: ${getType(reference.type.componentType)}")
+                println("DASH: Current value: $currentValue")
+
+
+                val innerType = getType(reference.type.componentType)
+                if(innerType == Types.CUSTOM){
+
+                }
+
+                if(innerType == Types.UNKNOWN){
+
+                }
+
+                (currentValue as? Array<*>)?.forEachIndexed { index, value ->
+                    println("DASH: [$index] = $value (${value?.javaClass?.name ?: "null"})")
+                }
+
+
+
+                println("DASH: ")
+
+                JsonJvmField(
+                    className = className,
+                    fieldName = reference.name,
+                    type = type,
+                    arrayType = innerType,
+                    possibleValues = getArrayValues(currentValue)
+                )
+            }
 
             Types.ENUM -> JsonJvmField(
                 className = className,
