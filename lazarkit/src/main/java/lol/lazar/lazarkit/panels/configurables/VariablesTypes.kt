@@ -81,37 +81,20 @@ class GenericType(
     }
 
     fun toJsonType(): JsonJvmField {
-//        val currentValue: Any? = runCatching {
-//            if (reference.isAccessible) reference.get(null) else null
-//        }.getOrNull()
-
         return when (type) {
             Types.CUSTOM -> {
                 try {
-                    println("DASH: ")
-                    println("DASH: Found custom FIELD: ${reference.name} ${reference.type.name}")
-                    val nestedFields = reference.type.declaredFields.map {
-                        println("   DASH: Custom type field: ${it.name}")
-                        println("   DASH: Custom type field type: ${it.type}")
-                        println("   DASH: Custom type fields my types: ${getType(it.type)}")
-                        println("   DASH: Custom type field value: ${it.get(currentValue)}")
-
-                        val value = it.get(currentValue)
-
-                        val genericAnswer =
-                            GenericType(it.declaringClass.name, it, value)
-                        println("   DASH: Custom type field struct: $genericAnswer")
-                        println("   DASH: Custom type field json: ${genericAnswer.toJsonType()}")
-                        println("   DASH: ")
-
-                        genericAnswer.toJsonType()
-                    }
-
                     JsonJvmField(
                         className = className,
                         fieldName = reference.name,
                         type = type,
-                        customValues = nestedFields
+                        customValues = reference.type.declaredFields.map {
+                            GenericType(
+                                it.declaringClass.name,
+                                it,
+                                it.get(currentValue)
+                            ).toJsonType()
+                        }
                     )
                 } catch (e: Exception) {
                     println("DASH: Error getting custom type: ${e.message}")
