@@ -19,6 +19,10 @@ class JsonJvmField(
     fun toReference(): GenericType? {
         return GlobalData.jvmFields.find { it.className == className && it.reference.name == fieldName }
     }
+
+    override fun toString(): String {
+        return "JsonJvmField(className='$className', fieldName='$fieldName', type=$type, arrayType=$arrayType, currentValueString='$currentValueString', possibleValues=$possibleValues, customValues=$customValues)"
+    }
 }
 
 class GenericType(
@@ -72,23 +76,35 @@ class GenericType(
     val type: Types
         get() = getType(reference.type)
 
+    override fun toString(): String {
+        return "GenericType(className='$className', reference=$reference, currentValue=$currentValue)"
+    }
+
     fun toJsonType(): JsonJvmField {
-        val currentValue: Any? = runCatching {
-            if (reference.isAccessible) reference.get(null) else null
-        }.getOrNull()
+//        val currentValue: Any? = runCatching {
+//            if (reference.isAccessible) reference.get(null) else null
+//        }.getOrNull()
 
         return when (type) {
             Types.CUSTOM -> {
                 try {
-                    println("DASH: Found custom type: ${reference.name} ${reference.type.name}")
+                    println("DASH: ")
+                    println("DASH: Found custom FIELD: ${reference.name} ${reference.type.name}")
                     val nestedFields = reference.type.declaredFields.map {
-                        println("DASH: Custom type field: ${it.name}")
-                        println("DASH: Custom type field type: ${it.type}")
-                        println("DASH: Custom type fields my types: ${getType(it.type)}")
-                        println("DASH: Custom type field value: ${it.get(currentValue)}")
+                        println("   DASH: Custom type field: ${it.name}")
+                        println("   DASH: Custom type field type: ${it.type}")
+                        println("   DASH: Custom type fields my types: ${getType(it.type)}")
+                        println("   DASH: Custom type field value: ${it.get(currentValue)}")
 
-                        GenericType(it.declaringClass.name, it, it.get(currentValue))
-                            .toJsonType()
+                        val value = it.get(currentValue)
+
+                        val genericAnswer =
+                            GenericType(it.declaringClass.name, it, value)
+                        println("   DASH: Custom type field struct: $genericAnswer")
+                        println("   DASH: Custom type field json: ${genericAnswer.toJsonType()}")
+                        println("   DASH: ")
+
+                        genericAnswer.toJsonType()
                     }
 
                     JsonJvmField(
@@ -97,7 +113,7 @@ class GenericType(
                         type = type,
                         customValues = nestedFields
                     )
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     println("DASH: Error getting custom type: ${e.message}")
                     e.printStackTrace()
                     JsonJvmField(
