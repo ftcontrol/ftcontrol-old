@@ -31,6 +31,7 @@ socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
   for (const field of info.jvmFields) {
     field.newValueString = field.valueString
+    field.isValid = true
   }
 })
 
@@ -41,6 +42,7 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
         if (newField.fieldName == oldField.fieldName) {
           oldField.valueString = newField.valueString
           oldField.newValueString = oldField.valueString
+          oldField.isValid = true
         }
       }
     }
