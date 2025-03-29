@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Varta:wght@300..700&display=swap");
 
+:root {
+  --bg: #f6f6f6;
+  --card: #ffffff;
+}
+
 *,
 *::after,
 *::before {
@@ -7,6 +12,7 @@
 }
 
 body {
+  background-color: var(--bg);
   padding: 0;
   margin: 0;
 

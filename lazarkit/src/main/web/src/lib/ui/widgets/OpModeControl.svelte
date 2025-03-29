@@ -1,0 +1,163 @@
+<script lang="ts">
+  import { info, socket } from "$lib"
+  import type { OpMode } from "$lib/socket.svelte"
+  import { Section, Button } from "$primitives"
+  import OpModeList from "../OpModeList.svelte"
+
+  let modalOpened = $state<"" | "autos" | "teleops">("")
+
+  function toggle(name: "autos" | "teleops") {
+    if (modalOpened != name) {
+      modalOpened = name
+    } else {
+      modalOpened = ""
+    }
+  }
+
+  function selectedOpMode(opMode: OpMode) {
+    currentOpMode = opMode
+    modalOpened = ""
+  }
+
+  $effect(() => {
+    console.log(info.activeOpMode)
+    if (info.activeOpMode == " ") {
+      return
+    }
+    console.log("Length: ", info.opModes.length)
+
+    let found = null
+
+    for (const item of info.opModes) {
+      if (item.name == info.activeOpMode) {
+        found = item
+      }
+    }
+
+    if (found != null) {
+      currentOpMode = found
+    }
+  })
+
+  let currentOpMode = $state<OpMode>({
+    name: "",
+    group: "",
+    flavour: "AUTONOMOUS",
+  })
+</script>
+
+{#snippet autoButton()}
+  <button slot="beforeTitle" onclick={() => toggle("autos")}>Autos</button>
+  {#if modalOpened == "autos"}
+    <div class="modal autos">
+      <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
+    </div>
+  {/if}
+{/snippet}
+{#snippet teleopsButton()}
+  <button slot="afterTitle" onclick={() => toggle("teleops")}>TeleOps</button>
+  {#if modalOpened == "teleops"}
+    <div class="modal teleops">
+      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
+    </div>
+  {/if}
+{/snippet}
+<Section
+  title={"OpMode Control"}
+  beforeTitle={autoButton}
+  afterTitle={teleopsButton}
+>
+  {#if currentOpMode.name == ""}
+    <p class="title">Nothing selected</p>
+  {:else}
+    <p class="title">
+      <span class="title_small">{currentOpMode.flavour}</span>
+      {currentOpMode.name}
+    </p>
+  {/if}
+
+  <div class="flex">
+    <Button
+      disabled={currentOpMode.name == "" ||
+        (info.activeOpModeStatus == "running" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (info.activeOpModeStatus == "stopped" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
+      onclick={() => {
+        socket.sendMessage({
+          kind: "initOpMode",
+          opModeName: currentOpMode.name,
+        })
+      }}
+    >
+      Initialize
+    </Button>
+    <Button
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
+        currentOpMode.name == "" ||
+        info.activeOpModeStatus != "init"}
+      onclick={() => {
+        socket.sendMessage({ kind: "startActiveOpMode" })
+      }}
+    >
+      Start
+    </Button>
+    <Button
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
+        currentOpMode.name == "" ||
+        info.activeOpModeStatus == "stopped"}
+      onclick={() => {
+        socket.sendMessage({ kind: "stopActiveOpMode" })
+      }}
+    >
+      Stop
+    </Button>
+  </div>
+</Section>
+
+<style>
+  div.modal {
+    width: fit-content;
+    position: absolute;
+    background-color: var(--card);
+    padding: 1rem;
+    z-index: 100;
+    top: 3rem;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+  }
+  .flex {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  .autos {
+    left: 0;
+  }
+  .teleops {
+    right: 0;
+  }
+
+  .title {
+    font-size: 2rem;
+    text-align: center;
+    position: relative;
+    margin: 0;
+    margin-bottom: 1rem;
+  }
+
+  .title_small {
+    font-size: 1rem;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    bottom: -1rem;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+    margin: 0;
+  }
+</style>

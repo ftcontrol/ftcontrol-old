@@ -17,8 +17,9 @@
 
 <style>
   nav {
-    outline: 1px solid black;
     padding: 1rem 1rem 1rem 1rem;
+    background-color: var(--card);
+    border-radius: 0 16px 16px 0;
   }
 
   .gap {
