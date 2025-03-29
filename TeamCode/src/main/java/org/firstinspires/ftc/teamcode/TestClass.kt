@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
-import lol.lazar.lazarkit.panels.configurables.Configurable
-import lol.lazar.lazarkit.panels.configurables.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
 
 @Configurable
 class TestClass {

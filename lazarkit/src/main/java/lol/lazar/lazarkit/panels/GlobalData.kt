@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.OpModeData.OpModeStatus
 import lol.lazar.lazarkit.panels.configurables.ClassFinder
 import lol.lazar.lazarkit.panels.configurables.GenericType
-import lol.lazar.lazarkit.panels.configurables.VariablesManager
 import lol.lazar.lazarkit.panels.data.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 

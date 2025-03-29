@@ -144,7 +144,16 @@
 <section>
   <h3>Variables</h3>
   {#each info.jvmFields as line}
-    <Field {line} />
+    <div class="item" style={line.type == "UNKNOWN" ? "opacity: 0.3;" : ""}>
+      <p>{line.className.split(".").at(-1)} {line.fieldName} {line.type}</p>
+      <p>
+        {line.valueString}
+      </p>
+      {#if line.type == "ENUM"}
+        <p>{JSON.stringify(line.possibleValues)}</p>
+      {/if}
+      {JSON.stringify(line)}
+    </div>
   {/each}
 </section>
 
@@ -153,6 +162,9 @@
 {/if}
 
 <style>
+  .item {
+    border: 2px solid black;
+  }
   h3 {
     text-align: center;
   }
