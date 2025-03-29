@@ -46,6 +46,11 @@ class TestClass {
             3,
             CustomType("Alice", 25),
             CustomType("Bob", 35),
+            NestedType(
+                "John",
+                CustomType("Alice", 25)
+            ),
+            UnknownType("John", 30),
             "Hello, world!",
             TestEnum.VALUE1,
             true

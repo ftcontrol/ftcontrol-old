@@ -125,149 +125,116 @@ class GenericType(
             Types.ARRAY -> {
                 val innerType = getType(reference.type.componentType)
 
-                println("DASH: Found an array of name: ${reference.name}")
-                println("DASH: Found an array of type: ${reference.type.componentType}")
-                println("DASH: Found an array of my type: $innerType")
-                println("DASH: Current value: $currentValue")
+                println("DASH: Processing array field '${reference.name}' with type '$innerType'")
 
                 val jsonFields = mutableListOf<JsonJvmField>()
 
-                if (innerType == Types.CUSTOM) {
-                    val customClass = reference.type.componentType
-                    println("DASH: Processing custom type array: ${customClass.name}")
+                when (innerType) {
+                    Types.CUSTOM -> {
+                        val customClass = reference.type.componentType
+                        println("DASH: Processing custom type array: ${customClass.name}")
 
-                    (currentValue as? Array<*>)?.forEachIndexed { i, value ->
-                        if (value != null) {
-                            println("   DASH: Processing element at index $i: ${value.javaClass.name}")
-
-                            val fields = value.javaClass.declaredFields
-                            val fieldData = fields.map { field ->
-                                field.isAccessible = true
-                                val fieldValue = field.get(value)
-                                GenericType(
-                                    field.declaringClass.name,
-                                    field,
-                                    fieldValue,
-                                    index = i
-                                ).toJsonType()
-                            }
-
-                            jsonFields.addAll(fieldData)
-                        }
-                    }
-                } else if (innerType == Types.UNKNOWN) {
-                    (currentValue as? Array<*>)?.forEachIndexed { i, value ->
-                        println("   DASH: index: $i -> [$value] (${value?.javaClass?.name ?: "null"})")
-                        val itemType = getType(value?.javaClass)
-                        if (itemType == Types.CUSTOM) {
-                            val fields = value?.javaClass?.declaredFields
-                            val fieldData = fields?.map { field ->
-                                field.isAccessible = true
-                                val fieldValue = field.get(value)
-                                GenericType(
-                                    field.declaringClass.name,
-                                    field,
-                                    fieldValue,
-                                    index = i
-                                ).toJsonType()
-                            }
-                            if (fieldData != null) {
+                        (currentValue as? Array<*>)?.forEachIndexed { i, value ->
+                            if (value != null) {
+                                val fieldData = value.javaClass.declaredFields.map { field ->
+                                    field.isAccessible = true
+                                    GenericType(
+                                        field.declaringClass.name,
+                                        field,
+                                        field.get(value),
+                                        index = i
+                                    ).toJsonType()
+                                }
                                 jsonFields.addAll(fieldData)
                             }
-                        } else {
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = itemType,
-                                    arrayType = innerType,
-                                    currentValueString = value.toString(),
-                                )
-                            )
                         }
-
                     }
-                } else {
-                    when (currentValue) {
-                        is IntArray -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
-                                )
-                            )
-                        }
 
-                        is DoubleArray -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
-                                )
-                            )
-                        }
+                    Types.UNKNOWN -> {
+                        (currentValue as? Array<*>)?.forEachIndexed { i, value ->
+                            println("   DASH: index: $i -> [$value] (${value?.javaClass?.name ?: "null"})")
 
-                        is BooleanArray -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
+                            val itemType = getType(value?.javaClass)
+                            if (itemType == Types.ARRAY) {
+                                // Handle nested arrays recursively
+                                jsonFields.add(
+                                    GenericType(
+                                        className,
+                                        reference,
+                                        value,
+                                        index = i
+                                    ).toJsonType()
                                 )
-                            )
-                        }
-
-                        is FloatArray -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
+                            } else if (itemType == Types.CUSTOM) {
+                                val fields = value?.javaClass?.declaredFields
+                                val fieldData = fields?.map { field ->
+                                    field.isAccessible = true
+                                    val fieldValue = field.get(value)
+                                    GenericType(
+                                        field.declaringClass.name,
+                                        field,
+                                        fieldValue,
+                                        index = i
+                                    ).toJsonType()
+                                }
+                                if (fieldData != null) {
+                                    jsonFields.addAll(fieldData)
+                                }
+                            } else {
+                                jsonFields.add(
+                                    JsonJvmField(
+                                        className = className,
+                                        fieldName = reference.name,
+                                        type = itemType,
+                                        arrayType = innerType,
+                                        currentValueString = value.toString(),
+                                        index = i
+                                    )
                                 )
-                            )
+                            }
                         }
+                    }
 
-                        is LongArray -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
+                    else -> {
+                        when (currentValue) {
+                            is IntArray -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
                                 )
-                            )
-                        }
+                            }
 
-                        is Array<*> -> currentValue.forEachIndexed { i, value ->
-                            jsonFields.add(
-                                JsonJvmField(
-                                    className = className,
-                                    fieldName = reference.name,
-                                    type = type,
-                                    arrayType = innerType,
-                                    possibleValues = listOf(value.toString()),
-                                    index = i
+                            is DoubleArray -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
                                 )
-                            )
-                        }
+                            }
 
-                        else -> {}
+                            is BooleanArray -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
+                                )
+                            }
+
+                            is FloatArray -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
+                                )
+                            }
+
+                            is LongArray -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
+                                )
+                            }
+
+                            is Array<*> -> currentValue.forEachIndexed { i, value ->
+                                jsonFields.add(
+                                    JsonJvmField(className, reference.name, type, arrayType = innerType, possibleValues = listOf(value.toString()), index = i)
+                                )
+                            }
+
+                            else -> {}
+                        }
                     }
                 }
 
