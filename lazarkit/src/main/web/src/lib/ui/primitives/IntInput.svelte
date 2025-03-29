@@ -3,13 +3,18 @@
     startValue = $bindable(),
     currentValue = $bindable(),
     isValid = $bindable(),
+    value = $bindable(),
   }: {
     startValue: string
     currentValue: string
     isValid: boolean
+    value: any
   } = $props()
 
-  let value = $state(parseInt(startValue))
+  $effect(() => {
+    if (value != null) return
+    value = parseInt(startValue)
+  })
 
   let innerIsValid = $derived.by(() => {
     for (const char of value.toString()) {
