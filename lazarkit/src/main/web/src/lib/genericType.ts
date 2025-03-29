@@ -16,6 +16,7 @@ export interface BaseGenericTypeJson {
   fieldName: string
   type: Types
   valueString: string
+  newValueString: string
 }
 
 export interface EnumTypeJson extends BaseGenericTypeJson {

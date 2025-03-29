@@ -1,28 +1,23 @@
 <script lang="ts">
   let {
+    startValue = $bindable(),
     currentValue = $bindable(),
-    onchange = (newValue: boolean) => {},
   }: {
-    currentValue: boolean
-    onchange?: (newValue: boolean) => void
+    startValue: string
+    currentValue: string
   } = $props()
-
-  function select(newValue: boolean) {
-    currentValue = newValue
-    onchange(newValue)
-  }
 </script>
 
 <div class="input">
-  <div class:selected={currentValue == false} class="selector"></div>
+  <div class:selected={currentValue == "false"} class="selector"></div>
   <button
     onclick={() => {
-      select(true)
+      currentValue = "true"
     }}>True</button
   >
   <button
     onclick={() => {
-      select(false)
+      currentValue = "false"
     }}>False</button
   >
 </div>

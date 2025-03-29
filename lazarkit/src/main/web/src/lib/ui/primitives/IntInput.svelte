@@ -1,22 +1,22 @@
 <script lang="ts">
   let {
+    startValue = $bindable(),
     currentValue = $bindable(),
-    onchange = (newValue: number) => {},
   }: {
-    currentValue: number
-    onchange?: (newValue: number) => void
+    startValue: string
+    currentValue: string
   } = $props()
 
-  function setValue(newValue: number) {
-    onchange(newValue)
-  }
-  let startValue = currentValue
+  let value = $state(parseInt(startValue))
 </script>
 
-{#if startValue != currentValue}
-  <button onclick={() => setValue(currentValue)}> Update </button><br />
-{/if}
-<input type="number" bind:value={currentValue} />
+<input
+  type="number"
+  bind:value
+  oninput={() => {
+    currentValue = value.toString()
+  }}
+/>
 
 <style>
 </style>

@@ -29,6 +29,9 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
+  for (const field of info.jvmFields) {
+    field.newValueString = field.valueString
+  }
 })
 
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
@@ -37,6 +40,7 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
       if (newField.className == oldField.className) {
         if (newField.fieldName == oldField.fieldName) {
           oldField.valueString = newField.valueString
+          oldField.newValueString = oldField.valueString
         }
       }
     }
