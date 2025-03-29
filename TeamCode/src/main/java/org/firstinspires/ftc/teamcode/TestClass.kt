@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode
 
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 
+@IgnoreConfigurable
 @Configurable
 class TestClass {
     companion object {

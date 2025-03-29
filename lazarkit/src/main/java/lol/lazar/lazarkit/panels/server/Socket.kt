@@ -4,6 +4,7 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
+import lol.lazar.lazarkit.panels.configurables.GenericType
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
@@ -17,6 +18,7 @@ import lol.lazar.lazarkit.panels.data.StopActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.TelemetryPacket
 import lol.lazar.lazarkit.panels.data.TestObject
 import lol.lazar.lazarkit.panels.data.TimeObject
+import lol.lazar.lazarkit.panels.data.UpdatedJvmFields
 import lol.lazar.lazarkit.panels.data.json
 import lol.lazar.lazarkit.panels.data.toJson
 import java.io.IOException
@@ -47,6 +49,8 @@ class Socket(
             }
         }
     }
+
+    fun sendAllClients(data: JSONData) = send(data)
 
     fun broadcastActiveOpMode() {
         if (!isAlive) return
@@ -196,29 +200,33 @@ class Socket(
                     }
 
                     is ReceivedJvmFields -> {
-//                        println("DASH: Received JvmFields: ${decoded.fields}")
+                        println("DASH: Received JvmFields: ${decoded.fields}")
 
-//                        decoded.fields.forEach {
-//                            val field = it.toReference()
+                        sendAllClients(
+                            UpdatedJvmFields(
+                                decoded.fields
+                            )
+                        )
+
+                        decoded.fields.forEach {
+                            val ref = it.toReference() ?: return
+
+                            println("DASH: Found field: ${ref.className}.${ref.name} | Type: ${ref.type}")
+                            println("DASH: Value String: ${it.valueString}")
+                            println("DASH: Value: ${it.valueAsType}")
+
+                            when (ref.type) {
+                                GenericType.Types.INT -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
+
+                                else -> {}
+                            }
+
 //
 //                            if (field != null) {
-//                                val value = it.currentValueString
 //
 //                                when (it.type) {
-//                                    GenericType.Types.INT -> {
-//                                        field.reference.set(
-//                                            null, when {
-//                                                value.toIntOrNull() != null -> value.toInt()
-//                                                value.toFloatOrNull() != null -> value.toFloat()
-//                                                    .toInt()
-//
-//                                                value.toDoubleOrNull() != null -> value.toDouble()
-//                                                    .toInt()
-//
-//                                                else -> value.toInt()
-//                                            }
-//                                        )
-//                                    }
 //
 //                                    GenericType.Types.DOUBLE -> field.reference.set(
 //                                        null,
@@ -259,7 +267,7 @@ class Socket(
 //                                }
 //
 //                            }
-//                        }
+                        }
                     }
 
                     else -> {
