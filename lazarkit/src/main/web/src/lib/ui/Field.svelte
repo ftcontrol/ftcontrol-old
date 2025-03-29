@@ -1,18 +1,16 @@
 <script lang="ts">
-  import type { JvmFieldInfo } from "$lib/socket.svelte"
-  import FieldArray from "./FieldArray.svelte"
-  import FieldRec from "./FieldRec.svelte"
+  import type { CustomTypeJson, GenericTypeJson } from "$lib/genericType"
 
-  let { line }: { line: JvmFieldInfo } = $props()
+  let { line }: { line: GenericTypeJson } = $props()
 
-  function getNesting(input: JvmFieldInfo, level = 0) {
+  function getNesting(input: CustomTypeJson, level = 0) {
     var components: {
-      item: JvmFieldInfo
+      item: GenericTypeJson
       level: number
     }[] = []
 
     for (const item of input.customValues) {
-      if (item.type === "CUSTOM" && item.customValues) {
+      if (item.type === "CUSTOM") {
         components.push(...getNesting(item, level + 1))
       } else {
         components.push({ item, level })
@@ -23,29 +21,27 @@
   }
 </script>
 
-<div class="var" style={line.type == "UNKNOWN" ? "opacity: 0.3;" : ""}>
-  {#if ["INT", "DOUBLE", "STRING", "ENUM"].includes(line.type)}
-    <FieldRec {line} />
-  {:else if line.type == "ENUM"}
-    <p>{line.currentValueString} / {line.possibleValues}</p>
-  {:else if line.type == "CUSTOM"}
-    <p>
-      {line.className} | {line.fieldName} | {line.type} | {line.arrayType}
-    </p>
+<div class="item" style={line.type == "UNKNOWN" ? "opacity: 0.3;" : ""}>
+  <p>{line.className.split("." + line.className.split(".").at(-1))[0]}</p>
 
-    {#each getNesting(line) as item}
-      <p>{item.level}</p>
-      <FieldRec line={item.item} />
-    {/each}
-  {:else if line.type == "ARRAY"}
-    <FieldArray {line} />
-  {:else}
-    <FieldRec {line} />
+  <p>{line.className.split(".").at(-1)} {line.fieldName} {line.type}</p>
+  <p>
+    {line.valueString}
+  </p>
+  {#if line.type == "ENUM"}
+    <p>{JSON.stringify(line.possibleValues)}</p>
   {/if}
+  {#if line.type == "CUSTOM"}
+    <p>{JSON.stringify(line.customValues)}</p>
+  {/if}
+  {#if line.type == "ARRAY"}
+    <p>{JSON.stringify(line.arrayValues)}</p>
+  {/if}
+  {JSON.stringify(line)}
 </div>
 
 <style>
-  .var {
+  .item {
     outline: 1px solid black;
   }
 </style>

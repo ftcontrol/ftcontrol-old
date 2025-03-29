@@ -10,6 +10,7 @@ class GenericType(
     var parentReference: GenericType? = null,
 ) {
 //    TODO: optimize using lazy
+//    TODO: decorator for quick values to select from
 
     enum class Types {
         INT,
