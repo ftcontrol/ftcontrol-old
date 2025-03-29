@@ -23,7 +23,7 @@
 
   function isChanged(fields: GenericTypeJson[]): boolean {
     for (const field of fields) {
-      if (field.valueString != field.newValueString) {
+      if (field.valueString != field.newValueString && field.isValid) {
         return true
       }
     }
@@ -38,6 +38,7 @@
   }
 
   function sendFieldUpdate(item: GenericTypeJson) {
+    if (!item.isValid) return
     socket.sendMessage({
       kind: "jvmFields",
       fields: [
@@ -55,7 +56,7 @@
   function sendAllUpdates(fields: GenericTypeJson[]) {
     var changedFields = []
     for (const field of fields) {
-      if (field.valueString != field.newValueString) {
+      if (field.valueString != field.newValueString && field.isValid) {
         changedFields.push({
           className: field.className,
           fieldName: field.fieldName,
@@ -84,11 +85,16 @@
     <div>
       <h3>{key}</h3>
       {#each items as item}
-        <div class="item" class:disabled={item.type == Types.UNKNOWN}>
-          <p>{item.fieldName} {item.type}</p>
-          {#if item.valueString != item.newValueString}
+        <form
+          class="item"
+          class:disabled={item.type == Types.UNKNOWN}
+          onsubmit={() => sendFieldUpdate(item)}
+        >
+          <p>{item.fieldName} {item.type} {item.isValid}</p>
+          {#if item.valueString != item.newValueString && item.isValid}
             <button
               onclick={() => {
+                if (!item.isValid) return
                 sendFieldUpdate(item)
               }}>Update</button
             >
@@ -105,6 +111,7 @@
             />
           {:else if [Types.INT, Types.LONG].includes(item.type)}
             <IntInput
+              bind:isValid={item.isValid}
               bind:startValue={item.valueString}
               bind:currentValue={item.newValueString}
             />
@@ -123,7 +130,7 @@
             {item.valueString}
           </p>
           {JSON.stringify(item)} -->
-        </div>
+        </form>
       {/each}
     </div>
   {/each}
