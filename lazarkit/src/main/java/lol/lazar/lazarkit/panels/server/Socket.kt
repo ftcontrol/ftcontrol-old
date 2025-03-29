@@ -4,7 +4,6 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
-import lol.lazar.lazarkit.panels.configurables.GenericType
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
@@ -197,70 +196,70 @@ class Socket(
                     }
 
                     is ReceivedJvmFields -> {
-                        println("DASH: Received JvmFields: ${decoded.fields}")
+//                        println("DASH: Received JvmFields: ${decoded.fields}")
 
-                        decoded.fields.forEach {
-                            val field = it.toReference()
-
-                            if (field != null) {
-                                val value = it.currentValueString
-
-                                when (it.type) {
-                                    GenericType.Types.INT -> {
-                                        field.reference.set(
-                                            null, when {
-                                                value.toIntOrNull() != null -> value.toInt()
-                                                value.toFloatOrNull() != null -> value.toFloat()
-                                                    .toInt()
-
-                                                value.toDoubleOrNull() != null -> value.toDouble()
-                                                    .toInt()
-
-                                                else -> value.toInt()
-                                            }
-                                        )
-                                    }
-
-                                    GenericType.Types.DOUBLE -> field.reference.set(
-                                        null,
-                                        value.toDouble()
-                                    )
-
-                                    GenericType.Types.STRING -> field.reference.set(null, value)
-                                    GenericType.Types.BOOLEAN -> field.reference.set(
-                                        null,
-                                        value.toBoolean()
-                                    )
-
-                                    GenericType.Types.FLOAT -> field.reference.set(
-                                        null,
-                                        value.toFloat()
-                                    )
-
-                                    GenericType.Types.LONG -> field.reference.set(
-                                        null,
-                                        value.toLong()
-                                    )
-
-                                    GenericType.Types.ENUM -> {
-                                        val enumValue =
-                                            field.reference.type.enumConstants.firstOrNull {
-                                                it.toString() == value
-                                            }
-                                        if (enumValue != null) {
-                                            field.reference.set(null, enumValue)
-                                        } else {
-                                            //
-                                        }
-                                    }
-
-                                    GenericType.Types.UNKNOWN -> TODO()
-                                    GenericType.Types.CUSTOM -> TODO()
-                                    GenericType.Types.ARRAY -> TODO()
-                                }
-
-                            }
-                        }
+//                        decoded.fields.forEach {
+//                            val field = it.toReference()
+//
+//                            if (field != null) {
+//                                val value = it.currentValueString
+//
+//                                when (it.type) {
+//                                    GenericType.Types.INT -> {
+//                                        field.reference.set(
+//                                            null, when {
+//                                                value.toIntOrNull() != null -> value.toInt()
+//                                                value.toFloatOrNull() != null -> value.toFloat()
+//                                                    .toInt()
+//
+//                                                value.toDoubleOrNull() != null -> value.toDouble()
+//                                                    .toInt()
+//
+//                                                else -> value.toInt()
+//                                            }
+//                                        )
+//                                    }
+//
+//                                    GenericType.Types.DOUBLE -> field.reference.set(
+//                                        null,
+//                                        value.toDouble()
+//                                    )
+//
+//                                    GenericType.Types.STRING -> field.reference.set(null, value)
+//                                    GenericType.Types.BOOLEAN -> field.reference.set(
+//                                        null,
+//                                        value.toBoolean()
+//                                    )
+//
+//                                    GenericType.Types.FLOAT -> field.reference.set(
+//                                        null,
+//                                        value.toFloat()
+//                                    )
+//
+//                                    GenericType.Types.LONG -> field.reference.set(
+//                                        null,
+//                                        value.toLong()
+//                                    )
+//
+//                                    GenericType.Types.ENUM -> {
+//                                        val enumValue =
+//                                            field.reference.type.enumConstants.firstOrNull {
+//                                                it.toString() == value
+//                                            }
+//                                        if (enumValue != null) {
+//                                            field.reference.set(null, enumValue)
+//                                        } else {
+//                                            //
+//                                        }
+//                                    }
+//
+//                                    GenericType.Types.UNKNOWN -> TODO()
+//                                    GenericType.Types.CUSTOM -> TODO()
+//                                    GenericType.Types.ARRAY -> TODO()
+//                                }
+//
+//                            }
+//                        }
                     }
 
                     else -> {

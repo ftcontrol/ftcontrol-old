@@ -47,17 +47,11 @@ class VariablesManager(
 
             println("DASH: Is ${field.name} a JvmField? $isJvmField")
             if (isJvmField) {
-                field.isAccessible = true
-                val currentValue = try {
-                    field.get(null)
-                } catch (e: Exception) {
-                    println("DASH: Could not get value for ${field.name}: ${e.message}")
-                    null
-                }
                 val displayClassName =
                     if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
-                println("DASH: Adding JvmField: $displayClassName.${field.name} = $currentValue")
-                add(GenericType(displayClassName, field, currentValue))
+                val genericType = GenericType(className = displayClassName, reference = field)
+                println("DASH: Adding JvmField: ${genericType.className}.${genericType.name} = ${genericType.currentValue}")
+                add(genericType)
             }
         }
     }

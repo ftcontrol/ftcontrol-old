@@ -1,5 +1,9 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
+import lol.lazar.lazarkit.panels.configurables.utils.extractClassNamesFromDex
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

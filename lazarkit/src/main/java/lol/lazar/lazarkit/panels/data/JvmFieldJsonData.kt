@@ -2,7 +2,7 @@ package lol.lazar.lazarkit.panels.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.lazar.lazarkit.panels.configurables.JsonJvmField
+import lol.lazar.lazarkit.panels.configurables.GenericTypeJson
 
 
 @Serializable
@@ -12,5 +12,5 @@ data object GetJvmFieldsRequest : JSONData()
 @Serializable
 @SerialName("jvmFields")
 data class ReceivedJvmFields(
-    var fields: List<JsonJvmField>
+    var fields: List<GenericTypeJson>
 ) : JSONData()

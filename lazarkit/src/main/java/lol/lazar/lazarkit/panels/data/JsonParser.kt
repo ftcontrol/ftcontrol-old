@@ -25,6 +25,7 @@ val json = Json {
             subclass(ReceivedJvmFields::class)
         }
     }
+    encodeDefaults = false
     useArrayPolymorphism = false
     classDiscriminator = "kind"
 }

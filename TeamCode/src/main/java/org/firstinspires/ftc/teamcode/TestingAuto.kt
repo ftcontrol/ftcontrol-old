@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.Panels
-import lol.lazar.lazarkit.panels.configurables.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import kotlin.jvm.JvmField
 
 @Configurable
