@@ -150,16 +150,6 @@ class GenericType(
                                     fieldValue,
                                     index = i
                                 ).toJsonType()
-//                                JsonJvmField(
-//                                    className = field.declaringClass.name,
-//                                    fieldName = field.name,
-//                                    type = getType(field.type),
-//                                    arrayType = null,
-//                                    possibleValues = listOf(fieldValue.toString()),
-//                                    index = i
-//                                ).also {
-//                                    println("   DASH: Extracted field: ${field.name} = $fieldValue")
-//                                }
                             }
 
                             jsonFields.addAll(fieldData)
@@ -168,15 +158,34 @@ class GenericType(
                 } else if (innerType == Types.UNKNOWN) {
                     (currentValue as? Array<*>)?.forEachIndexed { i, value ->
                         println("   DASH: index: $i -> [$value] (${value?.javaClass?.name ?: "null"})")
+                        val itemType = getType(value?.javaClass)
+                        if (itemType == Types.CUSTOM) {
+                            val fields = value?.javaClass?.declaredFields
+                            val fieldData = fields?.map { field ->
+                                field.isAccessible = true
+                                val fieldValue = field.get(value)
+                                GenericType(
+                                    field.declaringClass.name,
+                                    field,
+                                    fieldValue,
+                                    index = i
+                                ).toJsonType()
+                            }
+                            if (fieldData != null) {
+                                jsonFields.addAll(fieldData)
+                            }
+                        } else {
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = itemType,
+                                    arrayType = innerType,
+                                    currentValueString = value.toString(),
+                                )
+                            )
+                        }
 
-                        val jsonValue = GenericType(
-                            className = className,
-                            reference = reference,
-                            currentValue = value,
-                            index = i
-                        ).toJsonType()
-
-                        jsonFields.add(jsonValue)
                     }
                 } else {
                     when (currentValue) {
