@@ -1,6 +1,7 @@
 package lol.lazar.lazarkit.panels.configurables
 
 import lol.lazar.lazarkit.panels.GlobalData
+import java.lang.reflect.Array
 import java.lang.reflect.Field
 
 class GenericType(
@@ -8,6 +9,7 @@ class GenericType(
     var reference: Field,
     var parentReference: GenericType? = null,
 ) {
+//    TODO: optimize using lazy
 
     enum class Types {
         INT,
@@ -76,6 +78,7 @@ class GenericType(
     fun toJsonType(): GenericTypeJson {
         var possibleValues: List<String>? = null
         var customValues: List<GenericTypeJson>? = null
+        var arrayValues: List<GenericTypeJson>? = null
 
         if (type == Types.ENUM) {
             possibleValues = reference.type.enumConstants.map { it.toString() }
@@ -91,13 +94,30 @@ class GenericType(
             }
         }
 
+        if (type == Types.ARRAY) {
+            val componentType = reference.type.componentType;
+            val componentValues = currentValue;
+            if (componentValues != null && componentType != null) {
+                arrayValues = (0 until Array.getLength(componentValues)).map { i ->
+                    val element = Array.get(componentValues, i);
+                    GenericTypeJson(
+                        className = componentType.simpleName,
+                        fieldName = "[${i}]",
+                        type = getType(element.javaClass),
+                        valueString = element?.toString() ?: "",
+                    );
+                };
+            }
+        }
+
         return GenericTypeJson(
             className = className,
             fieldName = name,
             type = type,
             valueString = currentValue.toString(),
             possibleValues = possibleValues,
-            customValues = customValues
+            customValues = customValues,
+            arrayValues = arrayValues
         )
     }
 }
