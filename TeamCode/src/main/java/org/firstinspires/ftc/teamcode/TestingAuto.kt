@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.Panels
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 import kotlin.jvm.JvmField
 
 @Configurable
@@ -12,7 +13,7 @@ class TestingAuto : OpMode(
 ) {
     companion object {
         @JvmField
-        var number = 0
+        var number: Int = 0
 
         @JvmField
         var testArray = intArrayOf(1, 2, 3)

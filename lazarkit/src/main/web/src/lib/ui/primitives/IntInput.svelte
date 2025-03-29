@@ -8,11 +8,14 @@
   } = $props()
 
   function setValue(newValue: number) {
-    currentValue = newValue
     onchange(newValue)
   }
+  let startValue = currentValue
 </script>
 
+{#if startValue != currentValue}
+  <button onclick={() => setValue(currentValue)}> Update </button><br />
+{/if}
 <input type="number" bind:value={currentValue} />
 
 <style>

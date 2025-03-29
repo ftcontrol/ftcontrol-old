@@ -14,14 +14,7 @@
           className: "org.firstinspires.ftc.teamcode.TestingAuto",
           fieldName: "number",
           type: "INT",
-          currentValueString: (Math.random() * 100).toString(),
-        },
-        {
-          className: "org.firstinspires.ftc.teamcode.TestClass",
-          fieldName: "testEnum",
-          type: "ENUM",
-          currentValueString: "VALUE2",
-          possibleValues: ["VALUE1", "VALUE2", "VALUE3"],
+          valueString: "21",
         },
       ],
     })

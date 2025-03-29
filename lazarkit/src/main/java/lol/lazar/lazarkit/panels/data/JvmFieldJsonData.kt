@@ -14,3 +14,9 @@ data object GetJvmFieldsRequest : JSONData()
 data class ReceivedJvmFields(
     var fields: List<GenericTypeJson>
 ) : JSONData()
+
+@Serializable
+@SerialName("updatedJvmFields")
+data class UpdatedJvmFields(
+    var fields: List<GenericTypeJson>
+) : JSONData()
