@@ -3,6 +3,7 @@
   import { type OpMode } from "$lib/socket.svelte"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import OpModeList from "$lib/ui/OpModeList.svelte"
+  import Field from "$lib/ui/Field.svelte"
 
   let modalOpened = $state<"" | "autos" | "teleops">("")
 
@@ -141,38 +142,9 @@
   {/each}
 </section>
 <section>
-  <h3>ARRAY Variables</h3>
-  {#each info.jvmFields as line}
-    {#if line.type == "ARRAY"}
-      <div>
-        <p>
-          {line.className} | {line.fieldName} | {line.type} | {line.arrayType}
-        </p>
-        <p>{JSON.stringify(line.possibleValues)}</p>
-        <br />
-        {#each line.arrayValues as item}
-          <p>{JSON.stringify(item)}</p>
-        {/each}
-        <br />
-        <br />
-      </div>
-    {/if}
-  {/each}
-</section>
-<section>
   <h3>Variables</h3>
   {#each info.jvmFields as line}
-    <div style={line.type == "UNKNOWN" ? "opacity: 0.5;" : ""}>
-      <p>
-        {line.className} | {line.fieldName} | {line.type} | {line.arrayType}
-      </p>
-      <p>
-        {line.type == "UNKNOWN" ? "" : line.currentValueString} / {JSON.stringify(
-          line.possibleValues
-        )}
-      </p>
-      <p>{JSON.stringify(line)}</p>
-    </div>
+    <Field {line} />
   {/each}
 </section>
 

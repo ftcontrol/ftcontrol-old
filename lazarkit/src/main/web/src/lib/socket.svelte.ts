@@ -102,6 +102,8 @@ export type JvmFieldInfo = {
   arrayType: string
   currentValueString: string
   possibleValues: string[]
+  customValues: JvmFieldInfo[]
+  arrayValues: JvmFieldInfo[]
 }
 
 export class InfoManager {
