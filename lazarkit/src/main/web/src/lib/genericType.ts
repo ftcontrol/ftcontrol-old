@@ -35,9 +35,6 @@ export interface ArrayTypeJson extends BaseGenericTypeJson {
 
 export interface DefaultTypeJson extends BaseGenericTypeJson {
   type: Exclude<Types, Types.ENUM | Types.CUSTOM | Types.ARRAY>
-  possibleValues?: never
-  customValues?: never
-  arrayValues?: never
 }
 
 export type GenericTypeJson =

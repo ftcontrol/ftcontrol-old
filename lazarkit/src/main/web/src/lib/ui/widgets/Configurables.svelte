@@ -3,6 +3,7 @@
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { Section } from "$primitives"
   import BooleanInput from "$ui/primitives/BooleanInput.svelte"
+  import IntInput from "$ui/primitives/IntInput.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
 
   function processFields(fields: GenericTypeJson[]): {
@@ -44,6 +45,10 @@
             <BooleanInput
               currentValue={item.valueString == "true" ? true : false}
             />
+          {:else if [Types.INT, Types.LONG].includes(item.type)}
+            <IntInput currentValue={parseInt(item.valueString)} />
+          {:else if [Types.FLOAT, Types.DOUBLE].includes(item.type)}
+            <IntInput currentValue={parseFloat(item.valueString)} />
           {:else}
             {JSON.stringify(item)}
           {/if}
