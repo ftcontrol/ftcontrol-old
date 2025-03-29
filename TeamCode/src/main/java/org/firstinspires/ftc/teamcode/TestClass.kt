@@ -7,6 +7,9 @@ import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomTyp
 class TestClass {
     companion object {
         @JvmField
+        var testBoolean = true
+
+        @JvmField
         var testIntField = 42
 
         @JvmField
