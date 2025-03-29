@@ -34,4 +34,8 @@
     padding: 1rem 1rem 1rem 1rem;
     overflow-y: auto;
   }
+  p {
+    margin: 1rem;
+    text-align: center;
+  }
 </style>
