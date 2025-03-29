@@ -11,10 +11,12 @@ class JsonJvmField(
     val className: String,
     val fieldName: String,
     val type: GenericType.Types,
+    val index: Int? = null,
     val arrayType: GenericType.Types? = null,
     val currentValueString: String = "",
     val possibleValues: List<String>? = null,
-    val customValues: List<JsonJvmField>? = null
+    val customValues: List<JsonJvmField>? = null,
+    val arrayValues: List<JsonJvmField>? = null
 ) {
     fun toReference(): GenericType? {
         return GlobalData.jvmFields.find { it.className == className && it.reference.name == fieldName }
@@ -25,10 +27,19 @@ class JsonJvmField(
     }
 }
 
+@Serializable
+@SerialName("jvmField")
+class ArrayItem(
+    val index: Int,
+    val value: String,
+    val type: GenericType.Types
+)
+
 class GenericType(
     val className: String,
     val reference: Field,
-    val currentValue: Any?
+    val currentValue: Any?,
+    val index: Int? = null,
 ) {
     enum class Types {
         INT,
@@ -89,12 +100,15 @@ class GenericType(
                         fieldName = reference.name,
                         type = type,
                         customValues = reference.type.declaredFields.map {
+//                            TODO: get index here
                             GenericType(
                                 it.declaringClass.name,
                                 it,
-                                it.get(currentValue)
+                                it.get(currentValue),
+                                index = index
                             ).toJsonType()
-                        }
+                        },
+                        index = index
                     )
                 } catch (e: Exception) {
                     println("DASH: Error getting custom type: ${e.message}")
@@ -103,42 +117,159 @@ class GenericType(
                         className = className,
                         fieldName = reference.name,
                         type = type,
+                        index = index
                     )
                 }
             }
 
             Types.ARRAY -> {
-                println("DASH: ")
+                val innerType = getType(reference.type.componentType)
+
                 println("DASH: Found an array of name: ${reference.name}")
                 println("DASH: Found an array of type: ${reference.type.componentType}")
-                println("DASH: Found an array of my type: ${getType(reference.type.componentType)}")
+                println("DASH: Found an array of my type: $innerType")
                 println("DASH: Current value: $currentValue")
 
+                val jsonFields = mutableListOf<JsonJvmField>()
 
-                val innerType = getType(reference.type.componentType)
-                if(innerType == Types.CUSTOM){
+                if (innerType == Types.CUSTOM) {
+                    val customClass = reference.type.componentType
+                    println("DASH: Processing custom type array: ${customClass.name}")
 
+                    (currentValue as? Array<*>)?.forEachIndexed { i, value ->
+                        if (value != null) {
+                            println("   DASH: Processing element at index $i: ${value.javaClass.name}")
+
+                            val fields = value.javaClass.declaredFields
+                            val fieldData = fields.map { field ->
+                                field.isAccessible = true
+                                val fieldValue = field.get(value)
+                                GenericType(
+                                    field.declaringClass.name,
+                                    field,
+                                    fieldValue,
+                                    index = i
+                                ).toJsonType()
+//                                JsonJvmField(
+//                                    className = field.declaringClass.name,
+//                                    fieldName = field.name,
+//                                    type = getType(field.type),
+//                                    arrayType = null,
+//                                    possibleValues = listOf(fieldValue.toString()),
+//                                    index = i
+//                                ).also {
+//                                    println("   DASH: Extracted field: ${field.name} = $fieldValue")
+//                                }
+                            }
+
+                            jsonFields.addAll(fieldData)
+                        }
+                    }
+                } else if (innerType == Types.UNKNOWN) {
+                    (currentValue as? Array<*>)?.forEachIndexed { i, value ->
+                        println("   DASH: index: $i -> [$value] (${value?.javaClass?.name ?: "null"})")
+
+                        val jsonValue = GenericType(
+                            className = className,
+                            reference = reference,
+                            currentValue = value,
+                            index = i
+                        ).toJsonType()
+
+                        jsonFields.add(jsonValue)
+                    }
+                } else {
+                    when (currentValue) {
+                        is IntArray -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        is DoubleArray -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        is BooleanArray -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        is FloatArray -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        is LongArray -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        is Array<*> -> currentValue.forEachIndexed { i, value ->
+                            jsonFields.add(
+                                JsonJvmField(
+                                    className = className,
+                                    fieldName = reference.name,
+                                    type = type,
+                                    arrayType = innerType,
+                                    possibleValues = listOf(value.toString()),
+                                    index = i
+                                )
+                            )
+                        }
+
+                        else -> {}
+                    }
                 }
 
-                if(innerType == Types.UNKNOWN){
-
-                }
-
-                (currentValue as? Array<*>)?.forEachIndexed { index, value ->
-                    println("DASH: [$index] = $value (${value?.javaClass?.name ?: "null"})")
-                }
-
-
-
-                println("DASH: ")
-
-                JsonJvmField(
+                return JsonJvmField(
                     className = className,
                     fieldName = reference.name,
                     type = type,
                     arrayType = innerType,
-                    possibleValues = getArrayValues(currentValue)
-                )
+                    arrayValues = jsonFields,
+                    index = index
+                ).also { println("DASH: Final JSON Field: $it") }
             }
 
             Types.ENUM -> JsonJvmField(
@@ -146,7 +277,8 @@ class GenericType(
                 fieldName = reference.name,
                 type = type,
                 currentValueString = currentValue.toString(),
-                possibleValues = reference.type.enumConstants.map { it.toString() }
+                possibleValues = reference.type.enumConstants.map { it.toString() },
+                index = index
             )
 
             else -> JsonJvmField(
@@ -154,6 +286,7 @@ class GenericType(
                 fieldName = reference.name,
                 type = type,
                 currentValueString = currentValue.toString(),
+                index = index
             )
         }
     }

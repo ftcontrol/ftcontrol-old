@@ -140,7 +140,25 @@
     <p>{line}</p>
   {/each}
 </section>
-
+<section>
+  <h3>ARRAY Variables</h3>
+  {#each info.jvmFields as line}
+    {#if line.type == "ARRAY"}
+      <div>
+        <p>
+          {line.className} | {line.fieldName} | {line.type} | {line.arrayType}
+        </p>
+        <p>{JSON.stringify(line.possibleValues)}</p>
+        <br />
+        {#each line.arrayValues as item}
+          <p>{JSON.stringify(item)}</p>
+        {/each}
+        <br />
+        <br />
+      </div>
+    {/if}
+  {/each}
+</section>
 <section>
   <h3>Variables</h3>
   {#each info.jvmFields as line}
