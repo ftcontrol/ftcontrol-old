@@ -1,3 +1,5 @@
+import type { GenericTypeJson } from "./genericType"
+
 export type Handler = (data: GenericData) => void
 export type GenericData = { kind: string; [key: string]: any }
 export class SocketManager {
@@ -95,22 +97,11 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
-export type JvmFieldInfo = {
-  className: string
-  fieldName: string
-  type: string
-  arrayType: string
-  currentValueString: string
-  possibleValues: string[]
-  customValues: JvmFieldInfo[]
-  arrayValues: JvmFieldInfo[]
-}
-
 export class InfoManager {
   time = $state("")
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
   telemetry = $state<string[]>([])
-  jvmFields = $state<JvmFieldInfo[]>([])
+  jvmFields = $state<GenericTypeJson[]>([])
 }

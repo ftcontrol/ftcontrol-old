@@ -1,0 +1,47 @@
+export enum Types {
+  INT = "INT",
+  DOUBLE = "DOUBLE",
+  STRING = "STRING",
+  BOOLEAN = "BOOLEAN",
+  FLOAT = "FLOAT",
+  LONG = "LONG",
+  ENUM = "ENUM",
+  ARRAY = "ARRAY",
+  UNKNOWN = "UNKNOWN",
+  CUSTOM = "CUSTOM",
+}
+
+export interface BaseGenericTypeJson {
+  className: string
+  fieldName: string
+  type: Types
+  valueString: string
+}
+
+export interface EnumTypeJson extends BaseGenericTypeJson {
+  type: Types.ENUM
+  possibleValues: string[]
+}
+
+export interface CustomTypeJson extends BaseGenericTypeJson {
+  type: Types.CUSTOM
+  customValues: GenericTypeJson[]
+}
+
+export interface ArrayTypeJson extends BaseGenericTypeJson {
+  type: Types.ARRAY
+  arrayValues: GenericTypeJson[]
+}
+
+export interface DefaultTypeJson extends BaseGenericTypeJson {
+  type: Exclude<Types, Types.ENUM | Types.CUSTOM | Types.ARRAY>
+  possibleValues?: never
+  customValues?: never
+  arrayValues?: never
+}
+
+export type GenericTypeJson =
+  | EnumTypeJson
+  | CustomTypeJson
+  | ArrayTypeJson
+  | DefaultTypeJson
