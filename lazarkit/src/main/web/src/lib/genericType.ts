@@ -18,6 +18,7 @@ export interface BaseGenericTypeJson {
   valueString: string
   newValueString: string
   isValid: boolean
+  value: any
 }
 
 export interface EnumTypeJson extends BaseGenericTypeJson {

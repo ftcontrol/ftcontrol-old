@@ -111,6 +111,7 @@
             />
           {:else if [Types.INT, Types.LONG].includes(item.type)}
             <IntInput
+              bind:value={item.value}
               bind:isValid={item.isValid}
               bind:startValue={item.valueString}
               bind:currentValue={item.newValueString}
