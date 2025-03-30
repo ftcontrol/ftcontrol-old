@@ -219,20 +219,40 @@ class Socket(
                                 GenericType.Types.INT -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+
                                 GenericType.Types.DOUBLE -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+
                                 GenericType.Types.LONG -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+
                                 GenericType.Types.FLOAT -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+
                                 GenericType.Types.STRING -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+
                                 GenericType.Types.BOOLEAN -> {
                                     ref.reference.set(null, it.valueAsType)
+                                }
+
+                                GenericType.Types.ENUM -> {
+                                    val enumValue =
+                                        ref.reference.type.enumConstants.firstOrNull { c ->
+                                            c.toString() == it.valueString
+                                        }
+
+                                    println("DASH: Enum value: $enumValue")
+
+                                    if (enumValue != null) {
+                                        ref.reference.set(null, enumValue)
+                                    } else {
+                                        // 
+                                    }
                                 }
 
                                 else -> {}
