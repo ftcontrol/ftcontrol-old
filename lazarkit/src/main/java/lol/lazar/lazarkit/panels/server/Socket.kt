@@ -252,15 +252,24 @@ class Socket(
 
                                 GenericType.Types.CUSTOM -> {
                                     it.customValues?.forEach { customValue ->
-                                        //TODO: support for nested
-                                        println("   DASH: Field name: ${customValue.fieldName}")
-                                        println("   DASH: Custom value: ${customValue.valueString}")
-                                        val declaredField = ref.reference.type.getDeclaredField(customValue.fieldName)
-                                        println("   DASH: Declared field: ${declaredField.name}")
-                                        val newValue = customValue.valueAsType
-                                        println("   DASH: New value: $newValue")
-                                        declaredField.isAccessible = true
-                                        declaredField.set(ref.reference.get(null), customValue.valueAsType)
+                                        if (customValue.type != GenericType.Types.CUSTOM) {
+                                            println("   DASH: Field name: ${customValue.fieldName}")
+                                            println("   DASH: Custom value: ${customValue.valueString}")
+                                            val declaredField =
+                                                ref.reference.type.getDeclaredField(customValue.fieldName)
+                                            println("   DASH: Declared field: ${declaredField.name}")
+                                            val newValue = customValue.valueAsType
+                                            println("   DASH: New value: $newValue")
+                                            declaredField.isAccessible = true
+                                            declaredField.set(
+                                                ref.reference.get(null),
+                                                customValue.valueAsType
+                                            )
+                                        } else {
+                                            //TODO: support for nested
+
+                                        }
+
                                     }
                                 }
 
