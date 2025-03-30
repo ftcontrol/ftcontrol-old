@@ -58,7 +58,16 @@ class GenericTypeJson(
                     }
                 }
 
-                GenericType.Types.LONG -> TODO()
+                GenericType.Types.LONG -> {
+                    when {
+                        value.toLongOrNull() != null -> value.toLong()
+                        value.toDoubleOrNull() != null -> value.toDouble()
+                            .toLong()
+
+                        else -> value.toLong()
+                    }
+                }
+
                 GenericType.Types.ENUM -> TODO()
                 GenericType.Types.ARRAY -> TODO()
                 GenericType.Types.UNKNOWN -> TODO()

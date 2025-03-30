@@ -5,12 +5,14 @@
     isValid = $bindable(),
     value = $bindable(),
     validate = (value: string) => true,
+    extraChar = "",
   }: {
     startValue: string
     currentValue: string
     isValid: boolean
     value: string
     validate: (value: string) => boolean
+    extraChar?: string
   } = $props()
 
   $effect(() => {
@@ -31,7 +33,7 @@
     isValid = true
     currentValue = value
   }}
-/>
+/>{extraChar}
 
 <style>
   input.invalid {

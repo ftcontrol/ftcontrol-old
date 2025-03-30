@@ -5,7 +5,12 @@
   import BooleanInput from "$ui/primitives/BooleanInput.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
   import StringInput from "$ui/primitives/StringInput.svelte"
-  import { intValidator } from "$ui/primitives/validators"
+  import {
+    doubleValidator,
+    floatValidator,
+    intValidator,
+    longValidator,
+  } from "$ui/primitives/validators"
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
@@ -110,7 +115,7 @@
               startValue={item.valueString}
               currentValue={item.newValueString}
             />
-          {:else if [Types.INT, Types.LONG].includes(item.type)}
+          {:else if item.type == Types.INT}
             <StringInput
               bind:value={item.value}
               bind:isValid={item.isValid}
@@ -118,8 +123,32 @@
               bind:currentValue={item.newValueString}
               validate={intValidator}
             />
-          {:else if [Types.FLOAT, Types.DOUBLE].includes(item.type)}
-            <!-- <IntInput currentValue={item.valueString} /> -->
+          {:else if item.type == Types.LONG}
+            <StringInput
+              bind:value={item.value}
+              bind:isValid={item.isValid}
+              bind:startValue={item.valueString}
+              bind:currentValue={item.newValueString}
+              validate={longValidator}
+              extraChar={"L"}
+            />
+          {:else if item.type == Types.DOUBLE}
+            <StringInput
+              bind:value={item.value}
+              bind:isValid={item.isValid}
+              bind:startValue={item.valueString}
+              bind:currentValue={item.newValueString}
+              validate={doubleValidator}
+            />
+          {:else if item.type == Types.FLOAT}
+            <StringInput
+              bind:value={item.value}
+              bind:isValid={item.isValid}
+              bind:startValue={item.valueString}
+              bind:currentValue={item.newValueString}
+              validate={floatValidator}
+              extraChar={"f"}
+            />
           {:else}
             {JSON.stringify(item)}
           {/if}
