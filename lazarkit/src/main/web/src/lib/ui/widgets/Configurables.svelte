@@ -3,8 +3,9 @@
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { Section } from "$primitives"
   import BooleanInput from "$ui/primitives/BooleanInput.svelte"
-  import IntInput from "$ui/primitives/IntInput.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
+  import StringInput from "$ui/primitives/StringInput.svelte"
+  import { intValidator } from "$ui/primitives/validators"
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
@@ -110,11 +111,12 @@
               currentValue={item.newValueString}
             />
           {:else if [Types.INT, Types.LONG].includes(item.type)}
-            <IntInput
+            <StringInput
               bind:value={item.value}
               bind:isValid={item.isValid}
               bind:startValue={item.valueString}
               bind:currentValue={item.newValueString}
+              validate={intValidator}
             />
           {:else if [Types.FLOAT, Types.DOUBLE].includes(item.type)}
             <!-- <IntInput currentValue={item.valueString} /> -->
