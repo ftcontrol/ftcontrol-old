@@ -202,11 +202,6 @@ class Socket(
                     is ReceivedJvmFields -> {
                         println("DASH: Received JvmFields: ${decoded.fields}")
 
-                        sendAllClients(
-                            UpdatedJvmFields(
-                                decoded.fields
-                            )
-                        )
 
                         decoded.fields.forEach {
                             val ref = it.toReference() ?: return
@@ -255,54 +250,29 @@ class Socket(
                                     }
                                 }
 
+                                GenericType.Types.CUSTOM -> {
+                                    it.customValues?.forEach { customValue ->
+                                        //TODO: support for nested
+                                        println("   DASH: Field name: ${customValue.fieldName}")
+                                        println("   DASH: Custom value: ${customValue.valueString}")
+                                        val declaredField = ref.reference.type.getDeclaredField(customValue.fieldName)
+                                        println("   DASH: Declared field: ${declaredField.name}")
+                                        val newValue = customValue.valueAsType
+                                        println("   DASH: New value: $newValue")
+                                        declaredField.isAccessible = true
+                                        declaredField.set(ref.reference.get(null), customValue.valueAsType)
+                                    }
+                                }
+
                                 else -> {}
                             }
-
-//
-//                            if (field != null) {
-//
-//                                when (it.type) {
-//
-//                                    GenericType.Types.DOUBLE -> field.reference.set(
-//                                        null,
-//                                        value.toDouble()
-//                                    )
-//
-//                                    GenericType.Types.STRING -> field.reference.set(null, value)
-//                                    GenericType.Types.BOOLEAN -> field.reference.set(
-//                                        null,
-//                                        value.toBoolean()
-//                                    )
-//
-//                                    GenericType.Types.FLOAT -> field.reference.set(
-//                                        null,
-//                                        value.toFloat()
-//                                    )
-//
-//                                    GenericType.Types.LONG -> field.reference.set(
-//                                        null,
-//                                        value.toLong()
-//                                    )
-//
-//                                    GenericType.Types.ENUM -> {
-//                                        val enumValue =
-//                                            field.reference.type.enumConstants.firstOrNull {
-//                                                it.toString() == value
-//                                            }
-//                                        if (enumValue != null) {
-//                                            field.reference.set(null, enumValue)
-//                                        } else {
-//                                            //
-//                                        }
-//                                    }
-//
-//                                    GenericType.Types.UNKNOWN -> TODO()
-//                                    GenericType.Types.CUSTOM -> TODO()
-//                                    GenericType.Types.ARRAY -> TODO()
-//                                }
-//
-//                            }
                         }
+
+                        sendAllClients(
+                            UpdatedJvmFields(
+                                decoded.fields
+                            )
+                        )
                     }
 
                     else -> {

@@ -6,7 +6,7 @@ import {
   type OpMode,
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
-import type { GenericTypeJson } from "./genericType"
+import { Types, type CustomTypeJson, type GenericTypeJson } from "./genericType"
 
 export const socket = new SocketManager()
 
@@ -30,11 +30,20 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
   for (const field of info.jvmFields) {
-    field.newValueString = field.valueString
-    field.value = null
-    field.isValid = true
+    populateField(field)
   }
 })
+
+function populateField(field: GenericTypeJson) {
+  field.newValueString = field.valueString
+  field.value = null
+  field.isValid = true
+  if (field.type == Types.CUSTOM) {
+    for (const f of field.customValues) {
+      populateField(f)
+    }
+  }
+}
 
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
   for (const newField of data.fields as GenericTypeJson[]) {

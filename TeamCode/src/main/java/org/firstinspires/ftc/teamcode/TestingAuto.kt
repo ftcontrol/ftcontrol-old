@@ -29,7 +29,7 @@ class TestingAuto : OpMode(
         @JvmField
         var stringValue: String = "test"
 
-        enum class CustomEnum{
+        enum class CustomEnum {
             TEST,
             TEST2,
             TEST3,
@@ -43,11 +43,34 @@ class TestingAuto : OpMode(
         class CustomData(
             @JvmField var intValue: Int = 0,
             @JvmField var stringValue: String
-        )
+        ){
+            override fun toString(): String {
+                return "CustomData(intValue=$intValue, stringValue='$stringValue')"
+            }
+        }
+
+        @ConfigurableCustomType
+        class CustomNestedData(
+            @JvmField var customData: CustomData,
+            @JvmField var stringValue: String
+        ){
+            override fun toString(): String {
+                return "CustomNestedData(customData=$customData, stringValue='$stringValue')"
+            }
+        }
 
         @JvmField
         var customData = CustomData(
             intValue = 5,
+            stringValue = "test"
+        )
+
+        @JvmField
+        var customNestedData = CustomNestedData(
+            customData = CustomData(
+                intValue = 5,
+                stringValue = "test"
+            ),
             stringValue = "test"
         )
 
@@ -74,6 +97,8 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Boolean is $booleanValue")
         panelsTelemetry.debug("String is $stringValue")
         panelsTelemetry.debug("Enum is $customEnum")
+        panelsTelemetry.debug("Custom Data is $customData")
+        panelsTelemetry.debug("Custom Nested Data is $customNestedData")
 
         panelsTelemetry.debug("Array is ${testArray.joinToString()}")
 

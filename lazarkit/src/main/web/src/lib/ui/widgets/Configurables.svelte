@@ -1,6 +1,6 @@
 <script lang="ts">
   import { info, socket } from "$lib"
-  import { type GenericTypeJson } from "$lib/genericType"
+  import { Types, type GenericTypeJson } from "$lib/genericType"
   import { Section } from "$primitives"
   import Field from "$ui/Field.svelte"
 
@@ -24,6 +24,10 @@
       if (field.valueString != field.newValueString && field.isValid) {
         return true
       }
+      if (field.type == Types.CUSTOM) {
+        var innerIsChanged = isChanged(field.customValues)
+        if (innerIsChanged) return true
+      }
     }
     return false
   }
@@ -38,6 +42,7 @@
   function sendAllUpdates(fields: GenericTypeJson[]) {
     var changedFields = []
     for (const field of fields) {
+      //TODO: handle custom types
       if (field.valueString != field.newValueString && field.isValid) {
         changedFields.push({
           className: field.className,
