@@ -46,8 +46,12 @@ class GenericTypeJson(
                     }
                 }
 
-                GenericType.Types.STRING -> TODO()
-                GenericType.Types.BOOLEAN -> TODO()
+                GenericType.Types.STRING -> {
+                    return value
+                }
+                GenericType.Types.BOOLEAN -> {
+                    return value.toBoolean()
+                }
                 GenericType.Types.FLOAT -> {
                     when {
                         value.toFloatOrNull() != null -> value.toFloat()

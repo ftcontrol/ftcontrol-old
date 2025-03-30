@@ -228,6 +228,12 @@ class Socket(
                                 GenericType.Types.FLOAT -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+                                GenericType.Types.STRING -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
+                                GenericType.Types.BOOLEAN -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
 
                                 else -> {}
                             }
