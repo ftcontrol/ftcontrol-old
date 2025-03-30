@@ -18,3 +18,7 @@ export function doubleValidator(value: string): boolean {
 export function floatValidator(value: string): boolean {
   return doubleValidator(value)
 }
+
+export function stringValidator(value: string): boolean {
+  return true
+}

@@ -10,6 +10,7 @@
     floatValidator,
     intValidator,
     longValidator,
+    stringValidator,
   } from "$ui/primitives/validators"
 
   function processFields(fields: GenericTypeJson[]): {
@@ -102,7 +103,7 @@
             Update
           </button>
         {/if}
-        {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT].includes(item.type)}
+        {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
           <form
             class="item"
             class:disabled={item.type == Types.UNKNOWN}
@@ -143,6 +144,14 @@
                 bind:currentValue={item.newValueString}
                 validate={floatValidator}
                 extraChar={"f"}
+              />
+            {:else if item.type == Types.STRING}
+              <StringInput
+                bind:value={item.value}
+                bind:isValid={item.isValid}
+                bind:startValue={item.valueString}
+                bind:currentValue={item.newValueString}
+                validate={stringValidator}
               />
             {:else}
               {JSON.stringify(item)}
