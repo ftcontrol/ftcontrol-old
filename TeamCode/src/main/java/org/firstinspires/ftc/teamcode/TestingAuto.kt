@@ -28,6 +28,16 @@ class TestingAuto : OpMode(
         @JvmField
         var stringValue: String = "test"
 
+        enum class CustomEnum{
+            TEST,
+            TEST2,
+            TEST3,
+            TEST4
+        }
+
+        @JvmField
+        var customEnum: CustomEnum = CustomEnum.TEST
+
         @JvmField
         var testArray = intArrayOf(1, 2, 3)
     }
@@ -50,6 +60,7 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Float is $floatValue")
         panelsTelemetry.debug("Boolean is $booleanValue")
         panelsTelemetry.debug("String is $stringValue")
+        panelsTelemetry.debug("Enum is $customEnum")
 
         panelsTelemetry.debug("Array is ${testArray.joinToString()}")
 

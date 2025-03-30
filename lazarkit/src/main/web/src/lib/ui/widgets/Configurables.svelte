@@ -166,7 +166,10 @@
           />
         {:else if item.type == Types.ENUM}
           <SelectInput
-            currentValue={item.valueString}
+            bind:value={item.value}
+            bind:isValid={item.isValid}
+            bind:startValue={item.valueString}
+            bind:currentValue={item.newValueString}
             possibleValues={item.possibleValues}
           />
         {/if}

@@ -19,7 +19,7 @@ class GenericTypeJson(
         return GlobalData.jvmFields.find { it.className == className && it.name == fieldName }
     }
 
-    val valueAsType: Any
+    val valueAsType: Any?
         get() {
             val value = valueString
             return when (type) {
@@ -72,7 +72,7 @@ class GenericTypeJson(
                     }
                 }
 
-                GenericType.Types.ENUM -> TODO()
+                GenericType.Types.ENUM -> null
                 GenericType.Types.ARRAY -> TODO()
                 GenericType.Types.UNKNOWN -> TODO()
                 GenericType.Types.CUSTOM -> TODO()
