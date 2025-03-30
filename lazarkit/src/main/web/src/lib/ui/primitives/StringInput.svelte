@@ -4,25 +4,18 @@
     currentValue = $bindable(),
     isValid = $bindable(),
     value = $bindable(),
+    validate = (value: string) => true,
   }: {
     startValue: string
     currentValue: string
     isValid: boolean
-    value: any
+    value: string
+    validate: (value: string) => boolean
   } = $props()
 
   $effect(() => {
     if (value != null) return
-    value = parseInt(startValue)
-  })
-
-  let innerIsValid = $derived.by(() => {
-    for (const char of value.toString()) {
-      if (!["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"].includes(char)) {
-        return false
-      }
-    }
-    return true
+    value = startValue
   })
 </script>
 
@@ -31,12 +24,12 @@
   class:invalid={!isValid}
   bind:value
   oninput={() => {
-    if (!innerIsValid) {
+    if (!validate(value)) {
       isValid = false
       return
     }
     isValid = true
-    currentValue = value.toString()
+    currentValue = value
   }}
 />
 
