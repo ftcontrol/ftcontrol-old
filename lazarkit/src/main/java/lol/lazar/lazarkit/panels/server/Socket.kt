@@ -219,6 +219,15 @@ class Socket(
                                 GenericType.Types.INT -> {
                                     ref.reference.set(null, it.valueAsType)
                                 }
+                                GenericType.Types.DOUBLE -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
+                                GenericType.Types.LONG -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
+                                GenericType.Types.FLOAT -> {
+                                    ref.reference.set(null, it.valueAsType)
+                                }
 
                                 else -> {}
                             }
