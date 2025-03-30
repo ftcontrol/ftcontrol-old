@@ -49,9 +49,11 @@ class GenericTypeJson(
                 GenericType.Types.STRING -> {
                     return value
                 }
+
                 GenericType.Types.BOOLEAN -> {
                     return value.toBoolean()
                 }
+
                 GenericType.Types.FLOAT -> {
                     when {
                         value.toFloatOrNull() != null -> value.toFloat()
@@ -73,9 +75,9 @@ class GenericTypeJson(
                 }
 
                 GenericType.Types.ENUM -> null
-                GenericType.Types.ARRAY -> TODO()
-                GenericType.Types.UNKNOWN -> TODO()
-                GenericType.Types.CUSTOM -> TODO()
+                GenericType.Types.ARRAY -> null
+                GenericType.Types.UNKNOWN -> null
+                GenericType.Types.CUSTOM -> null
             }
         }
 }

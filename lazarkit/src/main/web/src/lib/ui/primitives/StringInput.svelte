@@ -18,6 +18,7 @@
   $effect(() => {
     if (value != null) return
     value = startValue
+    isValid = validate(value)
   })
 </script>
 

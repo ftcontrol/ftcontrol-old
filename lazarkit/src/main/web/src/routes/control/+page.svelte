@@ -12,9 +12,24 @@
       fields: [
         {
           className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "number",
-          type: "INT",
-          valueString: "21",
+          fieldName: "customData",
+          type: "CUSTOM",
+          valueString:
+            "org.firstinspires.ftc.teamcode.TestingAuto$Companion$CustomData@d6d801a",
+          customValues: [
+            {
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "intValue",
+              type: "INT",
+              valueString: (Math.random() * 100).toString(),
+            },
+            {
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "stringValue",
+              type: "STRING",
+              valueString: "test",
+            },
+          ],
         },
       ],
     })
