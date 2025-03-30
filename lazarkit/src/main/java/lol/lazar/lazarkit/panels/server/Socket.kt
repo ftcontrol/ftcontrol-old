@@ -251,7 +251,7 @@ class Socket(
                                     if (enumValue != null) {
                                         ref.reference.set(null, enumValue)
                                     } else {
-                                        // 
+                                        //
                                     }
                                 }
 

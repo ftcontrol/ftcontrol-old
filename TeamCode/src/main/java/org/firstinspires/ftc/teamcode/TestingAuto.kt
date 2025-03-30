@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.Panels
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
 
 @Configurable
 @Autonomous(name = "Testing Auto OpMode", group = "Dashboard")
@@ -37,6 +38,18 @@ class TestingAuto : OpMode(
 
         @JvmField
         var customEnum: CustomEnum = CustomEnum.TEST
+
+        @ConfigurableCustomType
+        class CustomData(
+            @JvmField var intValue: Int = 0,
+            @JvmField var stringValue: String
+        )
+
+        @JvmField
+        var customData = CustomData(
+            intValue = 5,
+            stringValue = "test"
+        )
 
         @JvmField
         var testArray = intArrayOf(1, 2, 3)
