@@ -60,7 +60,7 @@
                   className: "org.firstinspires.ftc.teamcode.TestingAuto",
                   fieldName: "stringValue",
                   type: "STRING",
-                  valueString: "test",
+                  valueString: "test" + (Math.random() * 100).toString(),
                 },
               ],
             },
