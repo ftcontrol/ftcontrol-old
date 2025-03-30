@@ -2,10 +2,20 @@
   let {
     startValue = $bindable(),
     currentValue = $bindable(),
+    isValid = $bindable(),
+    value = $bindable(),
   }: {
     startValue: string
     currentValue: string
+    isValid: boolean
+    value: string
   } = $props()
+
+  $effect(() => {
+    if (value != null) return
+    value = startValue
+    isValid = true
+  })
 </script>
 
 <div class="input">
@@ -13,11 +23,13 @@
   <button
     onclick={() => {
       currentValue = "true"
+      value = "true"
     }}>True</button
   >
   <button
     onclick={() => {
       currentValue = "false"
+      value = "false"
     }}>False</button
   >
 </div>

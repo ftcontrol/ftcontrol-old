@@ -23,6 +23,9 @@ class TestingAuto : OpMode(
         var floatValue: Float = 0.0f
 
         @JvmField
+        var booleanValue: Boolean = false
+
+        @JvmField
         var testArray = intArrayOf(1, 2, 3)
     }
 
@@ -42,6 +45,7 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Long is $longValue")
         panelsTelemetry.debug("Double is $doubleValue")
         panelsTelemetry.debug("Float is $floatValue")
+        panelsTelemetry.debug("Boolean is $booleanValue")
 
         panelsTelemetry.debug("Array is ${testArray.joinToString()}")
 
