@@ -6,7 +6,7 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
-import lol.lazar.lazarkit.panels.configurables.ConfigurablesManager
+import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.integration.MenuManager
 import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
 import lol.lazar.lazarkit.panels.integration.UIManager
@@ -20,7 +20,6 @@ class CorePanels {
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ data -> socket.sendOpModesList() })
-    var configurablesMenu = ConfigurablesManager()
 
     lateinit var server: Server
     lateinit var socket: Socket
@@ -45,7 +44,7 @@ class CorePanels {
         server.startServer()
         socket.startServer()
 
-        configurablesMenu.findConfigurables(context)
+        Configurables.findConfigurables(context)
     }
 
     private var opModeManager: OpModeManagerImpl? = null

@@ -2,8 +2,7 @@ package lol.lazar.lazarkit.panels.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.lazar.lazarkit.panels.configurables.ChangeJson
-import lol.lazar.lazarkit.panels.configurables.GenericTypeJson
+import lol.lazar.lazarkit.panels.configurables.GenericField
 
 
 @Serializable
@@ -21,3 +20,25 @@ data class ReceivedJvmFields(
 data class UpdatedJvmFields(
     var fields: List<ChangeJson>
 ) : JSONData()
+
+@Serializable
+@SerialName("jvmField")
+class GenericTypeJson(
+    val id: String,
+    val className: String? = null,
+    val fieldName: String,
+    val type: GenericField.Types,
+    val valueString: String,
+    val newValueString: String,
+    val value: String = "",
+    val isValid: Boolean = true,
+    val possibleValues: List<String>? = null,
+    val customValues: List<GenericTypeJson>? = null,
+    val arrayValues: List<GenericTypeJson>? = null,
+)
+
+@Serializable
+class ChangeJson(
+    val id: String,
+    val newValueString: String
+)

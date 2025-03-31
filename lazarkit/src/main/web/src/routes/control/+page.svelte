@@ -1,29 +1,25 @@
 <script lang="ts">
-  import { socket, info, gamepads } from "$lib"
+  import { gamepads } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
-  import Configurables from "$ui/widgets/Configurables.svelte"
-  import { OpModeControl, Telemetry } from "$widgets"
+  import { OpModeControl, Telemetry, Configurables } from "$widgets"
 </script>
 
-<button
-  onclick={() => {
-    socket.sendMessage({
-      kind: "updatedJvmFields",
-      fields: [
-        {
-          id: "ed0bcc0b-a4c1-4159-83bc-218b12974474",
-          newValueString: (Math.random() * 100).toString(),
-        },
-      ],
-    })
-  }}
->
-  Test Fields Update
-</button>
-<OpModeControl />
-<Telemetry />
-<Configurables />
+<section>
+  <div>
+    <OpModeControl />
+    <Telemetry />
+    {#if gamepads.current != null}
+      <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+    {/if}
+  </div>
+  <div>
+    <Configurables />
+  </div>
+</section>
 
-{#if gamepads.current != null}
-  <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-{/if}
+<style>
+  section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+</style>

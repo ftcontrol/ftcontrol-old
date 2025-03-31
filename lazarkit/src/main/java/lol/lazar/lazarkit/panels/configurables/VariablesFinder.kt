@@ -6,8 +6,8 @@ class VariablesFinder(
     private val allClasses: () -> List<ClassFinder.ClassEntry>
 ) {
 
-    private val jvmFields: List<GenericType> by lazy {
-        mutableListOf<GenericType>().apply {
+    private val jvmFields: List<GenericField> by lazy {
+        mutableListOf<GenericField>().apply {
             allClasses().forEach { entry ->
                 try {
                     val clazz = Class.forName(entry.className)
@@ -27,7 +27,7 @@ class VariablesFinder(
         }
     }
 
-    private fun MutableList<GenericType>.addFieldsFromClass(
+    private fun MutableList<GenericField>.addFieldsFromClass(
         clazz: Class<*>,
         originalClassName: String
     ) {
@@ -49,13 +49,13 @@ class VariablesFinder(
             if (isJvmField) {
                 val displayClassName =
                     if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
-                val genericType = GenericType(className = displayClassName, reference = field)
-                println("DASH: Adding JvmField: ${genericType.className}.${genericType.name} = ${genericType.currentValue}")
-                add(genericType)
+                val genericField = GenericField(className = displayClassName, reference = field)
+                println("DASH: Adding JvmField: ${genericField.className}.${genericField.name} = ${genericField.currentValue}")
+                add(genericField)
             }
         }
     }
 
-    val getJvmFields: List<GenericType>
+    val getJvmFields: List<GenericField>
         get() = jvmFields
 }

@@ -1,26 +1,26 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.data.GenericTypeJson
 import java.lang.reflect.Array
 import java.lang.reflect.Field
 import java.util.UUID
 
-class GenericType(
+class GenericField(
     var className: String,
     var reference: Field,
-    var parentReference: GenericType? = null,
+    var parentReference: GenericField? = null,
     var id: String = UUID.randomUUID().toString()
 ) {
-//    TODO: optimize using lazy
 //    TODO: decorator for quick values to select from
 
-    var customValues: List<GenericType>? = null
+    var customValues: List<GenericField>? = null
 
     init {
-        GlobalFields.fieldsMap[id] = this
+        Configurables.fieldsMap[id] = this
 
         if (type == Types.CUSTOM) {
             customValues = reference.type.declaredFields.map { field ->
-                GenericType(
+                GenericField(
                     className = className,
                     parentReference = this,
                     reference = field
@@ -62,7 +62,7 @@ class GenericType(
                     return Types.ARRAY
                 }
 
-                if (GlobalFields.customTypeClasses.any { it.className == classType.name }) {
+                if (Configurables.customTypeClasses.any { it.className == classType.name }) {
                     return Types.CUSTOM
                 }
 
@@ -207,9 +207,7 @@ class GenericType(
                 }
             }
 
-            Types.ARRAY -> null
-            Types.UNKNOWN -> null
-            Types.CUSTOM -> null
+            else -> null
         }
     }
 }

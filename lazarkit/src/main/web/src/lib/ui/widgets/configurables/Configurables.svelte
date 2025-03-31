@@ -3,11 +3,10 @@
   import {
     Types,
     type ChangeJson,
-    type CustomTypeJson,
     type GenericTypeJson,
   } from "$lib/genericType"
   import { Section } from "$primitives"
-  import Field from "$ui/Field.svelte"
+  import Field from "./Field.svelte"
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
