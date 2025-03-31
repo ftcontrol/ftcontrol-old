@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import lol.lazar.lazarkit.panels.Panels
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 
 @Configurable
 @Autonomous(name = "Testing Auto OpMode", group = "Dashboard")
@@ -24,6 +25,7 @@ class TestingAuto : OpMode(
         var floatValue: Float = 0.0f
 
         @JvmField
+        @IgnoreConfigurable
         var booleanValue: Boolean = false
 
         @JvmField
@@ -43,7 +45,7 @@ class TestingAuto : OpMode(
         class CustomData(
             @JvmField var intValue: Int = 0,
             @JvmField var stringValue: String
-        ){
+        ) {
             override fun toString(): String {
                 return "CustomData(intValue=$intValue, stringValue='$stringValue')"
             }
@@ -53,7 +55,7 @@ class TestingAuto : OpMode(
         class CustomNestedData(
             @JvmField var customData: CustomData,
             @JvmField var stringValue: String
-        ){
+        ) {
             override fun toString(): String {
                 return "CustomNestedData(customData=$customData, stringValue='$stringValue')"
             }
@@ -76,12 +78,23 @@ class TestingAuto : OpMode(
 
         @JvmField
         var testArray = intArrayOf(1, 2, 3)
+
+        @JvmField
+        var lambdaValue = {
+            when (customEnum) {
+                CustomEnum.TEST -> "0"
+                CustomEnum.TEST2 -> "0"
+                CustomEnum.TEST3 -> "1"
+                CustomEnum.TEST4 -> "1"
+            }
+        }
     }
 
     var panelsTelemetry = Panels.getTelemetry()
 
     override fun init() {
         panelsTelemetry.debug("Hi, init was ran!")
+        panelsTelemetry.debug("Lambda: ${ClawConfig.value()}")
         panelsTelemetry.update(telemetry)
     }
 
