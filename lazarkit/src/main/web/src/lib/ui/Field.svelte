@@ -17,10 +17,18 @@
     stringValidator,
   } from "./primitives/validators"
 
-  let { item, depth = 0 }: { item: GenericTypeJson; depth?: number } = $props()
+  let {
+    item,
+    parentItem,
+    depth = 0,
+  }: {
+    item: GenericTypeJson
+    parentItem: GenericTypeJson
+    depth?: number
+  } = $props()
 
-  function getUpdatedValues(field: CustomTypeJson): CustomTypeJson {
-    var outputList: GenericTypeJson[] = []
+  function getUpdatedValues(field) {
+    var outputList = []
     if (field.type != Types.CUSTOM) outputList
     for (const customValue of field.customValues) {
       if (customValue.type != Types.CUSTOM) {
@@ -29,11 +37,12 @@
           customValue.isValid
         ) {
           outputList.push({
+            id: customValue.id,
             className: customValue.className,
             fieldName: customValue.fieldName,
             type: customValue.type,
             valueString: customValue.newValueString,
-          } as GenericTypeJson)
+          })
         }
       } else {
         var processed = getUpdatedValues(customValue)
@@ -41,12 +50,13 @@
       }
     }
     return {
+      id: field.id,
       className: field.className,
       fieldName: field.fieldName,
       type: field.type,
       valueString: field.newValueString,
       customValues: outputList,
-    } as CustomTypeJson
+    }
   }
 
   function sendFieldUpdate(item: GenericTypeJson) {
@@ -57,12 +67,31 @@
       type: item.type,
       valueString: item.newValueString,
     }
-    if (item.type == Types.CUSTOM) {
-      var processed = getUpdatedValues(item)
+    if (parentItem.type == Types.CUSTOM) {
+      var processed = getUpdatedValues(parentItem)
       if (processed.customValues.length) {
         output = processed
+        // alert(JSON.stringify(output))
+        function process(data) {
+          var out = []
+          for (const i of data.customValues) {
+            if (i.type == Types.CUSTOM) {
+              var newItem = process(i)
+              out.push(newItem)
+            } else {
+              console.log(i)
+              console.log("comparing", i.id, item.id)
+              if (i.id == item.id) {
+                out.push(i)
+              }
+            }
+          }
+          data.customValues = out
+          return data
+        }
+        // alert(JSON.stringify(process(output)))
       }
-      return
+      // return
     }
     socket.sendMessage({
       kind: "jvmFields",
@@ -77,7 +106,7 @@
   class:disabled={item.type == Types.UNKNOWN}
   style="--depth:{depth};"
 >
-  <p>{item.fieldName} {item.type} {item.isValid}</p>
+  <p>{item.id} {item.fieldName} {item.type} {item.isValid}</p>
   {#if item.valueString != item.newValueString && item.isValid}
     <button
       onclick={() => {
@@ -156,7 +185,7 @@
   {:else if item.type == Types.CUSTOM}
     {JSON.stringify(getUpdatedValues(item).customValues)}
     {#each item.customValues as custom}
-      <FieldNested item={custom} depth={depth + 1} />
+      <FieldNested item={custom} parentItem={item} depth={depth + 1} />
     {/each}
   {:else}
     {JSON.stringify(item)}

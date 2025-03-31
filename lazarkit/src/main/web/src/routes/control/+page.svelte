@@ -25,23 +25,11 @@
               customValues: [
                 {
                   className: "org.firstinspires.ftc.teamcode.TestingAuto",
-                  fieldName: "intValue",
-                  type: "INT",
-                  valueString: "5",
-                },
-                {
-                  className: "org.firstinspires.ftc.teamcode.TestingAuto",
                   fieldName: "stringValue",
                   type: "STRING",
                   valueString: "test" + (Math.random() * 100).toString(),
                 },
               ],
-            },
-            {
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "stringValue",
-              type: "STRING",
-              valueString: "test" + (Math.random() * 100).toString(),
             },
           ],
         },

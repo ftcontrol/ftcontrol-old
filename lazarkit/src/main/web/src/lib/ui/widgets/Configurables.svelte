@@ -112,7 +112,7 @@
     <div>
       <h3>{key}</h3>
       {#each items as item}
-        <Field {item} />
+        <Field {item} parentItem={item} />
       {/each}
     </div>
   {/each}
