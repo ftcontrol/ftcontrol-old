@@ -1,9 +1,7 @@
 <script lang="ts">
   import { socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
-  import BooleanInput from "../../primitives/BooleanInput.svelte"
-  import SelectInput from "../../primitives/SelectInput.svelte"
-  import StringInput from "../../primitives/StringInput.svelte"
+  import { BooleanInput, SelectInput, StringInput } from "$primitives"
   import {
     doubleValidator,
     floatValidator,
@@ -126,7 +124,7 @@
     {#each item.arrayValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
-  {:else}
+  {:else if item.type != Types.UNKNOWN}
     {JSON.stringify(item)}
   {/if}
 </div>
