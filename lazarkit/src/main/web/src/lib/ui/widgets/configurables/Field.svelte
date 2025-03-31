@@ -122,8 +122,12 @@
     {#each item.customValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
+  {:else if item.type == Types.ARRAY}
+    {#each item.arrayValues as custom}
+      <FieldNested item={custom} depth={depth + 1} />
+    {/each}
   {:else}
-    <!-- {JSON.stringify(item)} -->
+    {JSON.stringify(item)}
   {/if}
 </div>
 

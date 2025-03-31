@@ -6,14 +6,20 @@ import java.lang.reflect.Field
 import java.util.UUID
 
 class GenericField(
-    var className: String,
-    var reference: Field,
-    var parentReference: GenericField? = null,
-    var id: String = UUID.randomUUID().toString()
+    override var className: String,
+    override var reference: Field,
+    override var parentReference: GenericField? = null,
+    override var id: String = UUID.randomUUID().toString()
+) : BaseGenericField(
+    className = className,
+    reference = reference,
+    parentReference = parentReference,
+    id = id
 ) {
 //    TODO: decorator for quick values to select from
 
     var customValues: List<GenericField>? = null
+    var arrayValues: List<ArrayElement>? = null
 
     init {
         Configurables.fieldsMap[id] = this
@@ -27,54 +33,22 @@ class GenericField(
                 )
             }
         }
-    }
 
-    enum class Types {
-        INT,
-        DOUBLE,
-        STRING,
-        BOOLEAN,
-        FLOAT,
-        LONG,
-        ENUM,
-        ARRAY,
-        UNKNOWN,
-        CUSTOM
-    }
-
-    fun getType(classType: Class<*>?): Types {
-        if (classType == null) {
-            return Types.UNKNOWN
-        }
-        return when (classType) {
-            Int::class.java, Integer::class.java -> Types.INT
-            Double::class.java, java.lang.Double::class.java -> Types.DOUBLE
-            String::class.java -> Types.STRING
-            Boolean::class.java, java.lang.Boolean::class.java -> Types.BOOLEAN
-            Float::class.java, java.lang.Float::class.java -> Types.FLOAT
-            Long::class.java, java.lang.Long::class.java -> Types.LONG
-            IntArray::class.java, DoubleArray::class.java, BooleanArray::class.java, FloatArray::class.java, LongArray::class.java -> Types.ARRAY
-            else -> {
-                if (classType.isEnum) {
-                    return Types.ENUM
+        if (type == Types.ARRAY) {
+            val componentType = reference.type.componentType
+            val componentValues = currentValue
+            if (componentValues != null && componentType != null) {
+                arrayValues = (0 until Array.getLength(componentValues)).map { i ->
+                    ArrayElement(this, i)
                 }
-                if (classType.isArray) {
-                    return Types.ARRAY
-                }
-
-                if (Configurables.customTypeClasses.any { it.className == classType.name }) {
-                    return Types.CUSTOM
-                }
-
-                Types.UNKNOWN
             }
         }
     }
 
-    val type: Types
+    override val type: Types
         get() = getType(reference.type)
 
-    var currentValue: Any?
+    override var currentValue: Any?
         get() {
             reference.isAccessible = true
             return try {
@@ -114,28 +88,8 @@ class GenericField(
         }
     }
 
-    fun toJsonType(): GenericTypeJson {
-        var arrayValues: List<GenericTypeJson>? = null
-
-        if (type == Types.ARRAY) {
-            val componentType = reference.type.componentType;
-            val componentValues = currentValue;
-            if (componentValues != null && componentType != null) {
-                arrayValues = (0 until Array.getLength(componentValues)).map { i ->
-                    val element = Array.get(componentValues, i);
-                    GenericTypeJson(
-                        id = id,
-                        className = componentType.simpleName,
-                        fieldName = "[${i}]",
-                        type = getType(element.javaClass),
-                        valueString = element?.toString() ?: "",
-                        newValueString = element?.toString() ?: "",
-                    );
-                };
-            }
-        }
-
-        return GenericTypeJson(
+    override val toJsonType: GenericTypeJson
+        get() = GenericTypeJson(
             id = id,
             className = className,
             fieldName = name,
@@ -143,71 +97,7 @@ class GenericField(
             valueString = currentValue.toString(),
             newValueString = currentValue.toString(),
             possibleValues = possibleValues,
-            customValues = customValues?.map { it.toJsonType() },
-            arrayValues = arrayValues
+            customValues = customValues?.map { it.toJsonType },
+            arrayValues = arrayValues?.map { it.toJsonType }
         )
-    }
-
-    fun convertValue(value: String): Any? {
-        return when (type) {
-            Types.INT -> {
-                when {
-                    value.toIntOrNull() != null -> value.toInt()
-                    value.toFloatOrNull() != null -> value.toFloat()
-                        .toInt()
-
-                    value.toDoubleOrNull() != null -> value.toDouble()
-                        .toInt()
-
-                    else -> value.toInt()
-                }
-            }
-
-            Types.DOUBLE -> {
-                when {
-                    value.toDoubleOrNull() != null -> value.toDouble()
-                    value.toFloatOrNull() != null -> value.toFloat()
-                        .toDouble()
-
-                    else -> value.toDouble()
-                }
-            }
-
-            Types.STRING -> {
-                value
-            }
-
-            Types.BOOLEAN -> {
-                value.toBoolean()
-            }
-
-            Types.FLOAT -> {
-                when {
-                    value.toFloatOrNull() != null -> value.toFloat()
-                    value.toDoubleOrNull() != null -> value.toDouble()
-                        .toFloat()
-
-                    else -> value.toFloat()
-                }
-            }
-
-            Types.LONG -> {
-                when {
-                    value.toLongOrNull() != null -> value.toLong()
-                    value.toDoubleOrNull() != null -> value.toDouble()
-                        .toLong()
-
-                    else -> value.toLong()
-                }
-            }
-
-            Types.ENUM -> {
-                reference.type.enumConstants.firstOrNull { c ->
-                    c.toString() == value
-                }
-            }
-
-            else -> null
-        }
-    }
 }

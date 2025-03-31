@@ -3,7 +3,7 @@ package lol.lazar.lazarkit.panels.configurables
 import android.content.Context
 
 object Configurables {
-    var fieldsMap = mutableMapOf<String, GenericField>()
+    var fieldsMap = mutableMapOf<String, BaseGenericField>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
     var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
 
