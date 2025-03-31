@@ -1,5 +1,6 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 import lol.lazar.lazarkit.panels.data.GenericTypeJson
 import java.lang.reflect.Array
 import java.lang.reflect.Field
@@ -25,7 +26,13 @@ class GenericField(
         Configurables.fieldsMap[id] = this
 
         if (type == Types.CUSTOM) {
-            customValues = reference.type.declaredFields.map { field ->
+            customValues = reference.type.declaredFields.mapNotNull { field ->
+                field.isAccessible = true
+                val isIgnored = field.isAnnotationPresent(IgnoreConfigurable::class.java)
+                if (isIgnored) {
+                    return@mapNotNull null
+                }
+
                 GenericField(
                     className = className,
                     parentReference = this,

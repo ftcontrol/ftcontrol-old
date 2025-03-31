@@ -1,5 +1,6 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 import java.lang.reflect.Modifier
 
 class VariablesFinder(
@@ -39,11 +40,12 @@ class VariablesFinder(
 
             val isFinal = Modifier.isFinal(field.modifiers)
             val isStatic = Modifier.isStatic(field.modifiers)
+            val isIgnored = field.isAnnotationPresent(IgnoreConfigurable::class.java)
 
             println("DASH: Is ${field.name} final? $isFinal")
             println("DASH: Is ${field.name} static? $isStatic")
 
-            val isJvmField = !isFinal && isStatic
+            val isJvmField = !isFinal && isStatic && !isIgnored
 
             println("DASH: Is ${field.name} a JvmField? $isJvmField")
             if (isJvmField) {
