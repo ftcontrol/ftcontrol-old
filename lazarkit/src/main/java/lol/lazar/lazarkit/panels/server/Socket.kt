@@ -164,7 +164,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType() }))
+            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
