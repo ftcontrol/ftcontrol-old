@@ -6,9 +6,9 @@ import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 @ConfigurableCustomType
 open class TPair<T, V>(
     @field:IgnoreConfigurable
-    open var lambdaProvider: () -> T,
-    open var defaultValue: V? = null,
-    open var states: MutableMap<T, V> = mutableMapOf(),
+    var lambdaProvider: () -> T,
+    var defaultValue: V? = null,
+    var states: MutableMap<T, V> = mutableMapOf(),
     block: TPair<T, V>.() -> Unit
 ) {
 
@@ -20,6 +20,10 @@ open class TPair<T, V>(
         states[state] = value
     }
 
+    fun default(value: V) {
+        defaultValue = value
+    }
+
     operator fun invoke(): V {
         return getStateValue(lambdaProvider.invoke())
     }
@@ -29,12 +33,3 @@ open class TPair<T, V>(
         ?: throw NoSuchElementException("State '$state' not found and no default value provided")
     }
 }
-
-@ConfigurableCustomType
-class DoublePair<T>(
-    @field:IgnoreConfigurable
-    override var lambdaProvider: () -> T,
-    override var defaultValue: Double? = null,
-    override var states: MutableMap<T, Double> = mutableMapOf(),
-    block: TPair<T, Double>.() -> Unit
-) : TPair<T, Double>(lambdaProvider, defaultValue, states, block = block)
