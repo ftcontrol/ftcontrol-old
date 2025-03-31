@@ -8,7 +8,7 @@ class TelemetryManager(
     var lines = mutableListOf<String>()
 
     var lastUpdate = 0L
-    var updateInterval = 100L
+    var updateInterval = 500L
     val timeSinceLastUpdate: Long
         get() = System.currentTimeMillis() - lastUpdate
     val shouldUpdate: Boolean

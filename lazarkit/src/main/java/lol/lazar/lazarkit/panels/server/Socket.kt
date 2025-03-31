@@ -5,6 +5,7 @@ import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
 import lol.lazar.lazarkit.panels.configurables.GenericType
+import lol.lazar.lazarkit.panels.configurables.GenericTypeJson
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
@@ -22,6 +23,7 @@ import lol.lazar.lazarkit.panels.data.UpdatedJvmFields
 import lol.lazar.lazarkit.panels.data.json
 import lol.lazar.lazarkit.panels.data.toJson
 import java.io.IOException
+import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -251,26 +253,52 @@ class Socket(
                                 }
 
                                 GenericType.Types.CUSTOM -> {
-                                    it.customValues?.forEach { customValue ->
-                                        if (customValue.type != GenericType.Types.CUSTOM) {
-                                            println("   DASH: Field name: ${customValue.fieldName}")
-                                            println("   DASH: Custom value: ${customValue.valueString}")
-                                            val declaredField =
-                                                ref.reference.type.getDeclaredField(customValue.fieldName)
-                                            println("   DASH: Declared field: ${declaredField.name}")
-                                            val newValue = customValue.valueAsType
-                                            println("   DASH: New value: $newValue")
-                                            declaredField.isAccessible = true
-                                            declaredField.set(
-                                                ref.reference.get(null),
-                                                customValue.valueAsType
-                                            )
-                                        } else {
-                                            //TODO: support for nested
-
+                                    fun updateField(obj: Any, fieldName: String, value: Any?) {
+                                        try {
+                                            val field = obj.javaClass.getDeclaredField(fieldName)
+                                            field.isAccessible = true
+                                            field.set(obj, value)
+                                        } catch (e: NoSuchFieldException) {
+                                            println("Field '$fieldName' not found in class ${obj.javaClass.name}")
+                                        } catch (e: IllegalAccessException) {
+                                            println("Cannot access field '$fieldName' in class ${obj.javaClass.name}")
                                         }
-
                                     }
+
+                                    fun updateCustomFields(
+                                        parentObj: Any?,
+                                        field: Field,
+                                        customValues: List<GenericTypeJson>?
+                                    ) {
+                                        field.isAccessible = true
+                                        val nestedObj = field.get(parentObj) ?: return
+
+                                        customValues?.forEach { customValue ->
+                                            println("DASH: Field ${customValue.fieldName}, type: ${customValue.type}")
+                                            if (customValue.type != GenericType.Types.CUSTOM) {
+                                                updateField(
+                                                    nestedObj,
+                                                    customValue.fieldName,
+                                                    customValue.valueAsType
+                                                )
+                                            } else {
+                                                val nestedField =
+                                                    nestedObj.javaClass.getDeclaredField(customValue.fieldName)
+                                                nestedField.isAccessible = true
+                                                updateCustomFields(
+                                                    nestedObj,
+                                                    nestedField,
+                                                    customValue.customValues
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    it.customValues?.forEach{
+                                        println("   DASH: CV: ${it.fieldName}, type: ${it.type}")
+                                    }
+
+                                    updateCustomFields(null, ref.reference, it.customValues)
                                 }
 
                                 else -> {}
