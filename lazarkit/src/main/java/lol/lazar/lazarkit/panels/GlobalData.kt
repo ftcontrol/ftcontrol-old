@@ -27,9 +27,4 @@ object GlobalData {
             )
         }
     var activeOpModeName = ""
-
-    var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
-    var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
-
-    var jvmFields = listOf<GenericType>()
 }

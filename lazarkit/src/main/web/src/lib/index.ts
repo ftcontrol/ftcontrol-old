@@ -7,8 +7,8 @@ import {
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
 import {
-  guidGenerator,
   Types,
+  type ChangeJson,
   type CustomTypeJson,
   type GenericTypeJson,
 } from "./genericType"
@@ -34,35 +34,27 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
-  for (const field of info.jvmFields) {
-    populateField(field)
-  }
 })
 
-function populateField(field: GenericTypeJson) {
-  field.newValueString = field.valueString
-  field.value = null
-  field.isValid = true
-  if (field.type == Types.CUSTOM) {
-    for (const f of field.customValues) {
-      populateField(f)
-    }
-  }
-}
-
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
-  for (const newField of data.fields as GenericTypeJson[]) {
-    for (const oldField of info.jvmFields) {
-      if (newField.className == oldField.className) {
-        if (newField.fieldName == oldField.fieldName) {
-          oldField.valueString = newField.valueString
-          oldField.newValueString = oldField.valueString
-          oldField.value = oldField.valueString
-          oldField.isValid = true
+  function update(fields: GenericTypeJson[], updates: ChangeJson[]) {
+    for (const f of fields) {
+      if (f.type == Types.CUSTOM) {
+        update(f.customValues, updates)
+      } else {
+        for (const u of updates) {
+          if (f.id == u.id) {
+            f.valueString = u.newValueString
+            f.valueString = u.newValueString
+            f.value = u.newValueString
+            f.isValid = true
+          }
         }
       }
     }
   }
+
+  update(info.jvmFields, data.fields as ChangeJson[])
 })
 
 // setTimeout(() => {

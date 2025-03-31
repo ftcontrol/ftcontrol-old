@@ -2,85 +2,19 @@ package lol.lazar.lazarkit.panels.configurables
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.lazar.lazarkit.panels.GlobalData
-import java.util.UUID
-import kotlin.uuid.Uuid
 
 @Serializable
 @SerialName("jvmField")
 class GenericTypeJson(
+    val id: String,
     val className: String? = null,
     val fieldName: String,
     val type: GenericType.Types,
     val valueString: String,
+    val newValueString: String,
+    val value: String = "",
+    val isValid: Boolean = true,
     val possibleValues: List<String>? = null,
     val customValues: List<GenericTypeJson>? = null,
     val arrayValues: List<GenericTypeJson>? = null,
-    val id: String = UUID.randomUUID().toString()
-) {
-    fun toReference(): GenericType? {
-        return GlobalData.jvmFields.find { it.className == className && it.name == fieldName }
-    }
-
-    val valueAsType: Any?
-        get() {
-            val value = valueString
-            return when (type) {
-                GenericType.Types.INT -> {
-                    when {
-                        value.toIntOrNull() != null -> value.toInt()
-                        value.toFloatOrNull() != null -> value.toFloat()
-                            .toInt()
-
-                        value.toDoubleOrNull() != null -> value.toDouble()
-                            .toInt()
-
-                        else -> value.toInt()
-                    }
-                }
-
-                GenericType.Types.DOUBLE -> {
-                    when {
-                        value.toDoubleOrNull() != null -> value.toDouble()
-                        value.toFloatOrNull() != null -> value.toFloat()
-                            .toDouble()
-
-                        else -> value.toDouble()
-                    }
-                }
-
-                GenericType.Types.STRING -> {
-                    return value
-                }
-
-                GenericType.Types.BOOLEAN -> {
-                    return value.toBoolean()
-                }
-
-                GenericType.Types.FLOAT -> {
-                    when {
-                        value.toFloatOrNull() != null -> value.toFloat()
-                        value.toDoubleOrNull() != null -> value.toDouble()
-                            .toFloat()
-
-                        else -> value.toFloat()
-                    }
-                }
-
-                GenericType.Types.LONG -> {
-                    when {
-                        value.toLongOrNull() != null -> value.toLong()
-                        value.toDoubleOrNull() != null -> value.toDouble()
-                            .toLong()
-
-                        else -> value.toLong()
-                    }
-                }
-
-                GenericType.Types.ENUM -> null
-                GenericType.Types.ARRAY -> null
-                GenericType.Types.UNKNOWN -> null
-                GenericType.Types.CUSTOM -> null
-            }
-        }
-}
+)

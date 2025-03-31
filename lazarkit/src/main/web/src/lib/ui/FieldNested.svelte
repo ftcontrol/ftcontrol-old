@@ -4,13 +4,11 @@
 
   let {
     item,
-    parentItem,
     depth = 0,
   }: {
     item: GenericTypeJson
-    parentItem: GenericTypeJson
     depth?: number
   } = $props()
 </script>
 
-<Field {item} {parentItem} {depth} />
+<Field {item} {depth} />

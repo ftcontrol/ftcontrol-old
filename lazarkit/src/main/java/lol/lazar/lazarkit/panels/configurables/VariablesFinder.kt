@@ -2,7 +2,7 @@ package lol.lazar.lazarkit.panels.configurables
 
 import java.lang.reflect.Modifier
 
-class VariablesManager(
+class VariablesFinder(
     private val allClasses: () -> List<ClassFinder.ClassEntry>
 ) {
 
