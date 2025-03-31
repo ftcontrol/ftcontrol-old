@@ -1,17 +1,17 @@
 <script lang="ts">
   import { socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
-  import FieldNested from "./FieldNested.svelte"
-  import BooleanInput from "./primitives/BooleanInput.svelte"
-  import SelectInput from "./primitives/SelectInput.svelte"
-  import StringInput from "./primitives/StringInput.svelte"
+  import BooleanInput from "../../primitives/BooleanInput.svelte"
+  import SelectInput from "../../primitives/SelectInput.svelte"
+  import StringInput from "../../primitives/StringInput.svelte"
   import {
     doubleValidator,
     floatValidator,
     intValidator,
     longValidator,
     stringValidator,
-  } from "./primitives/validators"
+  } from "../../primitives/validators"
+  import FieldNested from "./FieldNested.svelte"
 
   let {
     item,
@@ -38,12 +38,12 @@
 </script>
 
 <div
-  class="item"
+  class:item
   class:disabled={item.type == Types.UNKNOWN}
+  class:first={depth == 0}
   style="--depth:{depth};"
 >
-  <p>{item.id} {item.fieldName} {item.type}</p>
-  <p>VS: {item.valueString} NVS:{item.newValueString} IV{item.isValid}</p>
+  <p>{item.fieldName} {item.type}</p>
   {#if item.valueString != item.newValueString && item.isValid}
     <button
       onclick={() => {
@@ -123,19 +123,20 @@
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
   {:else}
-    {JSON.stringify(item)}
+    <!-- {JSON.stringify(item)} -->
   {/if}
 </div>
 
-<!--
-  {#if item.type == "ARRAY"}
-    <p>{JSON.stringify(item.arrayValues)}</p>
-  {/if} -->
-
 <style>
   .item {
-    border-bottom: 1px solid black;
     margin-left: calc(var(--depth) * 32px);
+  }
+  p {
+    margin: 0;
+  }
+  .item.first {
+    padding: 8px;
+    border-bottom: 1px solid black;
   }
   .item.disabled {
     opacity: 0.5;

@@ -43,12 +43,11 @@
   }
   section {
     background-color: var(--card);
-    width: fit-content;
-    max-width: 80vw;
-    min-width: 600px;
     position: relative;
     border-radius: 16px;
     margin: 0.5rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
   }
   .header {
     padding-top: 1rem;

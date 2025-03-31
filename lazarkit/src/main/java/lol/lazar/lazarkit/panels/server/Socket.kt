@@ -4,7 +4,7 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
-import lol.lazar.lazarkit.panels.configurables.GlobalFields
+import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
@@ -164,7 +164,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedJvmFields(GlobalFields.jvmFields.map { it.toJsonType() }))
+            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType() }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
@@ -205,7 +205,7 @@ class Socket(
 
                         decoded.fields.forEach {
                             println("DASH: Field id: ${it.id}, New value: ${it.newValueString}")
-                            val generalRef = GlobalFields.fieldsMap[it.id] ?: return
+                            val generalRef = Configurables.fieldsMap[it.id] ?: return
                             val convertedValue = generalRef.convertValue(it.newValueString)
                             generalRef.currentValue = convertedValue
                         }
