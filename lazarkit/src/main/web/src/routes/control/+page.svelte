@@ -12,49 +12,22 @@
       fields: [
         {
           className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "customData",
+          fieldName: "customNestedData",
           type: "CUSTOM",
           valueString:
-            "org.firstinspires.ftc.teamcode.TestingAuto$Companion$CustomData@d6d801a",
+            "CustomNestedData(customData=CustomData(intValue=5, stringValue='test'), stringValue='test')",
           customValues: [
-            // {
-            //   className: "org.firstinspires.ftc.teamcode.TestingAuto",
-            //   fieldName: "intValue",
-            //   type: "INT",
-            //   valueString: (Math.random() * 100).toString(),
-            // },
-            // {
-            //   className: "org.firstinspires.ftc.teamcode.TestingAuto",
-            //   fieldName: "stringValue",
-            //   type: "STRING",
-            //   valueString: "test",
-            // },
             {
               className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "customNestedData",
+              fieldName: "customData",
               type: "CUSTOM",
-              valueString:
-                "CustomNestedData(customData=CustomData(intValue=5, stringValue='test'), stringValue='test')",
+              valueString: "CustomData(intValue=5, stringValue='test')",
               customValues: [
                 {
                   className: "org.firstinspires.ftc.teamcode.TestingAuto",
-                  fieldName: "customData",
-                  type: "CUSTOM",
-                  valueString: "CustomData(intValue=5, stringValue='test')",
-                  customValues: [
-                    {
-                      className: "org.firstinspires.ftc.teamcode.TestingAuto",
-                      fieldName: "intValue",
-                      type: "INT",
-                      valueString: (Math.random() * 100).toString(),
-                    },
-                    {
-                      className: "org.firstinspires.ftc.teamcode.TestingAuto",
-                      fieldName: "stringValue",
-                      type: "STRING",
-                      valueString: "test",
-                    },
-                  ],
+                  fieldName: "intValue",
+                  type: "INT",
+                  valueString: "5",
                 },
                 {
                   className: "org.firstinspires.ftc.teamcode.TestingAuto",
@@ -63,6 +36,12 @@
                   valueString: "test" + (Math.random() * 100).toString(),
                 },
               ],
+            },
+            {
+              className: "org.firstinspires.ftc.teamcode.TestingAuto",
+              fieldName: "stringValue",
+              type: "STRING",
+              valueString: "test" + (Math.random() * 100).toString(),
             },
           ],
         },
