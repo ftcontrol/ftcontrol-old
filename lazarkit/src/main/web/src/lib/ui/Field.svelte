@@ -19,35 +19,54 @@
 
   let { item, depth = 0 }: { item: GenericTypeJson; depth?: number } = $props()
 
-  function getNesting(input: CustomTypeJson, level = 0) {
-    var components: {
-      item: GenericTypeJson
-      level: number
-    }[] = []
-
-    for (const item of input.customValues) {
-      if (item.type === "CUSTOM") {
-        components.push(...getNesting(item, level + 1))
+  function getUpdatedValues(field: CustomTypeJson): CustomTypeJson {
+    var outputList: GenericTypeJson[] = []
+    if (field.type != Types.CUSTOM) outputList
+    for (const customValue of field.customValues) {
+      if (customValue.type != Types.CUSTOM) {
+        if (
+          customValue.valueString != customValue.newValueString &&
+          customValue.isValid
+        ) {
+          outputList.push({
+            className: customValue.className,
+            fieldName: customValue.fieldName,
+            type: customValue.type,
+            valueString: customValue.newValueString,
+          } as GenericTypeJson)
+        }
       } else {
-        components.push({ item, level })
+        var processed = getUpdatedValues(customValue)
+        if (processed.customValues.length) outputList.push(processed)
       }
     }
-
-    return components
+    return {
+      className: field.className,
+      fieldName: field.fieldName,
+      type: field.type,
+      valueString: field.newValueString,
+      customValues: outputList,
+    } as CustomTypeJson
   }
 
   function sendFieldUpdate(item: GenericTypeJson) {
     if (!item.isValid) return
+    var output = {
+      className: item.className,
+      fieldName: item.fieldName,
+      type: item.type,
+      valueString: item.newValueString,
+    }
+    if (item.type == Types.CUSTOM) {
+      var processed = getUpdatedValues(item)
+      if (processed.customValues.length) {
+        output = processed
+      }
+      return
+    }
     socket.sendMessage({
       kind: "jvmFields",
-      fields: [
-        {
-          className: item.className,
-          fieldName: item.fieldName,
-          type: item.type,
-          valueString: item.newValueString,
-        },
-      ],
+      fields: [output],
     })
     item.valueString = item.newValueString
   }
@@ -135,6 +154,7 @@
       possibleValues={item.possibleValues}
     />
   {:else if item.type == Types.CUSTOM}
+    {JSON.stringify(getUpdatedValues(item).customValues)}
     {#each item.customValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}

@@ -1,6 +1,10 @@
 <script lang="ts">
   import { info, socket } from "$lib"
-  import { Types, type GenericTypeJson } from "$lib/genericType"
+  import {
+    Types,
+    type CustomTypeJson,
+    type GenericTypeJson,
+  } from "$lib/genericType"
   import { Section } from "$primitives"
   import Field from "$ui/Field.svelte"
 
@@ -39,20 +43,56 @@
     return item.split("." + getClassName(item))[0]
   }
 
+  function getUpdatedValues(field: CustomTypeJson): CustomTypeJson {
+    var outputList: GenericTypeJson[] = []
+    if (field.type != Types.CUSTOM) outputList
+    for (const customValue of field.customValues) {
+      if (customValue.type != Types.CUSTOM) {
+        if (
+          customValue.valueString != customValue.newValueString &&
+          customValue.isValid
+        ) {
+          outputList.push({
+            className: customValue.className,
+            fieldName: customValue.fieldName,
+            type: customValue.type,
+            valueString: customValue.newValueString,
+          } as GenericTypeJson)
+        }
+      } else {
+        var processed = getUpdatedValues(customValue)
+        if (processed.customValues.length) outputList.push(processed)
+      }
+    }
+    return {
+      className: field.className,
+      fieldName: field.fieldName,
+      type: field.type,
+      valueString: field.newValueString,
+      customValues: outputList,
+    } as CustomTypeJson
+  }
+
   function sendAllUpdates(fields: GenericTypeJson[]) {
     var changedFields = []
     for (const field of fields) {
       //TODO: handle custom types
       if (field.valueString != field.newValueString && field.isValid) {
-        changedFields.push({
-          className: field.className,
-          fieldName: field.fieldName,
-          type: field.type,
-          valueString: field.newValueString,
-        })
-        field.valueString = field.newValueString
+        if (field.type == Types.CUSTOM) {
+          var processed = getUpdatedValues(field)
+          if (processed.customValues.length) changedFields.push(processed)
+        } else {
+          changedFields.push({
+            className: field.className,
+            fieldName: field.fieldName,
+            type: field.type,
+            valueString: field.newValueString,
+          })
+          field.valueString = field.newValueString
+        }
       }
     }
+    alert(changedFields)
     socket.sendMessage({
       kind: "jvmFields",
       fields: changedFields,
