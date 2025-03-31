@@ -8,30 +8,11 @@
 <button
   onclick={() => {
     socket.sendMessage({
-      kind: "jvmFields",
+      kind: "updatedJvmFields",
       fields: [
         {
-          className: "org.firstinspires.ftc.teamcode.TestingAuto",
-          fieldName: "customNestedData",
-          type: "CUSTOM",
-          valueString:
-            "CustomNestedData(customData=CustomData(intValue=5, stringValue='test'), stringValue='test')",
-          customValues: [
-            {
-              className: "org.firstinspires.ftc.teamcode.TestingAuto",
-              fieldName: "customData",
-              type: "CUSTOM",
-              valueString: "CustomData(intValue=5, stringValue='test')",
-              customValues: [
-                {
-                  className: "org.firstinspires.ftc.teamcode.TestingAuto",
-                  fieldName: "stringValue",
-                  type: "STRING",
-                  valueString: "test" + (Math.random() * 100).toString(),
-                },
-              ],
-            },
-          ],
+          id: "ed0bcc0b-a4c1-4159-83bc-218b12974474",
+          newValueString: (Math.random() * 100).toString(),
         },
       ],
     })

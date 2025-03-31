@@ -2,6 +2,7 @@
   import { info, socket } from "$lib"
   import {
     Types,
+    type ChangeJson,
     type CustomTypeJson,
     type GenericTypeJson,
   } from "$lib/genericType"
@@ -43,59 +44,28 @@
     return item.split("." + getClassName(item))[0]
   }
 
-  function getUpdatedValues(field: CustomTypeJson): CustomTypeJson {
-    var outputList: GenericTypeJson[] = []
-    if (field.type != Types.CUSTOM) outputList
-    for (const customValue of field.customValues) {
-      if (customValue.type != Types.CUSTOM) {
-        if (
-          customValue.valueString != customValue.newValueString &&
-          customValue.isValid
-        ) {
-          outputList.push({
-            className: customValue.className,
-            fieldName: customValue.fieldName,
-            type: customValue.type,
-            valueString: customValue.newValueString,
-          } as GenericTypeJson)
-        }
+  function getAllValues(fields: GenericTypeJson[]): ChangeJson[] {
+    var values: ChangeJson[] = []
+    for (const field of fields) {
+      if (field.type == Types.CUSTOM) {
+        var nested = getAllValues(field.customValues)
+        if (nested.length) values = [...values, ...nested]
       } else {
-        var processed = getUpdatedValues(customValue)
-        if (processed.customValues.length) outputList.push(processed)
+        if (field.valueString != field.newValueString && field.isValid) {
+          values.push({
+            id: field.id,
+            newValueString: field.newValueString,
+          })
+        }
       }
     }
-    return {
-      className: field.className,
-      fieldName: field.fieldName,
-      type: field.type,
-      valueString: field.newValueString,
-      customValues: outputList,
-    } as CustomTypeJson
+    return values
   }
 
   function sendAllUpdates(fields: GenericTypeJson[]) {
-    var changedFields = []
-    for (const field of fields) {
-      //TODO: handle custom types
-      if (field.valueString != field.newValueString && field.isValid) {
-        if (field.type == Types.CUSTOM) {
-          var processed = getUpdatedValues(field)
-          if (processed.customValues.length) changedFields.push(processed)
-        } else {
-          changedFields.push({
-            className: field.className,
-            fieldName: field.fieldName,
-            type: field.type,
-            valueString: field.newValueString,
-          })
-          field.valueString = field.newValueString
-        }
-      }
-    }
-    alert(changedFields)
     socket.sendMessage({
-      kind: "jvmFields",
-      fields: changedFields,
+      kind: "updatedJvmFields",
+      fields: getAllValues(fields),
     })
   }
 </script>
@@ -112,7 +82,7 @@
     <div>
       <h3>{key}</h3>
       {#each items as item}
-        <Field {item} parentItem={item} />
+        <Field {item} />
       {/each}
     </div>
   {/each}

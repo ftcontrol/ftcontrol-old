@@ -46,3 +46,8 @@ export type GenericTypeJson =
   | CustomTypeJson
   | ArrayTypeJson
   | DefaultTypeJson
+
+export type ChangeJson = {
+  id: string
+  newValueString: string
+}

@@ -1,10 +1,6 @@
 <script lang="ts">
   import { socket } from "$lib"
-  import {
-    Types,
-    type CustomTypeJson,
-    type GenericTypeJson,
-  } from "$lib/genericType"
+  import { Types, type GenericTypeJson } from "$lib/genericType"
   import FieldNested from "./FieldNested.svelte"
   import BooleanInput from "./primitives/BooleanInput.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
@@ -19,85 +15,25 @@
 
   let {
     item,
-    parentItem,
     depth = 0,
   }: {
     item: GenericTypeJson
-    parentItem: GenericTypeJson
     depth?: number
   } = $props()
 
-  function getUpdatedValues(field) {
-    var outputList = []
-    if (field.type != Types.CUSTOM) outputList
-    for (const customValue of field.customValues) {
-      if (customValue.type != Types.CUSTOM) {
-        if (
-          customValue.valueString != customValue.newValueString &&
-          customValue.isValid
-        ) {
-          outputList.push({
-            id: customValue.id,
-            className: customValue.className,
-            fieldName: customValue.fieldName,
-            type: customValue.type,
-            valueString: customValue.newValueString,
-          })
-        }
-      } else {
-        var processed = getUpdatedValues(customValue)
-        if (processed.customValues.length) outputList.push(processed)
-      }
-    }
-    return {
-      id: field.id,
-      className: field.className,
-      fieldName: field.fieldName,
-      type: field.type,
-      valueString: field.newValueString,
-      customValues: outputList,
-    }
-  }
-
-  function sendFieldUpdate(item: GenericTypeJson) {
+  function sendFieldUpdate() {
     if (!item.isValid) return
-    var output = {
-      className: item.className,
-      fieldName: item.fieldName,
-      type: item.type,
-      valueString: item.newValueString,
-    }
-    if (parentItem.type == Types.CUSTOM) {
-      var processed = getUpdatedValues(parentItem)
-      if (processed.customValues.length) {
-        output = processed
-        // alert(JSON.stringify(output))
-        function process(data) {
-          var out = []
-          for (const i of data.customValues) {
-            if (i.type == Types.CUSTOM) {
-              var newItem = process(i)
-              out.push(newItem)
-            } else {
-              console.log(i)
-              console.log("comparing", i.id, item.id)
-              if (i.id == item.id) {
-                out.push(i)
-              }
-            }
-          }
-          data.customValues = out
-          return data
-        }
-        // alert(JSON.stringify(process(output)))
-      }
-      // return
-    }
     socket.sendMessage({
-      kind: "jvmFields",
-      fields: [output],
+      kind: "updatedJvmFields",
+      fields: [
+        {
+          id: item.id,
+          newValueString: item.newValueString,
+        },
+      ],
     })
     item.valueString = item.newValueString
+    item.value = item.newValueString
   }
 </script>
 
@@ -106,12 +42,12 @@
   class:disabled={item.type == Types.UNKNOWN}
   style="--depth:{depth};"
 >
-  <p>{item.id} {item.fieldName} {item.type} {item.isValid}</p>
+  <p>{item.id} {item.fieldName} {item.type}</p>
+  <p>VS: {item.valueString} NVS:{item.newValueString} IV{item.isValid}</p>
   {#if item.valueString != item.newValueString && item.isValid}
     <button
       onclick={() => {
-        if (!item.isValid) return
-        sendFieldUpdate(item)
+        sendFieldUpdate()
       }}
     >
       Update
@@ -120,7 +56,7 @@
   {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
     <form
       onsubmit={() => {
-        sendFieldUpdate(item)
+        sendFieldUpdate()
       }}
     >
       {#if item.type == Types.INT}
@@ -183,9 +119,8 @@
       possibleValues={item.possibleValues}
     />
   {:else if item.type == Types.CUSTOM}
-    {JSON.stringify(getUpdatedValues(item).customValues)}
     {#each item.customValues as custom}
-      <FieldNested item={custom} parentItem={item} depth={depth + 1} />
+      <FieldNested item={custom} depth={depth + 1} />
     {/each}
   {:else}
     {JSON.stringify(item)}

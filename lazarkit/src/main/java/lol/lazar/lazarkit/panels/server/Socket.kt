@@ -4,8 +4,7 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
-import lol.lazar.lazarkit.panels.configurables.GenericType
-import lol.lazar.lazarkit.panels.configurables.GenericTypeJson
+import lol.lazar.lazarkit.panels.configurables.GlobalFields
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
@@ -23,7 +22,6 @@ import lol.lazar.lazarkit.panels.data.UpdatedJvmFields
 import lol.lazar.lazarkit.panels.data.json
 import lol.lazar.lazarkit.panels.data.toJson
 import java.io.IOException
-import java.lang.reflect.Field
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -166,7 +164,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedJvmFields(GlobalData.jvmFields.map { it.toJsonType() }))
+            send(ReceivedJvmFields(GlobalFields.jvmFields.map { it.toJsonType() }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
@@ -201,108 +199,15 @@ class Socket(
                         sendJvmFields()
                     }
 
-                    is ReceivedJvmFields -> {
+                    is UpdatedJvmFields -> {
                         println("DASH: Received JvmFields: ${decoded.fields}")
 
 
                         decoded.fields.forEach {
-                            val ref = it.toReference() ?: return
-
-                            println("DASH: Found field: ${ref.className}.${ref.name} | Type: ${ref.type}")
-                            println("DASH: Value String: ${it.valueString}")
-                            println("DASH: Value: ${it.valueAsType}")
-
-                            when (ref.type) {
-                                GenericType.Types.INT -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.DOUBLE -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.LONG -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.FLOAT -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.STRING -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.BOOLEAN -> {
-                                    ref.reference.set(null, it.valueAsType)
-                                }
-
-                                GenericType.Types.ENUM -> {
-                                    val enumValue =
-                                        ref.reference.type.enumConstants.firstOrNull { c ->
-                                            c.toString() == it.valueString
-                                        }
-
-                                    println("DASH: Enum value: $enumValue")
-
-                                    if (enumValue != null) {
-                                        ref.reference.set(null, enumValue)
-                                    } else {
-                                        //
-                                    }
-                                }
-
-                                GenericType.Types.CUSTOM -> {
-                                    fun updateField(obj: Any, fieldName: String, value: Any?) {
-                                        try {
-                                            val field = obj.javaClass.getDeclaredField(fieldName)
-                                            field.isAccessible = true
-                                            field.set(obj, value)
-                                        } catch (e: NoSuchFieldException) {
-                                            println("Field '$fieldName' not found in class ${obj.javaClass.name}")
-                                        } catch (e: IllegalAccessException) {
-                                            println("Cannot access field '$fieldName' in class ${obj.javaClass.name}")
-                                        }
-                                    }
-
-                                    fun updateCustomFields(
-                                        parentObj: Any?,
-                                        field: Field,
-                                        customValues: List<GenericTypeJson>?
-                                    ) {
-                                        field.isAccessible = true
-                                        val nestedObj = field.get(parentObj) ?: return
-
-                                        customValues?.forEach { customValue ->
-                                            println("DASH: Field ${customValue.fieldName}, type: ${customValue.type}")
-                                            if (customValue.type != GenericType.Types.CUSTOM) {
-                                                updateField(
-                                                    nestedObj,
-                                                    customValue.fieldName,
-                                                    customValue.valueAsType
-                                                )
-                                            } else {
-                                                val nestedField =
-                                                    nestedObj.javaClass.getDeclaredField(customValue.fieldName)
-                                                nestedField.isAccessible = true
-                                                updateCustomFields(
-                                                    nestedObj,
-                                                    nestedField,
-                                                    customValue.customValues
-                                                )
-                                            }
-                                        }
-                                    }
-
-                                    it.customValues?.forEach{
-                                        println("   DASH: CV: ${it.fieldName}, type: ${it.type}")
-                                    }
-
-                                    updateCustomFields(null, ref.reference, it.customValues)
-                                }
-
-                                else -> {}
-                            }
+                            println("DASH: Field id: ${it.id}, New value: ${it.newValueString}")
+                            val generalRef = GlobalFields.fieldsMap[it.id] ?: return
+                            val convertedValue = generalRef.convertValue(it.newValueString)
+                            generalRef.currentValue = convertedValue
                         }
 
                         sendAllClients(
