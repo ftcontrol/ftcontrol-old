@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { socket, info } from "$lib"
+  import { info } from "$lib"
+  import Section from "$ui/primitives/Section.svelte"
 </script>
 
-<h1>Current Time:</h1>
-<p>{info.time}</p>
+<Section title="Current Time">
+  <h1>Current Time:</h1>
+  <p>{info.time}</p>
+</Section>

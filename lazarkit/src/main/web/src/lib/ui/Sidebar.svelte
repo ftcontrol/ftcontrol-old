@@ -11,7 +11,6 @@
 
   <a href="/control">Robot Control</a>
   <a href="/time">Global Time</a>
-  <a href="/debug">Debug</a>
   <a href="/controller">Controller</a>
 </nav>
 
