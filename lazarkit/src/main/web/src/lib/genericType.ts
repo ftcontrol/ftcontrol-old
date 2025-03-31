@@ -16,6 +16,7 @@ export interface BaseGenericTypeJson {
   fieldName: string
   type: Types
   valueString: string
+  id: string
   newValueString: string
   isValid: boolean
   value: any

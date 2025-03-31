@@ -6,7 +6,12 @@ import {
   type OpMode,
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
-import { Types, type CustomTypeJson, type GenericTypeJson } from "./genericType"
+import {
+  guidGenerator,
+  Types,
+  type CustomTypeJson,
+  type GenericTypeJson,
+} from "./genericType"
 
 export const socket = new SocketManager()
 

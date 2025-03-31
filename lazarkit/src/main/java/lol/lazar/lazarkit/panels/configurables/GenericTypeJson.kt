@@ -3,6 +3,8 @@ package lol.lazar.lazarkit.panels.configurables
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import lol.lazar.lazarkit.panels.GlobalData
+import java.util.UUID
+import kotlin.uuid.Uuid
 
 @Serializable
 @SerialName("jvmField")
@@ -13,7 +15,8 @@ class GenericTypeJson(
     val valueString: String,
     val possibleValues: List<String>? = null,
     val customValues: List<GenericTypeJson>? = null,
-    val arrayValues: List<GenericTypeJson>? = null
+    val arrayValues: List<GenericTypeJson>? = null,
+    val id: String = UUID.randomUUID().toString()
 ) {
     fun toReference(): GenericType? {
         return GlobalData.jvmFields.find { it.className == className && it.name == fieldName }
