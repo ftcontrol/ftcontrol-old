@@ -36,6 +36,7 @@ class GenericTypeJson(
     val possibleValues: List<String>? = null,
     val customValues: List<GenericTypeJson>? = null,
     val arrayValues: List<GenericTypeJson>? = null,
+    val mapValues: List<GenericTypeJson>? = null,
 )
 
 @Serializable

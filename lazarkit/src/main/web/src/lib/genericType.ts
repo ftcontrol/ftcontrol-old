@@ -9,6 +9,9 @@ export enum Types {
   ARRAY = "ARRAY",
   UNKNOWN = "UNKNOWN",
   CUSTOM = "CUSTOM",
+  MAP = "MAP",
+  GENERIC = "GENERIC",
+  GENERIC_NO_ANNOTATION = "GENERIC_NO_ANNOTATION",
 }
 
 export interface BaseGenericTypeJson {
@@ -37,14 +40,20 @@ export interface ArrayTypeJson extends BaseGenericTypeJson {
   arrayValues: GenericTypeJson[]
 }
 
+export interface MapTypeJson extends BaseGenericTypeJson {
+  type: Types.MAP
+  mapValues: GenericTypeJson[]
+}
+
 export interface DefaultTypeJson extends BaseGenericTypeJson {
-  type: Exclude<Types, Types.ENUM | Types.CUSTOM | Types.ARRAY>
+  type: Exclude<Types, Types.ENUM | Types.CUSTOM | Types.ARRAY | Types.MAP>
 }
 
 export type GenericTypeJson =
   | EnumTypeJson
   | CustomTypeJson
   | ArrayTypeJson
+  | MapTypeJson
   | DefaultTypeJson
 
 export type ChangeJson = {
