@@ -60,14 +60,14 @@ abstract class BaseGenericField(
 
                 println("DASH: TYPES: Getting type for ${reference.name} of $classType with $currentValue")
 
-                if (genericType is java.lang.reflect.ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
+                if (genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
                     val genericAnnotation =
                         parentReference?.reference?.getAnnotation(GenericValue::class.java)
                     if (genericAnnotation != null) {
                         println("   DASH: TYPES: tParam: ${genericAnnotation.tParam}, vParam: ${genericAnnotation.vParam}")
 
                         when (genericType) {
-                            is java.lang.reflect.ParameterizedType -> {
+                            is ParameterizedType -> {
                                 println("   DASH: TYPES: Parameterized type")
                                 val typeArguments = genericType.actualTypeArguments
                                 println("   DASH: TYPES: Actual type arguments: ${typeArguments.contentToString()}")
