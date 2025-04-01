@@ -108,6 +108,8 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Custom Data is $customData")
         panelsTelemetry.debug("Custom Nested Data is $customNestedData")
         panelsTelemetry.debug("Map is ${testingMap.entries.joinToString()}")
+        panelsTelemetry.debug("Current State of Claw is ${ClawConfig.state}")
+        panelsTelemetry.debug("Current Position of Claw is ${ClawConfig.testTParam()}")
 
         panelsTelemetry.debug("DV: ${ClawConfig.testTParam.defaultValue}")
 
