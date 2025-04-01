@@ -1,5 +1,6 @@
 package lol.lazar.lazarkit.panels.configurables
 
+import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
 import lol.lazar.lazarkit.panels.data.GenericTypeJson
 import java.lang.reflect.Field
 import java.util.UUID
@@ -20,18 +21,20 @@ abstract class BaseGenericField(
         ENUM,
         ARRAY,
         UNKNOWN,
-        CUSTOM
+        CUSTOM,
+        GENERIC
     }
 
     abstract var currentValue: Any?
 
     abstract val toJsonType: GenericTypeJson
 
-    fun getType(classType: Class<*>?): Types {
-        if (classType == null) {
-            return Types.UNKNOWN
         }
         return when (classType) {
+    fun getType(classType: Class<*>?): Types {
+
+        val answer = when (classType) {
+            null -> Types.UNKNOWN
             Int::class.java, Integer::class.java -> Types.INT
             Double::class.java, java.lang.Double::class.java -> Types.DOUBLE
             String::class.java -> Types.STRING
@@ -46,14 +49,22 @@ abstract class BaseGenericField(
                 if (classType.isArray) {
                     return Types.ARRAY
                 }
-
                 if (Configurables.customTypeClasses.any { it.className == classType.name }) {
                     return Types.CUSTOM
+                }
+
+                val genericType = reference.genericType
+
+                if (genericType is java.lang.reflect.ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
+                    return Types.GENERIC
                 }
 
                 Types.UNKNOWN
             }
         }
+
+        println("DASH: TYPES: Type for ${reference.name} is $answer")
+        return answer
     }
 
     abstract val type: Types

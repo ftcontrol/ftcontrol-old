@@ -94,7 +94,7 @@ class TestingAuto : OpMode(
 
     override fun init() {
         panelsTelemetry.debug("Hi, init was ran!")
-        panelsTelemetry.debug("Lambda: ${ClawConfig.value()}")
+        panelsTelemetry.debug("Lambda: ${ClawConfig.testTParam()}")
         panelsTelemetry.update(telemetry)
     }
 
