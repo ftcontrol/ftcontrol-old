@@ -25,8 +25,8 @@ object Configurables {
         }
         configurableClasses = finder.configurableClasses
         println("DASH: Found ${finder.customTypeClasses.size} custom type classes:")
-        finder.customTypeClasses.forEach { className ->
-            println("DASH: $className")
+        finder.customTypeClasses.forEach { entry ->
+            println("DASH: ${entry.className} / ${Class.forName(entry.className).declaredFields.map { it.name }}")
         }
         customTypeClasses = finder.customTypeClasses
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
