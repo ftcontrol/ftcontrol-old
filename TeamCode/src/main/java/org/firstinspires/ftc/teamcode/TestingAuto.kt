@@ -94,7 +94,6 @@ class TestingAuto : OpMode(
 
     override fun init() {
         panelsTelemetry.debug("Hi, init was ran!")
-        panelsTelemetry.debug("Lambda: ${ClawConfig.testTParam()}")
         panelsTelemetry.update(telemetry)
     }
 
@@ -112,6 +111,8 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Enum is $customEnum")
         panelsTelemetry.debug("Custom Data is $customData")
         panelsTelemetry.debug("Custom Nested Data is $customNestedData")
+
+        panelsTelemetry.debug("DV: ${ClawConfig.testTParam.defaultValue}")
 
         panelsTelemetry.debug("Array is ${testArray.joinToString()}")
 

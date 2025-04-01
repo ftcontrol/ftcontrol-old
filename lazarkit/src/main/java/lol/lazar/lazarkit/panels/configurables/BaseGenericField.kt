@@ -22,18 +22,16 @@ abstract class BaseGenericField(
         ARRAY,
         UNKNOWN,
         CUSTOM,
-        GENERIC
+        GENERIC,
+        GENERIC_NO_ANNOTATION
     }
 
     abstract var currentValue: Any?
 
     abstract val toJsonType: GenericTypeJson
 
-        }
-        return when (classType) {
     fun getType(classType: Class<*>?): Types {
-
-        val answer = when (classType) {
+        return when (classType) {
             null -> Types.UNKNOWN
             Int::class.java, Integer::class.java -> Types.INT
             Double::class.java, java.lang.Double::class.java -> Types.DOUBLE
@@ -55,16 +53,49 @@ abstract class BaseGenericField(
 
                 val genericType = reference.genericType
 
+                println("DASH: TYPES: Getting type for ${reference.name} of $classType with $currentValue")
+
                 if (genericType is java.lang.reflect.ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
-                    return Types.GENERIC
+                    val genericAnnotation =
+                        parentReference?.reference?.getAnnotation(GenericValue::class.java)
+                    if (genericAnnotation != null) {
+                        println("   DASH: TYPES: tParam: ${genericAnnotation.tParam}, vParam: ${genericAnnotation.vParam}")
+
+                        when (genericType) {
+                            is java.lang.reflect.ParameterizedType -> {
+                                println("   DASH: TYPES: Parameterized type")
+                                val typeArguments = genericType.actualTypeArguments
+                                println("   DASH: TYPES: Actual type arguments: ${typeArguments.contentToString()}")
+
+                                typeArguments.forEach {
+                                    println("   DASH: TYPES: Type argument: $it")
+                                }
+                            }
+
+                            is java.lang.reflect.TypeVariable<*> -> {
+                                println("   DASH: TYPES: Type variable")
+                                println("   DASH: TYPES: Generic declaration: ${genericType.genericDeclaration}")
+                                val resolvedType = when (genericType.name) {
+                                    "T" -> genericAnnotation.tParam
+                                    "V" -> genericAnnotation.vParam
+                                    else -> null
+                                }
+                                println("   DASH: TYPES: Resolved type for ${genericType.name}: $resolvedType")
+                                if(resolvedType != null) {
+                                    return getType(resolvedType.java)
+                                }
+                            }
+                        }
+
+                        return Types.GENERIC
+                    } else {
+                        return Types.GENERIC_NO_ANNOTATION
+                    }
                 }
 
                 Types.UNKNOWN
             }
         }
-
-        println("DASH: TYPES: Type for ${reference.name} is $answer")
-        return answer
     }
 
     abstract val type: Types
