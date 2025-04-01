@@ -21,6 +21,7 @@ class GenericField(
 
     var customValues: List<GenericField>? = null
     var arrayValues: List<ArrayElement>? = null
+    var mapValues: List<MapValueElement>? = null
 
     init {
         Configurables.fieldsMap[id] = this
@@ -48,6 +49,19 @@ class GenericField(
                 arrayValues = (0 until Array.getLength(componentValues)).map { i ->
                     ArrayElement(this, i)
                 }
+            }
+        }
+
+        if (type == Types.MAP) {
+            val mapInstance = currentValue as? Map<*, *>
+            if (mapInstance != null) {
+                val newList: MutableList<MapValueElement> = mutableListOf()
+                mapInstance.forEach { (key, _) ->
+                    if (key != null) {
+                        newList.add(MapValueElement(this, key))
+                    }
+                }
+                mapValues = newList.toList()
             }
         }
     }
@@ -105,6 +119,7 @@ class GenericField(
             newValueString = currentValue.toString(),
             possibleValues = possibleValues,
             customValues = customValues?.map { it.toJsonType },
-            arrayValues = arrayValues?.map { it.toJsonType }
+            arrayValues = arrayValues?.map { it.toJsonType },
+            mapValues = mapValues?.map { it.toJsonType },
         )
 }

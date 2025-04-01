@@ -3,6 +3,7 @@ package lol.lazar.lazarkit.panels.configurables
 import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
 import lol.lazar.lazarkit.panels.data.GenericTypeJson
 import java.lang.reflect.Field
+import java.lang.reflect.ParameterizedType
 import java.util.UUID
 
 abstract class BaseGenericField(
@@ -20,6 +21,7 @@ abstract class BaseGenericField(
         LONG,
         ENUM,
         ARRAY,
+        MAP,
         UNKNOWN,
         CUSTOM,
         GENERIC,
@@ -46,6 +48,9 @@ abstract class BaseGenericField(
                 }
                 if (classType.isArray) {
                     return Types.ARRAY
+                }
+                if (Map::class.java.isAssignableFrom(classType)) {
+                    return Types.MAP
                 }
                 if (Configurables.customTypeClasses.any { it.className == classType.name }) {
                     return Types.CUSTOM

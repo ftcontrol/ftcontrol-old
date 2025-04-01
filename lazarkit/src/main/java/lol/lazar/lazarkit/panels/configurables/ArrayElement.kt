@@ -51,6 +51,5 @@ class ArrayElement(
             type = type,
             valueString = currentValue.toString(),
             newValueString = currentValue.toString(),
-            value = currentValue.toString(),
         )
 }

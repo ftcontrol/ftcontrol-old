@@ -124,6 +124,10 @@
     {#each item.arrayValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
+  {:else if item.type == Types.MAP}
+    {#each item.mapValues as mapCustom}
+      <FieldNested item={mapCustom} depth={depth + 1} />
+    {/each}
   {:else if item.type != Types.UNKNOWN}
     {JSON.stringify(item)}
   {/if}

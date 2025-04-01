@@ -80,14 +80,10 @@ class TestingAuto : OpMode(
         var testArray = intArrayOf(1, 2, 3)
 
         @JvmField
-        var lambdaValue = {
-            when (customEnum) {
-                CustomEnum.TEST -> "0"
-                CustomEnum.TEST2 -> "0"
-                CustomEnum.TEST3 -> "1"
-                CustomEnum.TEST4 -> "1"
-            }
-        }
+        var testingMap = mapOf(
+            "test" to 0,
+            "test2" to 1
+        )
     }
 
     var panelsTelemetry = Panels.getTelemetry()
@@ -111,6 +107,7 @@ class TestingAuto : OpMode(
         panelsTelemetry.debug("Enum is $customEnum")
         panelsTelemetry.debug("Custom Data is $customData")
         panelsTelemetry.debug("Custom Nested Data is $customNestedData")
+        panelsTelemetry.debug("Map is ${testingMap.entries.joinToString()}")
 
         panelsTelemetry.debug("DV: ${ClawConfig.testTParam.defaultValue}")
 
