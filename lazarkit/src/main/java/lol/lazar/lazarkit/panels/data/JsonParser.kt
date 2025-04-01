@@ -24,6 +24,7 @@ val json = Json {
             subclass(GetJvmFieldsRequest::class)
             subclass(ReceivedJvmFields::class)
             subclass(UpdatedJvmFields::class)
+            subclass(BatteryVoltage::class)
         }
     }
     encodeDefaults = false

@@ -104,4 +104,5 @@ export class InfoManager {
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
   telemetry = $state<string[]>([])
   jvmFields = $state<GenericTypeJson[]>([])
+  batteryVoltage = $state<number>(-1.0)
 }
