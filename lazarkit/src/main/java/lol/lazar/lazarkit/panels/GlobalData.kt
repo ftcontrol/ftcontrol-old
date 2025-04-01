@@ -25,4 +25,6 @@ object GlobalData {
             )
         }
     var activeOpModeName = ""
+
+    var batteryVoltage = -1.0
 }

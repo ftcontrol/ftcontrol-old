@@ -57,6 +57,10 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
   update(info.jvmFields, data.fields as ChangeJson[])
 })
 
+socket.addMessageHandler("batteryVoltage", (data: GenericData) => {
+  info.batteryVoltage = data.value
+})
+
 // setTimeout(() => {
 //   socket.sendMessage({ kind: "getOpmodes" })
 //   socket.sendMessage({ kind: "getActiveOpMode" })

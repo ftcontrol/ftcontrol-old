@@ -1,11 +1,14 @@
 package lol.lazar.lazarkit.panels.server
 
+import com.qualcomm.hardware.lynx.LynxModule
+import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
+import lol.lazar.lazarkit.panels.data.BatteryVoltage
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
@@ -21,12 +24,14 @@ import lol.lazar.lazarkit.panels.data.TimeObject
 import lol.lazar.lazarkit.panels.data.UpdatedJvmFields
 import lol.lazar.lazarkit.panels.data.json
 import lol.lazar.lazarkit.panels.data.toJson
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.math.max
 
 class Socket(
     private val initOpMode: (name: String) -> Unit,
@@ -121,6 +126,8 @@ class Socket(
                     try {
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
+                        updateBatteryVoltage()
+                        send(BatteryVoltage(GlobalData.batteryVoltage))
                     } catch (e: IOException) {
                         stopTimer()
                     }
@@ -132,6 +139,16 @@ class Socket(
             timer.cancel()
             timer.purge()
         }
+
+        fun updateBatteryVoltage() {
+            GlobalData.batteryVoltage = -1.0
+            val hardwareMap = GlobalData.activeOpMode?.hardwareMap ?: return
+            for (module in hardwareMap.getAll(LynxModule::class.java)) {
+                GlobalData.batteryVoltage =
+                    max(GlobalData.batteryVoltage, module.getInputVoltage(VoltageUnit.VOLTS))
+            }
+        }
+
 
         override fun onClose(
             code: WebSocketFrame.CloseCode,
