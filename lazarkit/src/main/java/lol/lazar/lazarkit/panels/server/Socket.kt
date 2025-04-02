@@ -1,7 +1,6 @@
 package lol.lazar.lazarkit.panels.server
 
 import com.qualcomm.hardware.lynx.LynxModule
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
@@ -9,6 +8,7 @@ import lol.lazar.lazarkit.panels.OpModeData
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
 import lol.lazar.lazarkit.panels.data.BatteryVoltage
+import lol.lazar.lazarkit.panels.data.Canvas
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
@@ -76,11 +76,11 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(lines: List<String>) {
+    fun sendTelemetry(lines: List<String>, canvas: Canvas) {
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
-            client.send(TelemetryPacket(lines))
+            client.send(TelemetryPacket(lines, canvas))
         }
     }
 

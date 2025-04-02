@@ -19,14 +19,14 @@ class CorePanels {
     var uiManager = UIManager()
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
-    var opModeData = OpModeData({ data -> socket.sendOpModesList() })
+    var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
     lateinit var server: Server
     lateinit var socket: Socket
 
     lateinit var limelightServer: LimelightServer
 
-    var telemetryManager = TelemetryManager({ lines -> socket.sendTelemetry(lines) })
+    var telemetryManager = TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
 
 
     fun attachWebServer(context: Context, webServer: WebServer) {
