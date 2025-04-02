@@ -32,7 +32,11 @@
       if (field.valueString != field.newValueString && field.isValid) {
         return true
       }
-      if (field.type == Types.CUSTOM) {
+      if (
+        field.type == Types.CUSTOM ||
+        field.type == Types.ARRAY ||
+        field.type == Types.MAP
+      ) {
         var innerIsChanged = isChanged(field.customValues)
         if (innerIsChanged) return true
       }
@@ -43,7 +47,11 @@
   function getAllValues(fields: GenericTypeJson[]): ChangeJson[] {
     var values: ChangeJson[] = []
     for (const field of fields) {
-      if (field.type == Types.CUSTOM) {
+      if (
+        field.type == Types.CUSTOM ||
+        field.type == Types.ARRAY ||
+        field.type == Types.MAP
+      ) {
         var nested = getAllValues(field.customValues)
         if (nested.length) values = [...values, ...nested]
       } else {
