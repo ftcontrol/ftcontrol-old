@@ -31,7 +31,7 @@
     all: unset;
     cursor: pointer;
     display: flex;
-    gap: 0.3rem;
+    gap: 0.6rem;
     align-items: center;
   }
 </style>

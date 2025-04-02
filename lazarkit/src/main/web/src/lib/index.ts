@@ -39,7 +39,11 @@ socket.addMessageHandler("jvmFields", (data: GenericData) => {
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
   function update(fields: GenericTypeJson[], updates: ChangeJson[]) {
     for (const f of fields) {
-      if (f.type == Types.CUSTOM) {
+      if (
+        f.type == Types.CUSTOM ||
+        f.type == Types.ARRAY ||
+        f.type == Types.MAP
+      ) {
         update(f.customValues, updates)
       } else {
         for (const u of updates) {
