@@ -118,8 +118,17 @@ class GenericField(
             valueString = currentValue.toString(),
             newValueString = currentValue.toString(),
             possibleValues = possibleValues,
-            customValues = customValues?.map { it.toJsonType },
-            arrayValues = arrayValues?.map { it.toJsonType },
-            mapValues = mapValues?.map { it.toJsonType },
+            customValues = when(type){
+                Types.CUSTOM -> customValues?.map { it.toJsonType }
+                Types.ARRAY -> arrayValues?.map { it.toJsonType }
+                Types.MAP -> mapValues?.map { it.toJsonType }
+                else -> null
+            },
+            isOpened = when (type) {
+                Types.CUSTOM -> false
+                Types.ARRAY -> false
+                Types.MAP -> false
+                else -> null
+            }
         )
 }

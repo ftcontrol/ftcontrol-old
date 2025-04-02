@@ -31,32 +31,21 @@ export interface FixedValuesTypeJson extends BaseGenericTypeJson {
 }
 
 export interface CustomTypeJson extends BaseGenericTypeJson {
-  type: Types.CUSTOM
+  type: Types.CUSTOM | Types.ARRAY | Types.MAP
   customValues: GenericTypeJson[]
-}
-
-export interface ArrayTypeJson extends BaseGenericTypeJson {
-  type: Types.ARRAY
-  arrayValues: GenericTypeJson[]
-}
-
-export interface MapTypeJson extends BaseGenericTypeJson {
-  type: Types.MAP
-  mapValues: GenericTypeJson[]
+  isOpened: boolean
 }
 
 export interface DefaultTypeJson extends BaseGenericTypeJson {
   type: Exclude<
     Types,
-    Types.ENUM | Types.CUSTOM | Types.ARRAY | Types.MAP | Types.BOOLEAN
+    Types.ENUM | Types.BOOLEAN | Types.CUSTOM | Types.ARRAY | Types.MAP
   >
 }
 
 export type GenericTypeJson =
   | FixedValuesTypeJson
   | CustomTypeJson
-  | ArrayTypeJson
-  | MapTypeJson
   | DefaultTypeJson
 
 export type ChangeJson = {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { BooleanInput, SelectInput, StringInput } from "$primitives"
   import {
@@ -11,6 +11,7 @@
     stringValidator,
   } from "../../primitives/validators"
   import FieldNested from "./FieldNested.svelte"
+  import Toggle from "./Toggle.svelte"
 
   let {
     item,
@@ -83,24 +84,15 @@
         type={item.type.toUpperCase()}
       />
     </div>
-  {:else if item.type == Types.CUSTOM}
-    <p>{item.fieldName} {item.type}</p>
-
-    {#each item.customValues as custom}
-      <FieldNested item={custom} depth={depth + 1} />
-    {/each}
-  {:else if item.type == Types.ARRAY}
-    <p>{item.fieldName} {item.type}</p>
-
-    {#each item.arrayValues as custom}
-      <FieldNested item={custom} depth={depth + 1} />
-    {/each}
-  {:else if item.type == Types.MAP}
-    <p>{item.fieldName} {item.type}</p>
-
-    {#each item.mapValues as mapCustom}
-      <FieldNested item={mapCustom} depth={depth + 1} />
-    {/each}
+  {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP}
+    <Toggle bind:isOpened={item.isOpened}>
+      <p>{item.fieldName} {item.type}</p>
+    </Toggle>
+    {#if item.isOpened}
+      {#each item.customValues as custom}
+        <FieldNested item={custom} depth={depth + 1} />
+      {/each}
+    {/if}
   {:else if item.type != Types.UNKNOWN}
     {JSON.stringify(item)}
   {/if}

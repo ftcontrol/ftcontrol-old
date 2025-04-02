@@ -8,11 +8,14 @@
   import { Section } from "$primitives"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
+  let openedStates: { [key: string]: boolean } = $state({})
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
   } {
-    const result: { [key: string]: GenericTypeJson[] } = {}
+    const result: {
+      [key: string]: GenericTypeJson[]
+    } = {}
 
     for (const field of fields) {
       if (!result.hasOwnProperty(field.className)) {
@@ -73,10 +76,12 @@
       >
     {/if}
     <div>
-      <ClassName {name} />
-      {#each items as item}
-        <Field {item} />
-      {/each}
+      <ClassName {name} bind:isOpened={openedStates[name]} />
+      {#if openedStates[name] == true}
+        {#each items as item}
+          <Field {item} />
+        {/each}
+      {/if}
     </div>
   {/each}
   {#if info.jvmFields.length == 0}
