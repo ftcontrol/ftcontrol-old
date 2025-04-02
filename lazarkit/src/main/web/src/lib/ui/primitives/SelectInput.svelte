@@ -1,16 +1,20 @@
 <script lang="ts">
+  import TypedInput from "./TypedInput.svelte"
+
   let {
     startValue = $bindable(),
     currentValue = $bindable(),
     isValid = $bindable(),
     value = $bindable(),
     possibleValues,
+    type = "ENUM",
   }: {
     startValue: string
     currentValue: string
     isValid: boolean
     value: string
     possibleValues: string[]
+    type?: string
   } = $props()
   $effect(() => {
     if (value != null) return
@@ -20,23 +24,46 @@
   let isShown = $state(false)
 </script>
 
-<div
-  onclick={() => {
-    isShown = !isShown
-  }}
->
-  {currentValue}
-</div>
-{#if isShown}
-  <div>
-    {#each possibleValues.filter((it) => it != currentValue) as v}
-      <button
-        onclick={() => {
-          currentValue = v
-          value = v
-          isShown = false
-        }}>{v}</button
-      >
-    {/each}
+<TypedInput {type}>
+  <div class="content">
+    <button
+      onclick={() => {
+        isShown = !isShown
+      }}
+    >
+      {currentValue}
+    </button>
   </div>
-{/if}
+  {#if isShown}
+    <div class="select">
+      {#each possibleValues.filter((it) => it != currentValue) as v, index}
+        <button
+          class:first={index == 0}
+          onclick={() => {
+            currentValue = v
+            value = v
+            isShown = false
+          }}>{v}</button
+        >
+      {/each}
+    </div>
+  {/if}
+</TypedInput>
+
+<style>
+  button {
+    all: unset;
+    display: block;
+    width: 100%;
+    padding-left: 0.25rem;
+  }
+  .select {
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    border: 1px solid black;
+  }
+  .content {
+    position: relative;
+  }
+</style>

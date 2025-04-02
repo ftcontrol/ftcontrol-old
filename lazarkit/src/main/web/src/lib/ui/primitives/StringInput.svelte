@@ -1,4 +1,6 @@
 <script lang="ts">
+  import TextTypedInput from "./TextTypedInput.svelte"
+
   let {
     startValue = $bindable(),
     currentValue = $bindable(),
@@ -6,6 +8,7 @@
     value = $bindable(),
     validate = (value: string) => true,
     extraChar = "",
+    type = "",
   }: {
     startValue: string
     currentValue: string
@@ -13,6 +16,7 @@
     value: string
     validate: (value: string) => boolean
     extraChar?: string
+    type?: string
   } = $props()
 
   $effect(() => {
@@ -22,10 +26,9 @@
   })
 </script>
 
-<input
-  type="text"
-  class:invalid={!isValid}
-  bind:value
+<TextTypedInput
+  {type}
+  bind:text={value}
   oninput={() => {
     if (!validate(value)) {
       isValid = false
@@ -34,10 +37,6 @@
     isValid = true
     currentValue = value
   }}
-/>{extraChar}
-
-<style>
-  input.invalid {
-    opacity: 0.5;
-  }
-</style>
+  {isValid}
+  {extraChar}
+/>

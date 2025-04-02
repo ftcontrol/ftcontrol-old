@@ -6,6 +6,7 @@
     type GenericTypeJson,
   } from "$lib/genericType"
   import { Section } from "$primitives"
+  import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
 
   function processFields(fields: GenericTypeJson[]): {
@@ -36,13 +37,6 @@
     return false
   }
 
-  function getClassName(item: string): string {
-    return item.split(".").at(-1) || ""
-  }
-  function getStartClassName(item: string): string {
-    return item.split("." + getClassName(item))[0]
-  }
-
   function getAllValues(fields: GenericTypeJson[]): ChangeJson[] {
     var values: ChangeJson[] = []
     for (const field of fields) {
@@ -70,7 +64,7 @@
 </script>
 
 <Section title={"Configurables"}>
-  {#each Object.entries(processFields(info.jvmFields)) as [key, items]}
+  {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
     {#if isChanged(info.jvmFields)}
       <button
         onclick={() => {
@@ -79,7 +73,7 @@
       >
     {/if}
     <div>
-      <h3>{key}</h3>
+      <ClassName {name} />
       {#each items as item}
         <Field {item} />
       {/each}
