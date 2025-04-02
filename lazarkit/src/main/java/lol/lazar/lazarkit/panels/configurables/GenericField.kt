@@ -102,10 +102,10 @@ class GenericField(
         get() = reference.name
 
     val possibleValues: List<String>? by lazy {
-        if (type == Types.ENUM) {
-            reference.type.enumConstants.map { it.toString() }
-        } else {
-            null
+        when (type) {
+            Types.ENUM -> reference.type.enumConstants.map { it.toString() }
+            Types.BOOLEAN -> listOf("true", "false")
+            else -> null
         }
     }
 

@@ -3,6 +3,7 @@
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { BooleanInput, SelectInput, StringInput } from "$primitives"
   import {
+    anyValidator,
     doubleValidator,
     floatValidator,
     intValidator,
@@ -41,7 +42,6 @@
   class:first={depth == 0}
   style="--depth:{depth};"
 >
-  <p>{item.fieldName} {item.type}</p>
   {#if item.valueString != item.newValueString && item.isValid}
     <button
       onclick={() => {
@@ -51,80 +51,53 @@
       Update
     </button>
   {/if}
+
   {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
-    <form
-      onsubmit={() => {
-        sendFieldUpdate()
-      }}
-    >
-      {#if item.type == Types.INT}
+    <div class="flex">
+      <p>{item.fieldName}</p>
+
+      <form
+        onsubmit={() => {
+          sendFieldUpdate()
+        }}
+      >
         <StringInput
           bind:value={item.value}
           bind:isValid={item.isValid}
           bind:startValue={item.valueString}
           bind:currentValue={item.newValueString}
-          validate={intValidator}
+          type={item.type.toUpperCase()}
+          validate={anyValidator(item.type)}
         />
-      {:else if item.type == Types.LONG}
-        <StringInput
-          bind:value={item.value}
-          bind:isValid={item.isValid}
-          bind:startValue={item.valueString}
-          bind:currentValue={item.newValueString}
-          validate={longValidator}
-          extraChar={"L"}
-        />
-      {:else if item.type == Types.DOUBLE}
-        <StringInput
-          bind:value={item.value}
-          bind:isValid={item.isValid}
-          bind:startValue={item.valueString}
-          bind:currentValue={item.newValueString}
-          validate={doubleValidator}
-        />
-      {:else if item.type == Types.FLOAT}
-        <StringInput
-          bind:value={item.value}
-          bind:isValid={item.isValid}
-          bind:startValue={item.valueString}
-          bind:currentValue={item.newValueString}
-          validate={floatValidator}
-          extraChar={"f"}
-        />
-      {:else if item.type == Types.STRING}
-        <StringInput
-          bind:value={item.value}
-          bind:isValid={item.isValid}
-          bind:startValue={item.valueString}
-          bind:currentValue={item.newValueString}
-          validate={stringValidator}
-        />
-      {/if}
-    </form>
-  {:else if item.type == Types.BOOLEAN}
-    <BooleanInput
-      bind:value={item.value}
-      bind:isValid={item.isValid}
-      bind:startValue={item.valueString}
-      bind:currentValue={item.newValueString}
-    />
-  {:else if item.type == Types.ENUM}
-    <SelectInput
-      bind:value={item.value}
-      bind:isValid={item.isValid}
-      bind:startValue={item.valueString}
-      bind:currentValue={item.newValueString}
-      possibleValues={item.possibleValues}
-    />
+      </form>
+    </div>
+  {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
+    <div class="flex">
+      <p>{item.fieldName}</p>
+      <SelectInput
+        bind:value={item.value}
+        bind:isValid={item.isValid}
+        bind:startValue={item.valueString}
+        bind:currentValue={item.newValueString}
+        possibleValues={item.possibleValues}
+        type={item.type.toUpperCase()}
+      />
+    </div>
   {:else if item.type == Types.CUSTOM}
+    <p>{item.fieldName} {item.type}</p>
+
     {#each item.customValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
   {:else if item.type == Types.ARRAY}
+    <p>{item.fieldName} {item.type}</p>
+
     {#each item.arrayValues as custom}
       <FieldNested item={custom} depth={depth + 1} />
     {/each}
   {:else if item.type == Types.MAP}
+    <p>{item.fieldName} {item.type}</p>
+
     {#each item.mapValues as mapCustom}
       <FieldNested item={mapCustom} depth={depth + 1} />
     {/each}
@@ -135,16 +108,24 @@
 
 <style>
   .item {
-    margin-left: calc(var(--depth) * 32px);
+    margin-left: calc((var(--depth) + 1) * 16px);
   }
   p {
     margin: 0;
   }
   .item.first {
-    padding: 8px;
-    border-bottom: 1px solid black;
+    /* padding: 8px;
+    border-bottom: 1px solid black; */
   }
   .item.disabled {
     opacity: 0.5;
+  }
+  .flex {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+  }
+  .flex > p {
+    margin-top: 7px;
   }
 </style>

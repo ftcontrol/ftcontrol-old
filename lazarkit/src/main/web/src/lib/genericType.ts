@@ -25,8 +25,8 @@ export interface BaseGenericTypeJson {
   value: any
 }
 
-export interface EnumTypeJson extends BaseGenericTypeJson {
-  type: Types.ENUM
+export interface FixedValuesTypeJson extends BaseGenericTypeJson {
+  type: Types.ENUM | Types.BOOLEAN
   possibleValues: string[]
 }
 
@@ -46,11 +46,14 @@ export interface MapTypeJson extends BaseGenericTypeJson {
 }
 
 export interface DefaultTypeJson extends BaseGenericTypeJson {
-  type: Exclude<Types, Types.ENUM | Types.CUSTOM | Types.ARRAY | Types.MAP>
+  type: Exclude<
+    Types,
+    Types.ENUM | Types.CUSTOM | Types.ARRAY | Types.MAP | Types.BOOLEAN
+  >
 }
 
 export type GenericTypeJson =
-  | EnumTypeJson
+  | FixedValuesTypeJson
   | CustomTypeJson
   | ArrayTypeJson
   | MapTypeJson
