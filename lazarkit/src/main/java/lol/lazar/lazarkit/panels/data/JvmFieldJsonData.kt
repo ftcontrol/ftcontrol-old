@@ -35,8 +35,7 @@ class GenericTypeJson(
     val isValid: Boolean = true,
     val possibleValues: List<String>? = null,
     val customValues: List<GenericTypeJson>? = null,
-    val arrayValues: List<GenericTypeJson>? = null,
-    val mapValues: List<GenericTypeJson>? = null,
+    val isOpened: Boolean? = null
 )
 
 @Serializable

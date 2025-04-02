@@ -1,5 +1,8 @@
 <script lang="ts">
-  let { name }: { name: string } = $props()
+  import Toggle from "./Toggle.svelte"
+
+  let { name, isOpened = $bindable() }: { name: string; isOpened: boolean } =
+    $props()
 
   function getClassName(item: string): string {
     return item.split(".").at(-1) || ""
@@ -9,7 +12,9 @@
   }
 </script>
 
-<h3>{getClassName(name)} <span>of {getStartClassName(name)}</span></h3>
+<Toggle bind:isOpened>
+  <h3>{getClassName(name)} <span>of {getStartClassName(name)}</span></h3>
+</Toggle>
 
 <style>
   span {
