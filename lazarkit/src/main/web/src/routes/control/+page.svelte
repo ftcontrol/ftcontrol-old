@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gamepads } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
+  import GameField from "$ui/widgets/fields/GameField.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
 </script>
 
@@ -14,6 +15,7 @@
   </div>
   <div>
     <Configurables />
+    <GameField />
   </div>
 </section>
 

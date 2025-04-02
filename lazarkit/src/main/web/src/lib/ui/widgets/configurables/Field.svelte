@@ -1,15 +1,8 @@
 <script lang="ts">
-  import { info, socket } from "$lib"
+  import { socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
-  import { BooleanInput, SelectInput, StringInput } from "$primitives"
-  import {
-    anyValidator,
-    doubleValidator,
-    floatValidator,
-    intValidator,
-    longValidator,
-    stringValidator,
-  } from "../../primitives/validators"
+  import { SelectInput, StringInput } from "$primitives"
+  import { anyValidator } from "../../primitives/validators"
   import FieldNested from "./FieldNested.svelte"
   import Toggle from "./Toggle.svelte"
 
