@@ -2,6 +2,7 @@
   import { info, socket } from "$lib"
   import type { OpMode } from "$lib/socket.svelte"
   import { Section, Button } from "$primitives"
+  import Arrow from "$ui/icons/Arrow.svelte"
   import OpModeList from "../OpModeList.svelte"
 
   let modalOpened = $state<"" | "autos" | "teleops">("")
@@ -47,7 +48,11 @@
 </script>
 
 {#snippet autoButton()}
-  <button slot="beforeTitle" onclick={() => toggle("autos")}>Autos</button>
+  <button slot="beforeTitle" onclick={() => toggle("autos")}>
+    <span>
+      Autos<Arrow isOpened={modalOpened == "autos"} />
+    </span>
+  </button>
   {#if modalOpened == "autos"}
     <div class="modal autos">
       <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
@@ -55,7 +60,11 @@
   {/if}
 {/snippet}
 {#snippet teleopsButton()}
-  <button slot="afterTitle" onclick={() => toggle("teleops")}>TeleOps</button>
+  <button slot="afterTitle" onclick={() => toggle("teleops")}>
+    <span>
+      TeleOps<Arrow isOpened={modalOpened == "teleops"} />
+    </span>
+  </button>
   {#if modalOpened == "teleops"}
     <div class="modal teleops">
       <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
@@ -117,6 +126,11 @@
 </Section>
 
 <style>
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
   div.modal {
     width: fit-content;
     position: absolute;

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Arrow from "$ui/icons/Arrow.svelte"
   import type { Snippet } from "svelte"
 
   let {
@@ -10,25 +11,27 @@
   } = $props()
 </script>
 
-<div>
-  <button
-    onclick={() => {
-      if (isOpened == true) {
-        isOpened = false
-      } else if (isOpened == false) {
-        isOpened = true
-      } else {
-        isOpened = true
-      }
-    }}
-  >
-    Toggle
-  </button>
+<button
+  onclick={() => {
+    if (isOpened == true) {
+      isOpened = false
+    } else if (isOpened == false) {
+      isOpened = true
+    } else {
+      isOpened = true
+    }
+  }}
+>
+  <Arrow {isOpened} />
   {@render children()}
-</div>
+</button>
 
 <style>
-  div {
+  button {
+    all: unset;
+    cursor: pointer;
     display: flex;
+    gap: 0.3rem;
+    align-items: center;
   }
 </style>
