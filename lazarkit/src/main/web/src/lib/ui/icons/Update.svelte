@@ -2,13 +2,14 @@
   let { isActive = true }: { isActive?: boolean } = $props()
   let spinning = $state(false)
 
-  function handleClick() {
-    if (!isActive) return
+  $effect(() => {
+    if (isActive) return
+    if (spinning) return
     spinning = true
     setTimeout(() => {
       spinning = false
     }, 300)
-  }
+  })
 </script>
 
 <svg
@@ -22,7 +23,6 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xml:space="preserve"
   style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"
-  onclick={handleClick}
 >
   <g>
     <path

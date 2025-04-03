@@ -40,6 +40,7 @@
     margin: 0;
     text-align: center;
     flex-grow: 1;
+    font-size: 1.25rem;
   }
   section {
     background-color: var(--card);
