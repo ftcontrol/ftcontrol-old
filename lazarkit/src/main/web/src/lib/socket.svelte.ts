@@ -1,3 +1,4 @@
+import { type Canvas, emptyCanvas } from "$ui/widgets/fields/canvas"
 import type { GenericTypeJson } from "./genericType"
 
 export type Handler = (data: GenericData) => void
@@ -105,4 +106,5 @@ export class InfoManager {
   telemetry = $state<string[]>([])
   jvmFields = $state<GenericTypeJson[]>([])
   batteryVoltage = $state<number>(-1.0)
+  canvas = $state<Canvas>(emptyCanvas)
 }

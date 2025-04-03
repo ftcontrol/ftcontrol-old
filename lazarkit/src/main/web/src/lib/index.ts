@@ -30,6 +30,7 @@ export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
   info.telemetry = data.lines
+  info.canvas = data.canvas
 })
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
