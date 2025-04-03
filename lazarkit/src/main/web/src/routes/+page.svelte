@@ -9,6 +9,7 @@
   <p>Check the time: <a href="/time">Click here</a></p>
   <p>Check the dash: <a href="/control">Click here</a></p>
   <p>Hello: <a href="/hello">Click here</a></p>
+  <p>Game Field: <a href="/field">Click here</a></p>
 
   <TextTypedInput text="da" type="TEST" />
 </Section>
