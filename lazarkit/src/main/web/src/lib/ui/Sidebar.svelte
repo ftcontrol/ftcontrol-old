@@ -12,6 +12,7 @@
   <a href="/control">Robot Control</a>
   <a href="/time">Global Time</a>
   <a href="/controller">Controller</a>
+  <a href="/field">Game Field</a>
 </nav>
 
 <style>
