@@ -31,7 +31,11 @@
       this.fieldY = new Distance(fieldY)
       const pixelsPerInch = FIELD_WIDTH.pixels / FIELD_WIDTH.inches
       this.x = this.fieldX.inches * pixelsPerInch
-      this.y = this.fieldY.inches * pixelsPerInch
+      this.y = this.fieldY.inches * -pixelsPerInch
+    }
+
+    static withData(data: { x: number; y: number }) {
+      return new Point(data.x, data.y)
     }
   }
 
@@ -84,6 +88,15 @@
       ctx.closePath()
     }
 
+    function setFontSizeInInches(
+      ctx: CanvasRenderingContext2D,
+      sizeInInches: number
+    ) {
+      const pixelsPerInch = FIELD_WIDTH.pixels / FIELD_WIDTH.inches
+      const fontSizeInPixels = sizeInInches * pixelsPerInch
+      ctx.font = `${fontSizeInPixels}px Arial`
+    }
+
     function drawGrid(
       cellSize: Distance,
       color: string = "#333",
@@ -93,7 +106,7 @@
       ctx.strokeStyle = color
       ctx.lineWidth = 1
       ctx.fillStyle = textColor
-      ctx.font = "16px Arial"
+      setFontSizeInInches(ctx, 3)
 
       const halfWidth = new Distance(FIELD_WIDTH.inches / 2)
       const halfHeight = new Distance(FIELD_HEIGHT.inches / 2)
@@ -117,7 +130,7 @@
         ) {
           const p = new Point(x, y)
           drawPoint(p, "white", 2)
-          ctx.fillText(`(${x}", ${y}")`, p.x + 5, -p.y + 5)
+          ctx.fillText(`(${x}", ${y}")`, p.x + 5, p.y + 5)
         }
       }
 
@@ -166,14 +179,23 @@
 
     await drawBase64Image(
       base64Image,
-      new Point(-72, -72),
+      new Point(-72, 72),
       new Distance(24 * 6),
       new Distance(24 * 6)
     )
 
-    drawLine(new Point(0, 0), new Point(24, 24), "red", new Distance(1))
+    drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
     drawGrid(new Distance(24))
     drawPoint(new Point(0.0, 0.0))
+
+    data.lines.forEach((line) => {
+      drawLine(
+        Point.withData(line.start),
+        Point.withData(line.end),
+        line.look.outlineColor,
+        new Distance(line.look.outlineWidth)
+      )
+    })
   })
 </script>
 

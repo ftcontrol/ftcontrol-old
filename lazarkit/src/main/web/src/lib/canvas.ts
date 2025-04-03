@@ -7,7 +7,7 @@ export const data = {
         y: 0,
       },
       end: {
-        x: 0,
+        x: 10,
         y: 10,
       },
       offset: {
