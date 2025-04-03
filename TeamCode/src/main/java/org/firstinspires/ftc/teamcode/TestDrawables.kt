@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import lol.lazar.lazarkit.panels.Panels
-import lol.lazar.lazarkit.panels.data.Line
-import lol.lazar.lazarkit.panels.data.Point
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.data.Circle
+import lol.lazar.lazarkit.panels.data.Line
 import lol.lazar.lazarkit.panels.data.Look
+import lol.lazar.lazarkit.panels.data.Point
+import lol.lazar.lazarkit.panels.data.Rectangle
 import kotlin.random.Random
 
 @Configurable
@@ -29,8 +31,32 @@ class TestDrawables : OpMode() {
             Line(
                 Point(0.0, 0.0),
                 Point(0.0, Random.nextDouble(0.0, 10.0)),
-                look = Look(
+            ).withLook(
+                Look(
                     outlineColor = "red",
+                    outlineWidth = 1.0,
+                    fillColor = "",
+                    opacity = 1.0
+                )
+            ),
+            Circle(
+                Point(20.0, 20.0),
+                Random.nextDouble(0.0, 10.0),
+            ).withLook(
+                Look(
+                    outlineColor = "blue",
+                    outlineWidth = 1.0,
+                    fillColor = "yellow",
+                    opacity = 1.0
+                )
+            ),
+            Rectangle(
+                Point(40.0, 40.0),
+                Random.nextDouble(0.0, 10.0),
+                Random.nextDouble(0.0, 10.0),
+            ).withLook(
+                Look(
+                    outlineColor = "green",
                     outlineWidth = 1.0,
                     fillColor = "",
                     opacity = 1.0
