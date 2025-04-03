@@ -1,16 +1,12 @@
 package lol.lazar.lazarkit.flows
 
-
 open class Flow(
-    val execute: suspend () -> Unit,
-    val description: String
+    private val action: suspend () -> Unit,
 ) {
-    open suspend fun execute() {
-        execute()
-    }
+    var description: String = "Flow"
 
-    open fun describe(indent: Int = 0): String {
-        val indentString = "  ".repeat(indent)
-        return "$indentString$description"
-    }
+    open suspend fun execute() = action()
+
+    open fun describe(indent: Int = 0): String =
+        "${"  ".repeat(indent)}$description"
 }
