@@ -1,12 +1,13 @@
 <script lang="ts">
   import { Section } from "$primitives"
   import { onMount } from "svelte"
-  import { Distance, FIELD_HEIGHT, FIELD_WIDTH, Point } from "./primitives"
+  import { Distance, Point } from "./primitives"
   import {
-    drawBase64Image,
     drawGrid,
+    drawImage,
     drawLine,
     drawPoint,
+    getImage,
     imageToBase64,
     init,
   } from "./draw"
@@ -14,6 +15,7 @@
 
   let canvas: HTMLCanvasElement
   let base64Image: string
+  let fieldImage: HTMLImageElement
 
   onMount(async () => {
     init(canvas)
@@ -21,8 +23,10 @@
     const imageUrl = "/fields/field.png"
     base64Image = await imageToBase64(imageUrl)
 
-    await drawBase64Image(
-      base64Image,
+    fieldImage = await getImage(base64Image)
+
+    drawImage(
+      fieldImage,
       new Point(-72, 72),
       new Distance(24 * 6),
       new Distance(24 * 6)
@@ -34,24 +38,35 @@
   })
 
   $effect(() => {
-    info.canvas.lines.forEach((line) => {
-      drawLine(
-        Point.withData(line.start),
-        Point.withData(line.end),
-        line.look.outlineColor,
-        new Distance(line.look.outlineWidth)
-      )
-    })
+    drawImage(
+      fieldImage,
+      new Point(-72, 72),
+      new Distance(24 * 6),
+      new Distance(24 * 6)
+    )
+    if (info.canvas.lines) {
+      info.canvas.lines.forEach((line) => {
+        drawLine(
+          Point.withData(line.start),
+          Point.withData(line.end),
+          line.look.outlineColor,
+          new Distance(line.look.outlineWidth)
+        )
+      })
+    }
   })
 </script>
 
 <Section title={"Field"}>
-  <canvas bind:this={canvas} style="width: 1024px; height: 1024px;"></canvas>
-  {JSON.stringify(info.canvas)}
+  <div style="width: 100%; overflow: hidden;">
+    <canvas bind:this={canvas}></canvas>
+  </div>
 </Section>
 
 <style>
   canvas {
-    background-color: black;
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 </style>

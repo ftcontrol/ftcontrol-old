@@ -137,3 +137,23 @@ export async function drawBase64Image(
   ctx.drawImage(img, start.x, start.y, width.pixels, height.pixels)
   ctx.restore()
 }
+
+export async function getImage(base64: string): Promise<HTMLImageElement> {
+  const img = new Image()
+  img.src = base64
+  await img.decode()
+  return img
+}
+
+export function drawImage(
+  img: HTMLImageElement,
+  start: Point,
+  width: Distance,
+  height: Distance
+) {
+  if (img == null) return
+  if (ctx == null) return
+  ctx.save()
+  ctx.drawImage(img, start.x, start.y, width.pixels, height.pixels)
+  ctx.restore()
+}
