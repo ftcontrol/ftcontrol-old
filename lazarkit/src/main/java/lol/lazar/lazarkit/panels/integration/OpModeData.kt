@@ -1,9 +1,10 @@
-package lol.lazar.lazarkit.panels
+package lol.lazar.lazarkit.panels.integration
 
 import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
-import lol.lazar.lazarkit.panels.data.OpModeInfo
+import lol.lazar.lazarkit.panels.GlobalData
+import lol.lazar.lazarkit.panels.json.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes
 

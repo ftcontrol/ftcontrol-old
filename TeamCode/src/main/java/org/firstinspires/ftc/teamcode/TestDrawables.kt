@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import lol.lazar.lazarkit.LoopTimer
 import lol.lazar.lazarkit.panels.Panels
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
-import lol.lazar.lazarkit.panels.data.Circle
-import lol.lazar.lazarkit.panels.data.Line
-import lol.lazar.lazarkit.panels.data.Look
-import lol.lazar.lazarkit.panels.data.Point
-import lol.lazar.lazarkit.panels.data.Rectangle
+import lol.lazar.lazarkit.panels.json.Circle
+import lol.lazar.lazarkit.panels.json.Line
+import lol.lazar.lazarkit.panels.json.Look
+import lol.lazar.lazarkit.panels.json.Point
+import lol.lazar.lazarkit.panels.json.Rectangle
 import kotlin.random.Random
 
 @Configurable

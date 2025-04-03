@@ -1,7 +1,7 @@
-package lol.lazar.lazarkit.panels
+package lol.lazar.lazarkit.panels.integration
 
-import lol.lazar.lazarkit.panels.data.Canvas
-import lol.lazar.lazarkit.panels.data.Drawable
+import lol.lazar.lazarkit.panels.json.Canvas
+import lol.lazar.lazarkit.panels.json.Drawable
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class TelemetryManager(
