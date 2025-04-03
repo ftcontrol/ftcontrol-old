@@ -21,6 +21,10 @@
   function updateSize() {
     input.style.width = Math.max(span.offsetWidth + 2, 100) + "px"
   }
+  $effect(() => {
+    if (text?.length > 0) return
+    updateSize()
+  })
   let span: HTMLElement
   let input: HTMLElement
 </script>
