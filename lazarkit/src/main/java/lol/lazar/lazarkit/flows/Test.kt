@@ -1,21 +1,31 @@
 package lol.lazar.lazarkit.flows
 
 import kotlinx.coroutines.delay
+import lol.lazar.lazarkit.flows.conditional.mustSuspended
+import lol.lazar.lazarkit.flows.groups.sequential
 
 class Test {
     var batteryLevel = 50
 
-    val autonomous = seq {
+    val sequential = sequential { }
+    val stuff = sequential
+
+    val autonomous = sequential {
         instant { println("DASH: FLOWS: Start moving") }
 
-        waitFlow(1000)
+        wait(1000)
 
-        ifFlow({ batteryLevel > 20 }) {
+        must({ batteryLevel > 20 }) {
             instant { println("DASH: FLOWS: Battery is good, proceeding") }
         }
 
-        ifFlowSuspend({ checkSensor() }) {
+        mustSuspended({ checkSensor() }) {
             instant { println("DASH: FLOWS: Sensor detected obstacle!") }
+        }
+
+        parallel {
+            instant { println("DASH: FLOWS: Parallel flow start") }
+            instant { println("DASH: FLOWS: Parallel flow start") }
         }
 
         instant { println("DASH: FLOWS: Done") }
@@ -28,6 +38,6 @@ class Test {
 
     fun printAutonomousFlowDescription() {
         println("DASH: FLOWS: Autonomous flow description:")
-        println(autonomous.describe())
+        println("DASH: FLOWS: ${autonomous.describe()}")
     }
 }

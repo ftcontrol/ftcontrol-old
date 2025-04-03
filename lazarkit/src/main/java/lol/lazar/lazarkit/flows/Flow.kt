@@ -1,12 +1,18 @@
 package lol.lazar.lazarkit.flows
 
+import kotlinx.coroutines.coroutineScope
+
 open class Flow(
-    private val action: suspend () -> Unit,
+    val action: suspend () -> Unit,
+    var description: String
 ) {
-    var description: String = "Flow"
+    constructor(action: suspend () -> Unit)
+            : this(action = { action() }, description = "Flow")
 
     open suspend fun execute() = action()
 
-    open fun describe(indent: Int = 0): String =
+    open fun describe(indent: Int): String =
         "${"  ".repeat(indent)}$description"
+
+    fun describe() = describe(0)
 }
