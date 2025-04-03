@@ -120,6 +120,8 @@ class Socket(
             sendJvmFields()
         }
 
+        var lastBatteryVoltage: Double = 0.0
+
         fun startSendingTime() {
             timer.schedule(object : TimerTask() {
                 override fun run() {
@@ -127,7 +129,10 @@ class Socket(
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
                         updateBatteryVoltage()
-                        send(BatteryVoltage(GlobalData.batteryVoltage))
+                        if(GlobalData.batteryVoltage != lastBatteryVoltage){
+                            send(BatteryVoltage(GlobalData.batteryVoltage))
+                            lastBatteryVoltage = GlobalData.batteryVoltage
+                        }
                     } catch (e: IOException) {
                         stopTimer()
                     }
