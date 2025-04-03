@@ -19,6 +19,8 @@ import org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
+import lol.lazar.lazarkit.panels.integration.TelemetryManager;
+
 public class Panels implements OpModeManagerImpl.Notifications {
     private final CorePanels corePanels = new CorePanels();
     private static Panels registrar;

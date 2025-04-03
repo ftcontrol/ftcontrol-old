@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.data
+package lol.lazar.lazarkit.panels.json
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

@@ -5,7 +5,6 @@ import android.graphics.Typeface
 import android.widget.LinearLayout
 import android.widget.TextView
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil
-import lol.lazar.lazarkit.panels.Preferences
 
 class UIManager {
     private var connectionStatusTextView: TextView? = null
