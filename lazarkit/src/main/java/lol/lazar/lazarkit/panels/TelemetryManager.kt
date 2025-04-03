@@ -1,7 +1,7 @@
 package lol.lazar.lazarkit.panels
 
 import lol.lazar.lazarkit.panels.data.Canvas
-import lol.lazar.lazarkit.panels.data.Line
+import lol.lazar.lazarkit.panels.data.Drawable
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class TelemetryManager(
@@ -27,10 +27,10 @@ class TelemetryManager(
         data.forEach {
             when (it) {
                 is String -> lines.add(it)
-                is Line -> {
+                is Drawable -> {
                     it.zIndex = lastZIndex + if (it.zIndex > 0) it.zIndex else 0
                     lastZIndex++
-                    canvas.lines.add(it)
+                    canvas.add(it)
                 }
 
                 else -> {}

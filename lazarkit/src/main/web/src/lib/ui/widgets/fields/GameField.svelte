@@ -3,10 +3,12 @@
   import { onMount } from "svelte"
   import { Distance, Point } from "./primitives"
   import {
+    drawCircle,
     drawGrid,
     drawImage,
     drawLine,
     drawPoint,
+    drawRectangle,
     getImage,
     imageToBase64,
     init,
@@ -54,10 +56,40 @@
         )
       })
     }
+
+    if (info.canvas.rectangles) {
+      info.canvas.rectangles.forEach((rectangle) => {
+        drawRectangle(
+          Point.withData(rectangle.center),
+          new Distance(rectangle.width),
+          new Distance(rectangle.height),
+          rectangle.look.fillColor,
+          rectangle.look.outlineColor,
+          new Distance(rectangle.look.outlineWidth)
+        )
+      })
+    }
+
+    if (info.canvas.circles) {
+      info.canvas.circles.forEach((circle) => {
+        drawCircle(
+          Point.withData(circle.center),
+          new Distance(circle.radius),
+          circle.look.fillColor,
+          circle.look.outlineColor,
+          new Distance(circle.look.outlineWidth)
+        )
+      })
+    }
   })
 </script>
 
 <Section title={"Field"}>
+  <p>
+    {info.canvas.lines?.length}
+    {info.canvas.rectangles?.length}
+    {info.canvas.circles?.length}
+  </p>
   <div style="width: 100%; overflow: hidden;">
     <canvas bind:this={canvas}></canvas>
   </div>

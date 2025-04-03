@@ -6,9 +6,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 class Canvas(
     var lines: MutableList<Line> = mutableListOf(),
+    var rectangles: MutableList<Rectangle> = mutableListOf(),
+    var circles: MutableList<Circle> = mutableListOf(),
 ) {
     fun clear() {
         lines = mutableListOf()
+        rectangles = mutableListOf()
+        circles = mutableListOf()
+    }
+
+    fun add(drawable: Drawable) {
+        when (drawable) {
+            is Line -> lines.add(drawable)
+            is Rectangle -> rectangles.add(drawable)
+            is Circle -> circles.add(drawable)
+        }
     }
 }
 
@@ -41,17 +53,37 @@ class Look(
     var outlineColor: String,
     var outlineWidth: Double,
     var opacity: Double,
-)
+) {
+    constructor() : this("", "", 0.0, 1.0)
+}
 
 @Serializable
-abstract class Drawable(private val type: Types) {
+abstract class Drawable(val type: Types) {
+    var offset: Pose = Pose()
+    var look: Look = Look()
+    var zIndex: Int = 0
+
     enum class Types {
         @SerializedName("line")
         LINE,
-        SQUARE,
         RECTANGLE,
         CIRCLE,
         IMG
+    }
+
+    fun withLook(look: Look): Drawable {
+        this.look = look
+        return this
+    }
+
+    fun withOffset(offset: Pose): Drawable {
+        this.offset = offset
+        return this
+    }
+
+    fun withZIndex(zIndex: Int): Drawable {
+        this.zIndex = zIndex
+        return this
     }
 }
 
@@ -59,7 +91,17 @@ abstract class Drawable(private val type: Types) {
 class Line(
     var start: Point,
     var end: Point,
-    var offset: Pose = Pose(),
-    var look: Look,
-    var zIndex: Int = 0,
 ) : Drawable(Types.LINE)
+
+@Serializable
+class Rectangle(
+    var center: Point,
+    var width: Double,
+    var height: Double,
+) : Drawable(Types.RECTANGLE)
+
+@Serializable
+class Circle(
+    var center: Point,
+    var radius: Double,
+) : Drawable(Types.CIRCLE)
