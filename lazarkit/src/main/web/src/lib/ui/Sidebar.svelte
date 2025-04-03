@@ -11,14 +11,15 @@
 
   <a href="/control">Robot Control</a>
   <a href="/time">Global Time</a>
-  <a href="/debug">Debug</a>
   <a href="/controller">Controller</a>
+  <a href="/field">Game Field</a>
 </nav>
 
 <style>
   nav {
-    outline: 1px solid black;
     padding: 1rem 1rem 1rem 1rem;
+    background-color: var(--card);
+    border-radius: 0 16px 16px 0;
   }
 
   .gap {

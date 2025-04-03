@@ -83,3 +83,5 @@ lint/tmp/
 
 gradle.properties
 /lazarkit/src/main/assets/web
+/.kotlin
+/lazarkit-docs/book

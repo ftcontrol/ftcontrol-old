@@ -23,15 +23,11 @@ val json = Json {
             subclass(TelemetryPacket::class)
             subclass(GetJvmFieldsRequest::class)
             subclass(ReceivedJvmFields::class)
-        }
-
-        polymorphic(JvmFieldInfoBase::class) {
-            subclass(JvmFieldInfoString::class)
-            subclass(JvmFieldInfoInt::class)
-            subclass(JvmFieldInfoDouble::class)
-            subclass(JvmFieldInfoArray::class)
+            subclass(UpdatedJvmFields::class)
+            subclass(BatteryVoltage::class)
         }
     }
+    encodeDefaults = false
     useArrayPolymorphism = false
     classDiscriminator = "kind"
 }

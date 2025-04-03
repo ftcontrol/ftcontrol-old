@@ -1,3 +1,6 @@
+import { type Canvas, emptyCanvas } from "$ui/widgets/fields/canvas"
+import type { GenericTypeJson } from "./genericType"
+
 export type Handler = (data: GenericData) => void
 export type GenericData = { kind: string; [key: string]: any }
 export class SocketManager {
@@ -95,25 +98,13 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
-export type JvmFieldInfoGeneric = {
-  className: string
-  kind: string
-  currentValue: any
-}
-
-export type JvmFieldInfoArray = {
-  className: string
-  kind: "array"
-  values: JvmFieldInfo[]
-}
-
-export type JvmFieldInfo = JvmFieldInfoGeneric | JvmFieldInfoArray
-
 export class InfoManager {
   time = $state("")
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
   telemetry = $state<string[]>([])
-  jvmFields = $state<JvmFieldInfo[]>([])
+  jvmFields = $state<GenericTypeJson[]>([])
+  batteryVoltage = $state<number>(-1.0)
+  canvas = $state<Canvas>(emptyCanvas)
 }

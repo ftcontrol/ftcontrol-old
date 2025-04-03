@@ -6,6 +6,12 @@ import {
   type OpMode,
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
+import {
+  Types,
+  type ChangeJson,
+  type CustomTypeJson,
+  type GenericTypeJson,
+} from "./genericType"
 
 export const socket = new SocketManager()
 
@@ -24,17 +30,47 @@ export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
   info.telemetry = data.lines
+  info.canvas = data.canvas
 })
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
 })
 
-setTimeout(() => {
-  socket.sendMessage({ kind: "getOpmodes" })
-  socket.sendMessage({ kind: "getActiveOpMode" })
-  socket.sendMessage({ kind: "getJvmFieldsRequest" })
-}, 1500)
+socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
+  function update(fields: GenericTypeJson[], updates: ChangeJson[]) {
+    for (const f of fields) {
+      if (
+        f.type == Types.CUSTOM ||
+        f.type == Types.ARRAY ||
+        f.type == Types.MAP
+      ) {
+        update(f.customValues, updates)
+      } else {
+        for (const u of updates) {
+          if (f.id == u.id) {
+            f.valueString = u.newValueString
+            f.valueString = u.newValueString
+            f.value = u.newValueString
+            f.isValid = true
+          }
+        }
+      }
+    }
+  }
+
+  update(info.jvmFields, data.fields as ChangeJson[])
+})
+
+socket.addMessageHandler("batteryVoltage", (data: GenericData) => {
+  info.batteryVoltage = data.value
+})
+
+// setTimeout(() => {
+//   socket.sendMessage({ kind: "getOpmodes" })
+//   socket.sendMessage({ kind: "getActiveOpMode" })
+//   socket.sendMessage({ kind: "getJvmFieldsRequest" })
+// }, 1500)
 
 export const gamepads = new GamepadManager()
 

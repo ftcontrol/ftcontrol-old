@@ -46,3 +46,9 @@ data object StartActiveOpModeRequest : JSONData()
 @Serializable
 @SerialName("stopActiveOpMode")
 data object StopActiveOpModeRequest : JSONData()
+
+@Serializable
+@SerialName("batteryVoltage")
+data class BatteryVoltage(
+    var value: Double
+) : JSONData()

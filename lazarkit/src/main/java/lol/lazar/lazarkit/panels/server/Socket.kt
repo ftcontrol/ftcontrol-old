@@ -1,22 +1,19 @@
 package lol.lazar.lazarkit.panels.server
 
+import com.qualcomm.hardware.lynx.LynxModule
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.panels.GlobalData
 import lol.lazar.lazarkit.panels.OpModeData
+import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.data.ActiveOpMode
+import lol.lazar.lazarkit.panels.data.BatteryVoltage
+import lol.lazar.lazarkit.panels.data.Canvas
 import lol.lazar.lazarkit.panels.data.GetActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.GetJvmFieldsRequest
 import lol.lazar.lazarkit.panels.data.GetOpModesRequest
 import lol.lazar.lazarkit.panels.data.InitOpModeRequest
 import lol.lazar.lazarkit.panels.data.JSONData
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoArray
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoBoolean
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoDouble
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoFloat
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoInt
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoLong
-import lol.lazar.lazarkit.panels.data.JvmFieldInfoString
 import lol.lazar.lazarkit.panels.data.ReceivedJvmFields
 import lol.lazar.lazarkit.panels.data.ReceivedOpModes
 import lol.lazar.lazarkit.panels.data.StartActiveOpModeRequest
@@ -24,15 +21,17 @@ import lol.lazar.lazarkit.panels.data.StopActiveOpModeRequest
 import lol.lazar.lazarkit.panels.data.TelemetryPacket
 import lol.lazar.lazarkit.panels.data.TestObject
 import lol.lazar.lazarkit.panels.data.TimeObject
+import lol.lazar.lazarkit.panels.data.UpdatedJvmFields
 import lol.lazar.lazarkit.panels.data.json
-import lol.lazar.lazarkit.panels.data.setField
 import lol.lazar.lazarkit.panels.data.toJson
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
+import kotlin.math.max
 
 class Socket(
     private val initOpMode: (name: String) -> Unit,
@@ -56,6 +55,8 @@ class Socket(
         }
     }
 
+    fun sendAllClients(data: JSONData) = send(data)
+
     fun broadcastActiveOpMode() {
         if (!isAlive) return
         for (client in clients) {
@@ -75,11 +76,11 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(lines: List<String>) {
+    fun sendTelemetry(lines: List<String>, canvas: Canvas) {
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
-            client.send(TelemetryPacket(lines))
+            client.send(TelemetryPacket(lines, canvas))
         }
     }
 
@@ -119,12 +120,19 @@ class Socket(
             sendJvmFields()
         }
 
+        var lastBatteryVoltage: Double = 0.0
+
         fun startSendingTime() {
             timer.schedule(object : TimerTask() {
                 override fun run() {
                     try {
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
+                        updateBatteryVoltage()
+                        if(GlobalData.batteryVoltage != lastBatteryVoltage){
+                            send(BatteryVoltage(GlobalData.batteryVoltage))
+                            lastBatteryVoltage = GlobalData.batteryVoltage
+                        }
                     } catch (e: IOException) {
                         stopTimer()
                     }
@@ -136,6 +144,16 @@ class Socket(
             timer.cancel()
             timer.purge()
         }
+
+        fun updateBatteryVoltage() {
+            GlobalData.batteryVoltage = -1.0
+            val hardwareMap = GlobalData.activeOpMode?.hardwareMap ?: return
+            for (module in hardwareMap.getAll(LynxModule::class.java)) {
+                GlobalData.batteryVoltage =
+                    max(GlobalData.batteryVoltage, module.getInputVoltage(VoltageUnit.VOLTS))
+            }
+        }
+
 
         override fun onClose(
             code: WebSocketFrame.CloseCode,
@@ -168,7 +186,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedJvmFields(GlobalData.jvmFields.map { it.toJsonType() }))
+            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
@@ -203,21 +221,22 @@ class Socket(
                         sendJvmFields()
                     }
 
-                    is ReceivedJvmFields -> {
+                    is UpdatedJvmFields -> {
                         println("DASH: Received JvmFields: ${decoded.fields}")
 
+
                         decoded.fields.forEach {
-                            when(it){
-                                is JvmFieldInfoString -> setField(it)
-                                is JvmFieldInfoInt -> setField(it)
-                                is JvmFieldInfoDouble -> setField(it)
-                                is JvmFieldInfoBoolean -> setField(it)
-                                is JvmFieldInfoFloat -> setField(it)
-                                is JvmFieldInfoLong -> setField(it)
-                                is JvmFieldInfoArray -> setField(it)
-                                else -> {}
-                            }
+                            println("DASH: Field id: ${it.id}, New value: ${it.newValueString}")
+                            val generalRef = Configurables.fieldsMap[it.id] ?: return
+                            val convertedValue = generalRef.convertValue(it.newValueString)
+                            generalRef.currentValue = convertedValue
                         }
+
+                        sendAllClients(
+                            UpdatedJvmFields(
+                                decoded.fields
+                            )
+                        )
                     }
 
                     else -> {
