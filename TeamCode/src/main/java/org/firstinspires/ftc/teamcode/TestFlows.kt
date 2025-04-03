@@ -24,6 +24,8 @@ class TestFlows : OpMode() {
 
     override fun init() {
         panelsTelemetry.debug("Init was ran!")
+        test.printAutonomousFlowDescription()
+        panelsTelemetry.debug(test.autonomous.describe())
         panelsTelemetry.update(telemetry)
     }
 
