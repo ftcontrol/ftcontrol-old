@@ -56,6 +56,7 @@
     display: block;
     width: 100%;
     padding-left: 0.25rem;
+    cursor: pointer;
   }
   .select {
     position: absolute;

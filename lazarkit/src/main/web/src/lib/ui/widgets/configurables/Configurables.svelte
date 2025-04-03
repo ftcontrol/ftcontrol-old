@@ -6,6 +6,7 @@
     type GenericTypeJson,
   } from "$lib/genericType"
   import { Section } from "$primitives"
+  import UpdateAll from "$ui/icons/UpdateAll.svelte"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
   let openedStates: { [key: string]: boolean } = $state({})
@@ -74,15 +75,17 @@
   }
 </script>
 
-<Section title={"Configurables"}>
+{#snippet updateButton()}
+  <button
+    onclick={() => {
+      sendAllUpdates(info.jvmFields)
+    }}
+  >
+    <UpdateAll isActive={isChanged(info.jvmFields)} />
+  </button>
+{/snippet}
+<Section title={"Configurables"} afterTitle={updateButton}>
   {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-    {#if isChanged(info.jvmFields)}
-      <button
-        onclick={() => {
-          sendAllUpdates(info.jvmFields)
-        }}>Update All</button
-      >
-    {/if}
     <div>
       <ClassName {name} bind:isOpened={openedStates[name]} />
       {#if openedStates[name] == true}
@@ -98,4 +101,8 @@
 </Section>
 
 <style>
+  button {
+    all: unset;
+    cursor: pointer;
+  }
 </style>

@@ -24,7 +24,7 @@
     width: fit-content;
     min-width: 80px;
     position: relative;
-    margin-top: 4px;
+    margin-top: -2px;
   }
   div.field.invalid {
     opacity: 0.5;

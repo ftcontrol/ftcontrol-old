@@ -2,6 +2,7 @@
   import { socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { SelectInput, StringInput } from "$primitives"
+  import Update from "$ui/icons/Update.svelte"
   import { anyValidator } from "../../primitives/validators"
   import FieldNested from "./FieldNested.svelte"
   import Toggle from "./Toggle.svelte"
@@ -36,54 +37,66 @@
   class:first={depth == 0}
   style="--depth:{depth};"
 >
-  {#if item.valueString != item.newValueString && item.isValid}
-    <button
-      onclick={() => {
-        sendFieldUpdate()
-      }}
-    >
-      Update
-    </button>
-  {/if}
-
   {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
-    <div class="flex">
-      <p>{item.fieldName}</p>
-
-      <form
-        onsubmit={() => {
+    <p>
+      <button
+        onclick={() => {
           sendFieldUpdate()
         }}
       >
-        <StringInput
-          bind:value={item.value}
-          bind:isValid={item.isValid}
-          bind:startValue={item.valueString}
-          bind:currentValue={item.newValueString}
-          type={item.type.toUpperCase()}
-          validate={anyValidator(item.type)}
+        <Update
+          isActive={item.valueString != item.newValueString && item.isValid}
         />
-      </form>
-    </div>
-  {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
-    <div class="flex">
-      <p>{item.fieldName}</p>
-      <SelectInput
+      </button>
+      {item.fieldName}
+    </p>
+
+    <form
+      onsubmit={() => {
+        sendFieldUpdate()
+      }}
+    >
+      <StringInput
         bind:value={item.value}
         bind:isValid={item.isValid}
         bind:startValue={item.valueString}
         bind:currentValue={item.newValueString}
-        possibleValues={item.possibleValues}
         type={item.type.toUpperCase()}
+        validate={anyValidator(item.type)}
       />
-    </div>
+    </form>
+  {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
+    <p>
+      <button
+        onclick={() => {
+          sendFieldUpdate()
+        }}
+      >
+        <Update
+          isActive={item.valueString != item.newValueString && item.isValid}
+        />
+      </button>
+      {item.fieldName}
+    </p>
+    <SelectInput
+      bind:value={item.value}
+      bind:isValid={item.isValid}
+      bind:startValue={item.valueString}
+      bind:currentValue={item.newValueString}
+      possibleValues={item.possibleValues}
+      type={item.type.toUpperCase()}
+    />
   {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP}
-    <Toggle bind:isOpened={item.isOpened}>
-      <p>{item.fieldName} {item.type}</p>
-    </Toggle>
+    <div class="two" style="margin-left: -20px;">
+      <Toggle bind:isOpened={item.isOpened}>
+        <p>{item.fieldName} {item.type}</p>
+      </Toggle>
+    </div>
     {#if item.isOpened}
       {#each item.customValues as custom}
-        <FieldNested item={custom} depth={depth + 1} />
+        <div class="two">
+          <FieldNested item={custom} depth={depth + 1} />
+        </div>
       {/each}
     {/if}
   {:else if item.type != Types.UNKNOWN}
@@ -93,24 +106,31 @@
 
 <style>
   .item {
-    margin-left: calc((var(--depth) + 1) * 16px);
+    --margin: calc((var(--depth)) * 0px);
+    margin-left: calc(var(--margin));
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .first {
+    margin-left: calc(var(--margin) + 42px);
   }
   p {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
   }
-  .item.first {
-    /* padding: 8px;
-    border-bottom: 1px solid black; */
+  .two {
+    grid-column-start: span 2;
+  }
+  button {
+    all: unset;
+    cursor: pointer;
+    margin-top: 6px;
   }
   .item.disabled {
     opacity: 0.5;
-  }
-  .flex {
-    display: flex;
-    gap: 0.25rem;
-    align-items: center;
-  }
-  .flex > p {
-    margin-top: 7px;
   }
 </style>
