@@ -190,8 +190,8 @@ export function drawRectangle(
   if (ctx == null) return
 
   const topLeft = new Point(
-    center.fieldX.inches - width.inches / 2,
-    center.fieldY.inches - height.inches / 2
+    center.fieldX - width.inches / 2,
+    center.fieldY - height.inches / 2
   )
 
   ctx.beginPath()
