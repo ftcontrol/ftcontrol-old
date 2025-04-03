@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import lol.lazar.lazarkit.LoopTimer
 import lol.lazar.lazarkit.panels.Panels
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import lol.lazar.lazarkit.panels.data.Circle
@@ -14,9 +15,7 @@ import kotlin.random.Random
 @Configurable
 @TeleOp(name = "Testing Drawables OpMode", group = "Dashboard")
 class TestDrawables : OpMode() {
-    companion object {
-
-    }
+    var timer = LoopTimer()
 
     var panelsTelemetry = Panels.getTelemetry()
 
@@ -26,6 +25,7 @@ class TestDrawables : OpMode() {
     }
 
     override fun loop() {
+        timer.start()
         panelsTelemetry.debug("Loop was ran!")
         panelsTelemetry.debug(
             Line(
@@ -63,6 +63,9 @@ class TestDrawables : OpMode() {
                 )
             )
         )
+        panelsTelemetry.debug("LoopTime: ${timer.hz}")
+        println("DASH: LoopTime: ${timer.hz} / startTime: ${timer.startTime} / endTime: ${timer.endTime}")
         panelsTelemetry.update(telemetry)
+        timer.end()
     }
 }
