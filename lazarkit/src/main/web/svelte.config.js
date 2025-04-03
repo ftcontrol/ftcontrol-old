@@ -13,6 +13,11 @@ const config = {
     // See https://svelte.dev/docs/kit/adapters for more information about adapters.
     adapter: adapter(),
     appDir: "app",
+    alias: {
+      $ui: "src/lib/ui/",
+      $widgets: "src/lib/ui/widgets/",
+      $primitives: "src/lib/ui/primitives/",
+    },
   },
 }
 

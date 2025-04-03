@@ -1,10 +1,16 @@
 package org.firstinspires.ftc.teamcode
 
-import lol.lazar.lazarkit.panels.configurables.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 
+@IgnoreConfigurable
 @Configurable
 class TestClass {
     companion object {
+        @JvmField
+        var testBoolean = true
+
         @JvmField
         var testIntField = 42
 
@@ -14,13 +20,55 @@ class TestClass {
         @JvmField
         var testArray = intArrayOf(1, 2, 3)
 
+        @JvmField
+        var testArray2 = arrayOf(1, 2, 3)
+
+        @ConfigurableCustomType
         data class CustomType(
-            val name: String,
-            val age: Int
+            @JvmField var name: String,
+            @JvmField var age: Int
+        )
+
+        @ConfigurableCustomType
+        data class NestedType(
+            @JvmField var name: String,
+            @JvmField var custom: CustomType,
+            @JvmField var enumClass: TestEnum = TestEnum.VALUE1
+        )
+
+        data class UnknownType(
+            @JvmField var name: String,
+            @JvmField var age: Int
+        )
+
+        @JvmField
+        var unknownObject = UnknownType("John", 30)
+
+        @JvmField
+        var crazyArray = arrayOf(
+            1,
+            2,
+            3,
+            CustomType("Alice", 25),
+            CustomType("Bob", 35),
+            NestedType(
+                "John",
+                CustomType("Alice", 25)
+            ),
+            UnknownType("John", 30),
+            "Hello, world!",
+            TestEnum.VALUE1,
+            true
         )
 
         @JvmField
         var testObject = CustomType("John", 30)
+
+        @JvmField
+        var nestedTestObject = NestedType(
+            "John",
+            CustomType("Alice", 25)
+        )
 
         @JvmField
         var testString = "Hello, world!"
