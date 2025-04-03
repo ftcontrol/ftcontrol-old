@@ -1,4 +1,4 @@
-export const canvas = {
+export const data = {
   lines: [
     {
       type: "LINE",
