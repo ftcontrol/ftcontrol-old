@@ -1,13 +1,13 @@
 package lol.lazar.lazarkit.flows
 
 import kotlinx.coroutines.coroutineScope
-import lol.lazar.lazarkit.flows.ifFlow as ifFlowHelper
-import lol.lazar.lazarkit.flows.ifFlowSuspend as ifFlowSuspendHelper
+import lol.lazar.lazarkit.flows.conditional.must as mustHelper
+import lol.lazar.lazarkit.flows.conditional.mustSuspended as mustSuspendedHelper
+import lol.lazar.lazarkit.flows.groups.parallel as parallelHelper
+import lol.lazar.lazarkit.flows.groups.race as raceHelper
+import lol.lazar.lazarkit.flows.groups.sequential as sequentialHelper
 import lol.lazar.lazarkit.flows.instant as instantHelper
-import lol.lazar.lazarkit.flows.para as paraHelper
-import lol.lazar.lazarkit.flows.race as raceHelper
-import lol.lazar.lazarkit.flows.seq as seqHelper
-import lol.lazar.lazarkit.flows.waitFlow as waitFlowHelper
+import lol.lazar.lazarkit.flows.wait as waitHelper
 
 class FlowScope(
     val flows: MutableList<Flow> = mutableListOf()
@@ -21,19 +21,31 @@ class FlowScope(
         flows.add(flow)
     }
 
-    fun seq(block: FlowScope.() -> Unit): Flow = seqHelper(block).also { add(it) }
+    fun sequential(block: FlowScope.() -> Unit) = sequentialHelper(block).also { add(it) }
 
-    fun para(block: FlowScope.() -> Unit): Flow = paraHelper(block).also { add(it) }
+    fun parallel(block: FlowScope.() -> Unit) = parallelHelper(block).also { add(it) }
 
-    fun race(block: FlowScope.() -> Unit): Flow = raceHelper(block).also { add(it) }
+    fun race(block: FlowScope.() -> Unit) = raceHelper(block).also { add(it) }
 
-    fun instant(action: () -> Unit): Flow = instantHelper(action).also { add(it) }
+    fun instant(action: () -> Unit) = instantHelper(action).also { add(it) }
 
-    fun waitFlow(durationMillis: Long): Flow = waitFlowHelper(durationMillis).also { add(it) }
+    fun wait(durationMillis: Long) = waitHelper(durationMillis).also { add(it) }
 
-    fun ifFlow(condition: () -> Boolean, block: FlowScope.() -> Unit): Flow =
-        ifFlowHelper(condition, block).also { add(it) }
+    fun must(condition: () -> Boolean, block: FlowScope.() -> Unit) =
+        mustHelper(condition, block).also { add(it) }
 
-    fun ifFlowSuspend(condition: suspend () -> Boolean, block: FlowScope.() -> Unit): Flow =
-        ifFlowSuspendHelper(condition, block).also { add(it) }
+    fun mustSuspended(condition: suspend () -> Boolean, block: FlowScope.() -> Unit) =
+        mustSuspendedHelper(condition, block).also { add(it) }
+
+    override fun describe(indent: Int): String {
+        var str = ""
+        flows.forEach { flow ->
+            if (flow is FlowScope) {
+                str += "${"  ".repeat(indent)}${flow.describe(indent + 1)}\n"
+            } else {
+                str += "${"  ".repeat(indent)}${flow.describe(indent)}\n"
+            }
+        }
+        return str
+    }
 }
