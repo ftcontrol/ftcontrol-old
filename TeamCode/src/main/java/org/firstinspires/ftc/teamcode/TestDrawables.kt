@@ -7,6 +7,7 @@ import lol.lazar.lazarkit.panels.data.Line
 import lol.lazar.lazarkit.panels.data.Point
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import lol.lazar.lazarkit.panels.data.Look
+import kotlin.random.Random
 
 @Configurable
 @TeleOp(name = "Testing Drawables OpMode", group = "Dashboard")
@@ -27,7 +28,7 @@ class TestDrawables : OpMode() {
         panelsTelemetry.debug(
             Line(
                 Point(0.0, 0.0),
-                Point(0.0, 10.0),
+                Point(0.0, Random.nextDouble(0.0, 10.0)),
                 look = Look(
                     outlineColor = "red",
                     outlineWidth = 1.0,
