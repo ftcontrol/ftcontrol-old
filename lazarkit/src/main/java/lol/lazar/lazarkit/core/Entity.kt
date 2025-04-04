@@ -7,7 +7,7 @@ class Entity {
     var id = UUID.randomUUID().toString()
 
     val mutex = Mutex()
-    val isBudy
+    val isBusy
         get() = mutex.isLocked
 
     init {

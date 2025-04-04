@@ -12,6 +12,10 @@ class Test {
     val entity2 = Entity()
 
     val autonomous = sequential {
+        val lazar = "test"
+
+        instant { println("DASH: FLOWS: $lazar") }
+
         instant { println("DASH: FLOWS: Start moving") }
 
         instant { println("DASH: FLOWS: Start time: ${System.currentTimeMillis()}") }
