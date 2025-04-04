@@ -1,8 +1,8 @@
 package lol.lazar.lazarkit.flows
 
 import kotlinx.coroutines.coroutineScope
-import lol.lazar.lazarkit.flows.conditional.must as mustHelper
-import lol.lazar.lazarkit.flows.conditional.mustSuspended as mustSuspendedHelper
+import lol.lazar.lazarkit.flows.conditional.doIf as doIfHelper
+import lol.lazar.lazarkit.flows.conditional.doIfSuspended as doIfSuspendedHelper
 import lol.lazar.lazarkit.flows.groups.parallel as parallelHelper
 import lol.lazar.lazarkit.flows.groups.race as raceHelper
 import lol.lazar.lazarkit.flows.groups.sequential as sequentialHelper
@@ -31,11 +31,11 @@ class FlowScope(
 
     fun wait(durationMillis: Long) = waitHelper(durationMillis).also { add(it) }
 
-    fun must(condition: () -> Boolean, block: FlowScope.() -> Unit) =
-        mustHelper(condition, block).also { add(it) }
+    fun doIf(condition: () -> Boolean, block: FlowScope.() -> Unit) =
+        doIfHelper(condition, block).also { add(it) }
 
-    fun mustSuspended(condition: suspend () -> Boolean, block: FlowScope.() -> Unit) =
-        mustSuspendedHelper(condition, block).also { add(it) }
+    fun doIfSuspended(condition: suspend () -> Boolean, block: FlowScope.() -> Unit) =
+        doIfSuspendedHelper(condition, block).also { add(it) }
 
     override fun describe(indent: Int): String {
         var str = ""

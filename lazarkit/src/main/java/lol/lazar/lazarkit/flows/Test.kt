@@ -2,7 +2,6 @@ package lol.lazar.lazarkit.flows
 
 import kotlinx.coroutines.delay
 import lol.lazar.lazarkit.core.Entity
-import lol.lazar.lazarkit.flows.conditional.mustSuspended
 import lol.lazar.lazarkit.flows.groups.sequential
 
 class Test {
@@ -32,11 +31,11 @@ class Test {
 
         wait(1000)
 
-        must({ batteryLevel > 20 }) {
+        doIf({ batteryLevel > 20 }) {
             instant { println("DASH: FLOWS: Battery is good, proceeding") }
         }
 
-        mustSuspended({ checkSensor() }) {
+        doIfSuspended({ checkSensor() }) {
             instant { println("DASH: FLOWS: Sensor detected obstacle!") }
         }
 
