@@ -15,6 +15,7 @@ import lol.lazar.lazarkit.panels.integration.TelemetryManager
 import lol.lazar.lazarkit.panels.integration.UIManager
 import lol.lazar.lazarkit.panels.server.LimelightServer
 import lol.lazar.lazarkit.panels.server.Server
+import lol.lazar.lazarkit.panels.server.ServerLL
 import lol.lazar.lazarkit.panels.server.Socket
 import java.io.IOException
 
@@ -25,16 +26,17 @@ class CorePanels {
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
     lateinit var server: Server
+    lateinit var serverLL: ServerLL
     lateinit var socket: Socket
 
     lateinit var limelightServer: LimelightServer
 
     var telemetryManager = TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
 
-
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {
             server = Server(context)
+            serverLL = ServerLL(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
             limelightServer = LimelightServer(context)
         } catch (e: IOException) {
@@ -45,6 +47,7 @@ class CorePanels {
         if (!Preferences.isEnabled) return
 
         server.startServer()
+        serverLL.startServer()
         socket.startServer()
 
         Configurables.findConfigurables(context)
@@ -76,6 +79,7 @@ class CorePanels {
     fun close(registrar: Panels) {
         server.stopServer()
         socket.stopServer()
+        serverLL.stopServer()
 
         opModeManager?.unregisterListener(registrar)
         disable()
@@ -88,6 +92,7 @@ class CorePanels {
         Preferences.isEnabled = true
         uiManager.updateText()
         server.startServer()
+        serverLL.startServer()
         socket.startServer()
     }
 
@@ -96,6 +101,7 @@ class CorePanels {
         Preferences.isEnabled = false
         uiManager.updateText()
         server.stopServer()
+        serverLL.stopServer()
         socket.stopServer()
     }
 
