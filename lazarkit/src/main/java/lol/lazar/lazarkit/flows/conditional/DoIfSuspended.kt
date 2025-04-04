@@ -3,13 +3,14 @@ package lol.lazar.lazarkit.flows.conditional
 import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowScope
 
-fun must(condition: () -> Boolean, block: FlowScope.() -> Unit) = Must(
+
+fun doIfSuspended(condition: suspend () -> Boolean, block: FlowScope.() -> Unit) = DoIfSuspended(
     condition = condition,
     flow = FlowScope().apply(block)
 )
 
-class Must(
-    condition: () -> Boolean,
+class DoIfSuspended(
+    condition: suspend () -> Boolean,
     flow: Flow
 ) : Flow(
     {

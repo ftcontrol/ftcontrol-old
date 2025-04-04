@@ -1,6 +1,6 @@
 package lol.lazar.lazarkit.flows;
 
-import lol.lazar.lazarkit.flows.conditional.Must;
+import lol.lazar.lazarkit.flows.conditional.DoIf;
 import lol.lazar.lazarkit.flows.groups.Parallel;
 import lol.lazar.lazarkit.flows.groups.Sequential;
 
@@ -14,13 +14,13 @@ public class TestJava {
                 return null;
             }),
             new Wait(1000),
-            new Must(() -> batteryLevel > 20,
+            new DoIf(() -> batteryLevel > 20,
                     new Instant(() -> {
                         System.out.println("DASH: FLOWS: Battery is good, proceeding");
                         return null;
                     })
             ),
-            new Must(() -> true,
+            new DoIf(() -> true,
                     new Instant(() -> {
                         System.out.println("DASH: FLOWS: Sensor detected obstacle!");
                         return null;
