@@ -1,14 +1,20 @@
 package lol.lazar.lazarkit.core
 
-import kotlinx.coroutines.sync.Mutex
 import java.util.UUID
 
 class Entity {
     var id = UUID.randomUUID().toString()
 
-    val mutex = Mutex()
-    val isBusy
-        get() = mutex.isLocked
+    var runningFlowId: UUID? = null
+    val isBusy: Boolean get() = runningFlowId != null
+
+    fun lock(flowId: UUID) {
+        runningFlowId = flowId
+    }
+
+    fun unlock() {
+        runningFlowId = null
+    }
 
     init {
         GlobalEntities.entities[id] = this

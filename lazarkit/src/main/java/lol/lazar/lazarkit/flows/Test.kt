@@ -1,6 +1,5 @@
 package lol.lazar.lazarkit.flows
 
-import kotlinx.coroutines.delay
 import lol.lazar.lazarkit.core.Entity
 import lol.lazar.lazarkit.flows.groups.sequential
 
@@ -39,21 +38,12 @@ class Test {
             instant { println("DASH: FLOWS: Battery is good, proceeding") }
         }
 
-        doIfSuspended({ checkSensor() }) {
-            instant { println("DASH: FLOWS: Sensor detected obstacle!") }
-        }
-
         parallel {
             instant { println("DASH: FLOWS: Parallel flow start") }
             instant { println("DASH: FLOWS: Parallel flow start") }
         }
 
         instant { println("DASH: FLOWS: Done") }
-    }
-
-    private suspend fun checkSensor(): Boolean {
-        delay(500)
-        return true
     }
 
     fun printAutonomousFlowDescription() {

@@ -1,8 +1,7 @@
 package lol.lazar.lazarkit.flows
 
-import kotlinx.coroutines.coroutineScope
+import lol.lazar.lazarkit.flows.groups.Sequential
 import lol.lazar.lazarkit.flows.conditional.doIf as doIfHelper
-import lol.lazar.lazarkit.flows.conditional.doIfSuspended as doIfSuspendedHelper
 import lol.lazar.lazarkit.flows.groups.parallel as parallelHelper
 import lol.lazar.lazarkit.flows.groups.race as raceHelper
 import lol.lazar.lazarkit.flows.groups.sequential as sequentialHelper
@@ -11,14 +10,16 @@ import lol.lazar.lazarkit.flows.wait as waitHelper
 
 class FlowScope(
     val flows: MutableList<Flow> = mutableListOf()
-) : Flow({
-    coroutineScope {
-        flows.forEach { it.execute() }
+) : Flow({}) {
+    var seq = Sequential(*flows.toTypedArray())
+    override fun innerAction() {
+        seq.execute()
+        if (seq.isFinished) finishedTime = System.currentTimeMillis()
     }
-}) {
 
     fun add(flow: Flow) {
         flows.add(flow)
+        seq = Sequential(*flows.toTypedArray())
     }
 
     fun sequential(block: FlowScope.() -> Unit) = sequentialHelper(block).also { add(it) }
@@ -33,9 +34,6 @@ class FlowScope(
 
     fun doIf(condition: () -> Boolean, block: FlowScope.() -> Unit) =
         doIfHelper(condition, block).also { add(it) }
-
-    fun doIfSuspended(condition: suspend () -> Boolean, block: FlowScope.() -> Unit) =
-        doIfSuspendedHelper(condition, block).also { add(it) }
 
     override fun describe(indent: Int): String {
         var str = ""

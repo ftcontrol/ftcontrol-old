@@ -5,16 +5,29 @@ import lol.lazar.lazarkit.flows.FlowScope
 
 fun doIf(condition: () -> Boolean, block: FlowScope.() -> Unit) = DoIf(
     condition = condition,
-    flow = FlowScope().apply(block)
+    flowProvider = { FlowScope().apply(block) }
 )
 
 class DoIf(
-    condition: () -> Boolean,
-    flow: Flow
-) : Flow(
-    {
-        if (condition()) {
-            flow.execute()
+    val condition: () -> Boolean,
+    val flowProvider: () -> Flow
+) : Flow({}) {
+    var passedCheck = false
+    var flow: Flow? = null
+
+    override fun innerAction() {
+        if (!passedCheck) {
+            passedCheck = condition()
+            if (!passedCheck) {
+                finishedTime = System.currentTimeMillis()
+                return
+            }
+            flow = flowProvider()
         }
+        if (flow == null) {
+            return
+        }
+        flow?.execute()
+        if (flow?.isFinished == true) finishedTime = System.currentTimeMillis()
     }
-)
+}
