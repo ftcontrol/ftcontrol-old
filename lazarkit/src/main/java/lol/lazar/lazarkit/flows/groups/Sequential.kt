@@ -1,10 +1,10 @@
 package lol.lazar.lazarkit.flows.groups
 
 import lol.lazar.lazarkit.flows.Flow
-import lol.lazar.lazarkit.flows.FlowScope
+import lol.lazar.lazarkit.flows.FlowBuilder
 
-fun sequential(block: FlowScope.() -> Unit) = Sequential(
-    *FlowScope().apply(block).flows.toTypedArray()
+fun sequential(block: FlowBuilder.() -> Unit) = Sequential(
+    *FlowBuilder().apply(block).flows.toTypedArray()
 )
 
 class Sequential(

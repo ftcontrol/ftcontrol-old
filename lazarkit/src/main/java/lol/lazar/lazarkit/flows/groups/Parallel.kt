@@ -1,10 +1,10 @@
 package lol.lazar.lazarkit.flows.groups
 
 import lol.lazar.lazarkit.flows.Flow
-import lol.lazar.lazarkit.flows.FlowScope
+import lol.lazar.lazarkit.flows.FlowBuilder
 
-fun parallel(block: FlowScope.() -> Unit) = Parallel(
-    *FlowScope().apply(block).flows.toTypedArray()
+fun parallel(block: FlowBuilder.() -> Unit) = Parallel(
+    *FlowBuilder().apply(block).flows.toTypedArray()
 )
 
 class Parallel(

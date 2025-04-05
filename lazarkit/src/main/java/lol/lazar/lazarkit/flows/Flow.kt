@@ -22,7 +22,7 @@ open class Flow(
 
     open fun execute() {
         if (isFinished) return
-        val entity = entityId?.let { GlobalEntities.entities[it] }
+        val entity = GlobalEntities.entities[entityId]
         if (entity != null) {
             if (entity.isBusy && entity.runningFlowId != id) return
             entity.lock(id)
