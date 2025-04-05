@@ -1,6 +1,5 @@
 package lol.lazar.lazarkit.flows.groups
 
-import kotlinx.coroutines.coroutineScope
 import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowScope
 
@@ -9,11 +8,22 @@ fun sequential(block: FlowScope.() -> Unit) = Sequential(
 )
 
 class Sequential(
-    vararg flows: Flow
-) : Flow(
-    {
-        coroutineScope {
-            flows.forEach { it.execute() }
+    vararg val flows: Flow
+) : Flow({}) {
+    var index = 0
+        private set
+
+    override fun innerAction() {
+        if (index < flows.size) {
+            val flow = flows[index]
+
+            if (!flow.isFinished) {
+                flow.execute()
+            } else {
+                index++
+            }
+        } else {
+            finishedTime = System.currentTimeMillis()
         }
     }
-)
+}

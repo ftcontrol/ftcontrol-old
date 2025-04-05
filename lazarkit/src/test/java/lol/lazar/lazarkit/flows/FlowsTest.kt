@@ -1,19 +1,24 @@
 package lol.lazar.lazarkit.flows
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import lol.lazar.lazarkit.core.Entity
+import lol.lazar.lazarkit.flows.conditional.doIf
 import lol.lazar.lazarkit.flows.groups.parallel
 import lol.lazar.lazarkit.flows.groups.race
 import lol.lazar.lazarkit.flows.groups.sequential
-import org.firstinspires.ftc.robotcore.internal.system.Assert.assertTrue
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 class FlowsTest {
 
+    private fun runFlow(flow: Flow) {
+        while (!flow.isFinished) {
+            flow.execute()
+        }
+    }
+
     @Test
-    fun `test sequential execution order`() = runBlocking {
+    fun `test sequential execution order`() {
         val executionOrder = mutableListOf<String>()
 
         val flow = sequential {
@@ -24,32 +29,31 @@ class FlowsTest {
             instant { executionOrder.add("Step 3") }
         }
 
-        flow.execute()
+        runFlow(flow)
 
         println("Execution Order: $executionOrder")
-
         assertTrue(
-            executionOrder == listOf("Step 1", "Step 2", "Step 3"),
-            "Steps should execute in order"
+            executionOrder == listOf("Step 1", "Step 2", "Step 3")
         )
     }
 
     @Test
-    fun `test parallel execution timing`() = runBlocking {
+    fun `test parallel execution timing`() {
+        val flow = parallel {
+            wait(1000)
+            wait(1000)
+        }
+
         val timeTaken = measureTimeMillis {
-            parallel {
-                wait(1000)
-                wait(1000)
-            }.execute()
+            runFlow(flow)
         }
 
         println("Time taken for parallel execution: $timeTaken ms")
-
-        assertTrue(timeTaken in 900..1100, "Parallel execution should finish in ~1000ms")
+        assertTrue(timeTaken in 900..1100)
     }
 
     @Test
-    fun `test entity-specific flow execution`() = runBlocking {
+    fun `test entity-specific flow execution`() {
         val entity1 = Entity()
         val entity2 = Entity()
         val entityExecuted = mutableSetOf<String>()
@@ -66,56 +70,33 @@ class FlowsTest {
             }.apply { entityId = entity2.id }
         }
 
-        flow.execute()
+        runFlow(flow)
 
         println("Executed entity actions: $entityExecuted")
-
-        assertTrue("Entity 1 Action" in entityExecuted, "Entity 1 should execute")
-        assertTrue("Entity 2 Action" in entityExecuted, "Entity 2 should execute")
+        assertTrue("Entity 1 Action" in entityExecuted)
+        assertTrue("Entity 2 Action" in entityExecuted)
     }
 
     @Test
-    fun `test conditional execution with doIf`() = runBlocking {
-        var batteryLevel = 25
-        var message = ""
+    fun `test conditional execution with doIf`() {
+        val batteryLevel = 25
+        var message = false
 
-        val flow = sequential {
-            doIf({ batteryLevel > 20 }) {
-                instant { message = "Battery good" }
+        val flow = doIf({ batteryLevel > 20 }) {
+            instant {
+                println("Running instant block")
+                message = true
             }
         }
 
-        flow.execute()
-
         println("Message: $message")
 
-        assertTrue(message == "Battery good", "Condition should be met and executed")
+        runFlow(flow)
+        assertTrue(message)
     }
 
     @Test
-    fun `test suspended condition with doIfSuspended`() = runBlocking {
-        var message = ""
-
-        val flow = sequential {
-            doIfSuspended({ checkSensor() }) {
-                instant { message = "Obstacle detected" }
-            }
-        }
-
-        flow.execute()
-
-        println("Message: $message")
-
-        assertTrue(message == "Obstacle detected", "Suspended condition should execute correctly")
-    }
-
-    private suspend fun checkSensor(): Boolean {
-        delay(500)
-        return true
-    }
-
-    @Test
-    fun `test nested sequential and parallel execution`() = runBlocking {
+    fun `test nested sequential and parallel execution`() {
         val executionOrder = mutableListOf<String>()
 
         val flow = sequential {
@@ -138,98 +119,95 @@ class FlowsTest {
             instant { executionOrder.add("End") }
         }
 
-        flow.execute()
+        runFlow(flow)
 
         println("Execution Order: $executionOrder")
-
-        assertTrue(executionOrder.first() == "Start", "First step should be 'Start'")
-        assertTrue(executionOrder.last() == "End", "Last step should be 'End'")
+        assertTrue(executionOrder.first() == "Start")
+        assertTrue(executionOrder.last() == "End")
     }
 
-
     @Test
-    fun `parallel execution with same entity should behave sequentially`() = runBlocking {
+    fun `parallel execution with same entity should behave sequentially`() {
         val entity = Entity()
         val executionOrder = mutableListOf<String>()
 
-        val timeTaken = measureTimeMillis {
-            parallel {
-                sequential {
-                    instant {
-                        executionOrder.add("Task 1 Start")
-                    }
-                    wait(1000)
-                    instant {
-                        executionOrder.add("Task 1 End")
-                    }
-                }.apply { entityId = entity.id }
+        val flow = parallel {
+            sequential {
+                instant {
+                    executionOrder.add("Task 1 Start")
+                }
+                wait(1000)
+                instant {
+                    executionOrder.add("Task 1 End")
+                }
+            }.apply { entityId = entity.id }
 
-                sequential {
-                    instant {
-                        executionOrder.add("Task 2 Start")
-                    }
-                    wait(1000)
-                    instant {
-                        executionOrder.add("Task 2 End")
-                    }
-                }.apply { entityId = entity.id }
-            }.execute()
+            sequential {
+                instant {
+                    executionOrder.add("Task 2 Start")
+                }
+                wait(1000)
+                instant {
+                    executionOrder.add("Task 2 End")
+                }
+            }.apply { entityId = entity.id }
+        }
+
+        val timeTaken = measureTimeMillis {
+            runFlow(flow)
         }
 
         println("Execution Order: $executionOrder")
         println("Time Taken: $timeTaken ms")
-
         assertTrue(
-            executionOrder == listOf("Task 1 Start", "Task 1 End", "Task 2 Start", "Task 2 End"),
-            "Tasks should execute sequentially since they share the same entity"
+            executionOrder == listOf("Task 1 Start", "Task 1 End", "Task 2 Start", "Task 2 End")
         )
         assertTrue(
-            timeTaken >= 2000,
-            "Total execution should take around 2000ms since they are forced sequentially"
+            timeTaken >= 2000
         )
     }
 
     @Test
-    fun `parallel execution with different entities should run concurrently`() = runBlocking {
+    fun `parallel execution with different entities should run concurrently`() {
         val entity1 = Entity()
         val entity2 = Entity()
         val executionOrder = mutableListOf<String>()
 
-        val timeTaken = measureTimeMillis {
-            parallel {
-                sequential {
-                    instant {
-                        executionOrder.add("Entity1 Task Start")
-                    }
-                    wait(1000)
-                    instant {
-                        executionOrder.add("Entity1 Task End")
-                    }
-                }.apply { entityId = entity1.id }
+        val flow = parallel {
+            sequential {
+                instant {
+                    executionOrder.add("Entity1 Task Start")
+                }
+                wait(1000)
+                instant {
+                    executionOrder.add("Entity1 Task End")
+                }
+            }.apply { entityId = entity1.id }
 
-                sequential {
-                    instant {
-                        executionOrder.add("Entity2 Task Start")
-                    }
-                    wait(1000)
-                    instant {
-                        executionOrder.add("Entity2 Task End")
-                    }
-                }.apply { entityId = entity2.id }
-            }.execute()
+            sequential {
+                instant {
+                    executionOrder.add("Entity2 Task Start")
+                }
+                wait(1000)
+                instant {
+                    executionOrder.add("Entity2 Task End")
+                }
+            }.apply { entityId = entity2.id }
+        }
+
+        val timeTaken = measureTimeMillis {
+            runFlow(flow)
         }
 
         println("Execution Order: $executionOrder")
         println("Time Taken: $timeTaken ms")
-
         assertTrue(
-            timeTaken in 900..1100,
-            "Total execution should take ~1000ms since they are truly parallel"
+            timeTaken in 900..1100
         )
     }
 
     @Test
-    fun `sequential flow should reset entity busy state after execution`() = runBlocking {
+    fun `sequential flow should reset entity busy state after execution`() {
         val entity = Entity()
         var wasBusyDuringFlow = false
 
@@ -240,16 +218,15 @@ class FlowsTest {
             wait(500)
         }
 
-        flow.execute()
+        runFlow(flow)
 
         println("Entity busy state after execution: ${entity.isBusy}")
-
-        assertTrue(wasBusyDuringFlow, "Entity should be marked busy during execution")
-        assertTrue(!entity.isBusy, "Entity should be free after execution")
+        assertTrue(wasBusyDuringFlow)
+        assertTrue(!entity.isBusy)
     }
 
     @Test
-    fun `parallel flow should not start if entity is already busy`() = runBlocking {
+    fun `parallel flow should not start if entity is already busy`() {
         val entity = Entity()
         var executedTask = ""
 
@@ -263,6 +240,7 @@ class FlowsTest {
 
             sequential {
                 instant {
+                    // This task should not execute because the entity is busy
                     if (!entity.isBusy) {
                         executedTask = "Second Task"
                     }
@@ -270,13 +248,11 @@ class FlowsTest {
             }.apply { entityId = entity.id }
         }
 
-        flow.execute()
+        runFlow(flow)
 
         println("Executed Task: $executedTask")
-
         assertTrue(
-            executedTask == "First Task",
-            "Second task should not execute since entity is busy"
+            executedTask == "First Task"
         )
     }
 }

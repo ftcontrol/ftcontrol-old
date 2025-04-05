@@ -1,7 +1,5 @@
 package lol.lazar.lazarkit.flows.groups
 
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowScope
 
@@ -10,11 +8,13 @@ fun parallel(block: FlowScope.() -> Unit) = Parallel(
 )
 
 class Parallel(
-    vararg flows: Flow
-) : Flow(
-    {
-        coroutineScope {
-            flows.forEach { launch { it.execute() } }
+    vararg val flows: Flow
+) : Flow({}) {
+    override fun innerAction() {
+        if (!flows.any { !it.isFinished }) finishedTime = System.currentTimeMillis()
+
+        flows.forEach {
+            it.execute()
         }
     }
-)
+}
