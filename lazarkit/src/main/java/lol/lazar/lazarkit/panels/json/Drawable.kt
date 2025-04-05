@@ -64,7 +64,6 @@ abstract class Drawable(val type: Types) {
     var zIndex: Int = 0
 
     enum class Types {
-        @SerializedName("line")
         LINE,
         RECTANGLE,
         CIRCLE,
