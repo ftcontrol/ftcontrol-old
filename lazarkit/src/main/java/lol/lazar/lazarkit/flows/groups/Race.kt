@@ -1,10 +1,10 @@
 package lol.lazar.lazarkit.flows.groups
 
 import lol.lazar.lazarkit.flows.Flow
-import lol.lazar.lazarkit.flows.FlowScope
+import lol.lazar.lazarkit.flows.FlowBuilder
 
-fun race(block: FlowScope.() -> Unit) = Race(
-    *FlowScope().apply(block).flows.toTypedArray()
+fun race(block: FlowBuilder.() -> Unit) = Race(
+    *FlowBuilder().apply(block).flows.toTypedArray()
 )
 
 class Race(

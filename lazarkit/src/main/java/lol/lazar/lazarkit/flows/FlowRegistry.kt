@@ -5,8 +5,6 @@ import java.util.UUID
 object FlowRegistry {
     private val flows = mutableMapOf<UUID, Flow>()
 
-    val hasFlows: Boolean get() = flows.isNotEmpty()
-
     fun register(flow: Flow) {
         flows[flow.id] = flow
     }
