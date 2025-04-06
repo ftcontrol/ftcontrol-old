@@ -1,13 +1,16 @@
 package lol.lazar.lazarkit.flows.conditional
 
+import lol.lazar.lazarkit.panels.json.DoIfJson
+import lol.lazar.lazarkit.flows.EmptyFlow
 import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowBuilder
+import lol.lazar.lazarkit.panels.json.JsonFlow
 import lol.lazar.lazarkit.flows.groups.Sequential
 
 fun doIf(condition: () -> Boolean, block: FlowBuilder.() -> Unit): DoIf {
     val flows = FlowBuilder().apply(block).flows
     val flow = when (flows.size) {
-        0 -> Flow {}
+        0 -> EmptyFlow()
         1 -> flows[0]
         else -> Sequential(*flows.toTypedArray())
     }
@@ -17,9 +20,12 @@ fun doIf(condition: () -> Boolean, block: FlowBuilder.() -> Unit): DoIf {
 class DoIf(
     private val condition: () -> Boolean,
     private val flow: Flow
-) : Flow({}) {
+) : Flow() {
 
     private var passedCheck = false
+
+    override val toJson: JsonFlow
+        get() = DoIfJson(passedCheck, flow.id.toString())
 
     override fun innerAction() {
         if (!passedCheck) {

@@ -1,9 +1,17 @@
 package lol.lazar.lazarkit.flows
 
+import lol.lazar.lazarkit.panels.json.JsonFlow
 import java.util.UUID
 
 object FlowRegistry {
     private val flows = mutableMapOf<UUID, Flow>()
+
+    val allFlows = mutableListOf<Flow>()
+
+    val allFlowsJson: List<JsonFlow>
+        get() {
+            return allFlows.map { it.toJson }
+        }
 
     fun register(flow: Flow) {
         flows[flow.id] = flow
