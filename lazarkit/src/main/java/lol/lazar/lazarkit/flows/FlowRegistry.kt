@@ -6,6 +6,11 @@ import java.util.UUID
 object FlowRegistry {
     private val flows = mutableMapOf<UUID, Flow>()
 
+    val runningFlowsJson: List<JsonFlow>
+        get() {
+            return flows.values.map { it.toJson }
+        }
+
     val allFlows = mutableListOf<Flow>()
 
     val allFlowsJson: List<JsonFlow>
@@ -17,9 +22,7 @@ object FlowRegistry {
         flows[flow.id] = flow
     }
 
-    fun unregister(id: UUID) {
-        flows.remove(id)
-    }
+    fun unregister(id: UUID) = flows.remove(id)
 
     fun unregister(flow: Flow) = unregister(flow.id)
 

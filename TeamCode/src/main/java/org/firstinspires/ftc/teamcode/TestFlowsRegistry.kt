@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import kotlinx.coroutines.runBlocking
-import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowRegistry
+import lol.lazar.lazarkit.flows.Instant
 import lol.lazar.lazarkit.panels.Panels
 
 @TeleOp(name = "TestFlowsRegistry", group = "Dashboard")
@@ -15,7 +15,7 @@ class TestFlowsRegistry : OpMode() {
     override fun init() {
         runBlocking {
             FlowRegistry.init()
-            FlowRegistry.register(Flow {
+            FlowRegistry.register(Instant {
                 panelsTelemetry.debug("Flow", "Executing...")
                 panelsTelemetry.update(telemetry)
             })
