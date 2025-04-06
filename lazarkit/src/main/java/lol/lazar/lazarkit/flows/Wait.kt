@@ -1,9 +1,13 @@
 package lol.lazar.lazarkit.flows
 
+import lol.lazar.lazarkit.panels.json.JsonFlow
+import lol.lazar.lazarkit.panels.json.WaitJson
+import java.util.UUID
+
 
 fun wait(durationMillis: Long) = Wait(durationMillis)
 
-class Wait(val durationMillis: Long) : Flow({}) {
+class Wait(val durationMillis: Long) : Flow() {
     var startedTimestamp = -1L
     override fun innerAction() {
         if (startedTimestamp == -1L) {
@@ -14,4 +18,10 @@ class Wait(val durationMillis: Long) : Flow({}) {
             finishedTime = System.currentTimeMillis()
         }
     }
+
+    override val toJson: JsonFlow
+        get() = WaitJson(startedTimestamp, durationMillis)
+
+    override val dependencyFlows: List<UUID>
+        get() = listOf()
 }

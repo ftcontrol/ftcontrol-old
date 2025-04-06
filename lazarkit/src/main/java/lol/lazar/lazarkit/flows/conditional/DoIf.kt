@@ -1,11 +1,12 @@
 package lol.lazar.lazarkit.flows.conditional
 
-import lol.lazar.lazarkit.panels.json.DoIfJson
 import lol.lazar.lazarkit.flows.EmptyFlow
 import lol.lazar.lazarkit.flows.Flow
 import lol.lazar.lazarkit.flows.FlowBuilder
-import lol.lazar.lazarkit.panels.json.JsonFlow
 import lol.lazar.lazarkit.flows.groups.Sequential
+import lol.lazar.lazarkit.panels.json.DoIfJson
+import lol.lazar.lazarkit.panels.json.JsonFlow
+import java.util.UUID
 
 fun doIf(condition: () -> Boolean, block: FlowBuilder.() -> Unit): DoIf {
     val flows = FlowBuilder().apply(block).flows
@@ -26,6 +27,9 @@ class DoIf(
 
     override val toJson: JsonFlow
         get() = DoIfJson(passedCheck, flow.id.toString())
+
+    override val dependencyFlows: List<UUID>
+        get() = listOf<UUID>() + flow.id + flow.dependencyFlows
 
     override fun innerAction() {
         if (!passedCheck) {

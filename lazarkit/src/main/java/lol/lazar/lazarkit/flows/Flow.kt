@@ -8,6 +8,7 @@ abstract class Flow {
     init {
         FlowRegistry.allFlows.add(this)
     }
+
     abstract fun innerAction()
 
     val id = UUID.randomUUID()
@@ -45,4 +46,6 @@ abstract class Flow {
     fun describe() = describe(0)
 
     abstract val toJson: JsonFlow
+
+    abstract val dependencyFlows: List<UUID>
 }

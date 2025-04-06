@@ -14,7 +14,8 @@ abstract class JsonFlow(val type: Types) {
         PARALLEL,
         RACE,
         INSTANT,
-        EMPTY
+        EMPTY,
+        WAIT
     }
 }
 
@@ -23,6 +24,12 @@ data class DoIfJson(
     val condition: Boolean,
     val body: String
 ) : JsonFlow(Types.DOIF)
+
+@Serializable
+data class WaitJson(
+    val startedTimestamp: Long,
+    val time: Long
+) : JsonFlow(Types.WAIT)
 
 @Serializable
 data class SequentialJson(
