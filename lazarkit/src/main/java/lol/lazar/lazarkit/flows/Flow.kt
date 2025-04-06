@@ -1,21 +1,18 @@
 package lol.lazar.lazarkit.flows
 
 import lol.lazar.lazarkit.core.GlobalEntities
+import lol.lazar.lazarkit.panels.json.JsonFlow
 import java.util.UUID
 
-open class Flow(
-    open var action: () -> Unit,
-    var description: String,
-    var entityId: String? = null,
-) {
-    constructor(action: () -> Unit)
-            : this(action = { action() }, description = "Flow")
-
-    open fun innerAction() {
-        action()
+abstract class Flow {
+    init {
+        FlowRegistry.allFlows.add(this)
     }
+    abstract fun innerAction()
 
     val id = UUID.randomUUID()
+    var description: String = ""
+    var entityId: String? = null
 
     var finishedTime: Long = -1L
     val isFinished: Boolean get() = finishedTime != -1L
@@ -46,4 +43,6 @@ open class Flow(
         "${"  ".repeat(indent)}$description"
 
     fun describe() = describe(0)
+
+    abstract val toJson: JsonFlow
 }

@@ -1,5 +1,6 @@
-package lol.lazar.lazarkit.flows
+package lol.lazar.lazarkit.panels.json
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,7 +13,8 @@ abstract class JsonFlow(val type: Types) {
         SEQUENTIAL,
         PARALLEL,
         RACE,
-        INSTANT
+        INSTANT,
+        EMPTY
     }
 }
 
@@ -40,3 +42,12 @@ data class RaceJson(
 
 @Serializable
 class InstantJson : JsonFlow(Types.INSTANT)
+
+@Serializable
+class EmptyJson : JsonFlow(Types.EMPTY)
+
+@Serializable
+@SerialName("allFlows")
+data class AllFlowsJson(
+    var flows: List<JsonFlow>
+) : JSONData()
