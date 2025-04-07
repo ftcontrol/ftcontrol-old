@@ -6,14 +6,16 @@ import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayInputStream
-import java.net.InetSocketAddress
-import java.net.Proxy
 
 class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
 
-    private val client = OkHttpClient.Builder()
-        .proxy(Proxy(Proxy.Type.HTTP, InetSocketAddress("172.29.0.1", 5801)))
-        .build()
+//    val llURL = "172.29.0.1"
+//    val llPort = 5801
+
+    val llURL = "localhost"
+    val llPort = 8001
+
+    private val client = OkHttpClient.Builder().build()
 
     override fun serve(session: IHTTPSession): Response {
         return try {
@@ -33,7 +35,7 @@ class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
         println("DASH: Proxying request to ${session.uri}")
 
         val request = Request.Builder()
-            .url("http://172.29.0.1:5801${session.uri}")
+            .url("http://$llURL:$llPort${session.uri}")
             .method(session.method.name, getRequestBody(session))
             .apply {
                 session.headers
@@ -45,13 +47,27 @@ class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
         val response = client.newCall(request).execute()
         val responseBody = response.body?.bytes() ?: ByteArray(0)
 
-        return newFixedLengthResponse(
+        val mimeType = response.header("Content-Type") ?: "application/octet-stream"
+        val encoding = response.header("Content-Encoding")
+
+        val resp = newFixedLengthResponse(
             Response.Status.lookup(response.code) ?: Response.Status.INTERNAL_ERROR,
-            response.header("Content-Type") ?: "application/octet-stream",
+            mimeType,
             ByteArrayInputStream(responseBody),
             responseBody.size.toLong()
         )
+
+        encoding?.let {
+            resp.addHeader("Content-Encoding", it)
+        }
+
+        listOf("Cache-Control", "Content-Language", "ETag").forEach { header ->
+            response.header(header)?.let { resp.addHeader(header, it) }
+        }
+
+        return resp
     }
+
 
     private fun getRequestBody(session: IHTTPSession): RequestBody? {
         if (session.method in listOf(Method.POST, Method.PUT, Method.PATCH)) {
