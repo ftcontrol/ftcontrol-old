@@ -22,7 +22,7 @@
     }
   }}
 >
-  <Arrow {isOpened} />
+  <Arrow {isOpened} isVertical={false} />
   {@render children()}
 </button>
 

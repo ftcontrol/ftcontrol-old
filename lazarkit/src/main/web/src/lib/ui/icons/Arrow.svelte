@@ -1,11 +1,15 @@
 <script lang="ts">
-  let { isOpened }: { isOpened: boolean } = $props()
+  let {
+    isOpened,
+    isVertical = true,
+  }: { isOpened: boolean; isVertical?: boolean } = $props()
 </script>
 
 <svg
   width="100%"
   height="100%"
   class:opened={isOpened}
+  class:vertical={isVertical}
   viewBox="0 0 11 7"
   version="1.1"
   xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +27,17 @@
     height: 7px;
     width: fit-content;
     transform-origin: center;
+    transform: rotate(-90deg);
+
     transition: transform 0.2s;
   }
   svg.opened {
+    transform: rotate(0deg);
+  }
+  svg.vertical {
+    transform: rotate(0deg);
+  }
+  svg.opened.vertical {
     transform: rotate(180deg);
   }
 </style>

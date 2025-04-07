@@ -9,6 +9,7 @@
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
+  import Hiddable from "./Hiddable.svelte"
   let openedStates: { [key: string]: boolean } = $state({})
 
   function processFields(fields: GenericTypeJson[]): {
@@ -88,11 +89,11 @@
   {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
     <div>
       <ClassName {name} bind:isOpened={openedStates[name]} />
-      {#if openedStates[name] == true}
+      <Hiddable isShown={openedStates[name] == true}>
         {#each items as item}
           <Field {item} />
         {/each}
-      {/if}
+      </Hiddable>
     </div>
   {/each}
   {#if info.jvmFields.length == 0}
