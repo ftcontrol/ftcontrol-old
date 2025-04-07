@@ -8,7 +8,6 @@
   import "./global.css"
 </script>
 
-<!-- TODO: predictive UI updates -->
 {#await socket.init()}
   <p>Loading...</p>
 {:then}
