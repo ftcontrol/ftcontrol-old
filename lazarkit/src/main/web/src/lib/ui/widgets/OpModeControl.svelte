@@ -138,7 +138,6 @@
     z-index: 100;
     top: 3rem;
     box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
-    max-height: 200px;
   }
   .flex {
     display: flex;
@@ -173,6 +172,5 @@
     border: none;
     background-color: transparent;
     margin: 0;
-    height: max-content;
   }
 </style>
