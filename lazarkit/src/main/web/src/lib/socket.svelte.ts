@@ -107,4 +107,5 @@ export class InfoManager {
   jvmFields = $state<GenericTypeJson[]>([])
   batteryVoltage = $state<number>(-1.0)
   canvas = $state<Canvas>(emptyCanvas)
+  flows = $state([])
 }

@@ -14,7 +14,11 @@ class Parallel(
     vararg val flows: Flow
 ) : Flow() {
     override val toJson: JsonFlow
-        get() = ParallelJson(flows.map { it.id.toString() })
+        get() {
+            val json = ParallelJson(flows.map { it.id.toString() })
+            json.id = id.toString()
+            return json
+        }
 
     override val dependencyFlows: List<UUID>
         get() {
