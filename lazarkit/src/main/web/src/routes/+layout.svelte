@@ -8,21 +8,20 @@
   import "./global.css"
 </script>
 
-<!-- TODO: predictive UI updates -->
-{#await socket.init()}
-  <p>Loading...</p>
-{:then}
-  <Gamepads />
-  <Notifications />
-  <div>
-    <Sidebar />
-    <section>
+<Gamepads />
+<Notifications />
+<div>
+  <Sidebar />
+  <section>
+    {#await socket.init()}
+      <p>Connecting to server...</p>
+    {:then}
       {@render children()}
-    </section>
-  </div>
-{:catch error}
-  <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
-{/await}
+    {:catch error}
+      <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
+    {/await}
+  </section>
+</div>
 
 <style>
   div {
@@ -31,7 +30,6 @@
     height: 100vh;
   }
   section {
-    padding: 1rem 1rem 1rem 1rem;
     overflow-y: auto;
   }
   p {

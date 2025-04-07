@@ -3,6 +3,18 @@
 :root {
   --bg: #f6f6f6;
   --card: #ffffff;
+  --text: black;
+}
+
+body,
+html {
+  overflow: hidden;
+}
+
+body.dark-mode {
+  --bg: #282828;
+  --card: black;
+  --text: white;
 }
 
 *,
@@ -16,8 +28,23 @@ body {
   padding: 0;
   margin: 0;
 
+  color: var(--text);
+
   font-family: "Varta", sans-serif;
   font-optical-sizing: auto;
   font-weight: 300;
   font-style: normal;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }

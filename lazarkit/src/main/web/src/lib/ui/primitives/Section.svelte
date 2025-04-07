@@ -1,47 +1,29 @@
 <script lang="ts">
   import type { Snippet } from "svelte"
+  import Header from "./Header.svelte"
+  import Title from "./Title.svelte"
 
   let {
-    beforeTitle,
-    afterTitle,
     children,
-    title,
+    title = "",
   }: {
-    beforeTitle?: Snippet
-    afterTitle?: Snippet
     children: Snippet
-    title: string
+    title?: string
   } = $props()
 </script>
 
 <section>
-  <div class="header">
-    {#if beforeTitle}
-      {@render beforeTitle()}
-    {/if}
-    <h2>{title}</h2>
-    {#if afterTitle}
-      {@render afterTitle()}
-    {/if}
-  </div>
+  {#if title != ""}
+    <Header>
+      <Title>{title}</Title>
+    </Header>
+  {/if}
   <div class="main">
     {@render children()}
   </div>
 </section>
 
 <style>
-  .header {
-    display: flex;
-    gap: 1rem;
-    justify-content: space-between;
-    position: relative;
-  }
-  h2 {
-    margin: 0;
-    text-align: center;
-    flex-grow: 1;
-    font-size: 1.25rem;
-  }
   section {
     background-color: var(--card);
     position: relative;
@@ -49,11 +31,10 @@
     margin: 0.5rem;
     margin-bottom: 1rem;
     overflow-x: auto;
-  }
-  .header {
-    padding-top: 1rem;
-    padding-inline: 1rem;
-    margin-bottom: 1rem;
+    overflow-y: hidden;
+
+    min-width: 400px;
+    transition: background-color 0.5s;
   }
   .main {
     padding-bottom: 1rem;

@@ -36,4 +36,8 @@
     height: 32px;
     width: fit-content;
   }
+  path,
+  text {
+    fill: var(--text);
+  }
 </style>
