@@ -31,6 +31,7 @@
     margin: 0.5rem;
     margin-bottom: 1rem;
     overflow-x: auto;
+    overflow-y: hidden;
   }
   .main {
     padding-bottom: 1rem;

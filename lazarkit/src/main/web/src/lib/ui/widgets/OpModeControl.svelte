@@ -132,12 +132,12 @@
     gap: 0.3rem;
   }
   div.modal {
-    width: fit-content;
     position: absolute;
     background-color: var(--card);
     z-index: 100;
+    max-height: 133px;
+    overflow-y: auto;
     top: 3rem;
-    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
   }
   .flex {
     display: flex;
