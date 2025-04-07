@@ -157,3 +157,51 @@ export function drawImage(
   ctx.drawImage(img, start.x, start.y, width.pixels, height.pixels)
   ctx.restore()
 }
+
+export function drawCircle(
+  center: Point,
+  radius: Distance,
+  fillColor: string = "blue",
+  outlineColor: string = "black",
+  outlineWidth: Distance = new Distance(0.02)
+) {
+  if (ctx == null) return
+  ctx.beginPath()
+  ctx.arc(center.x, center.y, radius.pixels, 0, 2 * Math.PI)
+
+  ctx.fillStyle = fillColor
+  ctx.fill()
+
+  ctx.strokeStyle = outlineColor
+  ctx.lineWidth = outlineWidth.pixels
+  ctx.stroke()
+
+  ctx.closePath()
+}
+
+export function drawRectangle(
+  center: Point,
+  width: Distance,
+  height: Distance,
+  fillColor: string = "green",
+  outlineColor: string = "black",
+  outlineWidth: Distance = new Distance(0.02)
+) {
+  if (ctx == null) return
+
+  const topLeft = new Point(
+    center.fieldX - width.inches / 2,
+    center.fieldY - height.inches / 2
+  )
+
+  ctx.beginPath()
+
+  ctx.fillStyle = fillColor
+  ctx.fillRect(topLeft.x, topLeft.y, width.pixels, height.pixels)
+
+  ctx.strokeStyle = outlineColor
+  ctx.lineWidth = outlineWidth.pixels
+  ctx.strokeRect(topLeft.x, topLeft.y, width.pixels, height.pixels)
+
+  ctx.closePath()
+}

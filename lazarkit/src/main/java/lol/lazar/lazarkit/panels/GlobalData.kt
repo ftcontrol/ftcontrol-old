@@ -1,8 +1,8 @@
 package lol.lazar.lazarkit.panels
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import lol.lazar.lazarkit.panels.OpModeData.OpModeStatus
-import lol.lazar.lazarkit.panels.data.OpModeInfo
+import lol.lazar.lazarkit.panels.integration.OpModeData.OpModeStatus
+import lol.lazar.lazarkit.panels.json.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 
 object GlobalData {

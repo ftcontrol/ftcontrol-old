@@ -2,7 +2,6 @@ package lol.lazar.lazarkit.panels.integration
 
 import android.view.Menu
 import android.view.MenuItem
-import lol.lazar.lazarkit.panels.Preferences
 
 class MenuManager(
     private val enable: () -> Unit,

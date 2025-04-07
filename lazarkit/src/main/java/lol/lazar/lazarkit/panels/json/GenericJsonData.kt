@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.data
+package lol.lazar.lazarkit.panels.json
 
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName

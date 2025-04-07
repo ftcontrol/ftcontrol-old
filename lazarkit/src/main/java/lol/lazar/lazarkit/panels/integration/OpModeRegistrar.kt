@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.system.Misc
-import lol.lazar.lazarkit.panels.Preferences
 
 class OpModeRegistrar(
     private val toggle: () -> Unit,
