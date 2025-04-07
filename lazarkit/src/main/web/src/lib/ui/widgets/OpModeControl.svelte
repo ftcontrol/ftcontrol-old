@@ -3,6 +3,8 @@
   import type { OpMode } from "$lib/socket.svelte"
   import { Section, Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
   import OpModeList from "../OpModeList.svelte"
   import Hiddable from "./configurables/Hiddable.svelte"
 
@@ -48,35 +50,32 @@
   })
 </script>
 
-{#snippet autoButton()}
-  <button slot="beforeTitle" onclick={() => toggle("autos")}>
-    <span>
-      Autos<Arrow isOpened={modalOpened == "autos"} />
-    </span>
-  </button>
+<Section>
+  <Header>
+    <button onclick={() => toggle("autos")}>
+      <span>
+        Autos<Arrow isOpened={modalOpened == "autos"} />
+      </span>
+    </button>
+    <Title>OpMode Control</Title>
+    <button onclick={() => toggle("teleops")}>
+      <span>
+        TeleOps<Arrow isOpened={modalOpened == "teleops"} />
+      </span>
+    </button>
+  </Header>
+
   <div class="modal autos">
     <Hiddable isShown={modalOpened == "autos"}>
       <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
     </Hiddable>
   </div>
-{/snippet}
-{#snippet teleopsButton()}
-  <button slot="afterTitle" onclick={() => toggle("teleops")}>
-    <span>
-      TeleOps<Arrow isOpened={modalOpened == "teleops"} />
-    </span>
-  </button>
-{/snippet}
-<Section
-  title={"OpMode Control"}
-  beforeTitle={autoButton}
-  afterTitle={teleopsButton}
->
   <div class="modal teleops">
     <Hiddable isShown={modalOpened == "teleops"}>
       <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
     </Hiddable>
   </div>
+
   {#if currentOpMode.name == ""}
     <p class="title">Nothing selected</p>
   {:else}
@@ -174,5 +173,6 @@
     border: none;
     background-color: transparent;
     margin: 0;
+    height: max-content;
   }
 </style>
