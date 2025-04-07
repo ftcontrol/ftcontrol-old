@@ -3,7 +3,10 @@
   import type { OpMode } from "$lib/socket.svelte"
   import { Section, Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
   import OpModeList from "../OpModeList.svelte"
+  import Hiddable from "./configurables/Hiddable.svelte"
 
   let modalOpened = $state<"" | "autos" | "teleops">("")
 
@@ -47,35 +50,32 @@
   })
 </script>
 
-{#snippet autoButton()}
-  <button slot="beforeTitle" onclick={() => toggle("autos")}>
-    <span>
-      Autos<Arrow isOpened={modalOpened == "autos"} />
-    </span>
-  </button>
-  {#if modalOpened == "autos"}
-    <div class="modal autos">
+<Section>
+  <Header>
+    <button onclick={() => toggle("autos")}>
+      <span>
+        Autos<Arrow isOpened={modalOpened == "autos"} />
+      </span>
+    </button>
+    <Title>OpMode Control</Title>
+    <button onclick={() => toggle("teleops")}>
+      <span>
+        TeleOps<Arrow isOpened={modalOpened == "teleops"} />
+      </span>
+    </button>
+  </Header>
+
+  <div class="modal autos">
+    <Hiddable isShown={modalOpened == "autos"}>
       <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
-    </div>
-  {/if}
-{/snippet}
-{#snippet teleopsButton()}
-  <button slot="afterTitle" onclick={() => toggle("teleops")}>
-    <span>
-      TeleOps<Arrow isOpened={modalOpened == "teleops"} />
-    </span>
-  </button>
-  {#if modalOpened == "teleops"}
-    <div class="modal teleops">
+    </Hiddable>
+  </div>
+  <div class="modal teleops">
+    <Hiddable isShown={modalOpened == "teleops"}>
       <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
-    </div>
-  {/if}
-{/snippet}
-<Section
-  title={"OpMode Control"}
-  beforeTitle={autoButton}
-  afterTitle={teleopsButton}
->
+    </Hiddable>
+  </div>
+
   {#if currentOpMode.name == ""}
     <p class="title">Nothing selected</p>
   {:else}
@@ -132,12 +132,12 @@
     gap: 0.3rem;
   }
   div.modal {
-    width: fit-content;
     position: absolute;
     background-color: var(--card);
     z-index: 100;
+    max-height: 133px;
+    overflow-y: auto;
     top: 3rem;
-    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
   }
   .flex {
     display: flex;
@@ -172,5 +172,6 @@
     border: none;
     background-color: transparent;
     margin: 0;
+    color: inherit;
   }
 </style>

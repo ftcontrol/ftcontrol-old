@@ -57,4 +57,9 @@
       opacity 0.3s ease-in-out,
       transform 0.3s ease-in-out;
   }
+
+  path,
+  text {
+    fill: var(--text);
+  }
 </style>

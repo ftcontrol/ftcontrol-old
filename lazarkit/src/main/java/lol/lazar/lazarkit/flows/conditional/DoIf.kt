@@ -26,7 +26,11 @@ class DoIf(
     private var passedCheck = false
 
     override val toJson: JsonFlow
-        get() = DoIfJson(passedCheck, flow.id.toString())
+        get() {
+            val json = DoIfJson(passedCheck, flow.id.toString())
+            json.id = id.toString()
+            return json
+        }
 
     override val dependencyFlows: List<UUID>
         get() = listOf<UUID>() + flow.id + flow.dependencyFlows

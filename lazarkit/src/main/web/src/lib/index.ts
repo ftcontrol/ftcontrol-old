@@ -66,6 +66,10 @@ socket.addMessageHandler("batteryVoltage", (data: GenericData) => {
   info.batteryVoltage = data.value
 })
 
+socket.addMessageHandler("allFlows", (data: GenericData) => {
+  info.flows = data.flows
+})
+
 // setTimeout(() => {
 //   socket.sendMessage({ kind: "getOpmodes" })
 //   socket.sendMessage({ kind: "getActiveOpMode" })

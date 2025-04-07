@@ -28,8 +28,8 @@
     z-index: 100;
   }
   p {
-    border: 1px solid black;
-    background-color: white;
+    border: 1px solid var(--text);
+    background-color: var(--card);
     padding: 1rem;
   }
 </style>

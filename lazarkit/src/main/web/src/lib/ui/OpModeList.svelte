@@ -9,25 +9,21 @@
     $props()
 </script>
 
-<section>
-  {#each info.opModes.filter((it) => it.flavour == flavour) as opMode}
-    <button onclick={() => onselect(opMode)}>
-      {opMode.name} / {opMode.group}
-    </button>
-  {/each}
-  {#if info.opModes.filter((it) => it.flavour == flavour).length == 0}
-    <p>No opModes here.</p>
-  {/if}
-</section>
+{#each info.opModes.filter((it) => it.flavour == flavour) as opMode}
+  <button onclick={() => onselect(opMode)}>
+    {opMode.name} / {opMode.group}
+  </button>
+{/each}
+{#if info.opModes.filter((it) => it.flavour == flavour).length == 0}
+  <p>No opModes here.</p>
+{/if}
 
 <style>
-  section {
-    max-height: 600px;
-  }
   button {
     display: block;
     border: none;
     background-color: transparent;
     padding: 0.5rem 1rem;
+    color: inherit;
   }
 </style>

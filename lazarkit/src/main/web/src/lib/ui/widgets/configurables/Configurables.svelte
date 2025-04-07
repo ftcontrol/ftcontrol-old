@@ -7,8 +7,11 @@
   } from "$lib/genericType"
   import { Section } from "$primitives"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
+  import Hiddable from "./Hiddable.svelte"
   let openedStates: { [key: string]: boolean } = $state({})
 
   function processFields(fields: GenericTypeJson[]): {
@@ -75,34 +78,43 @@
   }
 </script>
 
-{#snippet updateButton()}
-  <button
-    onclick={() => {
-      sendAllUpdates(info.jvmFields)
-    }}
-  >
-    <UpdateAll isActive={isChanged(info.jvmFields)} />
-  </button>
-{/snippet}
-<Section title={"Configurables"} afterTitle={updateButton}>
-  {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-    <div>
-      <ClassName {name} bind:isOpened={openedStates[name]} />
-      {#if openedStates[name] == true}
-        {#each items as item}
-          <Field {item} />
-        {/each}
-      {/if}
-    </div>
-  {/each}
-  {#if info.jvmFields.length == 0}
-    <p>No configurables found.</p>
-  {/if}
+<Section>
+  <Header>
+    <Title>Configurables</Title>
+    <button
+      onclick={() => {
+        sendAllUpdates(info.jvmFields)
+      }}
+    >
+      <UpdateAll isActive={isChanged(info.jvmFields)} />
+    </button>
+  </Header>
+  <div class="content">
+    {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
+      <div>
+        <ClassName {name} bind:isOpened={openedStates[name]} />
+        <Hiddable isShown={openedStates[name] == true}>
+          {#each items as item}
+            <Field {item} />
+          {/each}
+        </Hiddable>
+      </div>
+    {/each}
+    {#if info.jvmFields.length == 0}
+      <p>No configurables found.</p>
+    {/if}
+  </div>
 </Section>
 
 <style>
   button {
     all: unset;
     cursor: pointer;
+  }
+  .content {
+    height: 500px;
+    overflow-y: auto;
+    margin-right: -1rem;
+    padding-right: 1rem;
   }
 </style>
