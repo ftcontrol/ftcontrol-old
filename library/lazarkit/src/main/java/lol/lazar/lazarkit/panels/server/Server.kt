@@ -18,8 +18,6 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         file.writeText("Hello, world!")
     }
 
-
-
     override fun serve(session: IHTTPSession): Response {
         val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html").ifEmpty { "index.html" }
 
@@ -27,15 +25,16 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             return handleReverseProxy(session)
         }
 
-        val mime = when (uri.substringAfterLast(".", "")) {
+        val path = when {
+            !uri.contains(".") -> "web/$uri/index.html"
+            else -> "web/$uri"
+        }
+
+        val mime = when (path.substringAfterLast(".", "")) {
             "css" -> "text/css"
             "htm", "html" -> "text/html"
             "js" -> "application/javascript"
             else -> "application/octet-stream"
-        }
-        val path = when {
-            !uri.contains(".") -> "web/$uri/index.html"
-            else -> "web/$uri"
         }
 
         println("DASH: Request for ${session.uri} / $uri / $path / $mime")

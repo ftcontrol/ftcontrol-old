@@ -88,3 +88,4 @@ gradle.properties
 /lazarkit-website/.svelte-kit
 /lazarkit-website/node_modules
 /library/lazarkit/src/main/assets/web
+/library/.kotlin
