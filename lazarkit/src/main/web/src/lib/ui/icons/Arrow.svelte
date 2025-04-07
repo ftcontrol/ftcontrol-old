@@ -40,4 +40,8 @@
   svg.opened.vertical {
     transform: rotate(180deg);
   }
+
+  path {
+    fill: var(--text);
+  }
 </style>

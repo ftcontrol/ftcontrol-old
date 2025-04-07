@@ -61,8 +61,8 @@
   .select {
     position: absolute;
     width: 100%;
-    background-color: white;
-    border: 1px solid black;
+    background-color: var(--card);
+    border: 1px solid var(--text);
   }
   .content {
     position: relative;

@@ -3,6 +3,13 @@
 :root {
   --bg: #f6f6f6;
   --card: #ffffff;
+  --text: black;
+}
+
+body.dark-mode {
+  --bg: #282828;
+  --card: black;
+  --text: white;
 }
 
 *,
@@ -15,6 +22,8 @@ body {
   background-color: var(--bg);
   padding: 0;
   margin: 0;
+
+  color: var(--text);
 
   font-family: "Varta", sans-serif;
   font-optical-sizing: auto;

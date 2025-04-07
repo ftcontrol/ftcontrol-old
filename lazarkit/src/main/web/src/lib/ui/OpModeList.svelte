@@ -24,5 +24,6 @@
     border: none;
     background-color: transparent;
     padding: 0.5rem 1rem;
+    color: inherit;
   }
 </style>

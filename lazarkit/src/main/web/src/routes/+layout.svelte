@@ -8,20 +8,20 @@
   import "./global.css"
 </script>
 
-{#await socket.init()}
-  <p>Loading...</p>
-{:then}
-  <Gamepads />
-  <Notifications />
-  <div>
-    <Sidebar />
-    <section>
+<Gamepads />
+<Notifications />
+<div>
+  <Sidebar />
+  <section>
+    {#await socket.init()}
+      <p>Connecting to server...</p>
+    {:then}
       {@render children()}
-    </section>
-  </div>
-{:catch error}
-  <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
-{/await}
+    {:catch error}
+      <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
+    {/await}
+  </section>
+</div>
 
 <style>
   div {
