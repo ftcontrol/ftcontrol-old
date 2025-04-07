@@ -17,13 +17,31 @@
   }
 
   applyInitialTheme()
+  import { tick } from "svelte"
+  let isCovering = $state(false)
 
-  function toggleTheme() {
+  async function toggleTheme() {
+    isCovering = true
+    await tick()
+
+    const cover = document.querySelector(".cover") as HTMLElement
+    cover.classList.remove("applied")
+
+    await new Promise((r) => setTimeout(r, 250))
+
     const isDark = document.body.classList.toggle("dark-mode")
     document.cookie = `theme=${isDark ? "dark" : "light"}; path=/; max-age=31536000`
+
+    await new Promise((r) => setTimeout(r, 450))
+
+    cover.classList.add("applied")
+
+    await new Promise((r) => setTimeout(r, 250))
+    isCovering = false
   }
 </script>
 
+<div class="cover" class:applied={!isCovering}></div>
 <button
   class="arrow"
   class:hidden={!isOpened}
@@ -59,6 +77,19 @@
 </section>
 
 <style>
+  .cover {
+    background-color: var(--bg);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    transition: all 0.25s;
+  }
+  .cover.applied {
+    top: -100%;
+  }
   button.arrow {
     all: unset;
     cursor: pointer;
@@ -66,6 +97,7 @@
     top: 50%;
     left: 125px;
     transform: translateY(-50%);
+    z-index: 100;
 
     transition: left 0.2s;
   }
@@ -78,6 +110,7 @@
     border-radius: 0 16px 16px 0;
     height: 100%;
     width: fit-content;
+    transition: background-color 0.5s;
   }
   .shell {
     max-width: 400px;
