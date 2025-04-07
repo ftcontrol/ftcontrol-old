@@ -89,24 +89,32 @@
       <UpdateAll isActive={isChanged(info.jvmFields)} />
     </button>
   </Header>
-  {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-    <div>
-      <ClassName {name} bind:isOpened={openedStates[name]} />
-      <Hiddable isShown={openedStates[name] == true}>
-        {#each items as item}
-          <Field {item} />
-        {/each}
-      </Hiddable>
-    </div>
-  {/each}
-  {#if info.jvmFields.length == 0}
-    <p>No configurables found.</p>
-  {/if}
+  <div class="content">
+    {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
+      <div>
+        <ClassName {name} bind:isOpened={openedStates[name]} />
+        <Hiddable isShown={openedStates[name] == true}>
+          {#each items as item}
+            <Field {item} />
+          {/each}
+        </Hiddable>
+      </div>
+    {/each}
+    {#if info.jvmFields.length == 0}
+      <p>No configurables found.</p>
+    {/if}
+  </div>
 </Section>
 
 <style>
   button {
     all: unset;
     cursor: pointer;
+  }
+  .content {
+    height: 500px;
+    overflow-y: auto;
+    margin-right: -1rem;
+    padding-right: 1rem;
   }
 </style>

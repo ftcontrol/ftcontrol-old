@@ -31,7 +31,6 @@
     height: 100vh;
   }
   section {
-    padding: 1rem 1rem 1rem 1rem;
     overflow-y: auto;
   }
   p {

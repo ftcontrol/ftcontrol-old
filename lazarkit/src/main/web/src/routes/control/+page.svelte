@@ -15,6 +15,8 @@
   </div>
   <div>
     <Configurables />
+  </div>
+  <div>
     <GameField />
   </div>
 </section>
@@ -22,6 +24,9 @@
 <style>
   section {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    overflow-x: auto;
+    height: 100%;
+    padding: 0.5rem;
   }
 </style>
