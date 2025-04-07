@@ -17,10 +17,14 @@ class Sequential(
         private set
 
     override val toJson: JsonFlow
-        get() = SequentialJson(index, flows.map { it.id.toString() })
+        get() {
+            val json = SequentialJson(index, flows.map { it.id.toString() })
+            json.id = id.toString()
+            return json
+        }
 
     override val dependencyFlows: List<UUID>
-        get(){
+        get() {
             val list = listOf<UUID>()
             flows.forEach {
                 list + it.id
