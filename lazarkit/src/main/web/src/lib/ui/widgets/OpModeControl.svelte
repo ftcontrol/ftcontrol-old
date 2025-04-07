@@ -4,6 +4,7 @@
   import { Section, Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
   import OpModeList from "../OpModeList.svelte"
+  import Hiddable from "./configurables/Hiddable.svelte"
 
   let modalOpened = $state<"" | "autos" | "teleops">("")
 
@@ -53,11 +54,11 @@
       Autos<Arrow isOpened={modalOpened == "autos"} />
     </span>
   </button>
-  {#if modalOpened == "autos"}
-    <div class="modal autos">
+  <div class="modal autos">
+    <Hiddable isShown={modalOpened == "autos"}>
       <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
-    </div>
-  {/if}
+    </Hiddable>
+  </div>
 {/snippet}
 {#snippet teleopsButton()}
   <button slot="afterTitle" onclick={() => toggle("teleops")}>
@@ -65,17 +66,17 @@
       TeleOps<Arrow isOpened={modalOpened == "teleops"} />
     </span>
   </button>
-  {#if modalOpened == "teleops"}
-    <div class="modal teleops">
-      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
-    </div>
-  {/if}
 {/snippet}
 <Section
   title={"OpMode Control"}
   beforeTitle={autoButton}
   afterTitle={teleopsButton}
 >
+  <div class="modal teleops">
+    <Hiddable isShown={modalOpened == "teleops"}>
+      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
+    </Hiddable>
+  </div>
   {#if currentOpMode.name == ""}
     <p class="title">Nothing selected</p>
   {:else}
@@ -138,6 +139,7 @@
     z-index: 100;
     top: 3rem;
     box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25);
+    max-height: 200px;
   }
   .flex {
     display: flex;

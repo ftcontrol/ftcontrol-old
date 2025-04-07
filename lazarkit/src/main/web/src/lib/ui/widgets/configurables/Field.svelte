@@ -5,6 +5,7 @@
   import Update from "$ui/icons/Update.svelte"
   import { anyValidator } from "../../primitives/validators"
   import FieldNested from "./FieldNested.svelte"
+  import Hiddable from "./Hiddable.svelte"
   import Toggle from "./Toggle.svelte"
 
   let {
@@ -38,7 +39,7 @@
   style="--depth:{depth};"
 >
   {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
-    <p>
+    <p style="margin-left: -24px;">
       <button
         onclick={() => {
           sendFieldUpdate()
@@ -66,7 +67,7 @@
       />
     </form>
   {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
-    <p>
+    <p style="margin-left: -24px;">
       <button
         onclick={() => {
           sendFieldUpdate()
@@ -92,13 +93,13 @@
         <p>{item.fieldName} {item.type}</p>
       </Toggle>
     </div>
-    {#if item.isOpened}
+    <div class="two">
       {#each item.customValues as custom}
-        <div class="two">
+        <Hiddable isShown={item.isOpened}>
           <FieldNested item={custom} depth={depth + 1} />
-        </div>
+        </Hiddable>
       {/each}
-    {/if}
+    </div>
   {:else if item.type != Types.UNKNOWN}
     {JSON.stringify(item)}
   {/if}
@@ -106,15 +107,12 @@
 
 <style>
   .item {
-    --margin: calc((var(--depth)) * 0px);
+    --margin: 48px;
     margin-left: calc(var(--margin));
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     margin-bottom: 8px;
-  }
-  .first {
-    margin-left: calc(var(--margin) + 42px);
   }
   p {
     margin: 0;
