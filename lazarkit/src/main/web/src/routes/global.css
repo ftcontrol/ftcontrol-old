@@ -6,6 +6,11 @@
   --text: black;
 }
 
+body,
+html {
+  overflow: hidden;
+}
+
 body.dark-mode {
   --bg: #282828;
   --card: black;
@@ -31,8 +36,15 @@ body {
   font-style: normal;
 }
 
-/* *,
-*::after,
-*::before {
-  outline: 1px solid red;
-} */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
