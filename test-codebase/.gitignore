@@ -79,12 +79,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-
-gradle.properties
-/lazarkit/src/main/assets/web
-/.kotlin
-/lazarkit-docs/book
-/lazarkit-website/.svelte-kit
-/lazarkit-website/node_modules
-/library/lazarkit/src/main/assets/web
