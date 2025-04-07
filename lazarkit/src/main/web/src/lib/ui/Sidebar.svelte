@@ -70,7 +70,6 @@
     <div class="gap"></div>
     <div class="gap"></div>
     <div class="gap"></div>
-    <div class="gap"></div>
 
     <Button onclick={toggleTheme}>White Mode</Button>
   </nav>
