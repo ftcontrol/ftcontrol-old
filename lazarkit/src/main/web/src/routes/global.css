@@ -21,3 +21,9 @@ body {
   font-weight: 300;
   font-style: normal;
 }
+
+/* *,
+*::after,
+*::before {
+  outline: 1px solid red;
+} */

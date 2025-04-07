@@ -7,6 +7,8 @@
   } from "$lib/genericType"
   import { Section } from "$primitives"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
   import Hiddable from "./Hiddable.svelte"
@@ -76,16 +78,17 @@
   }
 </script>
 
-{#snippet updateButton()}
-  <button
-    onclick={() => {
-      sendAllUpdates(info.jvmFields)
-    }}
-  >
-    <UpdateAll isActive={isChanged(info.jvmFields)} />
-  </button>
-{/snippet}
-<Section title={"Configurables"} afterTitle={updateButton}>
+<Section>
+  <Header>
+    <Title>Configurables</Title>
+    <button
+      onclick={() => {
+        sendAllUpdates(info.jvmFields)
+      }}
+    >
+      <UpdateAll isActive={isChanged(info.jvmFields)} />
+    </button>
+  </Header>
   {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
     <div>
       <ClassName {name} bind:isOpened={openedStates[name]} />
