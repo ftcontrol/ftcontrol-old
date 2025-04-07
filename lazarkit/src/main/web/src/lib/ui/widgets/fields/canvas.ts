@@ -1,13 +1,19 @@
 export enum DrawableTypes {
   LINE = "LINE",
+  RECTANGLE = "RECTANGLE",
+  CIRCLE = "CIRCLE",
 }
 
 export const emptyCanvas: Canvas = {
   lines: [],
+  rectangles: [],
+  circles: [],
 }
 
 export interface Canvas {
   lines: Line[]
+  rectangles: Rectangle[]
+  circles: Circle[]
 }
 
 export interface Point {
@@ -38,4 +44,17 @@ export interface Line extends Drawable {
   type: DrawableTypes.LINE
   start: Point
   end: Point
+}
+
+export interface Rectangle extends Drawable {
+  type: DrawableTypes.RECTANGLE
+  center: Point
+  width: number
+  height: number
+}
+
+export interface Circle extends Drawable {
+  type: DrawableTypes.RECTANGLE
+  center: Point
+  radius: number
 }

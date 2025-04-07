@@ -1,6 +1,6 @@
 package lol.lazar.lazarkit.panels.configurables
 
-import lol.lazar.lazarkit.panels.data.GenericTypeJson
+import lol.lazar.lazarkit.panels.json.GenericTypeJson
 
 class MapValueElement(
     var map: GenericField,

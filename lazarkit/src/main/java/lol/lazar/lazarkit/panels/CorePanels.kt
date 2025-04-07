@@ -8,7 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.integration.MenuManager
+import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
+import lol.lazar.lazarkit.panels.integration.Preferences
+import lol.lazar.lazarkit.panels.integration.TelemetryManager
 import lol.lazar.lazarkit.panels.integration.UIManager
 import lol.lazar.lazarkit.panels.server.LimelightServer
 import lol.lazar.lazarkit.panels.server.Server
