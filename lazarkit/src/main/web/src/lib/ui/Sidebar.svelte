@@ -1,10 +1,31 @@
 <script lang="ts">
   import Arrow from "./icons/Arrow.svelte"
   import Logo from "./icons/Logo.svelte"
+  import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
+
+  function getThemeFromCookie() {
+    const match = document.cookie.match(/(?:^|; )theme=(dark|light)/)
+    return match ? match[1] : null
+  }
+
+  function applyInitialTheme() {
+    const savedTheme = getThemeFromCookie()
+    const isDark = savedTheme === "dark"
+
+    document.body.classList.toggle("dark-mode", isDark)
+  }
+
+  applyInitialTheme()
+
+  function toggleTheme() {
+    const isDark = document.body.classList.toggle("dark-mode")
+    document.cookie = `theme=${isDark ? "dark" : "light"}; path=/; max-age=31536000`
+  }
 </script>
 
 <button
+  class="arrow"
   class:hidden={!isOpened}
   onclick={() => {
     isOpened = !isOpened
@@ -24,11 +45,21 @@
     <a href="/time">Global Time</a>
     <a href="/controller">Controller</a>
     <a href="/field">Game Field</a>
+
+    <div class="gap"></div>
+    <div class="gap"></div>
+    <div class="gap"></div>
+    <div class="gap"></div>
+    <div class="gap"></div>
+    <div class="gap"></div>
+    <div class="gap"></div>
+
+    <Button onclick={toggleTheme}>White Mode</Button>
   </nav>
 </section>
 
 <style>
-  button {
+  button.arrow {
     all: unset;
     cursor: pointer;
     position: absolute;
@@ -38,7 +69,7 @@
 
     transition: left 0.2s;
   }
-  button.hidden {
+  button.arrow.hidden {
     left: 4px;
   }
   nav {

@@ -20,7 +20,7 @@
 
 <style>
   div.field {
-    border: 1px solid black;
+    border: 1px solid var(--text);
     width: fit-content;
     min-width: 80px;
     position: relative;
@@ -35,7 +35,7 @@
     top: -0.55rem;
     left: 0.25rem;
     padding-inline: 0.225rem;
-    background-color: white;
+    background-color: var(--card);
     font-size: 0.8em;
   }
   div.content {

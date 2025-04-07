@@ -172,5 +172,6 @@
     border: none;
     background-color: transparent;
     margin: 0;
+    color: inherit;
   }
 </style>

@@ -6,8 +6,8 @@
     onclick = () => {},
     children,
   }: {
-    disabled: boolean | null | undefined
-    onclick: () => void
+    disabled?: boolean | null | undefined
+    onclick?: () => void
     children: Snippet
   } = $props()
 </script>
@@ -21,11 +21,12 @@
     border: none;
     background-color: transparent;
     margin: 0;
-    background-color: #1a1a1a;
-    color: white;
+    background-color: var(--bg);
+    color: var(--text);
     padding: 1em 2em;
     flex-grow: 1;
     border-radius: 10px;
+    cursor: pointer;
   }
   button:disabled {
     opacity: 0.5;
