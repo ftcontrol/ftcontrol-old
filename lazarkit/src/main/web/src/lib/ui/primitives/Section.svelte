@@ -34,6 +34,7 @@
     overflow-y: hidden;
 
     min-width: 400px;
+    transition: background-color 0.5s;
   }
   .main {
     padding-bottom: 1rem;
