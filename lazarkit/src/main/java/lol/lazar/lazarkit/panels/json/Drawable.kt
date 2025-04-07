@@ -1,6 +1,5 @@
 package lol.lazar.lazarkit.panels.json
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -64,7 +63,6 @@ abstract class Drawable(val type: Types) {
     var zIndex: Int = 0
 
     enum class Types {
-        @SerializedName("line")
         LINE,
         RECTANGLE,
         CIRCLE,

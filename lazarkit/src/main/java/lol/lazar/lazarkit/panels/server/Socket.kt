@@ -3,10 +3,12 @@ package lol.lazar.lazarkit.panels.server
 import com.qualcomm.hardware.lynx.LynxModule
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
+import lol.lazar.lazarkit.flows.FlowRegistry
 import lol.lazar.lazarkit.panels.GlobalData
-import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.configurables.Configurables
+import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.json.ActiveOpMode
+import lol.lazar.lazarkit.panels.json.AllFlowsJson
 import lol.lazar.lazarkit.panels.json.BatteryVoltage
 import lol.lazar.lazarkit.panels.json.Canvas
 import lol.lazar.lazarkit.panels.json.GetActiveOpModeRequest
@@ -118,6 +120,7 @@ class Socket(
             sendOpModesList()
             sendActiveOpMode()
             sendJvmFields()
+            sendAllFlows()
         }
 
         var lastBatteryVoltage: Double = 0.0
@@ -129,7 +132,7 @@ class Socket(
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
                         updateBatteryVoltage()
-                        if(GlobalData.batteryVoltage != lastBatteryVoltage){
+                        if (GlobalData.batteryVoltage != lastBatteryVoltage) {
                             send(BatteryVoltage(GlobalData.batteryVoltage))
                             lastBatteryVoltage = GlobalData.batteryVoltage
                         }
@@ -187,6 +190,10 @@ class Socket(
 
         fun sendJvmFields() {
             send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
+        }
+
+        fun sendAllFlows() {
+            send(AllFlowsJson(FlowRegistry.allFlowsJson))
         }
 
         override fun onMessage(message: WebSocketFrame) {

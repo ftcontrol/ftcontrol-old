@@ -25,6 +25,17 @@ val json = Json {
             subclass(ReceivedJvmFields::class)
             subclass(UpdatedJvmFields::class)
             subclass(BatteryVoltage::class)
+            subclass(AllFlowsJson::class)
+        }
+        polymorphic(JsonFlow::class) {
+            subclass(DoIfJson::class)
+            subclass(EmptyJson::class)
+            subclass(InstantJson::class)
+            subclass(ParallelJson::class)
+            subclass(RaceJson::class)
+            subclass(SequentialJson::class)
+            subclass(WaitJson::class)
+
         }
     }
     encodeDefaults = false
