@@ -13,8 +13,9 @@ import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
 import lol.lazar.lazarkit.panels.integration.Preferences
 import lol.lazar.lazarkit.panels.integration.TelemetryManager
 import lol.lazar.lazarkit.panels.integration.UIManager
-import lol.lazar.lazarkit.panels.server.LimelightServer
+import lol.lazar.lazarkit.panels.server.TestLimelightServer
 import lol.lazar.lazarkit.panels.server.Server
+import lol.lazar.lazarkit.panels.server.LimelightProxy
 import lol.lazar.lazarkit.panels.server.Socket
 import java.io.IOException
 
@@ -25,26 +26,28 @@ class CorePanels {
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
     lateinit var server: Server
+    lateinit var limelightProxy: LimelightProxy
     lateinit var socket: Socket
 
-    lateinit var limelightServer: LimelightServer
+    lateinit var testLimelightServer: TestLimelightServer
 
     var telemetryManager = TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
-
 
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {
             server = Server(context)
+            limelightProxy = LimelightProxy(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
-            limelightServer = LimelightServer(context)
+            testLimelightServer = TestLimelightServer(context)
         } catch (e: IOException) {
             println("Failed to start: " + e.message)
         }
-        limelightServer.startServer()
+        testLimelightServer.startServer()
 
         if (!Preferences.isEnabled) return
 
         server.startServer()
+        limelightProxy.startServer()
         socket.startServer()
 
         Configurables.findConfigurables(context)
@@ -76,6 +79,7 @@ class CorePanels {
     fun close(registrar: Panels) {
         server.stopServer()
         socket.stopServer()
+        limelightProxy.stopServer()
 
         opModeManager?.unregisterListener(registrar)
         disable()
@@ -88,6 +92,7 @@ class CorePanels {
         Preferences.isEnabled = true
         uiManager.updateText()
         server.startServer()
+        limelightProxy.startServer()
         socket.startServer()
     }
 
@@ -96,6 +101,7 @@ class CorePanels {
         Preferences.isEnabled = false
         uiManager.updateText()
         server.stopServer()
+        limelightProxy.stopServer()
         socket.stopServer()
     }
 

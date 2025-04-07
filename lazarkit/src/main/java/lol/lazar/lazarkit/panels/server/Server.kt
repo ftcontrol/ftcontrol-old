@@ -55,7 +55,7 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
     private fun handleReverseProxy(session: IHTTPSession): Response {
         val targetUri = session.uri.removePrefix("/limelight")
-        val url = "http://localhost:3331$targetUri"
+        val url = "http://172.29.0.1:5801$targetUri"
 
         println("DASH: Proxying request to $url")
 
