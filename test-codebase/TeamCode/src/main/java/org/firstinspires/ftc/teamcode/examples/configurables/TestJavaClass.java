@@ -8,12 +8,12 @@ import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomTyp
 
 @Configurable
 public class TestJavaClass {
-    public int testInt = 1;
-    public long testLong = 1L;
-    public double testDouble = 1.0;
-    public float testFloat = 1.0f;
-    public String testString = "test!";
-    public boolean testBoolean = false;
+    public static int testInt = 1;
+    public static long testLong = 1L;
+    public static double testDouble = 1.0;
+    public static float testFloat = 1.0f;
+    public static String testString = "test!";
+    public static boolean testBoolean = false;
 
     public enum TestEnum {
         TEST1,
@@ -21,10 +21,10 @@ public class TestJavaClass {
         TEST3
     }
 
-    public TestEnum testEnum = TestEnum.TEST1;
-    public int[] testArray = {1, 2, 3};
-    public List<Integer> testList = List.of(1, 2, 3);
-    public Map<String, Integer> testMap = Map.of("one", 1, "two", 2, "three", 3);
+    public static TestEnum testEnum = TestEnum.TEST1;
+    public static int[] testArray = {1, 2, 3};
+    public static List<Integer> testList = List.of(1, 2, 3);
+    public static Map<String, Integer> testMap = Map.of("one", 1, "two", 2, "three", 3);
 
     @ConfigurableCustomType
     public static class CustomType {
@@ -45,7 +45,7 @@ public class TestJavaClass {
         }
     }
 
-    public CustomType testCustomType = new CustomType(1, "test!");
+    public static CustomType testCustomType = new CustomType(1, "test!");
 
     @ConfigurableCustomType
     public static class NestedType {
@@ -72,7 +72,7 @@ public class TestJavaClass {
         }
     }
 
-    public NestedType testNestedType = new NestedType(1, "test!", new CustomType(2, "test2!"));
+    public static NestedType testNestedType = new NestedType(1, "test!", new CustomType(2, "test2!"));
 
     public static class UnknownType {
         public final int testInt;
@@ -86,9 +86,9 @@ public class TestJavaClass {
         }
     }
 
-    public UnknownType testUnknownType = new UnknownType(1);
+    public static UnknownType testUnknownType = new UnknownType(1);
 
-    public Object[] testRandomArray = new Object[]{
+    public static Object[] testRandomArray = new Object[]{
             1,
             1.0,
             1.0f,
@@ -112,5 +112,5 @@ public class TestJavaClass {
         }
     }
 
-    public TParamClass<Integer> testTParamClass = new TParamClass<>(1);
+    public static TParamClass<Integer> testTParamClass = new TParamClass<Integer>(1);
 }
