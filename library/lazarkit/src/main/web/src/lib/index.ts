@@ -43,7 +43,8 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
       if (
         f.type == Types.CUSTOM ||
         f.type == Types.ARRAY ||
-        f.type == Types.MAP
+        f.type == Types.MAP ||
+        f.type == Types.LIST
       ) {
         update(f.customValues, updates)
       } else {
