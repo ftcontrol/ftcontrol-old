@@ -104,7 +104,10 @@ export class InfoManager {
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
   telemetry = $state<string[]>([])
+
   jvmFields = $state<GenericTypeJson[]>([])
+  openedStates: { [key: string]: boolean } = $state({})
+
   batteryVoltage = $state<number>(-1.0)
   canvas = $state<Canvas>(emptyCanvas)
   flows = $state([])
