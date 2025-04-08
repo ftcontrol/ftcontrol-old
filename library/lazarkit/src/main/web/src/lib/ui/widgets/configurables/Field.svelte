@@ -87,7 +87,7 @@
       possibleValues={item.possibleValues}
       type={item.type.toUpperCase()}
     />
-  {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP}
+  {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP || item.type == Types.LIST}
     <div class="two" style="margin-left: -20px;">
       <Toggle bind:isOpened={item.isOpened}>
         <p>{item.fieldName} {item.type}</p>
@@ -100,8 +100,10 @@
         </Hiddable>
       {/each}
     </div>
-  {:else if item.type != Types.UNKNOWN}
-    {JSON.stringify(item)}
+  {:else}
+    <div class="two">
+      <p>{item.fieldName} {item.type}</p>
+    </div>
   {/if}
 </div>
 

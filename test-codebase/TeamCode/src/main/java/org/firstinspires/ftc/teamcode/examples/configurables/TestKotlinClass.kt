@@ -5,89 +5,91 @@ import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomTyp
 
 @Configurable
 class TestKotlinClass {
-    @JvmField
-    var testInt: Int = 1
+    companion object {
+        @JvmField
+        var testInt: Int = 1
 
-    @JvmField
-    var testLong: Long = 1L
+        @JvmField
+        var testLong: Long = 1L
 
-    @JvmField
-    var testDouble: Double = 1.0
+        @JvmField
+        var testDouble: Double = 1.0
 
-    @JvmField
-    var testFloat: Float = 1.0f
+        @JvmField
+        var testFloat: Float = 1.0f
 
-    @JvmField
-    var testString: String = "test!"
+        @JvmField
+        var testString: String = "test!"
 
-    @JvmField
-    var testBoolean: Boolean = false
+        @JvmField
+        var testBoolean: Boolean = false
 
-    enum class TestEnum {
-        TEST1,
-        TEST2,
-        TEST3
-    }
+        enum class TestEnum {
+            TEST1,
+            TEST2,
+            TEST3
+        }
 
-    @JvmField
-    var testEnum: TestEnum = TestEnum.TEST1
+        @JvmField
+        var testEnum: TestEnum = TestEnum.TEST1
 
-    @JvmField
-    var testArray: Array<Int> = arrayOf(1, 2, 3)
+        @JvmField
+        var testArray: Array<Int> = arrayOf(1, 2, 3)
 
-    @JvmField
-    var testList: List<Int> = listOf(1, 2, 3)
+        @JvmField
+        var testList: List<Int> = listOf(1, 2, 3)
 
-    @JvmField
-    var testMap: Map<String, Int> = mapOf("one" to 1, "two" to 2, "three" to 3)
+        @JvmField
+        var testMap: Map<String, Int> = mapOf("one" to 1, "two" to 2, "three" to 3)
 
-    @ConfigurableCustomType
-    class CustomType(
-        val testInt: Int,
-        val testString: String
-    )
+        @ConfigurableCustomType
+        class CustomType(
+            val testInt: Int,
+            val testString: String
+        )
 
-    @JvmField
-    var testCustomType: CustomType = CustomType(1, "test!")
+        @JvmField
+        var testCustomType: CustomType = CustomType(1, "test!")
 
-    @ConfigurableCustomType
-    class NestedType(
-        val testInt: Int,
-        val testString: String,
-        val testCustomType: CustomType
-    )
+        @ConfigurableCustomType
+        class NestedType(
+            val testInt: Int,
+            val testString: String,
+            val testCustomType: CustomType
+        )
 
-    @JvmField
-    var testNestedType: NestedType = NestedType(1, "test!", CustomType(2, "test2!"))
+        @JvmField
+        var testNestedType: NestedType = NestedType(1, "test!", CustomType(2, "test2!"))
 
-    class UnknownType(
-        val testInt: Int,
-    )
+        class UnknownType(
+            val testInt: Int,
+        )
 
-    @JvmField
-    var testUnknownType: UnknownType = UnknownType(1)
+        @JvmField
+        var testUnknownType: UnknownType = UnknownType(1)
 
-    @JvmField
-    var testRandomArray = arrayOf(
-        1,
-        1.0,
-        1.0f,
-        "test!",
-        true,
-        CustomType(1, "test!"),
-        NestedType(1, "test!", CustomType(2, "test2!")),
-        UnknownType(1),
-        arrayOf(
+        @JvmField
+        var testRandomArray = arrayOf(
             1,
-            2,
-            3
-        ),
-    )
+            1.0,
+            1.0f,
+            "test!",
+            true,
+            CustomType(1, "test!"),
+            NestedType(1, "test!", CustomType(2, "test2!")),
+            UnknownType(1),
+            arrayOf(
+                1,
+                2,
+                3
+            ),
+        )
 
-    class TParamClass<T>(
-        val test: T
-    )
+        class TParamClass<T>(
+            val test: T
+        )
 
-    @JvmField
-    var testTParamClass = TParamClass(1)
+        @JvmField
+        var testTParamClass = TParamClass(1)
+    }
 }

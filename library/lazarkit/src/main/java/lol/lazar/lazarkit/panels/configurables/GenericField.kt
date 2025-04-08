@@ -22,6 +22,7 @@ class GenericField(
     var customValues: List<GenericField>? = null
     var arrayValues: List<ArrayElement>? = null
     var mapValues: List<MapValueElement>? = null
+    var listValues: List<ListElement>? = null
 
     init {
         Configurables.fieldsMap[id] = this
@@ -48,6 +49,15 @@ class GenericField(
             if (componentValues != null && componentType != null) {
                 arrayValues = (0 until Array.getLength(componentValues)).map { i ->
                     ArrayElement(this, i)
+                }
+            }
+        }
+
+        if (type == Types.LIST) {
+            val listInstance = currentValue as? List<*>
+            if (listInstance != null) {
+                listValues = listInstance.mapIndexed { index, _ ->
+                    ListElement(this, index)
                 }
             }
         }
@@ -118,16 +128,18 @@ class GenericField(
             valueString = currentValue.toString(),
             newValueString = currentValue.toString(),
             possibleValues = possibleValues,
-            customValues = when(type){
+            customValues = when (type) {
                 Types.CUSTOM -> customValues?.map { it.toJsonType }
                 Types.ARRAY -> arrayValues?.map { it.toJsonType }
                 Types.MAP -> mapValues?.map { it.toJsonType }
+                Types.LIST -> listValues?.map { it.toJsonType }
                 else -> null
             },
             isOpened = when (type) {
                 Types.CUSTOM -> false
                 Types.ARRAY -> false
                 Types.MAP -> false
+                Types.LIST -> false
                 else -> null
             }
         )
