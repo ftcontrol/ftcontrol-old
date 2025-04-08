@@ -40,7 +40,8 @@
       if (
         field.type == Types.CUSTOM ||
         field.type == Types.ARRAY ||
-        field.type == Types.MAP
+        field.type == Types.MAP ||
+        field.type == Types.LIST
       ) {
         var innerIsChanged = isChanged(field.customValues)
         if (innerIsChanged) return true
@@ -55,7 +56,8 @@
       if (
         field.type == Types.CUSTOM ||
         field.type == Types.ARRAY ||
-        field.type == Types.MAP
+        field.type == Types.MAP ||
+        field.type == Types.LIST
       ) {
         var nested = getAllValues(field.customValues)
         if (nested.length) values = [...values, ...nested]
