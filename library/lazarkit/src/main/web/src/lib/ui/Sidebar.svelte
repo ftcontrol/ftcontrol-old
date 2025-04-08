@@ -4,6 +4,8 @@
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
+  let isDark = $state(true)
+
   function getThemeFromCookie() {
     const match = document.cookie.match(/(?:^|; )theme=(dark|light)/)
     return match ? match[1] : null
@@ -11,7 +13,7 @@
 
   function applyInitialTheme() {
     const savedTheme = getThemeFromCookie()
-    const isDark = savedTheme === "dark"
+    isDark = savedTheme === "dark"
 
     document.body.classList.toggle("dark-mode", isDark)
   }
@@ -29,7 +31,7 @@
 
     await new Promise((r) => setTimeout(r, 250))
 
-    const isDark = document.body.classList.toggle("dark-mode")
+    isDark = document.body.classList.toggle("dark-mode")
     document.cookie = `theme=${isDark ? "dark" : "light"}; path=/; max-age=31536000`
 
     await new Promise((r) => setTimeout(r, 450))
@@ -71,7 +73,7 @@
     <div class="gap"></div>
     <div class="gap"></div>
 
-    <Button onclick={toggleTheme}>White Mode</Button>
+    <Button onclick={toggleTheme}>{isDark ? "Light Mode" : "Dark Mode"}</Button>
   </nav>
 </section>
 
