@@ -79,11 +79,114 @@
       fields: getAllValues(fields),
     })
   }
+
+  function search(p: string, fields: GenericTypeJson[]) {
+    if (!fields) return
+
+    p = p.toLowerCase()
+    const newOpenedStates: { [key: string]: boolean } = {}
+
+    function recursiveSearch(fields: GenericTypeJson[]): boolean {
+      let foundInGroup = false
+
+      for (const field of fields) {
+        const matchesField =
+          field.fieldName?.toLowerCase().includes(p) ||
+          field.className?.toLowerCase().includes(p)
+
+        let foundInNested = false
+        if (
+          (field.type === Types.CUSTOM ||
+            field.type === Types.ARRAY ||
+            field.type === Types.MAP ||
+            field.type === Types.LIST) &&
+          Array.isArray(field.customValues)
+        ) {
+          field.isOpened = false
+          foundInNested = recursiveSearch(field.customValues)
+          if (foundInNested) field.isOpened = true
+        }
+
+        field.isShown = matchesField || foundInNested
+
+        if (field.isShown) {
+          foundInGroup = true
+          newOpenedStates[field.className] = true
+        } else if (!(field.className in newOpenedStates)) {
+          newOpenedStates[field.className] = false
+        }
+      }
+
+      return foundInGroup
+    }
+
+    recursiveSearch(fields)
+    openedStates = newOpenedStates
+  }
+
+  let isSearching = $state(false)
+  let savedStates: {
+    openedStates: { [key: string]: boolean }
+    isShownMap: Map<string, boolean>
+  } = {
+    openedStates: {},
+    isShownMap: new Map(),
+  }
 </script>
 
 <Section>
   <Header>
     <Title>Configurables</Title>
+    <button
+      onclick={() => {
+        if (!isSearching) {
+          // Save previous state
+          savedStates.openedStates = { ...openedStates }
+          savedStates.isShownMap = new Map()
+          function saveStates(fields: GenericTypeJson[]) {
+            for (const field of fields) {
+              savedStates.isShownMap.set(field.id, field.isShown ?? true)
+              if (
+                (field.type === Types.CUSTOM ||
+                  field.type === Types.ARRAY ||
+                  field.type === Types.MAP ||
+                  field.type === Types.LIST) &&
+                Array.isArray(field.customValues)
+              ) {
+                saveStates(field.customValues)
+              }
+            }
+          }
+          saveStates(info.jvmFields)
+
+          // Run search
+          search("Int", info.jvmFields)
+        } else {
+          // Restore previous states
+          openedStates = { ...savedStates.openedStates }
+          function restoreStates(fields: GenericTypeJson[]) {
+            for (const field of fields) {
+              field.isShown = savedStates.isShownMap.get(field.id) ?? true
+              if (
+                (field.type === Types.CUSTOM ||
+                  field.type === Types.ARRAY ||
+                  field.type === Types.MAP ||
+                  field.type === Types.LIST) &&
+                Array.isArray(field.customValues)
+              ) {
+                restoreStates(field.customValues)
+              }
+            }
+          }
+          restoreStates(info.jvmFields)
+        }
+
+        isSearching = !isSearching
+      }}
+    >
+      <span>{isSearching ? "Reset" : "Search Int"}</span>
+    </button>
+
     <button
       onclick={() => {
         sendAllUpdates(info.jvmFields)
