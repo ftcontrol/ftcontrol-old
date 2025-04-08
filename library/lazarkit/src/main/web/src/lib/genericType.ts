@@ -7,6 +7,7 @@ export enum Types {
   LONG = "LONG",
   ENUM = "ENUM",
   ARRAY = "ARRAY",
+  LIST = "LIST",
   UNKNOWN = "UNKNOWN",
   CUSTOM = "CUSTOM",
   MAP = "MAP",
@@ -31,7 +32,7 @@ export interface FixedValuesTypeJson extends BaseGenericTypeJson {
 }
 
 export interface CustomTypeJson extends BaseGenericTypeJson {
-  type: Types.CUSTOM | Types.ARRAY | Types.MAP
+  type: Types.CUSTOM | Types.ARRAY | Types.MAP | Types.LIST
   customValues: GenericTypeJson[]
   isOpened: boolean
 }
@@ -39,7 +40,12 @@ export interface CustomTypeJson extends BaseGenericTypeJson {
 export interface DefaultTypeJson extends BaseGenericTypeJson {
   type: Exclude<
     Types,
-    Types.ENUM | Types.BOOLEAN | Types.CUSTOM | Types.ARRAY | Types.MAP
+    | Types.ENUM
+    | Types.BOOLEAN
+    | Types.CUSTOM
+    | Types.ARRAY
+    | Types.MAP
+    | Types.LIST
   >
 }
 

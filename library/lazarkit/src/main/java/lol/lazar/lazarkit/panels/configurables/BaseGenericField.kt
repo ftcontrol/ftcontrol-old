@@ -22,6 +22,7 @@ abstract class BaseGenericField(
         ENUM,
         ARRAY,
         MAP,
+        LIST,
         UNKNOWN,
         CUSTOM,
         GENERIC,
@@ -51,6 +52,11 @@ abstract class BaseGenericField(
                 }
                 if (Map::class.java.isAssignableFrom(classType)) {
                     return Types.MAP
+                }
+                if (List::class.java.isAssignableFrom(classType) ||
+                    MutableList::class.java.isAssignableFrom(classType)
+                ) {
+                    return Types.LIST
                 }
                 if (Configurables.customTypeClasses.any { it.className == classType.name }) {
                     return Types.CUSTOM
@@ -86,7 +92,7 @@ abstract class BaseGenericField(
                                     else -> null
                                 }
                                 println("   DASH: TYPES: Resolved type for ${genericType.name}: $resolvedType")
-                                if(resolvedType != null) {
+                                if (resolvedType != null) {
                                     return getType(resolvedType.java)
                                 }
                             }
