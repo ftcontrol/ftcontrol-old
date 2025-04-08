@@ -1,2 +1,5 @@
 include ':FtcRobotController'
 include ':TeamCode'
+
+include ':lazarkit'
+project(':lazarkit').projectDir = new File(settingsDir, '../library/lazarkit')
