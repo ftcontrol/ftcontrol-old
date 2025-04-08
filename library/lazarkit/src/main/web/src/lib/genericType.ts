@@ -24,6 +24,7 @@ export interface BaseGenericTypeJson {
   newValueString: string
   isValid: boolean
   value: any
+  isShown: boolean
 }
 
 export interface FixedValuesTypeJson extends BaseGenericTypeJson {

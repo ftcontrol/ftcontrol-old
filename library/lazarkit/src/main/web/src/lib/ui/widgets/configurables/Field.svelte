@@ -32,80 +32,82 @@
   }
 </script>
 
-<div
-  class:item
-  class:disabled={item.type == Types.UNKNOWN}
-  class:first={depth == 0}
-  style="--depth:{depth};"
->
-  {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
-    <p style="margin-left: -24px;">
-      <button
-        onclick={() => {
+{#if item.isShown}
+  <div
+    class:item
+    class:disabled={item.type == Types.UNKNOWN}
+    class:first={depth == 0}
+    style="--depth:{depth};"
+  >
+    {#if [Types.INT, Types.LONG, Types.DOUBLE, Types.FLOAT, Types.STRING].includes(item.type)}
+      <p style="margin-left: -24px;">
+        <button
+          onclick={() => {
+            sendFieldUpdate()
+          }}
+        >
+          <Update
+            isActive={item.valueString != item.newValueString && item.isValid}
+          />
+        </button>
+        {item.fieldName}
+      </p>
+
+      <form
+        onsubmit={() => {
           sendFieldUpdate()
         }}
       >
-        <Update
-          isActive={item.valueString != item.newValueString && item.isValid}
+        <StringInput
+          bind:value={item.value}
+          bind:isValid={item.isValid}
+          bind:startValue={item.valueString}
+          bind:currentValue={item.newValueString}
+          type={item.type.toUpperCase()}
+          validate={anyValidator(item.type)}
         />
-      </button>
-      {item.fieldName}
-    </p>
-
-    <form
-      onsubmit={() => {
-        sendFieldUpdate()
-      }}
-    >
-      <StringInput
+      </form>
+    {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
+      <p style="margin-left: -24px;">
+        <button
+          onclick={() => {
+            sendFieldUpdate()
+          }}
+        >
+          <Update
+            isActive={item.valueString != item.newValueString && item.isValid}
+          />
+        </button>
+        {item.fieldName}
+      </p>
+      <SelectInput
         bind:value={item.value}
         bind:isValid={item.isValid}
         bind:startValue={item.valueString}
         bind:currentValue={item.newValueString}
+        possibleValues={item.possibleValues}
         type={item.type.toUpperCase()}
-        validate={anyValidator(item.type)}
       />
-    </form>
-  {:else if item.type === Types.ENUM || item.type === Types.BOOLEAN}
-    <p style="margin-left: -24px;">
-      <button
-        onclick={() => {
-          sendFieldUpdate()
-        }}
-      >
-        <Update
-          isActive={item.valueString != item.newValueString && item.isValid}
-        />
-      </button>
-      {item.fieldName}
-    </p>
-    <SelectInput
-      bind:value={item.value}
-      bind:isValid={item.isValid}
-      bind:startValue={item.valueString}
-      bind:currentValue={item.newValueString}
-      possibleValues={item.possibleValues}
-      type={item.type.toUpperCase()}
-    />
-  {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP || item.type == Types.LIST}
-    <div class="two" style="margin-left: -20px;">
-      <Toggle bind:isOpened={item.isOpened}>
+    {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP || item.type == Types.LIST}
+      <div class="two" style="margin-left: -20px;">
+        <Toggle bind:isOpened={item.isOpened}>
+          <p>{item.fieldName} {item.type}</p>
+        </Toggle>
+      </div>
+      <div class="two">
+        {#each item.customValues as custom}
+          <Hiddable isShown={item.isOpened}>
+            <FieldNested item={custom} depth={depth + 1} />
+          </Hiddable>
+        {/each}
+      </div>
+    {:else}
+      <div class="two">
         <p>{item.fieldName} {item.type}</p>
-      </Toggle>
-    </div>
-    <div class="two">
-      {#each item.customValues as custom}
-        <Hiddable isShown={item.isOpened}>
-          <FieldNested item={custom} depth={depth + 1} />
-        </Hiddable>
-      {/each}
-    </div>
-  {:else}
-    <div class="two">
-      <p>{item.fieldName} {item.type}</p>
-    </div>
-  {/if}
-</div>
+      </div>
+    {/if}
+  </div>
+{/if}
 
 <style>
   .item {
