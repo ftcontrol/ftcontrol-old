@@ -41,6 +41,5 @@
   div.content {
     position: relative;
     margin-top: 4px;
-    z-index: 10;
   }
 </style>

@@ -32,6 +32,7 @@
   }
 
   function isChanged(fields: GenericTypeJson[]): boolean {
+    if (fields == null) return false
     for (const field of fields) {
       if (field.valueString != field.newValueString && field.isValid) {
         return true

@@ -63,6 +63,7 @@
     width: 100%;
     background-color: var(--card);
     border: 1px solid var(--text);
+    z-index: 10;
   }
   .content {
     position: relative;
