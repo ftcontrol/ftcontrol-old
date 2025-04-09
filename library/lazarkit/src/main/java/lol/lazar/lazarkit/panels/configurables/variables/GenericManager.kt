@@ -3,13 +3,14 @@ package lol.lazar.lazarkit.panels.configurables.variables
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import java.util.UUID
 
-abstract class GenericManager(
-    val type: GenericVariable.BaseTypes
+class GenericManager(
+    val type: BaseTypes,
+    val getValue: () -> Any?,
+    val setValue: (value: Any) -> Boolean,
+    val possibleValues: List<String>? = null
 ) {
     val id: String = UUID.randomUUID().toString()
     val name: String = "no name"
-    abstract fun getValue(): Any?
-    abstract fun setValue(value: Any): Boolean
     fun setValue(value: String): Boolean {
         return setValue(convertValue(value) ?: return false)
     }
@@ -20,7 +21,7 @@ abstract class GenericManager(
 
     private fun convertValue(value: String): Any? {
         return when (type) {
-            GenericVariable.BaseTypes.INT -> {
+            BaseTypes.INT -> {
                 when {
                     value.toIntOrNull() != null -> value.toInt()
                     value.toFloatOrNull() != null -> value.toFloat()
@@ -33,7 +34,7 @@ abstract class GenericManager(
                 }
             }
 
-            GenericVariable.BaseTypes.DOUBLE -> {
+            BaseTypes.DOUBLE -> {
                 when {
                     value.toDoubleOrNull() != null -> value.toDouble()
                     value.toFloatOrNull() != null -> value.toFloat()
@@ -43,15 +44,15 @@ abstract class GenericManager(
                 }
             }
 
-            GenericVariable.BaseTypes.STRING -> {
+            BaseTypes.STRING -> {
                 value
             }
 
-            GenericVariable.BaseTypes.BOOLEAN -> {
+            BaseTypes.BOOLEAN -> {
                 value.toBoolean()
             }
 
-            GenericVariable.BaseTypes.FLOAT -> {
+            BaseTypes.FLOAT -> {
                 when {
                     value.toFloatOrNull() != null -> value.toFloat()
                     value.toDoubleOrNull() != null -> value.toDouble()
@@ -61,7 +62,7 @@ abstract class GenericManager(
                 }
             }
 
-            GenericVariable.BaseTypes.LONG -> {
+            BaseTypes.LONG -> {
                 when {
                     value.toLongOrNull() != null -> value.toLong()
                     value.toDoubleOrNull() != null -> value.toDouble()
@@ -69,6 +70,14 @@ abstract class GenericManager(
 
                     else -> value.toLong()
                 }
+            }
+
+            BaseTypes.ENUM -> {
+                if (possibleValues == null) return null
+                for (enumValue in possibleValues) {
+                    if (enumValue == value) return enumValue
+                }
+                return null
             }
 
             else -> null

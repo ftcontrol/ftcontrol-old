@@ -34,6 +34,7 @@ object Configurables {
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
         variables.getJvmFields.forEach { info ->
             println("DASH: ${info.className}.${info.reference.name}")
+            info.debug()
         }
         jvmFields = variables.getJvmFields
     }

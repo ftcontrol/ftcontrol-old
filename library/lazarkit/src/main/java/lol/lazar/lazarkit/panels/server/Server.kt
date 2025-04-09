@@ -12,7 +12,6 @@ class Server(var context: Context) : NanoHTTPD(8001) {
     private val client = OkHttpClient()
 
     init {
-        println("DASH: ${assetManager.list("web")?.joinToString(", ")}")
         //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
         val file = File(context.filesDir, "myfile.txt")
         file.writeText("Hello, world!")

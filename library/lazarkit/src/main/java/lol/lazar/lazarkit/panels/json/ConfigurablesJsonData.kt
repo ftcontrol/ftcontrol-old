@@ -2,7 +2,7 @@ package lol.lazar.lazarkit.panels.json
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.lazar.lazarkit.panels.configurables.variables.GenericVariable
+import lol.lazar.lazarkit.panels.configurables.variables.BaseTypes
 
 
 @Serializable
@@ -27,7 +27,7 @@ class GenericTypeJson(
     val id: String,
     val className: String? = null,
     val fieldName: String,
-    val type: GenericVariable.BaseTypes,
+    val type: BaseTypes,
     val valueString: String,
     val newValueString: String,
     val value: String = "",
