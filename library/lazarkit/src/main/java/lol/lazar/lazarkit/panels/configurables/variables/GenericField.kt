@@ -2,14 +2,13 @@ package lol.lazar.lazarkit.panels.configurables.variables
 
 import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 import lol.lazar.lazarkit.panels.json.GenericTypeJson
+import java.lang.reflect.Array
 import java.lang.reflect.Field
 
 class UnknownVariable(
     override val className: String,
     val name: String
 ) : GenericVariable(null, className) {
-    override val manager: GenericManager
-        get() = TODO("Not yet implemented")
     override val toJsonType: GenericTypeJson
         get() = GenericTypeJson(
             id = "",
@@ -24,7 +23,7 @@ class UnknownVariable(
 class SimpleVariable(
     override val reference: Field,
     override val className: String
-) : GenericVariable(reference, className) {
+) : GenericManagedVariable(reference, className) {
     val type = getType(reference.type, reference, null)
 
     override val manager = GenericManager(
@@ -72,9 +71,9 @@ class SimpleVariable(
 
 class NestedVariable(
     override val reference: Field,
-    val parentReference: GenericVariable,
+    val parentReference: GenericManagedVariable,
     override val className: String
-) : GenericVariable(reference, className) {
+) : GenericManagedVariable(reference, className) {
     val type = getType(reference.type, reference, parentReference.reference)
 
     override val manager = GenericManager(
@@ -122,20 +121,69 @@ class NestedVariable(
 class CustomVariable(
     val fieldName: String,
     override val className: String,
-    val values: List<GenericVariable>
+    val values: List<GenericVariable>,
+    val type: BaseTypes = BaseTypes.CUSTOM
 ) : GenericVariable(null, className) {
-    override val manager: GenericManager
-        get() = TODO("Not yet implemented")
+
     override val toJsonType: GenericTypeJson
         get() {
             return GenericTypeJson(
                 id = "",
                 className = className,
                 fieldName = fieldName,
-                type = BaseTypes.CUSTOM,
+                type = type,
                 valueString = "",
                 newValueString = "",
                 customValues = values.map { it.toJsonType }
+            )
+        }
+
+}
+
+class ArrayElement(
+    var array: GenericManagedVariable,
+    var index: Int
+) : GenericManagedVariable(null, array.className) {
+    override val manager = GenericManager(
+        array.manager.type,
+        getValue = {
+            val componentType = array.reference?.type?.componentType
+            val componentValues = array.manager.getValue()
+            if (componentValues != null && componentType != null) {
+                return@GenericManager Array.get(componentValues, index)
+            }
+            return@GenericManager null
+        },
+        setValue = { value ->
+            val componentType = array.reference?.type?.componentType
+            val componentValues = array.manager.getValue()
+            if (componentValues != null && componentType != null) {
+                Array.set(componentValues, index, value)
+                return@GenericManager true
+            }
+            return@GenericManager false
+        }
+    )
+    override val toJsonType: GenericTypeJson
+        get() {
+            val arrayType = getType(array.reference?.type?.componentType)
+
+            val value = manager.getValue()
+
+            val itemType = if (arrayType == BaseTypes.UNKNOWN && value != null) {
+                getType(value.javaClass)
+            }else{
+                arrayType
+            }
+
+
+            return GenericTypeJson(
+                id = manager.id,
+                className = array.className,
+                fieldName = index.toString(),
+                type = itemType,
+                valueString = value.toString(),
+                newValueString = value.toString(),
             )
         }
 
@@ -145,25 +193,22 @@ fun processValue(
     className: String,
     type: BaseTypes,
     reference: Field,
-    parentReference: GenericVariable?
+    parentReference: GenericManagedVariable?
 ): GenericVariable {
+    val currentManager = if (parentReference == null) SimpleVariable(
+        reference,
+        className
+    ) else NestedVariable(
+        reference,
+        parentReference,
+        className
+    )
     if (type in listOf(
             BaseTypes.INT, BaseTypes.DOUBLE, BaseTypes.FLOAT,
             BaseTypes.LONG, BaseTypes.STRING, BaseTypes.BOOLEAN, BaseTypes.ENUM
         )
     ) {
-        if (parentReference == null) {
-            return SimpleVariable(
-                reference,
-                className
-            )
-        }
-
-        return NestedVariable(
-            reference,
-            parentReference,
-            className
-        )
+        return currentManager
     }
 
     if (type == BaseTypes.CUSTOM) {
@@ -176,15 +221,24 @@ fun processValue(
                 className,
                 getType(field.type, field, reference),
                 field,
-                if(parentReference == null) SimpleVariable(reference, className) else NestedVariable(
-                    reference,
-                    parentReference,
-                    className
-                )
+                currentManager
             )
         }
 
-        return CustomVariable(reference.name, className, customValues)
+        return CustomVariable(reference.name, className, customValues, BaseTypes.CUSTOM)
+    }
+
+    if (type == BaseTypes.ARRAY) {
+        val componentType = reference.type.componentType
+        val componentValues = currentManager.manager.getValue()
+        if (componentValues != null && componentType != null) {
+            val arrayValues = (0 until Array.getLength(componentValues)).map { i ->
+                ArrayElement(currentManager, i)
+            }
+            return CustomVariable(reference.name, className, arrayValues, BaseTypes.ARRAY)
+        } else {
+            return UnknownVariable(className, reference.name)
+        }
     }
 
     return UnknownVariable(className, reference.name)

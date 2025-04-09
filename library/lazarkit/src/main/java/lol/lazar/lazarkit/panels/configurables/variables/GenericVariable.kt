@@ -111,7 +111,12 @@ abstract class GenericVariable(
     open val reference: Field?,
     open val className: String,
 ) {
-    abstract val manager: GenericManager
-
     abstract val toJsonType: GenericTypeJson
+}
+
+abstract class GenericManagedVariable(
+    override val reference: Field?,
+    override val className: String,
+) : GenericVariable(reference, className) {
+    abstract val manager: GenericManager
 }
