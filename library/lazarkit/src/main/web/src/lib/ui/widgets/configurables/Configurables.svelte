@@ -13,6 +13,7 @@
   import Field from "./Field.svelte"
   import Hiddable from "./Hiddable.svelte"
   import { handleSearch } from "./search.svelte"
+  import { forAllRecursive } from "./utils"
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
@@ -32,45 +33,31 @@
   }
 
   function isChanged(fields: GenericTypeJson[]): boolean {
-    if (fields == null) return false
-    for (const field of fields) {
-      if (field.valueString != field.newValueString && field.isValid) {
-        return true
-      }
-      if (
-        field.type == Types.CUSTOM ||
-        field.type == Types.ARRAY ||
-        field.type == Types.MAP ||
-        field.type == Types.LIST
-      ) {
-        var innerIsChanged = isChanged(field.customValues)
-        if (innerIsChanged) return true
-      }
-    }
-    return false
+    return forAllRecursive(
+      fields,
+      (field) => field.valueString !== field.newValueString && field.isValid,
+      (_, childrenResults) => childrenResults.some(Boolean)
+    ).some(Boolean)
   }
 
   function getAllValues(fields: GenericTypeJson[]): ChangeJson[] {
-    var values: ChangeJson[] = []
-    for (const field of fields) {
-      if (
-        field.type == Types.CUSTOM ||
-        field.type == Types.ARRAY ||
-        field.type == Types.MAP ||
-        field.type == Types.LIST
-      ) {
-        var nested = getAllValues(field.customValues)
-        if (nested.length) values = [...values, ...nested]
-      } else {
-        if (field.valueString != field.newValueString && field.isValid) {
-          values.push({
+    const rawResults = forAllRecursive(
+      fields,
+      (field) => {
+        if (field.valueString !== field.newValueString && field.isValid) {
+          return {
             id: field.id,
             newValueString: field.newValueString,
-          })
+          }
         }
+        return null
+      },
+      (_field, childResults) => {
+        return null
       }
-    }
-    return values
+    )
+
+    return rawResults.filter((v): v is ChangeJson => v !== null)
   }
 
   function sendAllUpdates(fields: GenericTypeJson[]) {
