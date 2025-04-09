@@ -1,7 +1,7 @@
 package lol.lazar.lazarkit.panels.configurables
 
 import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
-import lol.lazar.lazarkit.panels.configurables.variables.GenericField
+import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericField
 import java.lang.reflect.Modifier
 
 class VariablesFinder(

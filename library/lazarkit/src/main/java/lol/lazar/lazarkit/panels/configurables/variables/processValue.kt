@@ -1,167 +1,14 @@
 package lol.lazar.lazarkit.panels.configurables.variables
 
 import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
-import lol.lazar.lazarkit.panels.json.GenericTypeJson
+import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericManagedVariable
+import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericVariable
+import lol.lazar.lazarkit.panels.configurables.variables.instances.CustomVariable
+import lol.lazar.lazarkit.panels.configurables.variables.instances.NestedVariable
+import lol.lazar.lazarkit.panels.configurables.variables.instances.SimpleVariable
+import lol.lazar.lazarkit.panels.configurables.variables.instances.UnknownVariable
 import java.lang.reflect.Array
-import java.lang.reflect.Field
-import java.lang.reflect.Type
 
-class UnknownVariable(
-    override val className: String,
-    val name: String
-) : GenericVariable(null, className) {
-    override val toJsonType: GenericTypeJson
-        get() = GenericTypeJson(
-            id = "",
-            className = className,
-            fieldName = name,
-            type = BaseTypes.UNKNOWN,
-            valueString = "",
-            newValueString = "",
-        )
-}
-
-class SimpleVariable(
-    override val reference: MyField,
-    override val className: String
-) : GenericManagedVariable(reference, className) {
-    val type = getType(reference.type, reference, null)
-
-    override val manager = GenericManager(
-        type,
-        getValue = {
-            reference.isAccessible = true
-            try {
-                reference.get(null)
-            } catch (e: Exception) {
-                println("DASH: Could not get value for ${reference.name}: ${e.message}")
-                null
-            }
-        },
-        setValue = {
-            reference.isAccessible = true
-            try {
-                reference.set(null, it)
-                true
-            } catch (e: Exception) {
-                println("DASH: Could not set value for ${reference.name}: ${e.message}")
-                false
-            }
-        },
-        possibleValues = when (type) {
-            BaseTypes.BOOLEAN -> listOf("true", "false")
-            BaseTypes.ENUM -> reference.type.enumConstants.map { it.toString() }
-            else -> null
-        }
-    )
-
-    override val toJsonType: GenericTypeJson
-        get() {
-            val value = manager.getValue()?.toString() ?: ""
-            return GenericTypeJson(
-                id = manager.id,
-                className = className,
-                fieldName = reference.name,
-                type = type,
-                valueString = value,
-                newValueString = value,
-                possibleValues = manager.possibleValues
-            )
-        }
-}
-
-class NestedVariable(
-    override val reference: MyField,
-    val parentReference: GenericManagedVariable,
-    override val className: String
-) : GenericManagedVariable(reference, className) {
-    val type = getType(reference.type, reference, parentReference.reference)
-
-    override val manager = GenericManager(
-        type,
-        getValue = {
-            reference.isAccessible = true
-            try {
-                reference.get(parentReference.manager.getValue())
-            } catch (e: Exception) {
-                println("DASH: Could not get value for ${reference.name}: ${e.message}")
-                null
-            }
-        },
-        setValue = {
-            reference.isAccessible = true
-            try {
-                reference.set(parentReference.manager.getValue(), it)
-                true
-            } catch (e: Exception) {
-                println("DASH: Could not set value for ${reference.name}: ${e.message}")
-                false
-            }
-        },
-        possibleValues = when (type) {
-            BaseTypes.BOOLEAN -> listOf("true", "false")
-            BaseTypes.ENUM -> reference.type.enumConstants.map { it.toString() }
-            else -> null
-        }
-    )
-    override val toJsonType: GenericTypeJson
-        get() {
-            val value = manager.getValue()?.toString() ?: ""
-            return GenericTypeJson(
-                id = manager.id,
-                className = className,
-                fieldName = reference.name,
-                type = type,
-                valueString = value,
-                newValueString = value,
-                possibleValues = manager.possibleValues
-            )
-        }
-}
-
-class CustomVariable(
-    val fieldName: String,
-    override val className: String,
-    val values: List<GenericVariable>,
-    val type: BaseTypes = BaseTypes.CUSTOM
-) : GenericVariable(null, className) {
-
-    override val toJsonType: GenericTypeJson
-        get() {
-            return GenericTypeJson(
-                id = "",
-                className = className,
-                fieldName = fieldName,
-                type = type,
-                valueString = "",
-                newValueString = "",
-                customValues = values.map { it.toJsonType }
-            )
-        }
-
-}
-
-class MyField(
-    val name: String,
-    val type: Class<*>,
-    var isAccessible: Boolean,
-    var get: (instance: Any?) -> Any?,
-    var set: (instance: Any?, newValue: Any?) -> Unit,
-    var genericType: Type? = null,
-    val field: Field? = null,
-)
-
-fun convertToMyField(field: Field): MyField {
-    return MyField(
-        name = field.name,
-        type = field.type,
-        isAccessible = field.isAccessible,
-        get = field::get,
-        set = field::set,
-        genericType = field.genericType,
-        field = field
-    )
-}
 
 fun processValue(
     className: String,
@@ -338,23 +185,4 @@ fun processValue(
     }
 
     return UnknownVariable(className, reference.name)
-}
-
-class GenericField(
-    var className: String,
-    var reference: Field,
-) {
-
-    val type = getType(reference.type, convertToMyField(reference), null)
-    val value: GenericVariable = processValue(className, type, convertToMyField(reference), null)
-
-    val name: String
-        get() = reference.name
-
-    fun debug() {
-        println("   DASH: Of type $type")
-    }
-
-    val toJsonType: GenericTypeJson
-        get() = value.toJsonType
 }

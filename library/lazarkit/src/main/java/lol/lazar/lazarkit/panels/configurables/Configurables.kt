@@ -1,8 +1,8 @@
 package lol.lazar.lazarkit.panels.configurables
 
 import android.content.Context
-import lol.lazar.lazarkit.panels.configurables.variables.GenericField
-import lol.lazar.lazarkit.panels.configurables.variables.GenericManager
+import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericField
+import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericManager
 
 object Configurables {
     var fieldsMap = mutableMapOf<String, GenericManager>()

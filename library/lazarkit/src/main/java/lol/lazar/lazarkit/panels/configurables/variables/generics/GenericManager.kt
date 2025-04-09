@@ -1,6 +1,7 @@
-package lol.lazar.lazarkit.panels.configurables.variables
+package lol.lazar.lazarkit.panels.configurables.variables.generics
 
 import lol.lazar.lazarkit.panels.configurables.Configurables
+import lol.lazar.lazarkit.panels.configurables.variables.BaseTypes
 import java.util.UUID
 
 class GenericManager(
