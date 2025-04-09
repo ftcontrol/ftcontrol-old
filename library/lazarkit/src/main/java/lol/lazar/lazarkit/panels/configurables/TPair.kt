@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.oldConfs
+package lol.lazar.lazarkit.panels.configurables
 
 import lol.lazar.lazarkit.panels.oldConfs.annotations.ConfigurableCustomType
 import lol.lazar.lazarkit.panels.oldConfs.annotations.IgnoreConfigurable

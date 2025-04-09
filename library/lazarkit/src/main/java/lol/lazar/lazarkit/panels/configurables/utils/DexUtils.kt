@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.oldConfs.utils
+package lol.lazar.lazarkit.panels.configurables.utils
 
 import java.nio.ByteBuffer
 
