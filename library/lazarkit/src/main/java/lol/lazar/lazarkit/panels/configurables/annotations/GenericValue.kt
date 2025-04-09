@@ -6,5 +6,5 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FIELD)
 annotation class GenericValue(
     val tParam: KClass<*>,
-    val vParam: KClass<*>
+    val vParam: KClass<*> = Any::class
 )

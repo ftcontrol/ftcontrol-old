@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.examples.configurables
 
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
 import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
 
 @Configurable
 object TestKotlinObject {
@@ -84,10 +85,12 @@ object TestKotlinObject {
         ),
     )
 
+    @ConfigurableCustomType
     class TParamClass<T>(
         val test: T
     )
 
     @JvmField
+    @field:GenericValue(Int::class)
     var testTParamClass = TParamClass(1)
 }
