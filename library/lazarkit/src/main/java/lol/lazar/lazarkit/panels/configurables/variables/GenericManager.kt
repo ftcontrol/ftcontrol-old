@@ -1,11 +1,10 @@
 package lol.lazar.lazarkit.panels.configurables.variables
 
 import lol.lazar.lazarkit.panels.configurables.Configurables
-import lol.lazar.lazarkit.panels.configurables.oldConfs.BaseGenericField.Types
 import java.util.UUID
 
 abstract class GenericManager(
-    val type: Types
+    val type: GenericVariable.BaseTypes
 ) {
     val id: String = UUID.randomUUID().toString()
     val name: String = "no name"
@@ -21,7 +20,7 @@ abstract class GenericManager(
 
     private fun convertValue(value: String): Any? {
         return when (type) {
-            Types.INT -> {
+            GenericVariable.BaseTypes.INT -> {
                 when {
                     value.toIntOrNull() != null -> value.toInt()
                     value.toFloatOrNull() != null -> value.toFloat()
@@ -34,7 +33,7 @@ abstract class GenericManager(
                 }
             }
 
-            Types.DOUBLE -> {
+            GenericVariable.BaseTypes.DOUBLE -> {
                 when {
                     value.toDoubleOrNull() != null -> value.toDouble()
                     value.toFloatOrNull() != null -> value.toFloat()
@@ -44,15 +43,15 @@ abstract class GenericManager(
                 }
             }
 
-            Types.STRING -> {
+            GenericVariable.BaseTypes.STRING -> {
                 value
             }
 
-            Types.BOOLEAN -> {
+            GenericVariable.BaseTypes.BOOLEAN -> {
                 value.toBoolean()
             }
 
-            Types.FLOAT -> {
+            GenericVariable.BaseTypes.FLOAT -> {
                 when {
                     value.toFloatOrNull() != null -> value.toFloat()
                     value.toDoubleOrNull() != null -> value.toDouble()
@@ -62,7 +61,7 @@ abstract class GenericManager(
                 }
             }
 
-            Types.LONG -> {
+            GenericVariable.BaseTypes.LONG -> {
                 when {
                     value.toLongOrNull() != null -> value.toLong()
                     value.toDoubleOrNull() != null -> value.toDouble()

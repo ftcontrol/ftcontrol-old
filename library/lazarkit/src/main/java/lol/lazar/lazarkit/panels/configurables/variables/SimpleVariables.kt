@@ -7,7 +7,9 @@ open class SimpleVariable(
     open var className: String,
     open var reference: Field,
 ) : GenericVariable() {
-    inner class SimpleManager: GenericManager(){
+    inner class SimpleManager: GenericManager(
+        getType(reference.type, reference)
+    ){
         override fun getValue(): Any? {
             reference.isAccessible = true
             return try {
@@ -18,7 +20,7 @@ open class SimpleVariable(
             }
         }
 
-        override fun setValue(value: String): Boolean {
+        override fun setValue(value: Any): Boolean {
             reference.isAccessible = true
 
             try {
@@ -38,7 +40,7 @@ open class SimpleVariable(
             id = manager.id,
             className = className,
             fieldName = reference.name,
-            type = type,
+            type = manager.type,
             valueString = manager.getValue().toString(),
             newValueString = manager.getValue().toString(),
             possibleValues = null,
@@ -50,25 +52,27 @@ open class SimpleVariable(
 
 class NestedSimpleVariable(
     var className: String,
-    var parentReference: GenericManager,
+    var parentReference: SimpleVariable,
     var reference: Field,
 ) : GenericVariable() {
-    inner class NestedManager: GenericManager(){
+    inner class NestedManager: GenericManager(
+        getType(reference.type, reference, parentReference.reference)
+    ){
         override fun getValue(): Any? {
             reference.isAccessible = true
             return try {
-                reference.get(parentReference.getValue())
+                reference.get(parentReference.manager.getValue())
             } catch (e: Exception) {
                 println("DASH: Could not get value for ${reference.name}: ${e.message}")
                 null
             }
         }
 
-        override fun setValue(value: String): Boolean {
+        override fun setValue(value: Any): Boolean {
             reference.isAccessible = true
 
             try {
-                reference.set(parentReference.getValue(), value)
+                reference.set(parentReference.manager.getValue(), value)
                 return true
             } catch (e: Exception) {
                 println("DASH: Could not set value for ${reference.name}: ${e.message}")
@@ -84,7 +88,7 @@ class NestedSimpleVariable(
             id = manager.id,
             className = className,
             fieldName = reference.name,
-            type = type,
+            type = manager.type,
             valueString = manager.getValue().toString(),
             newValueString = manager.getValue().toString(),
             possibleValues = null,
