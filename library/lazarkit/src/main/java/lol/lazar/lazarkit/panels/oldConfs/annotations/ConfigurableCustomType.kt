@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.configurables.annotations
+package lol.lazar.lazarkit.panels.oldConfs.annotations
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)

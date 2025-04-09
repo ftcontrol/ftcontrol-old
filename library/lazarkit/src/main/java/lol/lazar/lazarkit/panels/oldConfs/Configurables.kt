@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.configurables
+package lol.lazar.lazarkit.panels.oldConfs
 
 import android.content.Context
 

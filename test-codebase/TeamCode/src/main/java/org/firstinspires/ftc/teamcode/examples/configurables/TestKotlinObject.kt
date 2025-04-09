@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.examples.configurables
 
-import lol.lazar.lazarkit.panels.configurables.annotations.Configurable
-import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
-import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
+import lol.lazar.lazarkit.panels.oldConfs.annotations.Configurable
+import lol.lazar.lazarkit.panels.oldConfs.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.oldConfs.annotations.GenericValue
 
 @Configurable
 object TestKotlinObject {
@@ -83,6 +83,11 @@ object TestKotlinObject {
             2,
             3
         ),
+        mapOf(
+            "one" to 1,
+            "two" to 2,
+            "three" to 3
+        )
     )
 
     @ConfigurableCustomType

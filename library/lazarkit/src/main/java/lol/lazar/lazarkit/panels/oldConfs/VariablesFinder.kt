@@ -1,6 +1,6 @@
-package lol.lazar.lazarkit.panels.configurables
+package lol.lazar.lazarkit.panels.oldConfs
 
-import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
+import lol.lazar.lazarkit.panels.oldConfs.annotations.IgnoreConfigurable
 import java.lang.reflect.Modifier
 
 class VariablesFinder(

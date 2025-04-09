@@ -1,6 +1,6 @@
-package lol.lazar.lazarkit.panels.configurables
+package lol.lazar.lazarkit.panels.oldConfs
 
-import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
+import lol.lazar.lazarkit.panels.oldConfs.annotations.IgnoreConfigurable
 import lol.lazar.lazarkit.panels.json.GenericTypeJson
 import java.lang.reflect.Array
 import java.lang.reflect.Field
