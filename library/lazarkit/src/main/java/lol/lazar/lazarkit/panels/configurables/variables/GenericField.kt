@@ -351,6 +351,40 @@ fun processValue(
         }
     }
 
+    if (type == BaseTypes.MAP) {
+        val mapInstance = currentManager.manager.getValue() as? MutableMap<*, *>
+        if (mapInstance != null) {
+            println("   DASH: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
+            val mapValues : List<GenericVariable> = mapInstance.map { (key, _) ->
+                println("   DASH: Map key: $key")
+                val itemType = getType(mapInstance[key]?.javaClass)
+                val currentElementReference = MyField(
+                    name = key.toString(),
+                    type = mapInstance[key]?.javaClass ?: Any::class.java,
+                    isAccessible = true,
+                    get = { instance ->
+                        mapInstance[key]
+                    },
+                    set = { instance, newValue ->
+                        (mapInstance as MutableMap<Any, Any>)[key as Any] = newValue as Any
+                    },
+                    genericType = reference.type.componentType
+                )
+
+                processValue(
+                    className,
+                    itemType,
+                    currentElementReference,
+                    currentManager
+                )
+            }
+
+            println("   DASH: Map keys2: ${mapValues.map { it.toJsonType }}")
+
+
+            return CustomVariable(reference.name, className, mapValues, BaseTypes.MAP)
+        }
+    }
 
     return UnknownVariable(className, reference.name)
 }
