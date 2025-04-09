@@ -1,11 +1,8 @@
 package lol.lazar.lazarkit.panels.configurables.variables
 
 import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
-import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericManagedVariable
 import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericVariable
 import lol.lazar.lazarkit.panels.configurables.variables.instances.CustomVariable
-import lol.lazar.lazarkit.panels.configurables.variables.instances.NestedVariable
-import lol.lazar.lazarkit.panels.configurables.variables.instances.SimpleVariable
 import lol.lazar.lazarkit.panels.configurables.variables.instances.UnknownVariable
 import java.lang.reflect.Array
 
@@ -14,16 +11,9 @@ fun processValue(
     className: String,
     type: BaseTypes,
     reference: MyField,
-    parentReference: GenericManagedVariable?
+    parentReference: MyField?
 ): GenericVariable {
-    val currentManager = if (parentReference == null) SimpleVariable(
-        reference,
-        className
-    ) else NestedVariable(
-        reference,
-        parentReference,
-        className
-    )
+    val currentManager = convertToMyField(reference, parentReference, className)
     if (type in listOf(
             BaseTypes.INT, BaseTypes.DOUBLE, BaseTypes.FLOAT,
             BaseTypes.LONG, BaseTypes.STRING, BaseTypes.BOOLEAN, BaseTypes.ENUM
@@ -53,7 +43,7 @@ fun processValue(
 
     if (type == BaseTypes.ARRAY) {
         val componentType = reference.type.componentType
-        val componentValues = currentManager.manager.getValue()
+        val componentValues = currentManager.getValue()
         if (componentValues != null && componentType != null) {
             val arrayValues = (0 until Array.getLength(componentValues)).map { i ->
 
@@ -101,7 +91,7 @@ fun processValue(
     }
 
     if (type == BaseTypes.LIST) {
-        val listInstance = currentManager.manager.getValue() as? MutableList<Any?>
+        val listInstance = currentManager.getValue() as? MutableList<Any?>
         if (listInstance != null) {
 
             val listValues = listInstance.mapIndexed { index, value ->
@@ -150,7 +140,7 @@ fun processValue(
     }
 
     if (type == BaseTypes.MAP) {
-        val mapInstance = currentManager.manager.getValue() as? MutableMap<*, *>
+        val mapInstance = currentManager.getValue() as? MutableMap<*, *>
         if (mapInstance != null) {
             println("   DASH: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
             val mapValues: List<GenericVariable> = mapInstance.map { (key, _) ->

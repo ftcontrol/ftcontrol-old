@@ -9,7 +9,7 @@ class CustomVariable(
     override val className: String,
     val values: List<GenericVariable>,
     val type: BaseTypes = BaseTypes.CUSTOM
-) : GenericVariable(null, className) {
+) : GenericVariable(className) {
 
     override val toJsonType: GenericTypeJson
         get() {

@@ -45,14 +45,14 @@ fun getType(
 private fun resolveGenericType(reference: MyField?, parentReference: MyField?): BaseTypes {
     if (reference == null || parentReference == null) return BaseTypes.UNKNOWN
 
-    val genericType = reference.field?.genericType
+    val genericType = reference.ref?.genericType
 
     val isGeneric =
         genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>
 
     if (!isGeneric) return BaseTypes.UNKNOWN
 
-    val genericAnnotation = parentReference.field?.getAnnotation(GenericValue::class.java)
+    val genericAnnotation = parentReference.ref?.getAnnotation(GenericValue::class.java)
 
     if (genericAnnotation == null) return BaseTypes.GENERIC_NO_ANNOTATION
 

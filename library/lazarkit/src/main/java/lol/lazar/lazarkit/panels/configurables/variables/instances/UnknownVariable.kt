@@ -7,7 +7,7 @@ import lol.lazar.lazarkit.panels.json.GenericTypeJson
 class UnknownVariable(
     override val className: String,
     val name: String
-) : GenericVariable(null, className) {
+) : GenericVariable(className) {
     override val toJsonType: GenericTypeJson
         get() = GenericTypeJson(
             id = "",
