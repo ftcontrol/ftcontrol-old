@@ -61,6 +61,7 @@
   }
 
   function sendAllUpdates(fields: GenericTypeJson[]) {
+    if (fields == null) return
     socket.sendMessage({
       kind: "updatedJvmFields",
       fields: getAllValues(fields),
