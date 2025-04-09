@@ -42,36 +42,18 @@ fun getType(
 
             val genericType = reference.field?.genericType
 
-            println("DASH: BaseTypes: Getting type for ${reference.name} of $classType")
-
-
-
             if (genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
                 val genericAnnotation =
                     parentReference.field?.getAnnotation(GenericValue::class.java)
                 if (genericAnnotation != null) {
-                    println("   DASH: TYPES: tParam: ${genericAnnotation.tParam}, vParam: ${genericAnnotation.vParam}")
 
                     when (genericType) {
-                        is ParameterizedType -> {
-                            println("   DASH: TYPES: Parameterized type")
-                            val typeArguments = genericType.actualTypeArguments
-                            println("   DASH: TYPES: Actual type arguments: ${typeArguments.contentToString()}")
-
-                            typeArguments.forEach {
-                                println("   DASH: TYPES: Type argument: $it")
-                            }
-                        }
-
                         is java.lang.reflect.TypeVariable<*> -> {
-                            println("   DASH: TYPES: Type variable")
-                            println("   DASH: TYPES: Generic declaration: ${genericType.genericDeclaration}")
                             val resolvedType = when (genericType.name) {
                                 "T" -> genericAnnotation.tParam
                                 "V" -> genericAnnotation.vParam
                                 else -> null
                             }
-                            println("   DASH: TYPES: Resolved type for ${genericType.name}: $resolvedType")
                             if (resolvedType != null) {
                                 return getType(resolvedType.java)
                             }
@@ -89,24 +71,7 @@ fun getType(
     }
 }
 
-enum class BaseTypes {
-    INT,
-    LONG,
-    DOUBLE,
-    STRING,
-    BOOLEAN,
-    FLOAT,
-    ENUM,
 
-    UNKNOWN,
-
-    CUSTOM,
-    ARRAY,
-    LIST,
-    MAP,
-    GENERIC,
-    GENERIC_NO_ANNOTATION
-}
 
 abstract class GenericVariable(
     open val reference: MyField?,
