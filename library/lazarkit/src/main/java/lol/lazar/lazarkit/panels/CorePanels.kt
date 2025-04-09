@@ -6,16 +6,17 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
+import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.integration.MenuManager
 import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
 import lol.lazar.lazarkit.panels.integration.Preferences
 import lol.lazar.lazarkit.panels.integration.TelemetryManager
 import lol.lazar.lazarkit.panels.integration.UIManager
-import lol.lazar.lazarkit.panels.server.TestLimelightServer
-import lol.lazar.lazarkit.panels.server.Server
 import lol.lazar.lazarkit.panels.server.LimelightProxy
+import lol.lazar.lazarkit.panels.server.Server
 import lol.lazar.lazarkit.panels.server.Socket
+import lol.lazar.lazarkit.panels.server.TestLimelightServer
 import java.io.IOException
 
 class CorePanels {
@@ -30,7 +31,8 @@ class CorePanels {
 
     lateinit var testLimelightServer: TestLimelightServer
 
-    var telemetryManager = TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
+    var telemetryManager =
+        TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
 
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {

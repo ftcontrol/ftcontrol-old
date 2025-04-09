@@ -1,7 +1,7 @@
 package lol.lazar.lazarkit.panels.configurables
 
-import lol.lazar.lazarkit.panels.oldConfs.annotations.ConfigurableCustomType
-import lol.lazar.lazarkit.panels.oldConfs.annotations.IgnoreConfigurable
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType
+import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 
 @ConfigurableCustomType
 open class TPair<T, V>(

@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.examples.configurables;
 import java.util.List;
 import java.util.Map;
 
-import lol.lazar.lazarkit.panels.oldConfs.annotations.Configurable;
-import lol.lazar.lazarkit.panels.oldConfs.annotations.ConfigurableCustomType;
-import lol.lazar.lazarkit.panels.oldConfs.annotations.GenericValue;
+import lol.lazar.lazarkit.panels.configurables.annotations.Configurable;
+import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType;
+import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue;
+
 
 @Configurable
 public class TestJavaClass {
