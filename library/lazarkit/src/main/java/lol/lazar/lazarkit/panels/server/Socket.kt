@@ -5,7 +5,7 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.flows.FlowRegistry
 import lol.lazar.lazarkit.panels.GlobalData
-import lol.lazar.lazarkit.panels.oldConfs.Configurables
+import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.json.ActiveOpMode
 import lol.lazar.lazarkit.panels.json.AllFlowsJson
@@ -235,8 +235,7 @@ class Socket(
                         decoded.fields.forEach {
                             println("DASH: Field id: ${it.id}, New value: ${it.newValueString}")
                             val generalRef = Configurables.fieldsMap[it.id] ?: return
-                            val convertedValue = generalRef.convertValue(it.newValueString)
-                            generalRef.currentValue = convertedValue
+                            generalRef.setValue(it.newValueString)
                         }
 
                         sendAllClients(

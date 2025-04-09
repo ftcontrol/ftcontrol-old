@@ -1,9 +1,11 @@
-package lol.lazar.lazarkit.panels.oldConfs
+package lol.lazar.lazarkit.panels.configurables
 
 import android.content.Context
+import lol.lazar.lazarkit.panels.configurables.variables.GenericField
+import lol.lazar.lazarkit.panels.configurables.variables.GenericManager
 
 object Configurables {
-    var fieldsMap = mutableMapOf<String, BaseGenericField>()
+    var fieldsMap = mutableMapOf<String, GenericManager>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
     var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
 
@@ -31,7 +33,7 @@ object Configurables {
         customTypeClasses = finder.customTypeClasses
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
         variables.getJvmFields.forEach { info ->
-            println("DASH: ${info.className}.${info.reference.name} = ${info.currentValue}")
+            println("DASH: ${info.className}.${info.reference.name}")
         }
         jvmFields = variables.getJvmFields
     }

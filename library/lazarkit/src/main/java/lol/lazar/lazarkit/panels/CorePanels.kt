@@ -6,7 +6,6 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
-import lol.lazar.lazarkit.panels.oldConfs.Configurables
 import lol.lazar.lazarkit.panels.integration.MenuManager
 import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.integration.OpModeRegistrar
