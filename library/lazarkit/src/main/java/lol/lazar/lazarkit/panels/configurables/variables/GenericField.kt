@@ -270,7 +270,7 @@ fun processValue(
                 }
                 val cType = if (arrayType == BaseTypes.UNKNOWN) {
                     value.javaClass
-                }else{
+                } else {
                     componentType
                 }
 
@@ -301,6 +301,56 @@ fun processValue(
             return UnknownVariable(className, reference.name)
         }
     }
+
+    if (type == BaseTypes.LIST) {
+        val listInstance = currentManager.manager.getValue() as? MutableList<Any?>
+        if (listInstance != null) {
+
+            val listValues = listInstance.mapIndexed { index, value ->
+                val arrayType = getType(reference.type.componentType)
+
+                val itemType = if (arrayType == BaseTypes.UNKNOWN) {
+                    getType(value?.javaClass ?: Any::class.java)
+                } else {
+                    arrayType
+                }
+                val cType = if (arrayType == BaseTypes.UNKNOWN) {
+                    value?.javaClass ?: Any::class.java
+                } else {
+                    reference.type.componentType
+                }
+
+                println("DASH: Array type: $itemType")
+
+                val currentElementReference = MyField(
+                    name = index.toString(),
+                    type = cType,
+                    isAccessible = true,
+                    get = { instance ->
+                        listInstance.getOrNull(index)
+                    },
+                    set = { instance, newValue ->
+                        if (index in listInstance.indices) {
+                            listInstance[index] = newValue
+                        } else {
+                            listInstance.add(newValue)
+                        }
+                    },
+                    genericType = reference.type.componentType
+                )
+
+                processValue(
+                    className,
+                    itemType,
+                    currentElementReference,
+                    currentManager
+                )
+            }
+
+            return CustomVariable(reference.name, className, listValues, BaseTypes.LIST)
+        }
+    }
+
 
     return UnknownVariable(className, reference.name)
 }
