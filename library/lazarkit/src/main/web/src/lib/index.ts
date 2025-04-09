@@ -37,23 +37,11 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
   info.jvmFields = data.fields
 
-  function process(fields: GenericTypeJson[]) {
-    if (fields == null) return
-    for (const f of fields) {
-      if (
-        f.type == Types.CUSTOM ||
-        f.type == Types.ARRAY ||
-        f.type == Types.MAP ||
-        f.type == Types.LIST
-      ) {
-        process(f.customValues)
-      } else {
-        f.isShown = true
-      }
-    }
+  const process = (field: GenericTypeJson) => {
+    field.isShown = true
   }
 
-  process(info.jvmFields)
+  forAll(info.jvmFields, process, process)
 })
 
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {

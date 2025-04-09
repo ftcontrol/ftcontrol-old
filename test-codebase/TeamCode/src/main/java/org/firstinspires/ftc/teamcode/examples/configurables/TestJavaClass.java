@@ -5,6 +5,7 @@ import java.util.Map;
 
 import lol.lazar.lazarkit.panels.configurables.annotations.Configurable;
 import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType;
+import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue;
 
 @Configurable
 public class TestJavaClass {
@@ -100,6 +101,7 @@ public class TestJavaClass {
             new int[]{1, 2, 3}
     };
 
+    @ConfigurableCustomType
     public static class TParamClass<T> {
         public final T test;
 
@@ -112,5 +114,6 @@ public class TestJavaClass {
         }
     }
 
+    @GenericValue(tParam = Integer.class)
     public static TParamClass<Integer> testTParamClass = new TParamClass<Integer>(1);
 }
