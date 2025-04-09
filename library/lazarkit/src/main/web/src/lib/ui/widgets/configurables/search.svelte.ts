@@ -1,5 +1,6 @@
 import { info } from "$lib"
 import { Types, type GenericTypeJson } from "$lib/genericType"
+import { forAll, forAllRecursive } from "./utils"
 
 function search(p: string, fields: GenericTypeJson[]) {
   if (!fields) return
@@ -7,46 +8,50 @@ function search(p: string, fields: GenericTypeJson[]) {
   p = p.toLowerCase()
   const newOpenedStates: { [key: string]: boolean } = {}
 
-  function recursiveSearch(fields: GenericTypeJson[]): boolean {
-    let foundInGroup = false
-
-    for (const field of fields) {
-      const matchesField =
+  forAllRecursive(
+    fields,
+    (field) => {
+      const matches =
         field.fieldName?.toLowerCase().includes(p) ||
         field.className?.toLowerCase().includes(p)
+      field.isShown = matches
+      return matches
+    },
+    (field, childResults) => {
+      const nameMatches =
+        field.fieldName?.toLowerCase().includes(p) ||
+        field.className?.toLowerCase().includes(p)
+      const childrenMatch = childResults.some(Boolean)
 
-      let foundInNested = false
-      if (
-        (field.type === Types.CUSTOM ||
-          field.type === Types.ARRAY ||
-          field.type === Types.MAP ||
-          field.type === Types.LIST) &&
-        Array.isArray(field.customValues)
-      ) {
-        field.isOpened = false
+      const isMatch = nameMatches || childrenMatch
 
-        if (matchesField) {
-          field.isOpened = true
-        } else {
-          foundInNested = recursiveSearch(field.customValues)
-          if (foundInNested) field.isOpened = true
-        }
+      if (nameMatches) {
+        field.isOpened = true
+        field.isShown = true
+        forAll(
+          field.customValues ?? [],
+          (field) => {
+            field.isShown = true
+          },
+          (field) => {
+            field.isShown = true
+            field.isOpened = true
+          }
+        )
+      } else {
+        field.isOpened = childrenMatch
+        field.isShown = isMatch
       }
-
-      field.isShown = matchesField || foundInNested
-
-      if (field.isShown) {
-        foundInGroup = true
-        newOpenedStates[field.className] = true
-      } else if (!(field.className in newOpenedStates)) {
-        newOpenedStates[field.className] = false
-      }
+      return isMatch
     }
+  )
 
-    return foundInGroup
+  const openStuff = (field: GenericTypeJson) => {
+    if (field.isShown) newOpenedStates[field.className] = true
   }
 
-  recursiveSearch(fields)
+  forAll(info.jvmFields, openStuff, openStuff)
+
   info.openedStates = newOpenedStates
 }
 
@@ -60,44 +65,30 @@ let savedStates: {
 
 function saveState() {
   savedStates.openedStates = { ...info.openedStates }
-  console.log("Saved opened states", savedStates.openedStates)
+
   savedStates.isOpenedMap = new Map()
-  function saveStates(fields: GenericTypeJson[]) {
-    for (const field of fields) {
-      if (
-        (field.type === Types.CUSTOM ||
-          field.type === Types.ARRAY ||
-          field.type === Types.MAP ||
-          field.type === Types.LIST) &&
-        Array.isArray(field.customValues)
-      ) {
-        savedStates.isOpenedMap.set(field.id, field.isOpened ?? false)
-        saveStates(field.customValues)
-      }
+  forAll(
+    info.jvmFields,
+    (field) => {},
+    (field) => {
+      savedStates.isOpenedMap.set(field.id, field.isOpened ?? false)
     }
-  }
-  saveStates(info.jvmFields)
+  )
 }
 
 function restoreState() {
   info.openedStates = { ...savedStates.openedStates }
 
-  function restoreStates(fields: GenericTypeJson[]) {
-    for (const field of fields) {
+  forAll(
+    info.jvmFields,
+    (field) => {
       field.isShown = true
-      if (
-        (field.type === Types.CUSTOM ||
-          field.type === Types.ARRAY ||
-          field.type === Types.MAP ||
-          field.type === Types.LIST) &&
-        Array.isArray(field.customValues)
-      ) {
-        field.isOpened = savedStates.isOpenedMap.get(field.id) ?? false
-        restoreStates(field.customValues)
-      }
+    },
+    (field) => {
+      field.isShown = true
+      field.isOpened = savedStates.isOpenedMap.get(field.id) ?? false
     }
-  }
-  restoreStates(info.jvmFields)
+  )
 }
 
 let wasSaved = false
