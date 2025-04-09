@@ -107,6 +107,7 @@ export class InfoManager {
 
   jvmFields = $state<GenericTypeJson[]>([])
   openedStates: { [key: string]: boolean } = $state({})
+  searchParam = $state("")
 
   batteryVoltage = $state<number>(-1.0)
   canvas = $state<Canvas>(emptyCanvas)

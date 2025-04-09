@@ -3,6 +3,7 @@ import { Types, type GenericTypeJson } from "$lib/genericType"
 import { forAll, forAllRecursive } from "./utils"
 
 function search(p: string, fields: GenericTypeJson[]) {
+  info.searchParam = p
   if (!fields) return
 
   p = p.toLowerCase()

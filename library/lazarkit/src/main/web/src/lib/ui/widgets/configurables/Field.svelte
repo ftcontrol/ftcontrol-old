@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import { Types, type GenericTypeJson } from "$lib/genericType"
   import { SelectInput, StringInput } from "$primitives"
   import Update from "$ui/icons/Update.svelte"
@@ -30,6 +30,20 @@
     item.valueString = item.newValueString
     item.value = item.newValueString
   }
+
+  function processName(name: string): string {
+    const searchParam = info.searchParam?.toLowerCase()
+    if (!searchParam) return name
+
+    const index = name.toLowerCase().indexOf(searchParam)
+    if (index === -1) return name
+
+    const before = name.slice(0, index)
+    const match = name.slice(index, index + searchParam.length)
+    const after = name.slice(index + searchParam.length)
+
+    return `<span>${before}<span class="highlight">${match}</span>${after}</span>`
+  }
 </script>
 
 {#if item.isShown}
@@ -50,7 +64,7 @@
             isActive={item.valueString != item.newValueString && item.isValid}
           />
         </button>
-        {item.fieldName}
+        {@html processName(item.fieldName)}
       </p>
 
       <form
@@ -78,7 +92,7 @@
             isActive={item.valueString != item.newValueString && item.isValid}
           />
         </button>
-        {item.fieldName}
+        {@html processName(item.fieldName)}
       </p>
       <SelectInput
         bind:value={item.value}
@@ -91,7 +105,7 @@
     {:else if item.type == Types.CUSTOM || item.type == Types.ARRAY || item.type == Types.MAP || item.type == Types.LIST}
       <div class="two" style="margin-left: -20px;">
         <Toggle bind:isOpened={item.isOpened}>
-          <p>{item.fieldName} {item.type}</p>
+          <p>{@html processName(item.fieldName)} {item.type}</p>
         </Toggle>
       </div>
       <div class="two">
@@ -103,7 +117,7 @@
       </div>
     {:else}
       <div class="two">
-        <p>{item.fieldName} {item.type}</p>
+        <p>{@html processName(item.fieldName)} {item.type}</p>
       </div>
     {/if}
   </div>
@@ -134,5 +148,10 @@
   }
   .item.disabled {
     opacity: 0.5;
+  }
+
+  :global(span.highlight) {
+    color: red;
+    font-weight: bold;
   }
 </style>
