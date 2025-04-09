@@ -2,7 +2,6 @@ package lol.lazar.lazarkit.panels.configurables.variables
 
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
-import lol.lazar.lazarkit.panels.json.GenericTypeJson
 import java.lang.reflect.ParameterizedType
 
 private val typeMapping = mapOf(
@@ -47,18 +46,19 @@ private fun resolveGenericType(reference: MyField?, parentReference: MyField?): 
     if (reference == null || parentReference == null) return BaseTypes.UNKNOWN
 
     val genericType = reference.field?.genericType
-    val genericAnnotation = parentReference.field?.getAnnotation(GenericValue::class.java)
 
     val isGeneric =
         genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>
 
     if (!isGeneric) return BaseTypes.UNKNOWN
 
+    val genericAnnotation = parentReference.field?.getAnnotation(GenericValue::class.java)
+
     if (genericAnnotation == null) return BaseTypes.GENERIC_NO_ANNOTATION
 
-    if(genericType is ParameterizedType) return BaseTypes.GENERIC
+    if (genericType is ParameterizedType) return BaseTypes.GENERIC
 
-    if(genericType is java.lang.reflect.TypeVariable<*>){
+    if (genericType is java.lang.reflect.TypeVariable<*>) {
         val resolvedType = when (genericType.name) {
             "T" -> genericAnnotation.tParam
             "V" -> genericAnnotation.vParam
@@ -70,19 +70,4 @@ private fun resolveGenericType(reference: MyField?, parentReference: MyField?): 
     }
 
     return BaseTypes.GENERIC
-}
-
-
-abstract class GenericVariable(
-    open val reference: MyField?,
-    open val className: String,
-) {
-    abstract val toJsonType: GenericTypeJson
-}
-
-abstract class GenericManagedVariable(
-    override val reference: MyField?,
-    override val className: String,
-) : GenericVariable(reference, className) {
-    abstract val manager: GenericManager
 }
