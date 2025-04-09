@@ -5,7 +5,7 @@ import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
 import lol.lazar.lazarkit.flows.FlowRegistry
 import lol.lazar.lazarkit.panels.GlobalData
-import lol.lazar.lazarkit.panels.configurables.Configurables
+import lol.lazar.lazarkit.panels.oldConfs.Configurables
 import lol.lazar.lazarkit.panels.integration.OpModeData
 import lol.lazar.lazarkit.panels.json.ActiveOpMode
 import lol.lazar.lazarkit.panels.json.AllFlowsJson

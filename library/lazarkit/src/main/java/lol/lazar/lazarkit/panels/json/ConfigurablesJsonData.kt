@@ -2,7 +2,7 @@ package lol.lazar.lazarkit.panels.json
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import lol.lazar.lazarkit.panels.configurables.BaseGenericField
+import lol.lazar.lazarkit.panels.oldConfs.BaseGenericField
 
 
 @Serializable

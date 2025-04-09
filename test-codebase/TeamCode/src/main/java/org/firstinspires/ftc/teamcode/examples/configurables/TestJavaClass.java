@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.examples.configurables;
 import java.util.List;
 import java.util.Map;
 
-import lol.lazar.lazarkit.panels.configurables.annotations.Configurable;
-import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType;
-import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue;
+import lol.lazar.lazarkit.panels.oldConfs.annotations.Configurable;
+import lol.lazar.lazarkit.panels.oldConfs.annotations.ConfigurableCustomType;
+import lol.lazar.lazarkit.panels.oldConfs.annotations.GenericValue;
 
 @Configurable
 public class TestJavaClass {
@@ -98,7 +98,8 @@ public class TestJavaClass {
             new CustomType(1, "test!"),
             new NestedType(1, "test!", new CustomType(2, "test2!")),
             new UnknownType(1),
-            new int[]{1, 2, 3}
+            new int[]{1, 2, 3},
+            Map.of("one", 1, "two", 2, "three", 3)
     };
 
     @ConfigurableCustomType

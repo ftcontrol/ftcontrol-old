@@ -1,4 +1,4 @@
-package lol.lazar.lazarkit.panels.configurables
+package lol.lazar.lazarkit.panels.oldConfs
 
 import lol.lazar.lazarkit.panels.json.GenericTypeJson
 import java.lang.reflect.Array
@@ -11,8 +11,30 @@ class ArrayElement(
     reference = array.reference,
     className = array.className,
 ) {
+
+    var customValues: List<GenericField>? = null
+    var arrayValues: List<ArrayElement>? = null
+    var mapValues: List<MapValueElement>? = null
+    var listValues: List<ListElement>? = null
+
     init {
         Configurables.fieldsMap[id] = this
+
+        if (type == Types.CUSTOM) {
+
+        }
+
+        if (type == Types.ARRAY) {
+
+        }
+
+        if (type == Types.LIST) {
+
+        }
+
+        if (type == Types.MAP) {
+
+        }
     }
 
     override val type: Types
