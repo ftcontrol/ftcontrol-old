@@ -8,8 +8,8 @@ import java.lang.reflect.ParameterizedType
 
 fun getType(
     classType: Class<*>?,
-    reference: Field? = null,
-    parentReference: Field? = null
+    reference: MyField? = null,
+    parentReference: MyField? = null
 ): BaseTypes {
     return when (classType) {
         null -> BaseTypes.UNKNOWN
@@ -41,13 +41,15 @@ fun getType(
 
             if (reference == null || parentReference == null) return BaseTypes.UNKNOWN
 
-            val genericType = reference.genericType
+            val genericType = reference.field?.genericType
 
             println("DASH: BaseTypes: Getting type for ${reference.name} of $classType")
 
+
+
             if (genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>) {
                 val genericAnnotation =
-                    parentReference.getAnnotation(GenericValue::class.java)
+                    parentReference.field?.getAnnotation(GenericValue::class.java)
                 if (genericAnnotation != null) {
                     println("   DASH: TYPES: tParam: ${genericAnnotation.tParam}, vParam: ${genericAnnotation.vParam}")
 
@@ -108,14 +110,14 @@ enum class BaseTypes {
 }
 
 abstract class GenericVariable(
-    open val reference: Field?,
+    open val reference: MyField?,
     open val className: String,
 ) {
     abstract val toJsonType: GenericTypeJson
 }
 
 abstract class GenericManagedVariable(
-    override val reference: Field?,
+    override val reference: MyField?,
     override val className: String,
 ) : GenericVariable(reference, className) {
     abstract val manager: GenericManager

@@ -4,6 +4,7 @@ import lol.lazar.lazarkit.panels.configurables.annotations.IgnoreConfigurable
 import lol.lazar.lazarkit.panels.json.GenericTypeJson
 import java.lang.reflect.Array
 import java.lang.reflect.Field
+import java.lang.reflect.Type
 
 class UnknownVariable(
     override val className: String,
@@ -21,7 +22,7 @@ class UnknownVariable(
 }
 
 class SimpleVariable(
-    override val reference: Field,
+    override val reference: MyField,
     override val className: String
 ) : GenericManagedVariable(reference, className) {
     val type = getType(reference.type, reference, null)
@@ -70,7 +71,7 @@ class SimpleVariable(
 }
 
 class NestedVariable(
-    override val reference: Field,
+    override val reference: MyField,
     val parentReference: GenericManagedVariable,
     override val className: String
 ) : GenericManagedVariable(reference, className) {
@@ -172,7 +173,7 @@ class ArrayElement(
 
             val itemType = if (arrayType == BaseTypes.UNKNOWN && value != null) {
                 getType(value.javaClass)
-            }else{
+            } else {
                 arrayType
             }
 
@@ -189,10 +190,32 @@ class ArrayElement(
 
 }
 
+class MyField(
+    val name: String,
+    val type: Class<*>,
+    var isAccessible: Boolean,
+    var get: (instance: Any?) -> Any?,
+    var set: (instance: Any?, newValue: Any?) -> Unit,
+    var genericType: Type? = null,
+    val field: Field? = null,
+)
+
+fun convertToMyField(field: Field): MyField {
+    return MyField(
+        name = field.name,
+        type = field.type,
+        isAccessible = field.isAccessible,
+        get = field::get,
+        set = field::set,
+        genericType = field.genericType,
+        field = field
+    )
+}
+
 fun processValue(
     className: String,
     type: BaseTypes,
-    reference: Field,
+    reference: MyField,
     parentReference: GenericManagedVariable?
 ): GenericVariable {
     val currentManager = if (parentReference == null) SimpleVariable(
@@ -217,10 +240,12 @@ fun processValue(
             field.isAccessible = true
             if (field.isAnnotationPresent(IgnoreConfigurable::class.java)) return@mapNotNull null
 
+            val customNewField = convertToMyField(field)
+
             processValue(
                 className,
-                getType(field.type, field, reference),
-                field,
+                getType(field.type, customNewField, reference),
+                customNewField,
                 currentManager
             )
         }
@@ -233,7 +258,43 @@ fun processValue(
         val componentValues = currentManager.manager.getValue()
         if (componentValues != null && componentType != null) {
             val arrayValues = (0 until Array.getLength(componentValues)).map { i ->
-                ArrayElement(currentManager, i)
+
+                val value = Array.get(componentValues, i)
+
+                val arrayType = getType(componentType)
+
+                val itemType = if (arrayType == BaseTypes.UNKNOWN) {
+                    getType(value.javaClass)
+                } else {
+                    arrayType
+                }
+                val cType = if (arrayType == BaseTypes.UNKNOWN) {
+                    value.javaClass
+                }else{
+                    componentType
+                }
+
+                println("DASH: Array type: $itemType")
+
+                val currentElementReference = MyField(
+                    name = i.toString(),
+                    type = cType,
+                    isAccessible = true,
+                    get = { instance ->
+                        Array.get(instance, i)
+                    },
+                    set = { instance, newValue ->
+                        Array.set(instance, i, newValue)
+                    },
+                    genericType = componentType
+                )
+
+                processValue(
+                    className,
+                    itemType,
+                    currentElementReference,
+                    currentManager
+                )
             }
             return CustomVariable(reference.name, className, arrayValues, BaseTypes.ARRAY)
         } else {
@@ -249,8 +310,8 @@ class GenericField(
     var reference: Field,
 ) {
 
-    val type = getType(reference.type, reference, null)
-    val value: GenericVariable = processValue(className, type, reference, null)
+    val type = getType(reference.type, convertToMyField(reference), null)
+    val value: GenericVariable = processValue(className, type, convertToMyField(reference), null)
 
     val name: String
         get() = reference.name
