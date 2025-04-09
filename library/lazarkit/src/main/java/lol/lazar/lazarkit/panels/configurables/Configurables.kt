@@ -1,11 +1,11 @@
 package lol.lazar.lazarkit.panels.configurables
 
 import android.content.Context
+import lol.lazar.lazarkit.panels.configurables.variables.MyField
 import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericField
-import lol.lazar.lazarkit.panels.configurables.variables.generics.GenericManager
 
 object Configurables {
-    var fieldsMap = mutableMapOf<String, GenericManager>()
+    var fieldsMap = mutableMapOf<String, MyField>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
     var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
 
