@@ -141,55 +141,6 @@ class CustomVariable(
 
 }
 
-class ArrayElement(
-    var array: GenericManagedVariable,
-    var index: Int
-) : GenericManagedVariable(null, array.className) {
-    override val manager = GenericManager(
-        array.manager.type,
-        getValue = {
-            val componentType = array.reference?.type?.componentType
-            val componentValues = array.manager.getValue()
-            if (componentValues != null && componentType != null) {
-                return@GenericManager Array.get(componentValues, index)
-            }
-            return@GenericManager null
-        },
-        setValue = { value ->
-            val componentType = array.reference?.type?.componentType
-            val componentValues = array.manager.getValue()
-            if (componentValues != null && componentType != null) {
-                Array.set(componentValues, index, value)
-                return@GenericManager true
-            }
-            return@GenericManager false
-        }
-    )
-    override val toJsonType: GenericTypeJson
-        get() {
-            val arrayType = getType(array.reference?.type?.componentType)
-
-            val value = manager.getValue()
-
-            val itemType = if (arrayType == BaseTypes.UNKNOWN && value != null) {
-                getType(value.javaClass)
-            } else {
-                arrayType
-            }
-
-
-            return GenericTypeJson(
-                id = manager.id,
-                className = array.className,
-                fieldName = index.toString(),
-                type = itemType,
-                valueString = value.toString(),
-                newValueString = value.toString(),
-            )
-        }
-
-}
-
 class MyField(
     val name: String,
     val type: Class<*>,
@@ -355,7 +306,7 @@ fun processValue(
         val mapInstance = currentManager.manager.getValue() as? MutableMap<*, *>
         if (mapInstance != null) {
             println("   DASH: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
-            val mapValues : List<GenericVariable> = mapInstance.map { (key, _) ->
+            val mapValues: List<GenericVariable> = mapInstance.map { (key, _) ->
                 println("   DASH: Map key: $key")
                 val itemType = getType(mapInstance[key]?.javaClass)
                 val currentElementReference = MyField(

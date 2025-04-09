@@ -3,7 +3,6 @@ package lol.lazar.lazarkit.panels.configurables.variables
 import lol.lazar.lazarkit.panels.configurables.Configurables
 import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue
 import lol.lazar.lazarkit.panels.json.GenericTypeJson
-import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
 fun getType(
