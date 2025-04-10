@@ -1,8 +1,15 @@
 <script lang="ts">
   import { info } from "$lib"
+  import { settings } from "$lib/settings.svelte"
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
+
+  let animationSpeed = $state(settings.animationSpeed)
+
+  $effect(() => {
+    settings.setSpeed(animationSpeed)
+  })
 </script>
 
 <button
@@ -32,10 +39,10 @@
     <div class="flex">
       <p>Animation speed</p>
       <SelectInput
-        startValue="normal"
-        currentValue="normal"
+        startValue={settings.animationSpeed}
+        bind:currentValue={animationSpeed}
         value="normal"
-        possibleValues={["fast", "normal", "slow"]}
+        possibleValues={["instant", "fast", "normal", "slow"]}
         isValid={true}
         alwaysValid={true}
       ></SelectInput>

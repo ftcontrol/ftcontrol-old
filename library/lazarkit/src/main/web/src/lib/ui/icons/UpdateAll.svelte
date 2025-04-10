@@ -43,7 +43,7 @@
   svg {
     height: 20px;
     cursor: pointer;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity var(--d2) ease-in-out;
   }
 
   svg.disabled {
@@ -54,8 +54,8 @@
   svg.spin {
     transform: rotate(360deg);
     transition:
-      opacity 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
+      opacity var(--d2) ease-in-out,
+      transform var(--d2) ease-in-out;
   }
 
   path,
