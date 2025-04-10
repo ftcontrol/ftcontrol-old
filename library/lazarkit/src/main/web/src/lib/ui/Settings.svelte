@@ -14,7 +14,7 @@
 ></button>
 
 <section>
-  <Section hasMargin={false}>
+  <Section hasMargin={false} maxHeight={true}>
     <Header>
       <button
         onclick={() => {
@@ -37,6 +37,7 @@
         value="normal"
         possibleValues={["fast", "normal", "slow"]}
         isValid={true}
+        alwaysValid={true}
       ></SelectInput>
     </div>
   </Section>

@@ -8,12 +8,14 @@
     type = "",
     isValid = true,
     oninput = () => {},
+    alwaysValid = false,
   }: {
     text: string
     extraChar?: string
     type?: string
     isValid?: boolean
     oninput?: () => void
+    alwaysValid?: boolean
   } = $props()
   onMount(() => {
     updateSize()
@@ -29,7 +31,7 @@
   let input: HTMLElement
 </script>
 
-<TypedInput {type} {isValid}>
+<TypedInput {type} isValid={isValid || alwaysValid}>
   <div class="flex">
     <input
       bind:this={input}

@@ -9,6 +9,7 @@
     value = $bindable(),
     possibleValues,
     type = "ENUM",
+    alwaysValid = false,
   }: {
     startValue: string
     currentValue: string
@@ -16,6 +17,7 @@
     value: string
     possibleValues: string[]
     type?: string
+    alwaysValid?: boolean
   } = $props()
   $effect(() => {
     if (value != null) return
@@ -25,7 +27,7 @@
   let isShown = $state(false)
 </script>
 
-<TypedInput {type} isValid={socket.state == "opened"}>
+<TypedInput {type} isValid={socket.state == "opened" || alwaysValid}>
   <div class="content">
     <button
       onclick={() => {
@@ -41,7 +43,7 @@
         <button
           class:first={index == 0}
           onclick={() => {
-            if (socket.state == "closed") return
+            if (socket.state == "closed" && !alwaysValid) return
 
             currentValue = v
             value = v

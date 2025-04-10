@@ -7,14 +7,16 @@
     children,
     title = "",
     hasMargin = true,
+    maxHeight = false,
   }: {
     children: Snippet
     title?: string
     hasMargin?: boolean
+    maxHeight?: boolean
   } = $props()
 </script>
 
-<section class:hasMargin>
+<section class:hasMargin class:maxHeight>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>
@@ -35,12 +37,14 @@
     overflow-y: hidden;
 
     min-width: 400px;
-    height: 100%;
     transition: background-color 0.5s;
   }
   section.hasMargin {
     margin: 0.5rem;
     margin-bottom: 1rem;
+  }
+  section.maxHeight {
+    height: 100%;
   }
   .main {
     padding-bottom: 1rem;
