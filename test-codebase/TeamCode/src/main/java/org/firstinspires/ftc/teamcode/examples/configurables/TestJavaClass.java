@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.examples.configurables;
 import java.util.List;
 import java.util.Map;
 
-import lol.lazar.lazarkit.panels.configurables.annotations.Configurable;
-import lol.lazar.lazarkit.panels.configurables.annotations.ConfigurableCustomType;
-import lol.lazar.lazarkit.panels.configurables.annotations.GenericValue;
+import com.bylazar.bytebox.panels.configurables.annotations.Configurable;
+import com.bylazar.bytebox.panels.configurables.annotations.ConfigurableCustomType;
+import com.bylazar.bytebox.panels.configurables.annotations.GenericValue;
 
 
 @Configurable
