@@ -14,13 +14,14 @@
 
 <button
   class="overlay"
+  class:shown={info.showSettings}
   onclick={() => {
     info.showSettings = false
   }}
   aria-label="Close Settings"
 ></button>
 
-<section>
+<section class:shown={info.showSettings}>
   <Section hasMargin={false} maxHeight={true}>
     <Header>
       <button
@@ -64,6 +65,11 @@
     width: calc(100vw - 2 * var(--margin));
     height: calc(100vh - 2 * var(--margin));
     z-index: 101;
+    transform: translateY(-125%);
+    transition: transform var(--d3);
+  }
+  section.shown {
+    transform: translateY(0%);
   }
   button {
     all: unset;
@@ -77,7 +83,13 @@
     width: 100vw;
     height: 100vh;
     background-color: black;
-    opacity: 0.5;
     z-index: 100;
+    opacity: 0;
+    transition: opacity var(--d3);
+    pointer-events: none;
+  }
+  .overlay.shown {
+    opacity: 0.5;
+    pointer-events: all;
   }
 </style>

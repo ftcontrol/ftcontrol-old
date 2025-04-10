@@ -23,9 +23,7 @@
   </section>
 </div>
 
-{#if info.showSettings}
-  <Settings />
-{/if}
+<Settings />
 
 <style>
   div {
