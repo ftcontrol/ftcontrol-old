@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { socket } from "$lib"
   import Arrow from "./icons/Arrow.svelte"
   import Logo from "./icons/Logo.svelte"
   import Button from "./primitives/Button.svelte"
@@ -56,6 +57,7 @@
 <section class="shell" class:hidden={!isOpened}>
   <nav>
     <Logo />
+    <p>{socket.state}</p>
 
     <div class="gap"></div>
 

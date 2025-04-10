@@ -16,10 +16,11 @@
     {#await socket.init()}
       <p>Connecting to server...</p>
     {:then}
-      {@render children()}
+      <p>Succesfully connected.</p>
     {:catch error}
       <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
     {/await}
+    {@render children()}
   </section>
 </div>
 
