@@ -1,25 +1,26 @@
 <script lang="ts">
   import { info, socket } from "$lib"
+  import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
   import Logo from "./icons/Logo.svelte"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
-  let isDark = $state(true)
+  // let isDark = $state(true)
 
-  function getThemeFromCookie() {
-    const match = document.cookie.match(/(?:^|; )theme=(dark|light)/)
-    return match ? match[1] : null
-  }
+  // function getThemeFromCookie() {
+  //   const match = document.cookie.match(/(?:^|; )theme=(dark|light)/)
+  //   return match ? match[1] : null
+  // }
 
-  function applyInitialTheme() {
-    const savedTheme = getThemeFromCookie()
-    isDark = savedTheme === "dark"
+  // function applyInitialTheme() {
+  //   const savedTheme = getThemeFromCookie()
+  //   isDark = savedTheme === "dark"
 
-    document.body.classList.toggle("dark-mode", isDark)
-  }
+  //   document.body.classList.toggle("dark-mode", isDark)
+  // }
 
-  applyInitialTheme()
+  // applyInitialTheme()
   import { tick } from "svelte"
   let isCovering = $state(false)
 
@@ -32,8 +33,7 @@
 
     await new Promise((r) => setTimeout(r, 250))
 
-    isDark = document.body.classList.toggle("dark-mode")
-    document.cookie = `theme=${isDark ? "dark" : "light"}; path=/; max-age=31536000`
+    settings.toggleIsDark()
 
     await new Promise((r) => setTimeout(r, 450))
 
@@ -75,7 +75,9 @@
     <div class="gap"></div>
     <div class="gap"></div>
 
-    <Button onclick={toggleTheme}>{isDark ? "Light Mode" : "Dark Mode"}</Button>
+    <Button onclick={toggleTheme}
+      >{settings.isDark ? "Light Mode" : "Dark Mode"}</Button
+    >
     <Button
       onclick={() => {
         info.showSettings = !info.showSettings

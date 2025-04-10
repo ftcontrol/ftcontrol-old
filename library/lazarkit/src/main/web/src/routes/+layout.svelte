@@ -8,6 +8,7 @@
 
   import "./global.css"
   import Settings from "$ui/Settings.svelte"
+  import { settings } from "$lib/settings.svelte"
 
   onMount(async () => {
     await socket.init()
