@@ -151,7 +151,7 @@
   }
 
   :global(span.highlight) {
-    color: red;
+    color: var(--primary);
     font-weight: bold;
   }
 </style>

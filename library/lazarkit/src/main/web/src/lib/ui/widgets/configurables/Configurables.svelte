@@ -72,6 +72,16 @@
 <Section>
   <Header>
     <Title>Configurables</Title>
+    <input
+      class="search"
+      type="text"
+      placeholder="Search"
+      oninput={(e) => {
+        const target = e.target as HTMLInputElement | null
+        if (!target) return
+        handleSearch(target.value)
+      }}
+    />
     <button
       onclick={() => {
         sendAllUpdates(info.jvmFields)
@@ -80,14 +90,6 @@
       <UpdateAll isActive={isChanged(info.jvmFields)} />
     </button>
   </Header>
-  <input
-    type="text"
-    oninput={(e) => {
-      const target = e.target as HTMLInputElement | null
-      if (!target) return
-      handleSearch(target.value)
-    }}
-  />
   <div class="content">
     {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
       <div>
@@ -106,9 +108,16 @@
 </Section>
 
 <style>
+  .search {
+    all: unset;
+    color: inherit;
+    border: 2px solid var(--bg);
+    padding: 0.15em 0.3em;
+  }
   button {
     all: unset;
     cursor: pointer;
+    margin-top: 8px;
   }
   .content {
     height: 500px;
