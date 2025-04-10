@@ -1,3 +1,4 @@
+import { socket } from "$lib"
 import { Types } from "$lib/genericType"
 
 const JAVA_INT_MIN = -2147483648 // -2^31
@@ -78,7 +79,12 @@ export function stringValidator(value: string): boolean {
   return typeof value === "string"
 }
 
+function falseValidator(value: string): boolean {
+  return false
+}
+
 export function anyValidator(type: Types) {
+  if (socket.state == "closed") return falseValidator
   switch (type) {
     case Types.INT:
       return intValidator

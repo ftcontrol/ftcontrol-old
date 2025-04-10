@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { socket } from "$lib"
   import TextTypedInput from "./TextTypedInput.svelte"
 
   let {
@@ -24,10 +25,20 @@
     value = startValue
     isValid = validate(value)
   })
+
+  $effect(() => {
+    if (socket.state == "closed" || socket.state == "opened") {
+      if (!validate(value)) {
+        isValid = false
+        return
+      }
+      isValid = true
+    }
+  })
 </script>
 
 <TextTypedInput
-  type={`${type} ${isValid}`}
+  {type}
   bind:text={value}
   oninput={() => {
     if (!validate(value)) {
