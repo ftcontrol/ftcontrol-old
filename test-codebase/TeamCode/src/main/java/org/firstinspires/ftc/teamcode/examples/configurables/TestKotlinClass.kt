@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.examples.configurables
 
-import com.bylazar.bytebox.panels.configurables.annotations.Configurable
-import com.bylazar.bytebox.panels.configurables.annotations.ConfigurableCustomType
-import com.bylazar.bytebox.panels.configurables.annotations.GenericValue
+import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
+import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
+import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
 
 @Configurable
 class TestKotlinClass {
