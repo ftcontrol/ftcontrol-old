@@ -1,11 +1,18 @@
 <script>
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import Gamepads from "$lib/ui/Gamepads.svelte"
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
+  import { onMount } from "svelte"
   let { children } = $props()
 
   import "./global.css"
+  import Settings from "$ui/Settings.svelte"
+  import { settings } from "$lib/settings.svelte"
+
+  onMount(async () => {
+    await socket.init()
+  })
 </script>
 
 <Gamepads />
@@ -13,15 +20,13 @@
 <div>
   <Sidebar />
   <section>
-    {#await socket.init()}
-      <p>Connecting to server...</p>
-    {:then}
-      {@render children()}
-    {:catch error}
-      <p style="color: red;">WebSocket connection failed. Try refreshing.</p>
-    {/await}
+    {@render children()}
   </section>
 </div>
+
+{#if info.showSettings}
+  <Settings />
+{/if}
 
 <style>
   div {

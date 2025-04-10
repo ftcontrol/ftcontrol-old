@@ -6,13 +6,15 @@
   let {
     children,
     title = "",
+    hasMargin = true,
   }: {
     children: Snippet
     title?: string
+    hasMargin?: boolean
   } = $props()
 </script>
 
-<section>
+<section class:hasMargin>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>
@@ -26,15 +28,19 @@
 <style>
   section {
     background-color: var(--card);
+    border: 2px solid var(--bg);
     position: relative;
     border-radius: 16px;
-    margin: 0.5rem;
-    margin-bottom: 1rem;
     overflow-x: auto;
     overflow-y: hidden;
 
     min-width: 400px;
+    height: 100%;
     transition: background-color 0.5s;
+  }
+  section.hasMargin {
+    margin: 0.5rem;
+    margin-bottom: 1rem;
   }
   .main {
     padding-bottom: 1rem;

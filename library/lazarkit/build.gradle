@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace 'lol.lazar.lazarkit'
+    namespace 'com.bylazar.bytebox'
     compileSdk 35
 
     defaultConfig {
@@ -103,8 +103,8 @@ tasks.register('androidSourcesJar', Jar) {
 publishing {
     repositories {
         maven {
-            name = "lazarkit"
-            url = "https://maven.lazar.lol/private"
+            name = "bytebox"
+            url = "https://mymaven.bylazar.com/private"
             credentials(PasswordCredentials)
             authentication {
                 basic(BasicAuthentication)
@@ -113,8 +113,8 @@ publishing {
     }
     publications {
         maven(MavenPublication) {
-            groupId = "lol.lazar"
-            artifactId = "lazarkit"
+            groupId = "com.bylazar"
+            artifactId = "bytebox"
             version = "0.1.5"
 
             afterEvaluate {

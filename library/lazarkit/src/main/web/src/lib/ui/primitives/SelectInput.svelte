@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { socket } from "$lib"
   import TypedInput from "./TypedInput.svelte"
 
   let {
@@ -24,7 +25,7 @@
   let isShown = $state(false)
 </script>
 
-<TypedInput {type}>
+<TypedInput {type} isValid={socket.state == "opened"}>
   <div class="content">
     <button
       onclick={() => {
@@ -40,6 +41,8 @@
         <button
           class:first={index == 0}
           onclick={() => {
+            if (socket.state == "closed") return
+
             currentValue = v
             value = v
             isShown = false

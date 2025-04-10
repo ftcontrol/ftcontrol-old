@@ -1,15 +1,18 @@
 import { type Canvas, emptyCanvas } from "$ui/widgets/fields/canvas"
 import type { GenericTypeJson } from "./genericType"
 
+export type SocketState = "closed" | "opened"
+
 export type Handler = (data: GenericData) => void
 export type GenericData = { kind: string; [key: string]: any }
 export class SocketManager {
   private socket: WebSocket | null = null
   private url: string = `ws://${window.location.hostname}:8002`
-  private isConnected: boolean = false
   private readonly messageHandlers: Record<string, Handler> = {}
-  private reconnectInterval: number = 3000
+  private reconnectInterval: number = 1000
   private messageQueue: string[] = []
+
+  state: SocketState = $state("closed")
 
   constructor() {
     this.messageQueue = []
@@ -17,13 +20,14 @@ export class SocketManager {
   }
 
   init(): Promise<void> {
+    console.log("ran init")
     return new Promise((resolve, reject) => {
       if (this.socket) return
 
       this.socket = new WebSocket(this.url)
 
       this.socket.onopen = () => {
-        this.isConnected = true
+        this.state = "opened"
         console.log("Connected to WebSocket.")
         resolve()
         this.flushQueue()
@@ -42,17 +46,18 @@ export class SocketManager {
       }
 
       this.socket.onclose = () => {
-        this.isConnected = false
+        this.state = "closed"
         console.log("WebSocket closed. Attempting to reconnect...")
-        setTimeout(() => this.reconnect(), this.reconnectInterval)
+        setTimeout(async () => await this.reconnect(), this.reconnectInterval)
       }
     })
   }
 
-  reconnect() {
-    if (!this.isConnected) {
+  async reconnect() {
+    if (this.state == "closed") {
       console.log("Reconnecting...")
-      this.init()
+      this.socket = null
+      await this.init()
     }
   }
 
@@ -99,6 +104,8 @@ export type OpMode = {
 }
 
 export class InfoManager {
+  showSettings = $state(false)
+
   time = $state("")
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
