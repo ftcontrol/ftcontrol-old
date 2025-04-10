@@ -24,5 +24,6 @@ data class TimeObject(
 @SerialName("telemetryPacket")
 data class TelemetryPacket(
     var lines: List<String>,
-    var canvas: Canvas
+    var canvas: Canvas,
+    var timestamp: Long
 ) : JSONData()

@@ -13,7 +13,7 @@ class TelemetryManager(
     var lastZIndex = 0
 
     var lastUpdate = 0L
-    var updateInterval = 500L
+    var updateInterval = 200L
     val timeSinceLastUpdate: Long
         get() = System.currentTimeMillis() - lastUpdate
     val shouldUpdate: Boolean

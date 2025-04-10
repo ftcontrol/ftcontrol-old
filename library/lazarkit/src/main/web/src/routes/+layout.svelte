@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import Gamepads from "$lib/ui/Gamepads.svelte"
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
@@ -9,8 +9,16 @@
   import "./global.css"
   import Settings from "$ui/Settings.svelte"
 
-  onMount(async () => {
-    await socket.init()
+  onMount(() => {
+    socket.init()
+
+    const interval = setInterval(() => {
+      info.loop()
+    }, 100)
+
+    return () => {
+      clearInterval(interval)
+    }
   })
 </script>
 

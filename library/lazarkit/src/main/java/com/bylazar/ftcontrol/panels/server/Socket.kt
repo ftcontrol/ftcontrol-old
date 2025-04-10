@@ -1,8 +1,5 @@
 package com.bylazar.ftcontrol.panels.server
 
-import com.qualcomm.hardware.lynx.LynxModule
-import fi.iki.elonen.NanoWSD
-import kotlinx.serialization.PolymorphicSerializer
 import com.bylazar.ftcontrol.flows.FlowRegistry
 import com.bylazar.ftcontrol.panels.GlobalData
 import com.bylazar.ftcontrol.panels.configurables.Configurables
@@ -26,6 +23,9 @@ import com.bylazar.ftcontrol.panels.json.TimeObject
 import com.bylazar.ftcontrol.panels.json.UpdatedJvmFields
 import com.bylazar.ftcontrol.panels.json.json
 import com.bylazar.ftcontrol.panels.json.toJson
+import com.qualcomm.hardware.lynx.LynxModule
+import fi.iki.elonen.NanoWSD
+import kotlinx.serialization.PolymorphicSerializer
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -82,7 +82,7 @@ class Socket(
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
-            client.send(TelemetryPacket(lines, canvas))
+            client.send(TelemetryPacket(lines, canvas, System.currentTimeMillis()))
         }
     }
 
