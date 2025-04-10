@@ -2,7 +2,18 @@
   import { info } from "$lib"
   import { Section } from "$primitives"
   import Button from "$ui/primitives/Button.svelte"
+  import SelectInput from "$ui/primitives/SelectInput.svelte"
   import { onDestroy } from "svelte"
+
+  let playbackSpeed = $state("1x")
+
+  $effect(() => {
+    if (playbackSpeed == null) return
+    if (info.isForwarding) {
+      startingTimestamp = info.timestamp
+      startedForwardingAt = performance.now()
+    }
+  })
 
   let animationFrame: number | null = null
   let startedForwardingAt: number | null = null
@@ -12,7 +23,11 @@
     if (!info.isForwarding || startedForwardingAt === null) return
 
     const elapsed = time - startedForwardingAt
-    info.timestamp = Math.min(startingTimestamp + elapsed, info.duration)
+    const speedMultiplier = parseFloat(playbackSpeed.replace("x", ""))
+    info.timestamp = Math.min(
+      startingTimestamp + elapsed * speedMultiplier,
+      info.duration
+    )
 
     if (info.timestamp < info.duration) {
       animationFrame = requestAnimationFrame(updatePlayback)
@@ -61,6 +76,18 @@
     min={0}
     max={info.duration}
   />
+  <div class="flex-item">
+    <p>Animation speed</p>
+
+    <SelectInput
+      startValue={"1x"}
+      bind:currentValue={playbackSpeed}
+      value={"1x"}
+      possibleValues={["0.1x", "0.25x", "0.5x", "1x", "2x", "3x", "4x"]}
+      isValid={info.hasRecording}
+      alwaysValid={true}
+    ></SelectInput>
+  </div>
   <div>
     <div class="flex">
       <Button
@@ -100,6 +127,11 @@
 </Section>
 
 <style>
+  .flex-item {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
   .flex {
     display: flex;
     gap: 1rem;
