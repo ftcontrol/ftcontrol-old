@@ -20,13 +20,13 @@ body.instant {
   --multiplier: 0;
 }
 body.fast {
-  --multiplier: 0.05;
-}
-body.normal {
   --multiplier: 0.1;
 }
+body.normal {
+  --multiplier: 0.15;
+}
 body.slow {
-  --multiplier: 0.2;
+  --multiplier: 0.225;
 }
 body {
   --d: calc(var(--multiplier) * 1s);

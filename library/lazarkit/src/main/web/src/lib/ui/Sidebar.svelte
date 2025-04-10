@@ -35,17 +35,18 @@
 </script>
 
 <div class="cover" class:applied={!isCovering}></div>
-<button
-  class="arrow"
-  class:hidden={!isOpened}
-  onclick={() => {
-    isOpened = !isOpened
-  }}
->
-  <Arrow isOpened={false} isVertical={false} />
-</button>
+
 <section class="shell" class:hidden={!isOpened}>
-  <nav>
+  <button
+    class="arrow"
+    class:hidden={!isOpened}
+    onclick={() => {
+      isOpened = !isOpened
+    }}
+  >
+    <Arrow isOpened={!isOpened} isVertical={true} />
+  </button>
+  <nav class:hidden={!isOpened}>
     <Logo />
     <p>{socket.state}</p>
 
@@ -95,26 +96,34 @@
     cursor: pointer;
     position: absolute;
     top: 50%;
-    left: 125px;
+    right: 4px;
     transform: translateY(-50%);
     z-index: 100;
+    transform: rotate(90deg);
 
-    transition: left var(--d2);
+    transition: right var(--d2);
   }
   button.arrow.hidden {
-    left: 4px;
+    right: -16px;
   }
   nav {
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 1rem;
+    padding-inline: 1rem;
     background-color: var(--card);
     border-radius: 0 16px 16px 0;
     height: 100%;
-    width: fit-content;
-    transition: background-color var(--d3);
+    transition:
+      background-color var(--d3),
+      padding-inline var(--d2);
+    overflow: hidden;
+  }
+  nav.hidden {
+    padding-inline: 0;
   }
   .shell {
     max-width: 400px;
-    overflow: hidden;
+    /* overflow: hidden; */
+    position: relative;
 
     transition:
       max-width var(--d2),
