@@ -3,6 +3,7 @@
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Flows from "$ui/widgets/Flows.svelte"
+  import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
 
   let scrollContainer: HTMLElement | null = null
@@ -18,16 +19,17 @@
   <div class="scroller" onwheel={handleWheel}></div>
   <div>
     <OpModeControl />
-    <Telemetry />
+    <PlaybackHistory />
     {#if gamepads.current != null}
       <GamepadDrawing gamepad={gamepads.gamepads[0]} />
     {/if}
   </div>
   <div>
-    <Configurables />
+    <GameField />
+    <Telemetry />
   </div>
   <div>
-    <GameField />
+    <Configurables />
   </div>
   <div>
     <Flows />

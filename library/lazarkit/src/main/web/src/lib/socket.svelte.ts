@@ -103,6 +103,12 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
+export type TelemetryPacket = {
+  lines: string[]
+  canvas: Canvas
+  timestamp: number
+}
+
 export class InfoManager {
   showSettings = $state(false)
 
@@ -110,13 +116,46 @@ export class InfoManager {
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
   activeOpModeStatus = $state<"init" | "running" | "stopped">("stopped")
+
   telemetry = $state<string[]>([])
+  canvas = $state<Canvas>(emptyCanvas)
+  isRecording = $state(false)
+  isPlaying = $state(false)
+  history: TelemetryPacket[] = $state([])
+
+  hasRecording = $derived<boolean>(this.history.length > 0)
+  startTimestamp = $derived<number>(this.history.at(0)?.timestamp || 0)
+  endTimestamp = $derived<number>(
+    this.history.at(this.history.length - 1)?.timestamp || 0
+  )
+  duration = $derived(this.endTimestamp - this.startTimestamp)
+  timestamp = $state(0)
+  entry: TelemetryPacket | null = $derived.by(() => {
+    var answerIndex = 0
+    var index = 0
+    for (const entry of this.history) {
+      if (entry.timestamp <= this.timestamp + this.startTimestamp) {
+        answerIndex = index
+      } else {
+        return this.history.at(answerIndex) as TelemetryPacket
+      }
+      index++
+    }
+
+    return this.history.at(this.history.length - 1) || null
+  })
+
+  loop() {
+    if (this.isPlaying && this.entry != null) {
+      this.telemetry = this.entry.lines
+      this.canvas = this.entry.canvas
+    }
+  }
 
   jvmFields = $state<GenericTypeJson[]>([])
   openedStates: { [key: string]: boolean } = $state({})
   searchParam = $state("")
 
   batteryVoltage = $state<number>(-1.0)
-  canvas = $state<Canvas>(emptyCanvas)
   flows = $state([])
 }

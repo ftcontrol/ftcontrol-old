@@ -4,6 +4,7 @@ import {
   SocketManager,
   type GenericData,
   type OpMode,
+  type TelemetryPacket,
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
 import {
@@ -30,8 +31,17 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
 export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
-  info.telemetry = data.lines
-  info.canvas = data.canvas
+  if (!info.isPlaying) {
+    info.telemetry = data.lines
+    info.canvas = data.canvas
+  }
+  if (info.isRecording) {
+    info.history.push({
+      canvas: data.canvas,
+      lines: data.lines,
+      timestamp: data.timestamp,
+    } as TelemetryPacket)
+  }
 })
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
