@@ -1,26 +1,10 @@
 <script lang="ts">
   import { info, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
-  import Arrow from "./icons/Arrow.svelte"
-  import Logo from "./icons/Logo.svelte"
+  import { Logo, Arrow } from "./icons"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
-  // let isDark = $state(true)
-
-  // function getThemeFromCookie() {
-  //   const match = document.cookie.match(/(?:^|; )theme=(dark|light)/)
-  //   return match ? match[1] : null
-  // }
-
-  // function applyInitialTheme() {
-  //   const savedTheme = getThemeFromCookie()
-  //   isDark = savedTheme === "dark"
-
-  //   document.body.classList.toggle("dark-mode", isDark)
-  // }
-
-  // applyInitialTheme()
   import { tick } from "svelte"
   let isCovering = $state(false)
 
@@ -29,17 +13,23 @@
     await tick()
 
     const cover = document.querySelector(".cover") as HTMLElement
+    const computedStyles = getComputedStyle(cover)
+    const multiplierStr = computedStyles.getPropertyValue("--multiplier").trim()
+    const multiplier = parseFloat(multiplierStr) || 0
+
+    console.log(multiplier)
+
     cover.classList.remove("applied")
 
-    await new Promise((r) => setTimeout(r, 250))
+    await new Promise((r) => setTimeout(r, 4250 * multiplier))
 
     settings.toggleIsDark()
 
-    await new Promise((r) => setTimeout(r, 450))
+    await new Promise((r) => setTimeout(r, 4250 * multiplier))
 
     cover.classList.add("applied")
 
-    await new Promise((r) => setTimeout(r, 250))
+    await new Promise((r) => setTimeout(r, 3250 * multiplier))
     isCovering = false
   }
 </script>
@@ -95,7 +85,7 @@
     width: 100vw;
     height: 100vh;
     z-index: 10000;
-    transition: all 0.25s;
+    transition: all var(--d3);
   }
   .cover.applied {
     top: -100%;
@@ -109,7 +99,7 @@
     transform: translateY(-50%);
     z-index: 100;
 
-    transition: left 0.2s;
+    transition: left var(--d2);
   }
   button.arrow.hidden {
     left: 4px;
@@ -120,15 +110,15 @@
     border-radius: 0 16px 16px 0;
     height: 100%;
     width: fit-content;
-    transition: background-color 0.5s;
+    transition: background-color var(--d3);
   }
   .shell {
     max-width: 400px;
     overflow: hidden;
 
     transition:
-      max-width 0.2s,
-      padding 0.2s;
+      max-width var(--d2),
+      padding var(--d2);
   }
 
   .shell.hidden {

@@ -16,8 +16,8 @@
     grid-template-rows: 0fr;
     opacity: 0;
     transition:
-      grid-template-rows 0.3s ease-out,
-      opacity 0.3s ease-out;
+      grid-template-rows var(--d2) ease-out,
+      opacity var(--d2) ease-out;
   }
   .hiddable.shown {
     grid-template-rows: 1fr;

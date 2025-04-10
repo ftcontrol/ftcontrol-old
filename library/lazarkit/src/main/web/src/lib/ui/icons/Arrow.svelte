@@ -29,7 +29,7 @@
     transform-origin: center;
     transform: rotate(-90deg);
 
-    transition: transform 0.2s;
+    transition: transform var(--d2);
   }
   svg.opened {
     transform: rotate(0deg);

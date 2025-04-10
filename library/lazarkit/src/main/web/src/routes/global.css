@@ -16,6 +16,24 @@ body.dark-mode {
   --card: black;
   --text: white;
 }
+body.instant {
+  --multiplier: 0;
+}
+body.fast {
+  --multiplier: 0.05;
+}
+body.normal {
+  --multiplier: 0.1;
+}
+body.slow {
+  --multiplier: 0.2;
+}
+body {
+  --d: calc(var(--multiplier) * 1s);
+  --d1: calc(var(--multiplier) * 1s);
+  --d2: calc(var(--multiplier) * 2s);
+  --d3: calc(var(--multiplier) * 3s);
+}
 
 *,
 *::after,

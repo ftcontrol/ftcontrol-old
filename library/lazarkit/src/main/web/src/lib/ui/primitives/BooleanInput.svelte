@@ -51,7 +51,7 @@
     left: 0;
     width: calc(50% - 4px);
     margin: 4px;
-    transition: left 0.3s;
+    transition: left var(--d2);
   }
   .selector.selected {
     left: calc(50% - 4px);

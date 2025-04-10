@@ -37,7 +37,7 @@
     overflow-y: hidden;
 
     min-width: 400px;
-    transition: background-color 0.5s;
+    transition: background-color var(--d3);
   }
   section.hasMargin {
     margin: 0.5rem;
