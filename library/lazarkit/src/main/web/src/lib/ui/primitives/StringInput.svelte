@@ -27,7 +27,7 @@
 </script>
 
 <TextTypedInput
-  {type}
+  type={`${type} ${isValid}`}
   bind:text={value}
   oninput={() => {
     if (!validate(value)) {
