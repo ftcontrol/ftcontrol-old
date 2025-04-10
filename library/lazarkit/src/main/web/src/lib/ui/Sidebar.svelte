@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import Arrow from "./icons/Arrow.svelte"
   import Logo from "./icons/Logo.svelte"
   import Button from "./primitives/Button.svelte"
@@ -76,6 +76,11 @@
     <div class="gap"></div>
 
     <Button onclick={toggleTheme}>{isDark ? "Light Mode" : "Dark Mode"}</Button>
+    <Button
+      onclick={() => {
+        info.showSettings = !info.showSettings
+      }}>Settings</Button
+    >
   </nav>
 </section>
 

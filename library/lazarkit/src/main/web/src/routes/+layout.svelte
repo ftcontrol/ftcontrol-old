@@ -1,5 +1,5 @@
 <script>
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import Gamepads from "$lib/ui/Gamepads.svelte"
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
@@ -7,6 +7,7 @@
   let { children } = $props()
 
   import "./global.css"
+  import Settings from "$ui/Settings.svelte"
 
   onMount(async () => {
     await socket.init()
@@ -21,6 +22,10 @@
     {@render children()}
   </section>
 </div>
+
+{#if info.showSettings}
+  <Settings />
+{/if}
 
 <style>
   div {

@@ -104,6 +104,8 @@ export type OpMode = {
 }
 
 export class InfoManager {
+  showSettings = $state(false)
+
   time = $state("")
   opModes = $state<OpMode[]>([])
   activeOpMode = $state("$Stop$Robot$")
