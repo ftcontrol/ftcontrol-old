@@ -68,7 +68,7 @@
     right: 0;
     width: 100vw;
     height: 100vh;
-    background-color: var(--card);
+    background-color: black;
     opacity: 0.5;
     z-index: 100;
   }
