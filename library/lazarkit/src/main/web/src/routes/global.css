@@ -3,7 +3,7 @@
 :root {
   --bg: #f6f6f6;
   --card: #ffffff;
-  --text: black;
+  --text: #1b1b1b;
 }
 
 body,
@@ -12,9 +12,9 @@ html {
 }
 
 body.dark-mode {
-  --bg: #282828;
-  --card: black;
-  --text: white;
+  --bg: #1b1b1b;
+  --card: #131314;
+  --text: #c4c7c5;
 }
 body.instant {
   --multiplier: 0;
