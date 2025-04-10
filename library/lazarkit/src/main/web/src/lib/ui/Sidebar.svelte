@@ -47,33 +47,29 @@
     <Arrow isOpened={!isOpened} isVertical={true} />
   </button>
   <nav class:hidden={!isOpened}>
-    <Logo />
-    <p>{socket.state}</p>
+    <div>
+      <Logo />
+      <p>{socket.state}</p>
 
-    <div class="gap"></div>
+      <div class="gap"></div>
 
-    <h2>General</h2>
+      <h2>General</h2>
+      <a href="/control">Robot Control</a>
+      <a href="/time">Global Time</a>
+      <a href="/controller">Controller</a>
+      <a href="/field">Game Field</a>
+    </div>
 
-    <a href="/control">Robot Control</a>
-    <a href="/time">Global Time</a>
-    <a href="/controller">Controller</a>
-    <a href="/field">Game Field</a>
-
-    <div class="gap"></div>
-    <div class="gap"></div>
-    <div class="gap"></div>
-    <div class="gap"></div>
-    <div class="gap"></div>
-    <div class="gap"></div>
-
-    <Button onclick={toggleTheme}
-      >{settings.isDark ? "Light Mode" : "Dark Mode"}</Button
-    >
-    <Button
-      onclick={() => {
-        info.showSettings = !info.showSettings
-      }}>Settings</Button
-    >
+    <div class="item">
+      <Button onclick={toggleTheme}
+        >{settings.isDark ? "Light Mode" : "Dark Mode"}</Button
+      >
+      <Button
+        onclick={() => {
+          info.showSettings = !info.showSettings
+        }}>Settings</Button
+      >
+    </div>
   </nav>
 </section>
 
@@ -107,7 +103,10 @@
     right: -16px;
   }
   nav {
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 1rem;
     padding-inline: 1rem;
     background-color: var(--card);
     border-radius: 0 16px 16px 0;
@@ -120,9 +119,12 @@
   nav.hidden {
     padding-inline: 0;
   }
+  .item {
+    display: flex;
+    gap: 1rem;
+  }
   .shell {
     max-width: 400px;
-    /* overflow: hidden; */
     position: relative;
 
     transition:
@@ -147,5 +149,6 @@
     color: inherit;
     text-decoration: none;
     display: block;
+    text-wrap: nowrap;
   }
 </style>
