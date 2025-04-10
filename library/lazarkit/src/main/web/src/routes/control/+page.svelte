@@ -15,7 +15,7 @@
 </script>
 
 <section bind:this={scrollContainer}>
-  <div class="scroller" onwheel={handleWheel} />
+  <div class="scroller" onwheel={handleWheel}></div>
   <div>
     <OpModeControl />
     <Telemetry />
