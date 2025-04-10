@@ -1,5 +1,5 @@
-<script>
-  import { info, socket } from "$lib"
+<script lang="ts">
+  import { socket } from "$lib"
   import Gamepads from "$lib/ui/Gamepads.svelte"
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
