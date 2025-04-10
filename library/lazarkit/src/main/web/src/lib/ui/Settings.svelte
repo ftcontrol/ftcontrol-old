@@ -1,6 +1,7 @@
 <script lang="ts">
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
+  import Arrow from "./icons/Arrow.svelte"
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
@@ -29,7 +30,7 @@
           info.showSettings = false
         }}
       >
-        {"<"}
+        <Arrow isOpened={false} />
       </button>
       <h2>Settings</h2>
       <div></div>
@@ -75,6 +76,7 @@
     all: unset;
     cursor: pointer;
     font-size: 2rem;
+    transform: rotate(90deg);
   }
   .overlay {
     position: fixed;
