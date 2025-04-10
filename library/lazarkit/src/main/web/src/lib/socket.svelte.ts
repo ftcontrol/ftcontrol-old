@@ -121,6 +121,7 @@ export class InfoManager {
   canvas = $state<Canvas>(emptyCanvas)
   isRecording = $state(false)
   isPlaying = $state(false)
+  isForwarding = $state(false)
   history: TelemetryPacket[] = $state([])
 
   hasRecording = $derived<boolean>(this.history.length > 0)
