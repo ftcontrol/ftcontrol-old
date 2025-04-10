@@ -6,45 +6,73 @@ const config = defineConfig({
   plugins: [
     sveltepress({
       theme: defaultTheme({
+        themeColor: {
+          light: "#ffffff",
+          dark: "#131314",
+          primary: "#005bac",
+          hover: "#1a7fd9",
+          gradient: {
+            start: "#1a7fd9",
+            end: "#005bac",
+          },
+        },
         navbar: [
           {
             title: "Docs",
             to: "/docs/",
           },
-          {
-            title: "With dropdown",
-            items: [
-              {
-                title: "Bar page",
-                to: "/bar/",
-              },
-              {
-                title: "External Github page",
-                to: "https://github.com/",
-                external: true,
-              },
-            ],
-          },
+          // {
+          //   title: "With dropdown",
+          //   items: [
+          //     {
+          //       title: "Bar page",
+          //       to: "/bar/",
+          //     },
+          //     {
+          //       title: "External Github page",
+          //       to: "https://github.com/",
+          //       external: true,
+          //     },
+          //   ],
+          // },
         ],
         sidebar: {
-          "/foo/": [
+          "/docs": [
             {
-              title: "Bar",
-              to: "/foo/bar/",
-            },
-            {
-              title: "Zoo",
-              collapsible: false,
+              title: "Getting started",
+              collapsible: true,
               items: [
                 {
-                  title: "Sub item",
-                  collapsible: true,
-                  items: [
-                    {
-                      title: "Sub item",
-                      to: "/sub/item/link2",
-                    },
-                  ],
+                  title: "Overview",
+                  to: "/docs/overview",
+                },
+                {
+                  title: "Prerequisites",
+                  to: "/docs/prerequisites",
+                },
+                {
+                  title: "Changelog",
+                },
+              ],
+            },
+            {
+              title: "Features",
+              collapsible: true,
+              items: [
+                {
+                  title: "OpModes Control",
+                },
+                {
+                  title: "Telemetry",
+                },
+                {
+                  title: "Field View",
+                },
+                {
+                  title: "Capture",
+                },
+                {
+                  title: "Configurables",
                 },
               ],
             },
@@ -58,8 +86,8 @@ const config = defineConfig({
         logo: "/sveltepress.svg",
       }),
       siteConfig: {
-        title: "Sveltepress",
-        description: "A content centered site build tool",
+        title: "FTCControl",
+        description: "An all in one toolbox for FTC Programming.",
       },
     }),
   ],
