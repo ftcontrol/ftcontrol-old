@@ -27,6 +27,7 @@
     flex-grow: 1;
     border-radius: 10px;
     cursor: pointer;
+    text-wrap: nowrap;
   }
   button:disabled {
     opacity: 0.5;

@@ -40,9 +40,9 @@
 
 <style>
   svg {
-    width: 100%;
-    height: auto;
-    max-height: 52px;
+    height: 52px;
+    width: fit-content;
+    margin: 0 auto;
   }
   path {
     fill: var(--text);
