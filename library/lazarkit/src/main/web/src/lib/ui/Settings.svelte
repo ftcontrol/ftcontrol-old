@@ -26,6 +26,7 @@
   <Section hasMargin={false} maxHeight={true}>
     <Header>
       <button
+        class="arrow"
         onclick={() => {
           info.showSettings = false
         }}
@@ -76,6 +77,8 @@
     all: unset;
     cursor: pointer;
     font-size: 2rem;
+  }
+  .arrow {
     transform: rotate(90deg);
   }
   .overlay {
