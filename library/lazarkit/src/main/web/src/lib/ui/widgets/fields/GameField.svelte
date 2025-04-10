@@ -85,11 +85,6 @@
 </script>
 
 <Section title={"Field"}>
-  <p>
-    {info.canvas.lines?.length}
-    {info.canvas.rectangles?.length}
-    {info.canvas.circles?.length}
-  </p>
   <div style="width: 100%; overflow: hidden;">
     <canvas bind:this={canvas}></canvas>
   </div>
