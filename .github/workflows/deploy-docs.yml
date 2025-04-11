@@ -32,9 +32,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: .
-          sparse-checkout-cone-mode: false
-      - name: Ls
-        run: ls
       - name: Build and Push Docker Image
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
