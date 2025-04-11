@@ -57,22 +57,40 @@ const config = defineConfig({
             },
             {
               title: "Features",
-              collapsible: true,
+              collapsible: false,
               items: [
                 {
-                  title: "OpModes Control",
+                  title: "Panels",
+                  collapsible: true,
+                  items: [
+                    {
+                      title: "Overview",
+                    },
+                    {
+                      title: "OpModes Control",
+                    },
+                    {
+                      title: "Telemetry",
+                    },
+                    {
+                      title: "Field View",
+                    },
+                    {
+                      title: "Capture",
+                    },
+                    {
+                      title: "Configurables",
+                    },
+                  ],
                 },
                 {
-                  title: "Telemetry",
-                },
-                {
-                  title: "Field View",
-                },
-                {
-                  title: "Capture",
-                },
-                {
-                  title: "Configurables",
+                  title: "Flows",
+                  collapsible: true,
+                  items: [
+                    {
+                      title: "Overview",
+                    },
+                  ],
                 },
               ],
             },
