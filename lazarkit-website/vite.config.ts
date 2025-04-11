@@ -17,6 +17,8 @@ const config = defineConfig({
             "css",
             "scss",
             "groovy",
+            "java",
+            "kotlin",
           ],
         },
         themeColor: {
@@ -76,21 +78,27 @@ const config = defineConfig({
                 {
                   title: "Panels",
                   collapsible: true,
+                  to: "/docs/panels",
                   items: [
                     {
                       title: "OpModes Control",
+                      to: "/docs/panels/opmodecontrol",
                     },
                     {
                       title: "Telemetry",
+                      to: "/docs/panels/telemetry",
                     },
                     {
                       title: "Field View",
+                      to: "/docs/panels/fieldview",
                     },
                     {
                       title: "Capture",
+                      to: "/docs/panels/capture",
                     },
                     {
                       title: "Configurables",
+                      to: "/docs/panels/configurables",
                     },
                   ],
                 },

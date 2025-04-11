@@ -16,7 +16,7 @@ It provides a powerful set of features with minimal boilerplate, using **Kotlin*
 - 🗺️ **Field view** – A canvas-like interface for drawing on the field  
 - 🎥 **Capture mode** – Record and replay matches for debugging  
 - 🎛️ **Configurables** – Tune your robot in real time **without uploading code again**
-- 
+
 ---
 
 ### 🔄 Flows *(Work in Progress)*
