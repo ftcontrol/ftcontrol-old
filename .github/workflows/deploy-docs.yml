@@ -16,7 +16,6 @@ env:
   SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
   REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-  REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
   REPO_FOLDER: compose
   BASE_DIR: lazarkit-website
   SERVICE_FOLDER: /home/ftcontrol-docs
@@ -31,9 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.REPO_FOLDER }}
-          sparse-checkout-cone-mode: false
       - name: Build and Push Docker Image
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
