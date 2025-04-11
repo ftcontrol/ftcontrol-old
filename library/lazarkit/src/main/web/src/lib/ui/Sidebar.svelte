@@ -49,7 +49,7 @@
   <nav class:hidden={!isOpened}>
     <div>
       <Logo />
-      <p>{socket.state}</p>
+      <p>{socket.state == "opened" ? "Connected to server" : "Disconnected"}</p>
 
       <div class="gap"></div>
 

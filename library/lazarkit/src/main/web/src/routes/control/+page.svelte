@@ -8,10 +8,16 @@
 
   let scrollContainer: HTMLElement | null = null
   function handleWheel(event: WheelEvent) {
-    if (scrollContainer) {
-      event.preventDefault()
-      scrollContainer.scrollLeft += event.deltaY * 4
+    if (!scrollContainer) return
+
+    const isTrackpadGesture = Math.abs(event.deltaX) > 5
+
+    event.preventDefault()
+    if (isTrackpadGesture) {
+      scrollContainer.scrollLeft += event.deltaX * 8
+      return
     }
+    scrollContainer.scrollLeft += event.deltaY * 4
   }
 </script>
 

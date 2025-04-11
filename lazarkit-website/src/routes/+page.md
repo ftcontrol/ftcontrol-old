@@ -1,7 +1,7 @@
 ---
 title: Welcome
-heroImage: /favicon.svg
 tagline: An intuitive, real-time dashboard for your FTC Robot. 
+heroImage: /app-zoomed.png
 actions:
   # - label: View on github
   #   type: primary
