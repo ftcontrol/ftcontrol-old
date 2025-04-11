@@ -52,6 +52,7 @@ const config = defineConfig({
                 },
                 {
                   title: "Changelog",
+                  to: "/docs/changelog",
                 },
               ],
             },
