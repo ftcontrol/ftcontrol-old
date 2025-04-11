@@ -49,9 +49,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: compose
-          sparse-checkout-cone-mode: false
       - name: Copy and set permissions
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
