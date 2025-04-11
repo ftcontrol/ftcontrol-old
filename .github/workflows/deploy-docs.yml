@@ -1,4 +1,4 @@
-name: Build FTControl Docs
+name: Build FTControl
 on:
   push:
     branches:
@@ -30,8 +30,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: ls
-        run: ls -a
+        with:
+          sparse-checkout: .
+          sparse-checkout-cone-mode: false
+      - name: Ls
+        run: ls
       - name: Build and Push Docker Image
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
