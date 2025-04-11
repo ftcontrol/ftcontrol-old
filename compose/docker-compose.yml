@@ -1,0 +1,11 @@
+services:
+  portfolio-worker:
+    image: myregistry.bylazar.com/ftcontrol-docs:latest
+    container_name: ftcontrol-docs
+    restart: always
+    networks:
+      - lazar-network
+
+networks:
+  lazar-network:
+    external: true
