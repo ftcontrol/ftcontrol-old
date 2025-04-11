@@ -32,7 +32,7 @@ const config = defineConfig({
         navbar: [
           {
             title: "Docs",
-            to: "/docs/",
+            to: "/docs/overview",
           },
           // {
           //   title: "With dropdown",
