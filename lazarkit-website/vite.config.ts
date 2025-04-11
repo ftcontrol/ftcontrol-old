@@ -6,6 +6,19 @@ const config = defineConfig({
   plugins: [
     sveltepress({
       theme: defaultTheme({
+        highlighter: {
+          languages: [
+            "svelte",
+            "sh",
+            "js",
+            "html",
+            "ts",
+            "md",
+            "css",
+            "scss",
+            "groovy",
+          ],
+        },
         themeColor: {
           light: "#ffffff",
           dark: "#131314",
