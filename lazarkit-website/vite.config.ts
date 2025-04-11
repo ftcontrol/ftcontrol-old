@@ -64,9 +64,6 @@ const config = defineConfig({
                   collapsible: true,
                   items: [
                     {
-                      title: "Overview",
-                    },
-                    {
                       title: "OpModes Control",
                     },
                     {
@@ -88,7 +85,7 @@ const config = defineConfig({
                   collapsible: true,
                   items: [
                     {
-                      title: "Overview",
+                      title: "Test Chapter",
                     },
                   ],
                 },
