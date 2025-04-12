@@ -1,8 +1,8 @@
-FROM oven/bun:alpine AS build
+FROM oven/bun:latest AS build
 
 WORKDIR /app
 
-RUN apk add --no-cache git
+RUN apt-get update && apt-get install -y git
 
 COPY ./lazarkit-website/bun.lock ./lazarkit-website/package.json ./
 RUN bun install
