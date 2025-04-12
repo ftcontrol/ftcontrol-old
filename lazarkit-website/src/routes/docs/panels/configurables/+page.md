@@ -1,7 +1,8 @@
-# 📦 Configurables - Live-Updatable Variables for Your Robot
+# 📦 Configurables
 
 Configurables are runtime-modifiable variables that make *testing*, *tuning*, and *debugging* robot behavior easier without needing to recompile or reupload your code. You can think of them as live sliders or inputs exposed to your Panels Dashboard.
-Also supports search.
+
+The Configurables Widget also supports search functionality.
 
 <video width="100%" controls>
   <source src="/docs/configurables_example.mp4" type="video/mp4">
@@ -10,7 +11,9 @@ Also supports search.
 
 ## 🛠️ What is a Configurable?
 
-A Configurable is a `static` (Java) or `@JvmField` (Kotlin) variable marked in a class annotated with `@Configurable`. These variables are exposed in the dashboard UI and can be changed while the robot is running. Useful for things like:
+A Configurable is a `static` (Java) or `@JvmField` (Kotlin) variable marked in a class annotated with `@Configurable`. These variables are exposed in the Panels UI and can be changed while the robot is running.
+
+Useful for things like:
 - PID tuning
 - Autonomous positions and paths
 - Behavioral toggles (e.g., enabling/disabling subsystems)
@@ -35,7 +38,7 @@ In Kotlin:
 @Configurable
 object RobotConstants {
     @JvmField
-    var MAGIC_NUMBER = 32
+    var magicNumber = 32
 }
 ```
 
@@ -142,7 +145,7 @@ Then mark the instance with its type:
 public static TParamClass<Integer> testGeneric = new TParamClass<>(42);
 ```
 Kotlin:
-```jotlin
+```kotlin
 @GenericValue(Int::class)
 @JvmField
 var testTParamClass = TParamClass(1)
@@ -168,27 +171,29 @@ This means:
 
 ## 💀 The Common Pitfall: Copy Semantics
 
-In Kotlin and Java, when you assign an object to a new variable, you copy the reference, not the object itself. This means both variables point to the same memory location. This can lead to unexpected behavior if one variable is modified.
+In Kotlin and Java, when you assign an object to a new variable, you copy the reference  to the object, not the object itself. This means both variables point to the same memory location. However, when dealing with primitives (like int, double, etc.) or immutable objects, the value is copied directly. This can lead to unexpected behavior if one variable is modified, as the other variable won't reflect the change.
 
-Example: Claw Pitfall
+### Example: Implementing a configurable Claw System
 
-```kotlin
-class Claw(var movementRange: Int)
+### Bad Example
 
-fun main() {
-    val originalClaw = Claw(15)
-    val copiedClaw = originalClaw  // This just copies the reference
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/copysemantics/bad/Example.kt)
 
-    copiedClaw.movementRange = 10  // Modifies the movementRange of the original too!
+#### Problem:
 
-    println("Original Claw Movement Range: ${originalClaw.movementRange}")  // Outputs 10
-    println("Copied Claw Movement Range: ${copiedClaw.movementRange}")  // Outputs 10
-}
-```
+In this example, the `offset` variable is passed as a value to the `RobotClaw` constructor during initialization. Since `Double` is a primitive type, its value is copied into the `RobotClaw` object. If `offset` is changed later during the OpMode (e.g., via Panels interface), the `RobotClaw` instance will not reflect the updated value. This leads to inconsistent behavior because the `RobotClaw` continues to use the old offset value.
 
-Explanation:
-- Pitfall: copiedClaw and originalClaw both reference the same Claw object. Modifying one modifies the other as well.
-- Solution: To avoid this, use deep copying or clone the object if you want independent copies.
+### Solution 1: Use a Mutable Shared State
+
+One way to solve this issue is to make the `clawOffset` a mutable shared state that can be updated dynamically. Instead of passing the value directly, we store it in a shared location (e.g., a `companion object`) and reference it within the `RobotClaw`.
+
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/copysemantics/fixed/Example.kt)
+
+### Solution 2: Use a Lambda Function
+
+Another elegant solution is to pass a `lambda function` that retrieves the current value of `offset`. This ensures that the `RobotClaw` always queries the latest value of `offset` whenever it needs it.
+
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/copysemantics/lambda/Example.kt)
 
 ---
 
@@ -205,7 +210,7 @@ var testRandomArray = arrayOf(
     true,
     CustomType(1, "test!"),
     NestedType(1, "test!", CustomType(2, "test2!")),
-    UnknownType(1),
+    UnknownType(1), //doesn't have the @ConfigurableCustomType annotation.
     arrayOf(
         1,
         2,
@@ -219,7 +224,7 @@ var testRandomArray = arrayOf(
 )
 ```
 Note: only supported types will render correctly on the dashboard.
-
+<img src="/docs/configurables_random_array.png"/>
 ---
 
 ## 🧠 Best Practices
