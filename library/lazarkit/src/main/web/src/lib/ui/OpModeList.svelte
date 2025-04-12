@@ -26,4 +26,7 @@
     padding: 0.5rem 1rem;
     color: inherit;
   }
+  p {
+    padding: 0.5rem 1rem;
+  }
 </style>
