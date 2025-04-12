@@ -1,6 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
-fun convertValue(value: String, type: BaseTypes, possibleValues: List<String>?): Any? {
+fun convertValue(value: String, type: BaseTypes, enumConstants: Array<out Any>?): Any? {
     return when (type) {
         BaseTypes.INT -> {
             when {
@@ -54,11 +54,14 @@ fun convertValue(value: String, type: BaseTypes, possibleValues: List<String>?):
         }
 
         BaseTypes.ENUM -> {
-            if (possibleValues == null) return null
-            for (enumValue in possibleValues) {
-                if (enumValue == value) return enumValue
+            if (enumConstants == null) return null
+            try {
+                val enumType = enumConstants.first()::class.java
+                return enumType.enumConstants.find { it.toString() == value }
+            } catch (e: Exception) {
+                println("DASH: Error converting to enum: ${e.message}")
+                return null
             }
-            return null
         }
 
         else -> null

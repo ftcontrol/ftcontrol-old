@@ -41,7 +41,7 @@ class MyField(
     }
 
     fun setValue(newValue: String): Boolean {
-        return setValue(convertValue(newValue, myType, possibleValues) ?: return false)
+        return setValue(convertValue(newValue, myType, ref?.type?.enumConstants) ?: return false)
     }
 
     fun setValue(newValue: Any): Boolean {
