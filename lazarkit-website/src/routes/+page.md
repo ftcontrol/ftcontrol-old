@@ -35,6 +35,11 @@ features:
     icon:
       type: svg
       value: <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M9.5 8h12a.5.5 0 0 0 0-1h-12a.5.5 0 0 0 0 1m-3.459 8.17l-.874 1V6.83l.874 1a.497.497 0 0 0 .705.046a.5.5 0 0 0 .047-.705l-1.75-2l-.023-.023a.516.516 0 0 0-.729.023l-1.75 2a.5.5 0 1 0 .752.658l.874-.998v10.338l-.874-.998a.5.5 0 0 0-.752.658l1.75 2a.5.5 0 0 0 .752 0l1.75-2a.5.5 0 0 0-.752-.658M21.5 17h-12a.5.5 0 0 0 0 1h12a.5.5 0 0 0 0-1m0-5h-12a.5.5 0 0 0 0 1h12a.5.5 0 0 0 0-1"/></svg>
+  - title: Limelight Support (coming soon)
+    description: Support for limelight realtime control, allowing you to tune pipelines and preview the camera feed.
+    icon:
+      type: svg
+      value: <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 256 256"><path fill="currentColor" d="M208 60h-29.87l-14.81-22.22A4 4 0 0 0 160 36H96a4 4 0 0 0-3.32 1.78L77.85 60H48a20 20 0 0 0-20 20v112a20 20 0 0 0 20 20h160a20 20 0 0 0 20-20V80a20 20 0 0 0-20-20m12 132a12 12 0 0 1-12 12H48a12 12 0 0 1-12-12V80a12 12 0 0 1 12-12h32a4 4 0 0 0 3.33-1.78L98.13 44h59.72l14.82 22.22A4 4 0 0 0 176 68h32a12 12 0 0 1 12 12ZM128 92a40 40 0 1 0 40 40a40 40 0 0 0-40-40m0 72a32 32 0 1 1 32-32a32 32 0 0 1-32 32"/></svg>
   - title: More Features Coming Soon
     description: We're just getting started. Expect an all in one toolbox in the future.
     icon:

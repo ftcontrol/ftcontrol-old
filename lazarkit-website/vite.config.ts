@@ -96,6 +96,10 @@ const config = defineConfig({
                   title: "Configurables",
                   to: "/docs/panels/configurables",
                 },
+                {
+                  title: "Limelight Proxy",
+                  to: "/docs/panels/limelight",
+                },
               ],
             },
             {
