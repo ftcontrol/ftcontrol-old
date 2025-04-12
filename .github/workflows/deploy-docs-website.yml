@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - lazarkit-website/**
+      - test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/**
       - .github/workflows/deploy-docs.yml
   workflow_dispatch:
 
