@@ -1,6 +1,12 @@
 # 📦 Configurables - Live-Updatable Variables for Your Robot
 
 Configurables are runtime-modifiable variables that make *testing*, *tuning*, and *debugging* robot behavior easier without needing to recompile or reupload your code. You can think of them as live sliders or inputs exposed to your Panels Dashboard.
+Also supports search.
+
+<video width="100%" controls>
+  <source src="/docs/configurables_example.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## 🛠️ What is a Configurable?
 
@@ -233,3 +239,6 @@ Note: only supported types will render correctly on the dashboard.
 
 ### Java Class
 @code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/TestJavaClass.java)
+
+### Showcase OpMode
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/TestOpMode.kt)
