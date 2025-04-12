@@ -1,348 +1,235 @@
-# Configurables
+# 📦 Configurables - Live-Updatable Variables for Your Robot
 
-## Example Configurables Files
-<Tabs activeName="Kotlin Object" > 
-  <TabPanel name ="Java Class" > 
-    
+Configurables are runtime-modifiable variables that make *testing*, *tuning*, and *debugging* robot behavior easier without needing to recompile or reupload your code. You can think of them as live sliders or inputs exposed to your Panels Dashboard.
+
+## 🛠️ What is a Configurable?
+
+A Configurable is a `static` (Java) or `@JvmField` (Kotlin) variable marked in a class annotated with `@Configurable`. These variables are exposed in the dashboard UI and can be changed while the robot is running. Useful for things like:
+- PID tuning
+- Autonomous positions and paths
+- Behavioral toggles (e.g., enabling/disabling subsystems)
+- Testing new constants on-the-fly
+
+---
+
+## ✅ Annotating Classes with @Configurable
+
+To make a class’s fields configurable:
+
 ```java
-package org.firstinspires.ftc.teamcode.examples.configurables;
+@Configurable
+public class RobotConstants {
+    public static int MAGIC_NUMBER = 32;
+}
+```
 
-import java.util.List;
-import java.util.Map;
+In Kotlin:
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType;
-import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue;
+```kotlin
+@Configurable
+object RobotConstants {
+    @JvmField
+    var MAGIC_NUMBER = 32
+}
+```
 
+---
 
+## 📂 Real Examples
+
+You can define configurables in many ways. Let's explore the styles supported.
+
+1. ✅ Java Class
+
+```java
 @Configurable
 public class TestJavaClass {
     public static int testInt = 1;
-    public static long testLong = 1L;
-    public static double testDouble = 1.0;
-    public static float testFloat = 1.0f;
-    public static String testString = "test!";
     public static boolean testBoolean = false;
-
-    public enum TestEnum {
-        TEST1,
-        TEST2,
-        TEST3
-    }
-
-    public static TestEnum testEnum = TestEnum.TEST1;
-    public static int[] testArray = {1, 2, 3};
-    public static List<Integer> testList = List.of(1, 2, 3);
-    public static Map<String, Integer> testMap = Map.of("one", 1, "two", 2, "three", 3);
-
-    @ConfigurableCustomType
-    public static class CustomType {
-        public final int testInt;
-        public final String testString;
-
-        public CustomType(int testInt, String testString) {
-            this.testInt = testInt;
-            this.testString = testString;
-        }
-
-        public int getTestInt() {
-            return testInt;
-        }
-
-        public String getTestString() {
-            return testString;
-        }
-    }
-
-    public static CustomType testCustomType = new CustomType(1, "test!");
-
-    @ConfigurableCustomType
-    public static class NestedType {
-        public final int testInt;
-        public final String testString;
-        public final CustomType testCustomType;
-
-        public NestedType(int testInt, String testString, CustomType testCustomType) {
-            this.testInt = testInt;
-            this.testString = testString;
-            this.testCustomType = testCustomType;
-        }
-
-        public int getTestInt() {
-            return testInt;
-        }
-
-        public String getTestString() {
-            return testString;
-        }
-
-        public CustomType getTestCustomType() {
-            return testCustomType;
-        }
-    }
-
-    public static NestedType testNestedType = new NestedType(1, "test!", new CustomType(2, "test2!"));
-
-    public static class UnknownType {
-        public final int testInt;
-
-        public UnknownType(int testInt) {
-            this.testInt = testInt;
-        }
-
-        public int getTestInt() {
-            return testInt;
-        }
-    }
-
-    public static UnknownType testUnknownType = new UnknownType(1);
-
-    public static Object[] testRandomArray = new Object[]{
-            1,
-            1.0,
-            1.0f,
-            "test!",
-            true,
-            new CustomType(1, "test!"),
-            new NestedType(1, "test!", new CustomType(2, "test2!")),
-            new UnknownType(1),
-            new int[]{1, 2, 3},
-            Map.of("one", 1, "two", 2, "three", 3)
-    };
-
-    @ConfigurableCustomType
-    public static class TParamClass<T> {
-        public final T test;
-
-        public TParamClass(T test) {
-            this.test = test;
-        }
-
-        public T getTest() {
-            return test;
-        }
-    }
-
-    @GenericValue(tParam = Integer.class)
-    public static TParamClass<Integer> testTParamClass = new TParamClass<Integer>(1);
+    public static String testString = "Hello";
 }
+
 ```
 
-  </TabPanel >
-  <TabPanel name ="Kotlin Object" > 
-    
+2. ✅ Kotlin Class
+
 ```kotlin
-package org.firstinspires.ftc.teamcode.examples.configurables
-
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
-import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
-
-@Configurable
-object TestKotlinObject {
-    @JvmField
-    var testInt: Int = 1
-
-    @JvmField
-    var testLong: Long = 1L
-
-    @JvmField
-    var testDouble: Double = 1.0
-
-    @JvmField
-    var testFloat: Float = 1.0f
-
-    @JvmField
-    var testString: String = "test!"
-
-    @JvmField
-    var testBoolean: Boolean = false
-
-    enum class TestEnum {
-        TEST1,
-        TEST2,
-        TEST3
-    }
-
-    @JvmField
-    var testEnum: TestEnum = TestEnum.TEST1
-
-    @JvmField
-    var testArray: Array<Int> = arrayOf(1, 2, 3)
-
-    @JvmField
-    var testList: List<Int> = listOf(1, 2, 3)
-
-    @JvmField
-    var testMap: Map<String, Int> = mapOf("one" to 1, "two" to 2, "three" to 3)
-
-    @ConfigurableCustomType
-    class CustomType(
-        val testInt: Int,
-        val testString: String
-    )
-
-    @JvmField
-    var testCustomType: CustomType = CustomType(1, "test!")
-
-    @ConfigurableCustomType
-    class NestedType(
-        val testInt: Int,
-        val testString: String,
-        val testCustomType: CustomType
-    )
-
-    @JvmField
-    var testNestedType: NestedType = NestedType(1, "test!", CustomType(2, "test2!"))
-
-    class UnknownType(
-        val testInt: Int,
-    )
-
-    @JvmField
-    var testUnknownType: UnknownType = UnknownType(1)
-
-    @JvmField
-    var testRandomArray = arrayOf(
-        1,
-        1.0,
-        1.0f,
-        "test!",
-        true,
-        CustomType(1, "test!"),
-        NestedType(1, "test!", CustomType(2, "test2!")),
-        UnknownType(1),
-        arrayOf(
-            1,
-            2,
-            3
-        ),
-        mapOf(
-            "one" to 1,
-            "two" to 2,
-            "three" to 3
-        )
-    )
-
-    @ConfigurableCustomType
-    class TParamClass<T>(
-        val test: T
-    )
-
-    @JvmField
-    @field:GenericValue(Int::class)
-    var testTParamClass = TParamClass(1)
-}
-```
-
-  </TabPanel >
-  <TabPanel name ="Kotlin Class" > 
-    
-```kotlin
-package org.firstinspires.ftc.teamcode.examples.configurables
-
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
-import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
-
 @Configurable
 class TestKotlinClass {
     companion object {
         @JvmField
-        var testInt: Int = 1
-
-        @JvmField
-        var testLong: Long = 1L
-
-        @JvmField
         var testDouble: Double = 1.0
-
-        @JvmField
-        var testFloat: Float = 1.0f
-
-        @JvmField
-        var testString: String = "test!"
-
-        @JvmField
-        var testBoolean: Boolean = false
-
-        enum class TestEnum {
-            TEST1,
-            TEST2,
-            TEST3
-        }
-
-        @JvmField
-        var testEnum: TestEnum = TestEnum.TEST1
-
-        @JvmField
-        var testArray: Array<Int> = arrayOf(1, 2, 3)
-
-        @JvmField
-        var testList: List<Int> = listOf(1, 2, 3)
-
-        @JvmField
-        var testMap: Map<String, Int> = mapOf("one" to 1, "two" to 2, "three" to 3)
-
-        @ConfigurableCustomType
-        class CustomType(
-            val testInt: Int,
-            val testString: String
-        )
-
-        @JvmField
-        var testCustomType: CustomType = CustomType(1, "test!")
-
-        @ConfigurableCustomType
-        class NestedType(
-            val testInt: Int,
-            val testString: String,
-            val testCustomType: CustomType
-        )
-
-        @JvmField
-        var testNestedType: NestedType = NestedType(1, "test!", CustomType(2, "test2!"))
-
-        class UnknownType(
-            val testInt: Int,
-        )
-
-        @JvmField
-        var testUnknownType: UnknownType = UnknownType(1)
-
-        @JvmField
-        var testRandomArray = arrayOf(
-            1,
-            1.0,
-            1.0f,
-            "test!",
-            true,
-            CustomType(1, "test!"),
-            NestedType(1, "test!", CustomType(2, "test2!")),
-            UnknownType(1),
-            arrayOf(
-                1,
-                2,
-                3
-            ),
-            mapOf(
-                "one" to 1,
-                "two" to 2,
-                "three" to 3
-            )
-        )
-
-        @ConfigurableCustomType
-        class TParamClass<T>(
-            val test: T
-        )
-
-        @JvmField
-        @field:GenericValue(Int::class)
-        var testTParamClass = TParamClass(1)
     }
 }
 ```
 
-  </TabPanel >
-</Tabs >
+3. ✅ Kotlin Object
+
+```kotlin
+@Configurable
+object TestKotlinObject {
+    @JvmField
+    var testFloat: Float = 1.0f
+}
+```
+
+---
+
+## 🔤 Supported Types
+
+All fields must be:
+- public static (Java)
+- @JvmField inside an object or companion object (Kotlin)
+And must be non-final.
+
+You can use:
+- Primitive types: int, double, boolean, etc.
+- Enums
+- Strings
+- Arrays and Lists
+- Maps (read-only unless exposed via a custom dashboard)
+- Custom types (via @ConfigurableCustomType)
+- Generic types (via @GenericValue)
+
+---
+
+## 🔁 Custom Types
+Mark classes with `@ConfigurableCustomType` to allow custom objects.
+
+```java
+@ConfigurableCustomType
+public class CustomType {
+    public final int id;
+    public final String name;
+    
+    public CustomType(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+}
+```
+You can nest custom types, too:
+```kotlin
+@ConfigurableCustomType
+public class NestedType {
+    public final CustomType child;
+
+    public NestedType(CustomType child) {
+        this.child = child;
+    }
+}
+```
+
+## 📦 Generic Types with @GenericValue
+If you have a generic wrapper class:
+
+```java
+@ConfigurableCustomType
+public class TParamClass<T> {
+    public final T value;
+    public TParamClass(T value) { this.value = value; }
+}
+```
+Then mark the instance with its type:
+```java
+@GenericValue(tParam = Integer.class)
+public static TParamClass<Integer> testGeneric = new TParamClass<>(42);
+```
+Kotlin:
+```jotlin
+@GenericValue(Int::class)
+@JvmField
+var testTParamClass = TParamClass(1)
+```
+
+---
+
+## ⚠️ Gotchas
+
+### Static-only
+
+All configurable fields must be static or top-level @JvmFields. Instance fields won’t be tracked by the dashboard.
+
+### Changes are One-Way
+
+Updates on the dashboard side reflect immediately in your robot code.
+But updates in code do not update the dashboard until a refresh is triggered.
+This means:
+- Editing a value in code does not update it live on the dashboard.
+- You can overwrite dashboard changes if your code re-initializes the value.
+
+---
+
+## 💀 The Common Pitfall: Copy Semantics
+
+In Kotlin and Java, when you assign an object to a new variable, you copy the reference, not the object itself. This means both variables point to the same memory location. This can lead to unexpected behavior if one variable is modified.
+
+Example: Claw Pitfall
+
+```kotlin
+class Claw(var movementRange: Int)
+
+fun main() {
+    val originalClaw = Claw(15)
+    val copiedClaw = originalClaw  // This just copies the reference
+
+    copiedClaw.movementRange = 10  // Modifies the movementRange of the original too!
+
+    println("Original Claw Movement Range: ${originalClaw.movementRange}")  // Outputs 10
+    println("Copied Claw Movement Range: ${copiedClaw.movementRange}")  // Outputs 10
+}
+```
+
+Explanation:
+- Pitfall: copiedClaw and originalClaw both reference the same Claw object. Modifying one modifies the other as well.
+- Solution: To avoid this, use deep copying or clone the object if you want independent copies.
+
+---
+
+## 🧪 Playground: Random Test Arrays
+
+You can even test the limits with things like:
+```kotlin
+@JvmField
+var testRandomArray = arrayOf(
+    1,
+    1.0,
+    1.0f,
+    "test!",
+    true,
+    CustomType(1, "test!"),
+    NestedType(1, "test!", CustomType(2, "test2!")),
+    UnknownType(1),
+    arrayOf(
+        1,
+        2,
+        3
+    ),
+    mapOf(
+        "one" to 1,
+        "two" to 2,
+        "three" to 3
+    )
+)
+```
+Note: only supported types will render correctly on the dashboard.
+
+---
+
+## 🧠 Best Practices
+- Group related config values into logical classes like `DriveConstants`, `ArmConfig`, etc.
+- Keep types simple. Avoid overengineering unless you need complex nested types.
+- Never assume a configurable is updated in code. Always access live values directly from their source.
+
+---
+
+## Example Configurables Files
+
+### Kotlin Object
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/TestKotlinObject.kt)
+
+### Kotlin Class
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/TestKotlinClass.kt)
+
+### Java Class
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/configurables/TestJavaClass.java)
