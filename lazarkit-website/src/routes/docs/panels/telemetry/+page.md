@@ -1,10 +1,10 @@
-# Telemetry
+# 📊 Telemetry
 
 The Telemetry  feature in FTControl provides real-time data logging and visualization capabilities, allowing teams to monitor robot performance directly from their code. By integrating telemetry into OpModes, teams can output key metrics such as sensor values, motor outputs, or custom debug messages, which are then displayed on the Driver Station or within the Panels interface.
 
 ---
 
-## Example OpMode File: `TestOpMode.kt`
+## 📋 Example OpMode File: `TestOpMode.kt`
 Below is an example of how telemetry can be implemented in an OpMode: 
 @code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/telemetry/TestOpMode.kt)
 

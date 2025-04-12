@@ -1,4 +1,4 @@
-# OpMode Control
+# 🤖 OpMode Control
 
 OpMode Control replicates driver station functionality, with separate Autonomous and TeleOp selectors.
 

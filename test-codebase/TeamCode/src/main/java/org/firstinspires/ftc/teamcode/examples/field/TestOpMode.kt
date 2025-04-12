@@ -11,13 +11,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import kotlin.random.Random
 
 @TeleOp(name = "Field Test OpMode")
-class FieldTestOpMode: OpMode() {
+class TestOpMode : OpMode() {
     var panelsTelemetry = Panels.getTelemetry()
 
     override fun init() {
         panelsTelemetry.debug("Init was ran!")
         panelsTelemetry.update(telemetry)
     }
+
     override fun loop() {
         panelsTelemetry.debug("Loop ${System.currentTimeMillis()} ran!")
         panelsTelemetry.debug(
