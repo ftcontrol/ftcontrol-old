@@ -72,44 +72,38 @@ const config = defineConfig({
               ],
             },
             {
-              title: "Features",
-              collapsible: false,
+              title: "Panels",
+              collapsible: true,
+              to: "/docs/panels",
               items: [
                 {
-                  title: "Panels",
-                  collapsible: true,
-                  to: "/docs/panels",
-                  items: [
-                    {
-                      title: "OpModes Control",
-                      to: "/docs/panels/opmodecontrol",
-                    },
-                    {
-                      title: "Telemetry",
-                      to: "/docs/panels/telemetry",
-                    },
-                    {
-                      title: "Field View",
-                      to: "/docs/panels/fieldview",
-                    },
-                    {
-                      title: "Capture",
-                      to: "/docs/panels/capture",
-                    },
-                    {
-                      title: "Configurables",
-                      to: "/docs/panels/configurables",
-                    },
-                  ],
+                  title: "OpModes Control",
+                  to: "/docs/panels/opmodecontrol",
                 },
                 {
-                  title: "Flows",
-                  collapsible: true,
-                  items: [
-                    {
-                      title: "Test Chapter",
-                    },
-                  ],
+                  title: "Telemetry",
+                  to: "/docs/panels/telemetry",
+                },
+                {
+                  title: "Field View",
+                  to: "/docs/panels/fieldview",
+                },
+                {
+                  title: "Capture",
+                  to: "/docs/panels/capture",
+                },
+                {
+                  title: "Configurables",
+                  to: "/docs/panels/configurables",
+                },
+              ],
+            },
+            {
+              title: "Flows",
+              collapsible: true,
+              items: [
+                {
+                  title: "Test Chapter",
                 },
               ],
             },

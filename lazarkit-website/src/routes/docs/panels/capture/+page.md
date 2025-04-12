@@ -1,8 +1,6 @@
 # 🎥 Capture
 
-Capture Feature Showcase 
-
-The Capture mode in FTControl is a powerful tool designed to record and replay matches for debugging purposes. This feature allows users to analyze robot performance, identify issues, and optimize strategies by reviewing recorded match data. It supports both Telemetry and Field Recording.
+It is a powerful tool designed to record and replay matches for debugging purposes. This feature allows users to analyze robot performance, identify issues, and optimize strategies by reviewing recorded match data. It supports both Telemetry and Field Recordings.
 
 ## 🛠️ Example Usage
 <video width="100%" autoplay loop>
