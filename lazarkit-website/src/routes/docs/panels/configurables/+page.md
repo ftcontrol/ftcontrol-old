@@ -224,6 +224,7 @@ var testRandomArray = arrayOf(
 )
 ```
 Note: only supported types will render correctly on the dashboard.
+
 <img src="/docs/configurables_random_array.png"/>
 ---
 
