@@ -88,16 +88,51 @@
   </ul>
 
   <div class="graph">
-    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+    <svg viewBox="-10 -10 120 120" preserveAspectRatio="none">
+      <rect x="0" y="0" width="100" height="100" fill="#111" />
+
       {#each [0, 25, 50, 75, 100] as x}
-        <text {x} y="98" font-size="2" fill="white" text-anchor="middle">
+        <text
+          {x}
+          y="-2"
+          font-size="2.5"
+          fill="white"
+          stroke="#333"
+          stroke-width="0.1"
+          text-anchor="middle"
+        >
           {Math.round((x / 100) * info.timeWindow)}s
         </text>
       {/each}
 
       {#each [0, 25, 50, 75, 100] as y}
-        <text x="2" y={100 - y} font-size="2" fill="white" text-anchor="start">
-          {Math.round((y / 100) * 100)}%
+        <text
+          x="-2"
+          y={100 - y}
+          font-size="2.5"
+          fill="white"
+          stroke="#333"
+          stroke-width="0.1"
+          text-anchor="end"
+        >
+          {(
+            (y / 100) *
+              (Object.values(
+                Object.values(info.graphs)
+                  .flat()
+                  .map((l) => l.data)
+              ).reduce((a, b) => Math.max(a, b), -Infinity) -
+                Object.values(
+                  Object.values(info.graphs)
+                    .flat()
+                    .map((l) => l.data)
+                ).reduce((a, b) => Math.min(a, b), Infinity)) +
+            Object.values(
+              Object.values(info.graphs)
+                .flat()
+                .map((l) => l.data)
+            ).reduce((a, b) => Math.min(a, b), Infinity)
+          ).toFixed(2)}
         </text>
       {/each}
 
@@ -136,6 +171,7 @@
 
 <style>
   .graph {
+    min-width: 800px;
     width: 100%;
     aspect-ratio: 4 / 3;
     position: relative;
@@ -159,7 +195,6 @@
   svg {
     width: 100%;
     height: 100%;
-    background-color: #111;
   }
 
   button {
