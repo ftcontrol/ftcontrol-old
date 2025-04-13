@@ -63,14 +63,16 @@
 </script>
 
 <Section title="Graph">
-  <input
-    type="range"
-    min="1"
-    max="60"
-    bind:value={info.timeWindow}
-    aria-label="Time window"
-  />
-
+  <div class="flex">
+    <input
+      type="range"
+      min="1"
+      max="60"
+      bind:value={info.timeWindow}
+      aria-label="Time window"
+    />
+    <p>(last {info.timeWindow}s)</p>
+  </div>
   <ul>
     {#each Object.entries(info.graphs) as [key, list]}
       <li>
@@ -81,14 +83,14 @@
         >
           {key}
         </button>
-        – {list.length} entries (last {info.timeWindow}s)
+        – {list.length} entries / {list[list.length - 1].data}
       </li>
     {/each}
   </ul>
 
   <div class="graph">
     <svg viewBox="-10 -10 120 120" preserveAspectRatio="none">
-      <rect x="0" y="0" width="100" height="100" fill="#111" />
+      <rect x="0" y="0" width="100" height="100" fill="var(--card)" />
 
       {#each [0, 25, 50, 75, 100] as x}
         <text
@@ -96,7 +98,7 @@
           y="-2"
           font-size="2.5"
           fill="white"
-          stroke="#333"
+          stroke="var(--text)"
           stroke-width="0.1"
           text-anchor="middle"
         >
@@ -110,7 +112,7 @@
           y={100 - y}
           font-size="2.5"
           fill="white"
-          stroke="#333"
+          stroke="var(--text)"
           stroke-width="0.1"
           text-anchor="end"
         >
@@ -141,7 +143,7 @@
           y1={value}
           x2="100"
           y2={value}
-          stroke="#333"
+          stroke="var(--text)"
           stroke-width="0.2"
         />
         <line
@@ -149,7 +151,7 @@
           y1="0"
           x2={value}
           y2="100"
-          stroke="#333"
+          stroke="var(--text)"
           stroke-width="0.2"
         />
       {/each}
@@ -169,12 +171,14 @@
 </Section>
 
 <style>
+  .flex {
+    display: flex;
+  }
   .graph {
-    min-width: 800px;
     width: 100%;
     aspect-ratio: 4 / 3;
     position: relative;
-    border: 1px solid #ccc;
+    border: 1px solid var(--text);
     margin-top: 1rem;
   }
 
@@ -194,12 +198,13 @@
   svg {
     width: 100%;
     height: 100%;
+    min-width: 800px;
   }
 
   button {
     background: transparent;
-    border: 1px solid #666;
-    color: white;
+    border: 1px solid var(--text);
+    color: var(--text);
     border-radius: 0.25rem;
     padding: 0.2rem 0.5rem;
     cursor: pointer;
@@ -207,10 +212,10 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
+    opacity: 0.5;
   }
 
   button.selected {
-    background-color: #333;
-    border-color: white;
+    opacity: 1;
   }
 </style>
