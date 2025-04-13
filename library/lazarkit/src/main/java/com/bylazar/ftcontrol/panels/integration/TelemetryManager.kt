@@ -2,13 +2,15 @@ package com.bylazar.ftcontrol.panels.integration
 
 import com.bylazar.ftcontrol.panels.json.Canvas
 import com.bylazar.ftcontrol.panels.json.Drawable
+import com.bylazar.ftcontrol.panels.json.GraphPacket
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class TelemetryManager(
-    private val sendTelemetry: (lines: List<String>, canvas: Canvas) -> Unit,
+    private val sendTelemetry: (lines: List<String>, canvas: Canvas, graph: List<GraphPacket>) -> Unit,
 ) {
     var lines = mutableListOf<String>()
     var canvas = Canvas()
+    var graph = mutableListOf<GraphPacket>()
 
     var lastZIndex = 0
 
@@ -18,6 +20,21 @@ class TelemetryManager(
         get() = System.currentTimeMillis() - lastUpdate
     val shouldUpdate: Boolean
         get() = timeSinceLastUpdate >= updateInterval
+
+    private fun graph(key: String, data: String) {
+        for (packet in graph) {
+            if (packet.key == key) {
+                return
+            }
+        }
+        graph.add(GraphPacket(key, data))
+    }
+
+    fun graph(key: String, data: Double) = graph(key, data.toString())
+    fun graph(key: String, data: Int) = graph(key, data.toString())
+    fun graph(key: String, data: Float) = graph(key, data.toString())
+    fun graph(key: String, data: Long) = graph(key, data.toString())
+
 
     fun debug(vararg data: String) {
         data.forEach { lines.add(it) }
@@ -40,12 +57,13 @@ class TelemetryManager(
 
     fun update() {
         if (shouldUpdate) {
-            sendTelemetry(lines, canvas)
+            sendTelemetry(lines, canvas, graph)
             lastUpdate = System.currentTimeMillis()
         }
         lastZIndex = 0
         lines.clear()
         canvas.clear()
+        graph.clear()
     }
 
     fun update(telemetry: Telemetry) {

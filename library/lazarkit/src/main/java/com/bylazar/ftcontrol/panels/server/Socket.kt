@@ -11,6 +11,7 @@ import com.bylazar.ftcontrol.panels.json.Canvas
 import com.bylazar.ftcontrol.panels.json.GetActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.GetJvmFieldsRequest
 import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
+import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
@@ -78,11 +79,11 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(lines: List<String>, canvas: Canvas) {
+    fun sendTelemetry(lines: List<String>, canvas: Canvas, graph: List<GraphPacket>) {
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
-            client.send(TelemetryPacket(lines, canvas, System.currentTimeMillis()))
+            client.send(TelemetryPacket(lines, canvas, graph, System.currentTimeMillis()))
         }
     }
 

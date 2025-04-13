@@ -103,10 +103,16 @@ export type OpMode = {
   flavour: "AUTONOMOUS" | "TELEOP"
 }
 
+export type GraphPacket = {
+  key: string
+  data: number
+}
+
 export type TelemetryPacket = {
   lines: string[]
   canvas: Canvas
   timestamp: number
+  graph: GraphPacket[]
 }
 
 export class InfoManager {
@@ -119,6 +125,7 @@ export class InfoManager {
 
   telemetry = $state<string[]>([])
   canvas = $state<Canvas>(emptyCanvas)
+  graphs = $state<GraphPacket[]>([])
   isRecording = $state(false)
   isPlaying = $state(false)
   isForwarding = $state(false)
