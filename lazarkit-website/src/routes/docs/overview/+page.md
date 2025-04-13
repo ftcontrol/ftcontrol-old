@@ -5,21 +5,21 @@ It provides a powerful set of features with minimal boilerplate, using **Kotlin*
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🧩 Panels
+### Panels
 
 **Panels** is a powerful dashboard for your FTC robot that includes:
 
-- 🕹️ **OpMode control** – Just like the Driver Hub  
-- 📡 **Real-time telemetry** – See all your robot data live  
-- 🗺️ **Field view** – A canvas-like interface for drawing on the field  
-- 🎥 **Capture mode** – Record and replay matches for debugging  
-- 🎛️ **Configurables** – Tune your robot in real time **without uploading code again**
+- **OpMode control** – Just like the Driver Hub  
+- **Real-time telemetry** – See all your robot data live  
+- **Field view** – A canvas-like interface for drawing on the field  
+- **Capture mode** – Record and replay matches for debugging  
+- **Configurables** – Tune your robot in real time **without uploading code again**
 
 ---
 
-### 🔄 Flows *(Work in Progress)*
+### Flows *(Work in Progress)*
 
 A modular **command system** for organizing your robot logic in a clean, structured way.
 

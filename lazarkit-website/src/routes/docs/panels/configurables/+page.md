@@ -1,4 +1,4 @@
-# 📦 Configurables
+# Configurables
 
 Configurables are runtime-modifiable variables that make *testing*, *tuning*, and *debugging* robot behavior easier without needing to recompile or reupload your code. You can think of them as live sliders or inputs exposed to your Panels Dashboard.
 
@@ -9,7 +9,7 @@ The Configurables Widget also supports search functionality.
   Your browser does not support the video tag.
 </video>
 
-## 🛠️ What is a Configurable?
+## What is a Configurable?
 
 A Configurable is a `static` (Java) or `@JvmField` (Kotlin) variable marked in a class annotated with `@Configurable`. These variables are exposed in the Panels UI and can be changed while the robot is running.
 
@@ -21,7 +21,7 @@ Useful for things like:
 
 ---
 
-## ✅ Annotating Classes with @Configurable
+## Annotating Classes with @Configurable
 
 To make a class’s fields configurable:
 
@@ -44,11 +44,11 @@ object RobotConstants {
 
 ---
 
-## 📂 Real Examples
+## Real Examples
 
 You can define configurables in many ways. Let's explore the styles supported.
 
-1. ✅ Java Class
+1. Java Class
 
 ```java
 @Configurable
@@ -60,7 +60,7 @@ public class TestJavaClass {
 
 ```
 
-2. ✅ Kotlin Class
+2. Kotlin Class
 
 ```kotlin
 @Configurable
@@ -72,7 +72,7 @@ class TestKotlinClass {
 }
 ```
 
-3. ✅ Kotlin Object
+3. Kotlin Object
 
 ```kotlin
 @Configurable
@@ -84,7 +84,7 @@ object TestKotlinObject {
 
 ---
 
-## 🔤 Supported Types
+## Supported Types
 
 All fields must be:
 - public static (Java)
@@ -102,7 +102,7 @@ You can use:
 
 ---
 
-## 🔁 Custom Types
+## Custom Types
 Mark classes with `@ConfigurableCustomType` to allow custom objects.
 
 ```java
@@ -129,7 +129,7 @@ public class NestedType {
 }
 ```
 
-## 📦 Generic Types with @GenericValue
+## Generic Types with @GenericValue
 If you have a generic wrapper class:
 
 ```java
@@ -153,7 +153,7 @@ var testTParamClass = TParamClass(1)
 
 ---
 
-## ⚠️ Gotchas
+## Gotchas
 
 ### Static-only
 
@@ -169,7 +169,7 @@ This means:
 
 ---
 
-## 💀 The Common Pitfall: Copy Semantics
+## The Common Pitfall: Copy Semantics
 
 In Kotlin and Java, when you assign an object to a new variable, you copy the reference  to the object, not the object itself. This means both variables point to the same memory location. However, when dealing with primitives (like int, double, etc.) or immutable objects, the value is copied directly. This can lead to unexpected behavior if one variable is modified, as the other variable won't reflect the change.
 
@@ -197,7 +197,7 @@ Another elegant solution is to pass a `lambda function` that retrieves the curre
 
 ---
 
-## 🧪 Playground: Random Test Arrays
+## Playground: Random Test Arrays
 
 You can even test the limits with things like:
 ```kotlin
@@ -228,7 +228,7 @@ Note: only supported types will render correctly on the dashboard.
 <img src="/docs/configurables_random_array.png"/>
 ---
 
-## 🧠 Best Practices
+## Best Practices
 - Group related config values into logical classes like `DriveConstants`, `ArmConfig`, etc.
 - Keep types simple. Avoid overengineering unless you need complex nested types.
 - Never assume a configurable is updated in code. Always access live values directly from their source.
