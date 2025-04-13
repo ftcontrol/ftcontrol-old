@@ -32,7 +32,7 @@ class CorePanels {
     lateinit var testLimelightServer: TestLimelightServer
 
     var telemetryManager =
-        TelemetryManager({ lines, canvas -> socket.sendTelemetry(lines, canvas) })
+        TelemetryManager({ lines, canvas, graph -> socket.sendTelemetry(lines, canvas, graph) })
 
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {

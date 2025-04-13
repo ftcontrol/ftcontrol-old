@@ -3,6 +3,7 @@
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Flows from "$ui/widgets/Flows.svelte"
+  import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
 
@@ -33,6 +34,7 @@
   <div>
     <GameField />
     <Telemetry />
+    <Graph />
   </div>
   <div>
     <Configurables />
