@@ -77,6 +77,10 @@ const config = defineConfig({
               to: "/docs/panels",
               items: [
                 {
+                  title: "Overview",
+                  to: "/docs/panels/overview",
+                },
+                {
                   title: "OpModes Control",
                   to: "/docs/panels/opmodecontrol",
                 },
