@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.examples.telemetry
 
+import com.bylazar.ftcontrol.LoopTimer
 import com.bylazar.ftcontrol.panels.Panels
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
@@ -16,6 +17,8 @@ class GraphOpMode : OpMode() {
     }
     private val panelsTelemetry: TelemetryManager = Panels.getTelemetry()
 
+    val timer = LoopTimer()
+
     var ticks = 0.0
     var wave = 0.0
     var wave2 = 0.0
@@ -30,6 +33,7 @@ class GraphOpMode : OpMode() {
     }
 
     override fun loop() {
+        timer.start()
         ticks += ticksIncrement
         wave = sin(ticks)
         wave2 = sin(ticks + PI)
@@ -40,6 +44,10 @@ class GraphOpMode : OpMode() {
         panelsTelemetry.graph("wave", wave)
         panelsTelemetry.graph("wave2", wave2)
         panelsTelemetry.graph("constant", constant)
+
+        panelsTelemetry.debug("LoopTime: ${timer.ms}ms / ${timer.hz}Hz")
+
         panelsTelemetry.update(telemetry)
+        timer.end()
     }
 }
