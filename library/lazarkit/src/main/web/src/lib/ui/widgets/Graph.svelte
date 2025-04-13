@@ -3,8 +3,6 @@
   import type { GraphPacket } from "$lib/socket.svelte"
   import Section from "$ui/primitives/Section.svelte"
 
-  export let windowSeconds = 10
-
   function normalize(values: number[], range = [0, 1]) {
     const min = Math.min(...values)
     const max = Math.max(...values)
@@ -15,35 +13,25 @@
     )
   }
 
-  function getNormalizedGraphPoints(
-    list: GraphPacket[],
-    windowSeconds: number
-  ) {
-    const now = Date.now()
-    const windowStart = now - windowSeconds * 1000
-
-    const filtered = list.filter((l) => {
-      const ts = new Date(l.timestamp).getTime()
-      return ts >= windowStart
-    })
-
-    const dataValues = filtered.map((l) => l.data)
-    const timeValues = filtered.map((l) => new Date(l.timestamp).getTime())
+  function getNormalizedGraphPoints(list: GraphPacket[]) {
+    const dataValues = list.map((l) => l.data)
+    const timeValues = list.map((l) => l.timestamp)
 
     const x = normalize(timeValues, [0, 100])
     const y = normalize(dataValues, [0, 100])
 
-    return filtered.map((_, i) => ({ x: x[i], y: 100 - y[i] }))
+    return list.map((_, i) => ({ x: x[i], y: 100 - y[i] }))
   }
 </script>
 
 <Section title="Graph">
+  <input type="range" min="1" max="60" bind:value={info.timeWindow} />
   <ul>
     {#each Object.entries(info.graphs) as [key, list]}
-      <li>{key}: {list.length} entries (last {windowSeconds}s)</li>
+      <li>{key}: {list.length} entries (last {info.timeWindow}s)</li>
       <div class="graph">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          {#each getNormalizedGraphPoints(list, windowSeconds) as point}
+          {#each getNormalizedGraphPoints(list) as point}
             <circle cx={point.x} cy={point.y} r="0.25" fill="white" />
           {/each}
         </svg>
