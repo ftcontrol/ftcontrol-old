@@ -35,6 +35,8 @@ panelsTelemetry.graph(
 
 ## Using the Graph View Interface 
 
+<img src="/docs/graph.png"/>
+
 ### Selecting Data Series  
 - On the left side of the Graph View, you will see a list of available telemetry keys.
 - Click on a key to toggle its visibility on the graph.

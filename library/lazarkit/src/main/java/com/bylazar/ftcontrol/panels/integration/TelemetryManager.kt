@@ -15,8 +15,8 @@ class TelemetryManager(
     var lastZIndex = 0
 
     var lastUpdate = 0L
-    var updateInterval = 50L
-    var graphUpdateInterval = 5L
+    var updateInterval = 100L
+    var graphUpdateInterval = 10L
     var graphUpdates: MutableMap<String, Long> = mutableMapOf()
     val timeSinceLastUpdate: Long
         get() = System.currentTimeMillis() - lastUpdate
