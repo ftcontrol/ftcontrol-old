@@ -31,15 +31,16 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
 export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
-  info.graphs = data.graphs
   if (!info.isPlaying) {
     info.telemetry = data.lines
     info.canvas = data.canvas
+    info.graphs = data.graphs
   }
   if (info.isRecording) {
     info.history.push({
       canvas: data.canvas,
       lines: data.lines,
+      graphs: data.graphs,
       timestamp: data.timestamp,
     } as TelemetryPacket)
   }
