@@ -17,10 +17,18 @@
     const dataValues = list.map((l) => l.data)
     const timeValues = list.map((l) => l.timestamp)
 
-    const x = normalize(timeValues, [0, 100])
+    const now = Date.now()
+    const timeStart = now - info.timeWindow * 1000
+
+    const x = timeValues.map(
+      (t) => ((t - timeStart) / (info.timeWindow * 1000)) * 100
+    )
     const y = normalize(dataValues, [0, 100])
 
-    return list.map((_, i) => ({ x: x[i], y: 100 - y[i] }))
+    return list.map((_, i) => ({
+      x: Math.min(100, Math.max(0, x[i])),
+      y: 100 - y[i],
+    }))
   }
 </script>
 
