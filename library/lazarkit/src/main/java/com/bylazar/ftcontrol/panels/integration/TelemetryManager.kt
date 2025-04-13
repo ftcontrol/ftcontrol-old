@@ -15,24 +15,25 @@ class TelemetryManager(
     var lastZIndex = 0
 
     var lastUpdate = 0L
-    var updateInterval = 200L
+    var updateInterval = 50L
     val timeSinceLastUpdate: Long
         get() = System.currentTimeMillis() - lastUpdate
     val shouldUpdate: Boolean
         get() = timeSinceLastUpdate >= updateInterval
 
     private fun graph(key: String, data: String) {
-        //TODO: handle max number of entries
+        val currentTime = System.currentTimeMillis()
+        val oneMinuteAgo = currentTime - 60_000
+
         if (!graph.containsKey(key)) {
             graph[key] = mutableListOf()
         }
 
-        graph[key]?.add(
-            GraphPacket(
-                data,
-                System.currentTimeMillis()
-            )
-        )
+        val list = graph[key]!!
+
+        list.removeIf { it.timestamp < oneMinuteAgo }
+
+        list.add(GraphPacket(data, currentTime))
     }
 
     fun graph(key: String, data: Double) = graph(key, data.toString())
