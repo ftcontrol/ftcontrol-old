@@ -34,7 +34,6 @@ export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
   const maxEntries = 1200
-  const maxPerSecond = Math.round(maxEntries / info.timeWindow)
   const now = new Date(data.timestamp).getTime()
   const windowStart = now - info.timeWindow * 1000
 
@@ -46,31 +45,17 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
       return ts >= windowStart
     })
 
-    const groupedBySecond: Record<string, GraphPacket[]> = {}
-    for (const entry of filteredItems) {
-      const ts = new Date(entry.timestamp).getTime()
-      const secondKey = Math.floor(ts / 1000)
-
-      if (!groupedBySecond[secondKey]) {
-        groupedBySecond[secondKey] = []
-      }
-      groupedBySecond[secondKey].push(entry)
+    const count = filteredItems.length
+    if (count <= maxEntries) {
+      filteredGraphs[key] = filteredItems
+      continue
     }
 
+    const step = (count - 1) / (maxEntries - 1)
     const limitedEntries: GraphPacket[] = []
-    for (const secondKey in groupedBySecond) {
-      const entriesForSecond = groupedBySecond[secondKey]
-      const count = entriesForSecond.length
-
-      if (count <= maxPerSecond) {
-        limitedEntries.push(...entriesForSecond)
-      } else {
-        const step = (count - 1) / (maxPerSecond - 1)
-        for (let i = 0; i < maxPerSecond; i++) {
-          const index = Math.round(i * step)
-          limitedEntries.push(entriesForSecond[index])
-        }
-      }
+    for (let i = 0; i < maxEntries; i++) {
+      const index = Math.round(i * step)
+      limitedEntries.push(filteredItems[index])
     }
 
     filteredGraphs[key] = limitedEntries
