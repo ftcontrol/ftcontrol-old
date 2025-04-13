@@ -62,7 +62,7 @@
   const colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
 </script>
 
-<Section title="Graph">
+<Section title="Graph View">
   <div class="flex">
     <input
       type="range"
