@@ -17,11 +17,11 @@
     const dataValues = list.map((l) => l.data)
     const timeValues = list.map((l) => l.timestamp)
 
-    const now = Date.now()
-    const timeStart = now - info.timeWindow * 1000
+    const timeStart = Math.min(...timeValues)
+    const timeEnd = timeStart + info.timeWindow * 1000
 
     const x = timeValues.map(
-      (t) => ((t - timeStart) / (info.timeWindow * 1000)) * 100
+      (t) => ((t - timeStart) / (timeEnd - timeStart)) * 100
     )
     const y = normalize(dataValues, [0, 100])
 
