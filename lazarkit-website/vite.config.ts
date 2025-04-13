@@ -89,6 +89,10 @@ const config = defineConfig({
                   to: "/docs/panels/fieldview",
                 },
                 {
+                  title: "Graph View",
+                  to: "/docs/panels/graph",
+                },
+                {
                   title: "Capture",
                   to: "/docs/panels/capture",
                 },
