@@ -77,6 +77,10 @@ const config = defineConfig({
               to: "/docs/panels",
               items: [
                 {
+                  title: "Overview",
+                  to: "/docs/panels/overview",
+                },
+                {
                   title: "OpModes Control",
                   to: "/docs/panels/opmodecontrol",
                 },
@@ -87,6 +91,10 @@ const config = defineConfig({
                 {
                   title: "Field View",
                   to: "/docs/panels/fieldview",
+                },
+                {
+                  title: "Graph View",
+                  to: "/docs/panels/graph",
                 },
                 {
                   title: "Capture",

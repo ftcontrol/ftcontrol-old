@@ -3,6 +3,7 @@ import {
   InfoManager,
   SocketManager,
   type GenericData,
+  type GraphPacket,
   type OpMode,
   type TelemetryPacket,
 } from "./socket.svelte"
@@ -14,6 +15,7 @@ import {
   type GenericTypeJson,
 } from "./genericType"
 import { forAll } from "$ui/widgets/configurables/utils"
+import type { Graph } from "./socket.svelte"
 
 export const socket = new SocketManager()
 
@@ -31,14 +33,44 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
 export const info = new InfoManager()
 
 socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
+  const maxEntries = 1200
+  const now = new Date(data.timestamp).getTime()
+  const windowStart = now - info.timeWindow * 1000
+
+  const filteredGraphs: Record<string, GraphPacket[]> = {}
+
+  for (const [key, items] of Object.entries(data.graphs as Graph)) {
+    const filteredItems = items.filter((entry: GraphPacket) => {
+      const ts = new Date(entry.timestamp).getTime()
+      return ts >= windowStart
+    })
+
+    const count = filteredItems.length
+    if (count <= maxEntries) {
+      filteredGraphs[key] = filteredItems
+      continue
+    }
+
+    const step = (count - 1) / (maxEntries - 1)
+    const limitedEntries: GraphPacket[] = []
+    for (let i = 0; i < maxEntries; i++) {
+      const index = Math.round(i * step)
+      limitedEntries.push(filteredItems[index])
+    }
+
+    filteredGraphs[key] = limitedEntries
+  }
+
   if (!info.isPlaying) {
     info.telemetry = data.lines
     info.canvas = data.canvas
+    info.graphs = filteredGraphs
   }
   if (info.isRecording) {
     info.history.push({
       canvas: data.canvas,
       lines: data.lines,
+      graphs: filteredGraphs,
       timestamp: data.timestamp,
     } as TelemetryPacket)
   }

@@ -54,7 +54,7 @@
       <div class="gap"></div>
 
       <h2>General</h2>
-      <a href="/control">Robot Control</a>
+      <a href="/">Robot Control</a>
       <a href="/time">Global Time</a>
       <a href="/controller">Controller</a>
       <a href="/field">Game Field</a>
