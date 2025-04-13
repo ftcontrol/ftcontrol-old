@@ -128,6 +128,7 @@ export class InfoManager {
   telemetry = $state<string[]>([])
   canvas = $state<Canvas>(emptyCanvas)
   graphs = $state<Graph>({})
+  timeWindow = $state(2)
   isRecording = $state(false)
   isPlaying = $state(false)
   isForwarding = $state(false)
