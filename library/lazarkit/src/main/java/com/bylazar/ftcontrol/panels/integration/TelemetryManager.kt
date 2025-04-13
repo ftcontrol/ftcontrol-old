@@ -22,7 +22,7 @@ class TelemetryManager(
         get() = timeSinceLastUpdate >= updateInterval
 
     private fun graph(key: String, data: String) {
-        //TODO: handle length and reset
+        //TODO: handle max number of entries
         if (!graph.containsKey(key)) {
             graph[key] = mutableListOf()
         }
