@@ -15,7 +15,7 @@ import {
   type GenericTypeJson,
 } from "./genericType"
 import { forAll } from "$ui/widgets/configurables/utils"
-import type Graph from "$ui/widgets/Graph.svelte"
+import type { Graph } from "./socket.svelte"
 
 export const socket = new SocketManager()
 
@@ -37,8 +37,8 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
   const windowStart = now - info.timeWindow * 1000
 
   const filteredGraphs: Record<string, GraphPacket[]> = {}
-  for (const [key, entries] of Object.entries(data.graphs as Graph)) {
-    filteredGraphs[key] = entries.filter((entry: GraphPacket) => {
+  for (const [key, items] of Object.entries(data.graphs as Graph)) {
+    filteredGraphs[key] = items.filter((entry: GraphPacket) => {
       const ts = new Date(entry.timestamp).getTime()
       return ts >= windowStart
     })
