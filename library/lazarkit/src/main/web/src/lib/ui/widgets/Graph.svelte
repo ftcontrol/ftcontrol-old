@@ -7,12 +7,23 @@
   <ul>
     {#each Object.entries(info.graphs) as [key, list]}
       <li>{key}: {list.length} entries</li>
+      <div class="graph">
+        {#each list as l}
+          <p>{l.data} {l.timestamp}</p>
+        {/each}
+      </div>
     {/each}
   </ul>
-  {JSON.stringify(info.graphs)}
 </Section>
 
 <style>
+  .graph {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    position: relative;
+  }
+  .entry {
+  }
   ul {
     list-style: none;
     padding: 0;

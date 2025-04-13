@@ -112,6 +112,7 @@ class CorePanels {
     }
 
     fun initOpMode(name: String) {
+        telemetryManager.graph.clear()
         GlobalGamepad.reset()
         opModeManager?.initOpMode(name) ?: run {
             println("DASH: opModeManager is null")
