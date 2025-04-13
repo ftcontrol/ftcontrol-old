@@ -39,9 +39,14 @@
       <li>{key}: {list.length} entries (last {info.timeWindow}s)</li>
       <div class="graph">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          {#each getNormalizedGraphPoints(list) as point}
-            <circle cx={point.x} cy={point.y} r="0.25" fill="white" />
-          {/each}
+          <polyline
+            fill="none"
+            stroke="white"
+            stroke-width="0.5"
+            points={getNormalizedGraphPoints(list)
+              .map((p) => `${p.x},${p.y}`)
+              .join(" ")}
+          />
         </svg>
       </div>
     {/each}
