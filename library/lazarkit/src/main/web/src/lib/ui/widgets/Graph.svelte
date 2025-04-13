@@ -79,7 +79,6 @@
           class:selected={selectedKeys[key]}
           aria-pressed={selectedKeys[key]}
         >
-          {#if selectedKeys[key]}✅{/if}
           {key}
         </button>
         – {list.length} entries (last {info.timeWindow}s)
