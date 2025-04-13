@@ -6,11 +6,11 @@ import com.bylazar.ftcontrol.panels.json.GraphPacket
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class TelemetryManager(
-    private val sendTelemetry: (lines: List<String>, canvas: Canvas, graph: List<GraphPacket>) -> Unit,
+    private val sendTelemetry: (lines: List<String>, canvas: Canvas, graph: MutableMap<String, MutableList<GraphPacket>>) -> Unit,
 ) {
     var lines = mutableListOf<String>()
     var canvas = Canvas()
-    var graph = mutableListOf<GraphPacket>()
+    var graph: MutableMap<String, MutableList<GraphPacket>> = mutableMapOf()
 
     var lastZIndex = 0
 
@@ -22,12 +22,17 @@ class TelemetryManager(
         get() = timeSinceLastUpdate >= updateInterval
 
     private fun graph(key: String, data: String) {
-        for (packet in graph) {
-            if (packet.key == key) {
-                return
-            }
+        //TODO: handle length and reset
+        if (!graph.containsKey(key)) {
+            graph[key] = mutableListOf()
         }
-        graph.add(GraphPacket(key, data))
+
+        graph[key]?.add(
+            GraphPacket(
+                data,
+                System.currentTimeMillis()
+            )
+        )
     }
 
     fun graph(key: String, data: Double) = graph(key, data.toString())
@@ -63,7 +68,6 @@ class TelemetryManager(
         lastZIndex = 0
         lines.clear()
         canvas.clear()
-        graph.clear()
     }
 
     fun update(telemetry: Telemetry) {

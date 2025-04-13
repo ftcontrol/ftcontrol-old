@@ -104,15 +104,17 @@ export type OpMode = {
 }
 
 export type GraphPacket = {
-  key: string
   data: number
+  timestamp: number
 }
+
+export type Graph = { [key: string]: GraphPacket[] }
 
 export type TelemetryPacket = {
   lines: string[]
   canvas: Canvas
   timestamp: number
-  graph: GraphPacket[]
+  graphs: Graph
 }
 
 export class InfoManager {
@@ -125,7 +127,7 @@ export class InfoManager {
 
   telemetry = $state<string[]>([])
   canvas = $state<Canvas>(emptyCanvas)
-  graphs = $state<GraphPacket[]>([])
+  graphs = $state<Graph>({})
   isRecording = $state(false)
   isPlaying = $state(false)
   isForwarding = $state(false)
@@ -157,6 +159,7 @@ export class InfoManager {
     if (this.isPlaying && this.entry != null) {
       this.telemetry = this.entry.lines
       this.canvas = this.entry.canvas
+      this.graphs = this.entry.graphs
     }
   }
 

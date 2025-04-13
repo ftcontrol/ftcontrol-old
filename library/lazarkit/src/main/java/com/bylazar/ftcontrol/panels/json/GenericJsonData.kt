@@ -25,12 +25,12 @@ data class TimeObject(
 data class TelemetryPacket(
     var lines: List<String>,
     var canvas: Canvas,
-    var graphs: List<GraphPacket>,
+    var graphs: Map<String, List<GraphPacket>>,
     var timestamp: Long
 ) : JSONData()
 
 @Serializable
 data class GraphPacket(
-    var key: String,
-    var data: String
+    var data: String,
+    var timestamp: Long
 )

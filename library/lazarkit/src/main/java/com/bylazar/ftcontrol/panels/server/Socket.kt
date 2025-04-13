@@ -79,7 +79,7 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(lines: List<String>, canvas: Canvas, graph: List<GraphPacket>) {
+    fun sendTelemetry(lines: List<String>, canvas: Canvas, graph: MutableMap<String, MutableList<GraphPacket>>) {
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
