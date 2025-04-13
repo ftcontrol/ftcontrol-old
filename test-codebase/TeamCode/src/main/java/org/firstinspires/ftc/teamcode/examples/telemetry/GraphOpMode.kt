@@ -5,6 +5,7 @@ import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import kotlin.math.PI
 import kotlin.math.sin
 
 @Configurable
@@ -16,21 +17,29 @@ class GraphOpMode : OpMode() {
     private val panelsTelemetry: TelemetryManager = Panels.getTelemetry()
 
     var ticks = 0.0
-    var value = 0.0
+    var wave = 0.0
+    var wave2 = 0.0
+    val constant = sin(0.0)
 
     override fun init() {
         panelsTelemetry.debug("Init was ran!")
         panelsTelemetry.update(telemetry)
         ticks = 0.0
-        value = 0.0
+        wave = 0.0
+        wave2 = 0.0
     }
 
     override fun loop() {
         ticks += ticksIncrement
-        value = sin(ticks)
+        wave = sin(ticks)
+        wave2 = sin(ticks + PI)
 
-        panelsTelemetry.debug("Here is a variable: $value")
-        panelsTelemetry.graph("wave", value)
+        panelsTelemetry.debug("wave: $wave")
+        panelsTelemetry.debug("wave2: $wave2")
+        panelsTelemetry.debug("constant: $constant")
+        panelsTelemetry.graph("wave", wave)
+        panelsTelemetry.graph("wave2", wave2)
+        panelsTelemetry.graph("constant", constant)
         panelsTelemetry.update(telemetry)
     }
 }
