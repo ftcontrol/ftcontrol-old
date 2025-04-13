@@ -14,14 +14,14 @@
 # FTControl Setup Guide
 This guide helps you integrate `ftcontrol` into your FTC Robot Controller.
 
-## 📦 Clone FTC Robot Controller
+## Clone FTC Robot Controller
 Start by cloning the official FTC repository:
 
 ```bash
 git clone https://github.com/FIRST-Tech-Challenge/FtcRobotController
 ```
 
-## ✨ [Optional] Enable Kotlin Support
+## [Optional] Enable Kotlin Support
 
 > You only need this if you want to use Kotlin instead of Java.
 
@@ -66,7 +66,7 @@ buildscript {
 }
 ```
 
-## 📁 Add FTControl to Your Project
+## Add FTControl to Your Project
 
 In your root build.gradle or settings.gradle, add this Maven repository:
 
@@ -98,7 +98,7 @@ dependencies {
     Latest version fetch failed: {err.message}.
 {/await}
 
-## 📝 Before Updating: Check the Changelog
+## Before Updating: Check the Changelog
 
 Before updating to the latest version of ftcontrol, it's essential to check the changelog for any breaking changes, bug fixes, or new features.
 
