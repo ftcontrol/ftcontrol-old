@@ -6,24 +6,9 @@
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
-
-  let scrollContainer: HTMLElement | null = null
-  function handleWheel(event: WheelEvent) {
-    if (!scrollContainer) return
-
-    const isTrackpadGesture = Math.abs(event.deltaX) > 5
-
-    event.preventDefault()
-    if (isTrackpadGesture) {
-      scrollContainer.scrollLeft += event.deltaX * 8
-      return
-    }
-    scrollContainer.scrollLeft += event.deltaY * 4
-  }
 </script>
 
-<section bind:this={scrollContainer}>
-  <div class="scroller" onwheel={handleWheel}></div>
+<section>
   <div>
     <OpModeControl />
     <PlaybackHistory />
@@ -34,13 +19,12 @@
   <div>
     <GameField />
     <Telemetry />
-    <Graph />
   </div>
   <div>
     <Configurables />
   </div>
   <div>
-    <Flows />
+    <Graph />
   </div>
 </section>
 
@@ -52,11 +36,5 @@
     scroll-behavior: smooth;
     height: 100%;
     padding: 0.5rem;
-  }
-  .scroller {
-    margin: -0.5rem;
-    position: absolute;
-    width: 100%;
-    height: 100%;
   }
 </style>
