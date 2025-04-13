@@ -31,8 +31,6 @@ export function longValidator(value: string): boolean {
   return num >= JAVA_LONG_MIN && num <= JAVA_LONG_MAX
 }
 
-console.log("Test double", doubleValidator("1.1."))
-
 export function doubleValidator(value: string): boolean {
   var foundDot = false
   for (const char of value) {

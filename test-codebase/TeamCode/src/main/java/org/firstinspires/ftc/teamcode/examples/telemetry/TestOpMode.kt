@@ -6,7 +6,6 @@ import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
-@Configurable
 @TeleOp(name = "Test Telemetry OpMode")
 class TestOpMode : OpMode() {
     private val panelsTelemetry: TelemetryManager = Panels.getTelemetry()
