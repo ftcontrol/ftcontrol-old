@@ -126,7 +126,7 @@ const config = defineConfig({
           ],
         },
         // github: "https://github.com/Blackman99/sveltepress",
-        discord: "https://discord.gg/9F7Kk4fRxB",
+        // discord: "https://discord.gg/9F7Kk4fRxB",
         logo: "/favicon.svg",
       }),
       siteConfig: {
