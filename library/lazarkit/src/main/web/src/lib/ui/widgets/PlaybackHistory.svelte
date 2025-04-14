@@ -107,6 +107,7 @@
           info.isRecording = false
           info.history = []
           info.timestamp = 0
+          info.isPlaying = false
         }}
         disabled={!info.hasRecording}>Reset</Button
       >
