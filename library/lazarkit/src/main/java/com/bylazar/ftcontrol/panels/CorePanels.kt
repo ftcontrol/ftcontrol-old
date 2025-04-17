@@ -1,6 +1,8 @@
 package com.bylazar.ftcontrol.panels
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.integration.MenuManager
@@ -16,6 +18,7 @@ import com.bylazar.ftcontrol.panels.server.Server
 import com.bylazar.ftcontrol.panels.server.Socket
 import com.bylazar.ftcontrol.panels.server.TestLimelightServer
 import com.qualcomm.ftccommon.FtcEventLoop
+import com.qualcomm.hardware.limelightvision.Limelight3A
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
@@ -27,10 +30,55 @@ class CorePanels {
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val limelightRunnable = object : Runnable {
+        override fun run() {
+            opModeManager?.hardwareMap?.getAll(Limelight3A::class.java)?.forEach {
+                println("DASH: HM: found ll Connection info: ${it.connectionInfo} deviceName: ${it.deviceName}, manufacturer: ${it.manufacturer} version: ${it.version}")
+                hasLimelight = true
+            }
+            println("DASH: HM: hasLimelight: $hasLimelight")
+            println("DASH: HM: isLimelightProxyEnabled: $isLimelightProxyEnabled")
+            handler.postDelayed(this, 1000)
+        }
+    }
+
+    var hasLimelight = false
+        set(value) {
+            isLimelightProxyEnabled = when (value) {
+                true -> isLimelightProxyEnabled
+                false -> false
+            }
+            field = value
+        }
+
+    var isLimelightProxyEnabled = false
+        set(value) {
+            when (value) {
+                true -> {
+                    if (hasLimelight) {
+                        limelightProxy.startServer()
+                        limelightFeedProxy.startServer()
+                        limelightWebsocketProxy.startProxy()
+                        limelightAPIProxy.startServer()
+                    }
+                }
+
+                false -> {
+                    limelightProxy.stopServer()
+                    limelightFeedProxy.stopServer()
+                    limelightWebsocketProxy.stopProxy()
+                    limelightAPIProxy.stopServer()
+                }
+            }
+            field = value
+        }
+
     lateinit var server: Server
-    lateinit var limelightProxy: GenericProxy
-    lateinit var limelightFeedProxy: GenericStreamingProxy
-    lateinit var limelightAPIProxy: GenericSocketProxy
+    var limelightProxy: GenericProxy = GenericProxy(5801, 5801, "172.29.0.1")
+    var limelightFeedProxy: GenericStreamingProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
+    var limelightWebsocketProxy: GenericSocketProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
+    var limelightAPIProxy: GenericProxy = GenericProxy(5807, 5807, "172.29.0.1")
     lateinit var socket: Socket
 
     lateinit var testLimelightServer: TestLimelightServer
@@ -41,9 +89,6 @@ class CorePanels {
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {
             server = Server(context)
-            limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
-            limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
-            limelightAPIProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
             testLimelightServer = TestLimelightServer(context)
         } catch (e: IOException) {
@@ -54,9 +99,7 @@ class CorePanels {
         if (!Preferences.isEnabled) return
 
         server.startServer()
-        limelightProxy.startServer()
-        limelightFeedProxy.startServer()
-        limelightAPIProxy.startProxy()
+        isLimelightProxyEnabled = true
         socket.startServer()
 
         Configurables.findConfigurables(context)
@@ -82,29 +125,30 @@ class CorePanels {
         if (Preferences.isEnabled) enable();
 
         uiManager.injectText()
+
+        handler.post(limelightRunnable)
     }
 
     fun close(registrar: Panels) {
         server.stopServer()
         socket.stopServer()
-        limelightProxy.stopServer()
-        limelightFeedProxy.stopServer()
+        isLimelightProxyEnabled = false
 
         opModeManager?.unregisterListener(registrar)
         disable()
 
         uiManager.removeText()
+
+        handler.removeCallbacks(limelightRunnable)
     }
 
     fun enable() {
         if (Preferences.isEnabled) return
         Preferences.isEnabled = true
         uiManager.updateText()
-        server.startServer()
-        limelightProxy.startServer()
-        limelightFeedProxy.startServer()
-        limelightAPIProxy.startProxy()
+        isLimelightProxyEnabled = true
         socket.startServer()
+        handler.post(limelightRunnable)
     }
 
     fun disable() {
@@ -112,10 +156,9 @@ class CorePanels {
         Preferences.isEnabled = false
         uiManager.updateText()
         server.stopServer()
-        limelightProxy.stopServer()
-        limelightFeedProxy.stopServer()
-        limelightAPIProxy.stopProxy()
+        isLimelightProxyEnabled = false
         socket.stopServer()
+        handler.post(limelightRunnable)
     }
 
     fun toggle() {
