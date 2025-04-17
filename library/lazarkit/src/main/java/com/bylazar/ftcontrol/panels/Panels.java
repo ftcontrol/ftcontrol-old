@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.WebHandlerManager;
 import com.qualcomm.robotcore.util.WebServer;
 

@@ -1,20 +1,17 @@
 package com.bylazar.ftcontrol.panels.server
 
-import android.content.Context
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayInputStream
 
-class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
-
-//    val llURL = "172.29.0.1"
-//    val llPort = 5801
-
-    val llURL = "localhost"
-    val llPort = 8001
-
+class GenericProxy(
+    val outsidePort: Int,
+    val innerPort: Int,
+    val innerIP: String
+) :
+    NanoHTTPD(outsidePort) {
     private val client = OkHttpClient.Builder().build()
 
     override fun serve(session: IHTTPSession): Response {
@@ -35,7 +32,7 @@ class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
         println("DASH: Proxying request to ${session.uri}")
 
         val request = Request.Builder()
-            .url("http://$llURL:$llPort${session.uri}")
+            .url("http://$innerIP:$innerPort${session.uri}")
             .method(session.method.name, getRequestBody(session))
             .apply {
                 session.headers
@@ -80,7 +77,7 @@ class LimelightProxy(private val context: Context) : NanoHTTPD(8003) {
 
     fun startServer() {
         start()
-        println("DASH: Server started on port 8003")
+        println("DASH: Server started on port $outsidePort")
     }
 
     fun stopServer() {
