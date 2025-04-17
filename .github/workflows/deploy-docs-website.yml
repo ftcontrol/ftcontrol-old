@@ -50,9 +50,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.REPO_FOLDER }}
-          sparse-checkout-cone-mode: false
       - name: Copy and set permissions
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
