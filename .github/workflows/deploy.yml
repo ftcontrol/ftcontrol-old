@@ -61,5 +61,6 @@ jobs:
           echo "$SUDO_PASSWORD" | sudo -S su -c "
             sudo docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD myregistry.bylazar.com
             cd $SERVICE_FOLDER
+            docker compose down
             docker compose up -d
           "
