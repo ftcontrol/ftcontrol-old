@@ -6,7 +6,7 @@ on:
     paths:
       - lazarkit-website/**
       - test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/**
-      - .github/workflows/deploy-docs-website.yml
+      - .github/workflows/deploy.yml
   workflow_dispatch:
 
 concurrency:
@@ -30,7 +30,7 @@ jobs:
     runs-on: lazarvps
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: ls
         run: ls
       - name: Build and Push Docker Image
@@ -51,7 +51,7 @@ jobs:
     needs: build
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Copy and set permissions
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
