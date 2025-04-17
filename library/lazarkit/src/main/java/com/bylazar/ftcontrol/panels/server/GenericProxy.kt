@@ -35,16 +35,18 @@ class GenericProxy(
             .url("http://$innerIP:$innerPort${session.uri}")
             .method(session.method.name, getRequestBody(session))
             .apply {
-                session.headers
-                    .filterKeys { it.lowercase() != "host" }
-                    .forEach { (key, value) -> addHeader(key, value) }
+                session.headers.forEach { (key, value) ->
+                    if (!key.equals("host", ignoreCase = true)) {
+                        addHeader(key, value)
+                    }
+                }
             }
             .build()
 
         val response = client.newCall(request).execute()
         val responseBody = response.body?.bytes() ?: ByteArray(0)
 
-        val mimeType = response.header("Content-Type") ?: "application/octet-stream"
+        val mimeType = response.header("Content-Type") ?: "application/json"
         val encoding = response.header("Content-Encoding")
 
         val resp = newFixedLengthResponse(
@@ -58,8 +60,20 @@ class GenericProxy(
             resp.addHeader("Content-Encoding", it)
         }
 
-        listOf("Cache-Control", "Content-Language", "ETag").forEach { header ->
+        listOf("Cache-Control", "Content-Language", "ETag", "Content-Type", "Content-Encoding", "Content-Length").forEach { header ->
             response.header(header)?.let { resp.addHeader(header, it) }
+        }
+
+        resp.addHeader("Access-Control-Allow-Origin", "*")
+        resp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        resp.addHeader("Access-Control-Allow-Headers", "*")
+
+        if (session.method == Method.OPTIONS) {
+            val optionsResp = newFixedLengthResponse(Response.Status.OK, "text/plain", "")
+            optionsResp.addHeader("Access-Control-Allow-Origin", "*")
+            optionsResp.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            optionsResp.addHeader("Access-Control-Allow-Headers", "*")
+            return optionsResp
         }
 
         return resp
@@ -67,12 +81,13 @@ class GenericProxy(
 
 
     private fun getRequestBody(session: IHTTPSession): RequestBody? {
-        if (session.method in listOf(Method.POST, Method.PUT, Method.PATCH)) {
-            val buffer = session.inputStream.readBytes()
+        return if (session.method in listOf(Method.POST, Method.PUT, Method.PATCH)) {
+            val contentLength = session.headers["content-length"]?.toIntOrNull() ?: 0
+            val buffer = ByteArray(contentLength)
+            session.inputStream.read(buffer)
             val mediaType = session.headers["content-type"]?.toMediaTypeOrNull()
-            return buffer.toRequestBody(mediaType)
-        }
-        return null
+            buffer.toRequestBody(mediaType)
+        } else null
     }
 
     fun startServer() {
