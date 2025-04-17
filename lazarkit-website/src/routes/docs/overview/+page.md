@@ -17,6 +17,7 @@ It provides a powerful set of features with minimal boilerplate, using **Kotlin*
 - **Graph view** – A graphing tool for tuning and debugging.
 - **Capture mode** – Record and replay matches for debugging.
 - **Configurables** – Tune your robot in real time **without uploading code again**.
+- **Limelight Support** - Use your Limelight 3A without USB connection.
 
 ---
 

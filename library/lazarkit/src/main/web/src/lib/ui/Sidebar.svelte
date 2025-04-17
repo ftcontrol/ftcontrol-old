@@ -50,11 +50,15 @@
     <div>
       <Logo />
       <p>{socket.state == "opened" ? "Connected to server" : "Disconnected"}</p>
+      <p>{info.batteryVoltage}V</p>
 
       <div class="gap"></div>
 
       <h2>General</h2>
       <a href="/">Robot Control</a>
+      <a href="/limelight">Limelight</a>
+
+      <h2>Developer</h2>
       <a href="/time">Global Time</a>
       <a href="/controller">Controller</a>
       <a href="/field">Game Field</a>
