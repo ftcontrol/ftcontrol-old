@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.0
+- Introduced Limelight Dashboard
+- Show Battery Voltage
+
 ## v0.1.7
 - Introduced the Graph View.
 - Changed the default homepage to be the Robot Control Panel.

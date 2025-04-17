@@ -1,8 +1,6 @@
 package com.bylazar.ftcontrol.panels
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.view.Menu
 import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.integration.MenuManager
@@ -18,7 +16,6 @@ import com.bylazar.ftcontrol.panels.server.Server
 import com.bylazar.ftcontrol.panels.server.Socket
 import com.bylazar.ftcontrol.panels.server.TestLimelightServer
 import com.qualcomm.ftccommon.FtcEventLoop
-import com.qualcomm.hardware.limelightvision.Limelight3A
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
@@ -30,38 +27,14 @@ class CorePanels {
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
-    private val handler = Handler(Looper.getMainLooper())
-    private val limelightRunnable = object : Runnable {
-        override fun run() {
-            opModeManager?.hardwareMap?.getAll(Limelight3A::class.java)?.forEach {
-                println("DASH: HM: found ll Connection info: ${it.connectionInfo} deviceName: ${it.deviceName}, manufacturer: ${it.manufacturer} version: ${it.version}")
-                hasLimelight = true
-            }
-            println("DASH: HM: hasLimelight: $hasLimelight")
-            println("DASH: HM: isLimelightProxyEnabled: $isLimelightProxyEnabled")
-            handler.postDelayed(this, 1000)
-        }
-    }
-
-    var hasLimelight = false
-        set(value) {
-            isLimelightProxyEnabled = when (value) {
-                true -> isLimelightProxyEnabled
-                false -> false
-            }
-            field = value
-        }
-
     var isLimelightProxyEnabled = false
         set(value) {
             when (value) {
                 true -> {
-                    if (hasLimelight) {
-                        limelightProxy.startServer()
-                        limelightFeedProxy.startServer()
-                        limelightWebsocketProxy.startProxy()
-                        limelightAPIProxy.startServer()
-                    }
+                    limelightProxy.startServer()
+                    limelightFeedProxy.startServer()
+                    limelightWebsocketProxy.startProxy()
+                    limelightAPIProxy.startServer()
                 }
 
                 false -> {
@@ -125,8 +98,6 @@ class CorePanels {
         if (Preferences.isEnabled) enable();
 
         uiManager.injectText()
-
-        handler.post(limelightRunnable)
     }
 
     fun close(registrar: Panels) {
@@ -138,8 +109,6 @@ class CorePanels {
         disable()
 
         uiManager.removeText()
-
-        handler.removeCallbacks(limelightRunnable)
     }
 
     fun enable() {
@@ -148,7 +117,6 @@ class CorePanels {
         uiManager.updateText()
         isLimelightProxyEnabled = true
         socket.startServer()
-        handler.post(limelightRunnable)
     }
 
     fun disable() {
@@ -158,7 +126,6 @@ class CorePanels {
         server.stopServer()
         isLimelightProxyEnabled = false
         socket.stopServer()
-        handler.post(limelightRunnable)
     }
 
     fun toggle() {
