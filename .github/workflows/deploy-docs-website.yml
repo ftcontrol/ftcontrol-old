@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Build and Push Docker Image
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
@@ -50,6 +52,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Copy and set permissions
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
