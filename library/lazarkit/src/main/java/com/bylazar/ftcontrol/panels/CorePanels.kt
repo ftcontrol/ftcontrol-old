@@ -2,10 +2,6 @@ package com.bylazar.ftcontrol.panels
 
 import android.content.Context
 import android.view.Menu
-import com.qualcomm.ftccommon.FtcEventLoop
-import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
-import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
-import com.qualcomm.robotcore.util.WebServer
 import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.integration.MenuManager
 import com.bylazar.ftcontrol.panels.integration.OpModeData
@@ -13,10 +9,16 @@ import com.bylazar.ftcontrol.panels.integration.OpModeRegistrar
 import com.bylazar.ftcontrol.panels.integration.Preferences
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.bylazar.ftcontrol.panels.integration.UIManager
-import com.bylazar.ftcontrol.panels.server.LimelightProxy
+import com.bylazar.ftcontrol.panels.server.GenericProxy
+import com.bylazar.ftcontrol.panels.server.GenericSocketProxy
+import com.bylazar.ftcontrol.panels.server.GenericStreamingProxy
 import com.bylazar.ftcontrol.panels.server.Server
 import com.bylazar.ftcontrol.panels.server.Socket
 import com.bylazar.ftcontrol.panels.server.TestLimelightServer
+import com.qualcomm.ftccommon.FtcEventLoop
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
+import com.qualcomm.robotcore.util.WebServer
 import java.io.IOException
 
 class CorePanels {
@@ -26,7 +28,9 @@ class CorePanels {
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
     lateinit var server: Server
-    lateinit var limelightProxy: LimelightProxy
+    lateinit var limelightProxy: GenericProxy
+    lateinit var limelightFeedProxy: GenericStreamingProxy
+    lateinit var limelightAPIProxy: GenericSocketProxy
     lateinit var socket: Socket
 
     lateinit var testLimelightServer: TestLimelightServer
@@ -37,7 +41,9 @@ class CorePanels {
     fun attachWebServer(context: Context, webServer: WebServer) {
         try {
             server = Server(context)
-            limelightProxy = LimelightProxy(context)
+            limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
+            limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
+            limelightAPIProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
             testLimelightServer = TestLimelightServer(context)
         } catch (e: IOException) {
@@ -49,6 +55,8 @@ class CorePanels {
 
         server.startServer()
         limelightProxy.startServer()
+        limelightFeedProxy.startServer()
+        limelightAPIProxy.startProxy()
         socket.startServer()
 
         Configurables.findConfigurables(context)
@@ -61,7 +69,6 @@ class CorePanels {
 
         opModeManager = eventLoop.opModeManager
         opModeManager?.registerListener(registrar)
-
 
         opModeData.init(eventLoop)
     }
@@ -81,6 +88,7 @@ class CorePanels {
         server.stopServer()
         socket.stopServer()
         limelightProxy.stopServer()
+        limelightFeedProxy.stopServer()
 
         opModeManager?.unregisterListener(registrar)
         disable()
@@ -94,6 +102,8 @@ class CorePanels {
         uiManager.updateText()
         server.startServer()
         limelightProxy.startServer()
+        limelightFeedProxy.startServer()
+        limelightAPIProxy.startProxy()
         socket.startServer()
     }
 
@@ -103,6 +113,8 @@ class CorePanels {
         uiManager.updateText()
         server.stopServer()
         limelightProxy.stopServer()
+        limelightFeedProxy.stopServer()
+        limelightAPIProxy.stopProxy()
         socket.stopServer()
     }
 
