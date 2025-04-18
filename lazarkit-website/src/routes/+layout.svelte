@@ -14,4 +14,7 @@
   p {
     text-align: center;
   }
+  :global(a > span.title) {
+    display: none;
+  }
 </style>
