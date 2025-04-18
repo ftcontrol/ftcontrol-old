@@ -1,6 +1,6 @@
 ---
 title: Welcome
-tagline: An intuitive, real-time dashboard for your FTC Robot. 
+tagline: With Panels, an intuitive, real-time dashboard for your FTC Robot. 
 heroImage: /app-zoomed.png
 actions:
   # - label: View on github
