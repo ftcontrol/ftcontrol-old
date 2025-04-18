@@ -15,6 +15,8 @@ COPY ./test-codebase ./test-codebase
 
 COPY ./library ./library
 
+COPY ./ ./
+
 RUN cd lazarkit-website && bun run build
 
 # CMD ["sleep", "infinity"]
