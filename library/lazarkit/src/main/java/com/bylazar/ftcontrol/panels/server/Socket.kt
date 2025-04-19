@@ -1,6 +1,5 @@
 package com.bylazar.ftcontrol.panels.server
 
-import com.bylazar.ftcontrol.flows.FlowRegistry
 import com.bylazar.ftcontrol.panels.GlobalData
 import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.integration.OpModeData
@@ -194,7 +193,6 @@ class Socket(
         }
 
         fun sendAllFlows() {
-            send(AllFlowsJson(FlowRegistry.allFlowsJson))
         }
 
         override fun onMessage(message: WebSocketFrame) {

@@ -1,4 +1,4 @@
-name: Build FTControl
+name: Build FTControl Docs
 on:
   push:
     branches:
@@ -31,9 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.BASE_DIR }}
-          sparse-checkout-cone-mode: false
+      - name: ls
+        run: ls -a
       - name: Build and Push Docker Image
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
@@ -53,9 +52,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ env.REPO_FOLDER }}
-          sparse-checkout-cone-mode: false
       - name: Copy and set permissions
         run: |
           echo "$SUDO_PASSWORD" | sudo -S bash -c "
@@ -67,5 +63,6 @@ jobs:
           echo "$SUDO_PASSWORD" | sudo -S su -c "
             sudo docker login --username $REGISTRY_USER --password $REGISTRY_PASSWORD myregistry.bylazar.com
             cd $SERVICE_FOLDER
+            docker compose down
             docker compose up -d
           "

@@ -105,13 +105,13 @@ const config = defineConfig({
             //     },
             //   ],
             // },
-            // {
-            //   title: "External github page",
-            //   to: "https://github.com",
-            // },
+            {
+              title: "External github page",
+              to: "https://github.com/lazarcloud/ftcontrol",
+            },
           ],
         },
-        // github: "https://github.com/Blackman99/sveltepress",
+        github: "https://github.com/lazarcloud/ftcontrol",
         // discord: "https://discord.gg/9F7Kk4fRxB",
         logo: "/logo.svg",
       }),
