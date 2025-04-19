@@ -7,7 +7,13 @@ RUN apt-get update && apt-get install -y git
 COPY ./lazarkit-website/package.json ./lazarkit-website/package.json
 COPY ./lazarkit-website/bun.lock ./lazarkit-website/bun.lock
 
+COPY ./lazarkit-website ./lazarkit-website
+
 RUN cd lazarkit-website && bun install
+
+COPY ./test-codebase ./test-codebase
+
+COPY ./library ./library
 
 COPY ./ ./
 

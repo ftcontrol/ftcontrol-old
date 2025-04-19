@@ -36,20 +36,6 @@ const config = defineConfig({
             title: "Docs",
             to: "/docs/overview",
           },
-          // {
-          //   title: "With dropdown",
-          //   items: [
-          //     {
-          //       title: "Bar page",
-          //       to: "/bar/",
-          //     },
-          //     {
-          //       title: "External Github page",
-          //       to: "https://github.com/",
-          //       external: true,
-          //     },
-          //   ],
-          // },
         ],
         sidebar: {
           "/docs": [
@@ -110,24 +96,24 @@ const config = defineConfig({
                 },
               ],
             },
-            {
-              title: "Flows",
-              collapsible: true,
-              items: [
-                {
-                  title: "Test Chapter",
-                },
-              ],
-            },
-            {
-              title: "External github page",
-              to: "https://github.com",
-            },
+            // {
+            //   title: "Flows",
+            //   collapsible: true,
+            //   items: [
+            //     {
+            //       title: "Test Chapter",
+            //     },
+            //   ],
+            // },
+            // {
+            //   title: "External github page",
+            //   to: "https://github.com",
+            // },
           ],
         },
         // github: "https://github.com/Blackman99/sveltepress",
         // discord: "https://discord.gg/9F7Kk4fRxB",
-        logo: "/favicon.svg",
+        logo: "/logo.svg",
       }),
       siteConfig: {
         title: "FTControl",

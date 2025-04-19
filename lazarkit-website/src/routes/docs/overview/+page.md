@@ -21,10 +21,4 @@ It provides a powerful set of features with minimal boilerplate, using **Kotlin*
 
 ---
 
-### Flows *(Work in Progress)*
-
-A modular **command system** for organizing your robot logic in a clean, structured way.
-
----
-
 Stay tuned for more features as FTControl evolves!

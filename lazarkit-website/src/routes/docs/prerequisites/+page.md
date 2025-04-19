@@ -86,7 +86,7 @@ Then in your module’s build.gradle:
 
 ```groovy title="build.gradle"
 dependencies {
-    implementation "com.bylazar.ftcontrol:ftcontrol:VERSION"// [svp! ~~:1]
+    implementation "com.bylazar:ftcontrol:VERSION"// [svp! ~~:1]
 }
 ```
 
