@@ -1,7 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables
 
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
 import java.io.IOException
@@ -57,8 +56,6 @@ class ClassFinder {
 
     data class ClassEntry(
         val className: String,
-        val isConfigurable: Boolean = false,
-        val isCustomType: Boolean = false,
     )
 
     lateinit var apkPath: String
@@ -88,17 +85,13 @@ class ClassFinder {
                                             clazz.isAnnotationPresent(Configurable::class.java)
                                         val hasIgnoreConfigurable =
                                             clazz.isAnnotationPresent(IgnoreConfigurable::class.java)
-                                        val hasCustomType =
-                                            clazz.isAnnotationPresent(ConfigurableCustomType::class.java)
                                         val shouldKeep =
-                                            (hasConfigurable || hasCustomType) && !hasIgnoreConfigurable
+                                            hasConfigurable && !hasIgnoreConfigurable
                                         if (!shouldKeep) {
                                             return@mapNotNull null
                                         }
                                         ClassEntry(
                                             className = it,
-                                            isConfigurable = hasConfigurable,
-                                            isCustomType = hasCustomType,
                                         )
                                     } catch (e: ClassNotFoundException) {
                                         println("DASH: Class not found: $it")
@@ -126,10 +119,4 @@ class ClassFinder {
 
     val getAllClasses: List<ClassEntry>
         get() = allClasses
-
-    val configurableClasses: List<ClassEntry>
-        get() = allClasses.filter { it.isConfigurable }
-
-    val customTypeClasses: List<ClassEntry>
-        get() = allClasses.filter { it.isCustomType }
 }

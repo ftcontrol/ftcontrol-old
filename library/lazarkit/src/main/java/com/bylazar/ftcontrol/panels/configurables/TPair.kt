@@ -1,9 +1,7 @@
 package com.bylazar.ftcontrol.panels.configurables
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 
-@ConfigurableCustomType
 open class TPair<T, V>(
     @field:IgnoreConfigurable
     var lambdaProvider: () -> T,

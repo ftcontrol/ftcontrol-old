@@ -36,10 +36,20 @@ fun getType(
         Map::class.java.isAssignableFrom(classType) -> BaseTypes.MAP
         List::class.java.isAssignableFrom(classType) -> BaseTypes.LIST
         MutableList::class.java.isAssignableFrom(classType) -> BaseTypes.LIST
+        isCustomClass(classType) -> BaseTypes.CUSTOM
 
-        Configurables.customTypeClasses.any { it.className == classType.name } -> BaseTypes.CUSTOM
         else -> resolveGenericType(reference, parentReference)
     }
+}
+
+private fun isCustomClass(clazz: Class<*>): Boolean {
+    return !(clazz.isPrimitive
+            || clazz.`package`?.name?.startsWith("java.") == true
+            || clazz.`package`?.name?.startsWith("kotlin.") == true
+            || clazz.isInterface
+            || clazz.isAnnotation
+            || clazz.isEnum
+            || clazz.isArray)
 }
 
 private fun resolveGenericType(reference: MyField?, parentReference: MyField?): BaseTypes {
@@ -50,7 +60,7 @@ private fun resolveGenericType(reference: MyField?, parentReference: MyField?): 
     val isGeneric =
         genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>
 
-    if (!isGeneric) return BaseTypes.UNKNOWN
+    if (!isGeneric) return BaseTypes.CUSTOM
 
     val genericAnnotation = parentReference.ref?.getAnnotation(GenericValue::class.java)
 

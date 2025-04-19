@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType;
 import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue;
 
 
@@ -28,7 +27,6 @@ public class TestJavaClass {
     public static List<Integer> testList = List.of(1, 2, 3);
     public static Map<String, Integer> testMap = Map.of("one", 1, "two", 2, "three", 3);
 
-    @ConfigurableCustomType
     public static class CustomType {
         public final int testInt;
         public final String testString;
@@ -49,7 +47,6 @@ public class TestJavaClass {
 
     public static CustomType testCustomType = new CustomType(1, "test!");
 
-    @ConfigurableCustomType
     public static class NestedType {
         public final int testInt;
         public final String testString;
@@ -103,7 +100,6 @@ public class TestJavaClass {
             Map.of("one", 1, "two", 2, "three", 3)
     };
 
-    @ConfigurableCustomType
     public static class TParamClass<T> {
         public final T test;
 

@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.2.5
+- Removed pointless `ConfigurableCustomType` annotation.
+
 ## v0.2.1
 - New logo for Panels
 

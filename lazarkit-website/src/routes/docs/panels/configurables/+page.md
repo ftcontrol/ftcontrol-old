@@ -97,16 +97,15 @@ You can use:
 - Strings
 - Arrays and Lists
 - Maps (read-only unless exposed via a custom dashboard)
-- Custom types (via @ConfigurableCustomType)
+- Custom types (detected automatically)
 - Generic types (via @GenericValue)
 
 ---
 
 ## Custom Types
-Mark classes with `@ConfigurableCustomType` to allow custom objects.
+Custom objects are detected automatically.
 
 ```java
-@ConfigurableCustomType
 public class CustomType {
     public final int id;
     public final String name;
@@ -119,7 +118,6 @@ public class CustomType {
 ```
 You can nest custom types, too:
 ```kotlin
-@ConfigurableCustomType
 public class NestedType {
     public final CustomType child;
 
@@ -133,7 +131,6 @@ public class NestedType {
 If you have a generic wrapper class:
 
 ```java
-@ConfigurableCustomType
 public class TParamClass<T> {
     public final T value;
     public TParamClass(T value) { this.value = value; }
@@ -210,7 +207,7 @@ var testRandomArray = arrayOf(
     true,
     CustomType(1, "test!"),
     NestedType(1, "test!", CustomType(2, "test2!")),
-    UnknownType(1), //doesn't have the @ConfigurableCustomType annotation.
+    UnknownType(1),
     arrayOf(
         1,
         2,

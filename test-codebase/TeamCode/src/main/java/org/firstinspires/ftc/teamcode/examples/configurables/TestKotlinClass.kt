@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.examples.configurables
 
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
 import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
 
 @Configurable
@@ -43,7 +42,6 @@ class TestKotlinClass {
         @JvmField
         var testMap: Map<String, Int> = mapOf("one" to 1, "two" to 2, "three" to 3)
 
-        @ConfigurableCustomType
         class CustomType(
             val testInt: Int,
             val testString: String
@@ -52,7 +50,6 @@ class TestKotlinClass {
         @JvmField
         var testCustomType: CustomType = CustomType(1, "test!")
 
-        @ConfigurableCustomType
         class NestedType(
             val testInt: Int,
             val testString: String,
@@ -91,7 +88,6 @@ class TestKotlinClass {
             )
         )
 
-        @ConfigurableCustomType
         class TParamClass<T>(
             val test: T
         )

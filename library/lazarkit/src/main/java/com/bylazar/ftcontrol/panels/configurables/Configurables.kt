@@ -7,7 +7,6 @@ import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericFiel
 object Configurables {
     var fieldsMap = mutableMapOf<String, MyField>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
-    var customTypeClasses: List<ClassFinder.ClassEntry> = listOf()
 
     var jvmFields = listOf<GenericField>()
 
@@ -17,20 +16,13 @@ object Configurables {
     fun findConfigurables(context: Context) {
         fieldsMap = mutableMapOf()
         configurableClasses = listOf()
-        customTypeClasses = listOf()
         jvmFields = listOf()
 
         finder.apkPath = context.packageCodePath
-        println("DASH: Found ${finder.configurableClasses.size} configurable classes:")
-        finder.configurableClasses.forEach { className ->
+        println("DASH: Found ${finder.getAllClasses.size} configurable classes:")
+        finder.getAllClasses.forEach { className ->
             println("DASH: $className")
         }
-        configurableClasses = finder.configurableClasses
-        println("DASH: Found ${finder.customTypeClasses.size} custom type classes:")
-        finder.customTypeClasses.forEach { entry ->
-            println("DASH: ${entry.className} / ${Class.forName(entry.className).declaredFields.map { it.name }}")
-        }
-        customTypeClasses = finder.customTypeClasses
         println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
         variables.getJvmFields.forEach { info ->
             println("DASH: ${info.className}.${info.reference.name}")

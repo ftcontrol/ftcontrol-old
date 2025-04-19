@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.examples.configurables
 
 import com.bylazar.ftcontrol.panels.Panels
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.ConfigurableCustomType
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
@@ -29,7 +28,6 @@ class TestOpMode: OpMode() {
         @JvmField
         var testArray: Array<Int> = arrayOf(1, 2, 3)
 
-        @ConfigurableCustomType
         class CustomType(
             @JvmField var testInt: Int,
             @JvmField var testString: String
