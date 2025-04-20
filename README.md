@@ -26,5 +26,6 @@ It provides a powerful set of features with minimal boilerplate, using **Kotlin*
 Stay tuned for more features as FTControl evolves!
 
 ## Dev Env
-- Use `test-codebase` in Android Studio.
+- Open `test-codebase` in Android Studio
 - All static sites can be opened in VSCode using Bun. (lazarkit-website for docs and library\lazarkit\src\main\web for dashboard ui)
+- Create gradle.properties files in library and test-codebase

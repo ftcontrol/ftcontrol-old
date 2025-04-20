@@ -1,26 +1,29 @@
 import { info } from "$lib"
-import { Types, type GenericTypeJson } from "$lib/genericType"
+import {
+  Types,
+  type CustomTypeJson,
+  type GenericTypeJson,
+} from "$lib/genericType"
+import { ConfigurablesStates } from "$lib/socket.svelte"
 import { forAll, forAllRecursive } from "./utils"
 
-function search(p: string, fields: GenericTypeJson[]) {
+function genericSearch(
+  fields: GenericTypeJson[],
+  condition: (field: GenericTypeJson) => boolean
+) {
   if (!fields) return
 
-  p = p.toLowerCase()
   const newOpenedStates: { [key: string]: boolean } = {}
 
   forAllRecursive(
     fields,
     (field) => {
-      const matches =
-        field.fieldName?.toLowerCase().includes(p) ||
-        field.className?.toLowerCase().includes(p)
+      const matches = condition(field)
       field.isShown = matches
       return matches
     },
     (field, childResults) => {
-      const nameMatches =
-        field.fieldName?.toLowerCase().includes(p) ||
-        field.className?.toLowerCase().includes(p)
+      const nameMatches = condition(field)
       const childrenMatch = childResults.some(Boolean)
 
       const isMatch = nameMatches || childrenMatch
@@ -53,6 +56,14 @@ function search(p: string, fields: GenericTypeJson[]) {
   forAll(info.jvmFields, openStuff, openStuff)
 
   info.openedStates = newOpenedStates
+}
+
+function search(p: string, fields: GenericTypeJson[]) {
+  p = p.toLowerCase()
+
+  genericSearch(fields, (field) => {
+    return field.fieldName?.toLowerCase().includes(p)
+  })
 }
 
 let savedStates: {
@@ -91,16 +102,54 @@ function restoreState() {
   )
 }
 
-let wasSaved = false
-
 export function handleSearch(value: string) {
   info.searchParam = value
   if (value != "") {
-    if (!wasSaved) saveState()
-    wasSaved = true
+    if (info.configurablesState == ConfigurablesStates.NORMAL) saveState()
+    info.configurablesState = ConfigurablesStates.SEARCH
     search(value, info.jvmFields)
   } else {
-    restoreState()
-    wasSaved = false
+    if (info.configurablesState == ConfigurablesStates.SEARCH) {
+      info.configurablesState = ConfigurablesStates.NORMAL
+      restoreState()
+      return
+    }
   }
+}
+
+export function handleDiff() {
+  if (info.configurablesState == ConfigurablesStates.DIFF) {
+    restoreState()
+    info.configurablesState = ConfigurablesStates.NORMAL
+    return
+  }
+  if (info.configurablesState == ConfigurablesStates.NORMAL) {
+    saveState()
+  }
+  info.configurablesState = ConfigurablesStates.DIFF
+  computeDiff(info.jvmFields)
+}
+
+function computeDiff(fields: GenericTypeJson[]) {
+  genericSearch(fields, (field) => {
+    return field.valueString != info.initialJvmFields.get(field.id)
+  })
+}
+
+export function hasDiff(fields: GenericTypeJson[]): boolean {
+  let foundDiff = false
+
+  forAllRecursive(
+    fields,
+    (field) => {
+      if (field.valueString !== info.initialJvmFields.get(field.id)) {
+        foundDiff = true
+        return true
+      }
+      return false
+    },
+    () => foundDiff
+  )
+
+  return foundDiff
 }

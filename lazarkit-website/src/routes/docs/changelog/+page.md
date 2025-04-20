@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.6
+- *Configurables Differential Mode*: Displays all modified variables
+- Search improvements
+- Configurables UI fixes
+- Panels favicon
+
 ## v0.2.5
 - Removed pointless `ConfigurableCustomType` annotation.
 

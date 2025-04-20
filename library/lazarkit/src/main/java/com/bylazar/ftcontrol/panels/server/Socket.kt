@@ -4,7 +4,6 @@ import com.bylazar.ftcontrol.panels.GlobalData
 import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.json.ActiveOpMode
-import com.bylazar.ftcontrol.panels.json.AllFlowsJson
 import com.bylazar.ftcontrol.panels.json.BatteryVoltage
 import com.bylazar.ftcontrol.panels.json.Canvas
 import com.bylazar.ftcontrol.panels.json.GetActiveOpModeRequest
@@ -13,6 +12,7 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
+import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
 import com.bylazar.ftcontrol.panels.json.StartActiveOpModeRequest
@@ -78,7 +78,11 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(lines: List<String>, canvas: Canvas, graph: MutableMap<String, MutableList<GraphPacket>>) {
+    fun sendTelemetry(
+        lines: List<String>,
+        canvas: Canvas,
+        graph: MutableMap<String, MutableList<GraphPacket>>
+    ) {
         if (!isAlive) return
         println("DASH: sent telemetry")
         for (client in clients) {
@@ -189,6 +193,7 @@ class Socket(
         }
 
         fun sendJvmFields() {
+            send(ReceivedInitialJvmFields(Configurables.initialJvmFields))
             send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
         }
 

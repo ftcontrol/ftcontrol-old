@@ -16,6 +16,12 @@ data class ReceivedJvmFields(
 ) : JSONData()
 
 @Serializable
+@SerialName("initialJvmFields")
+data class ReceivedInitialJvmFields(
+    var fields: List<GenericTypeJson>
+) : JSONData()
+
+@Serializable
 @SerialName("updatedJvmFields")
 data class UpdatedJvmFields(
     var fields: List<ChangeJson>
