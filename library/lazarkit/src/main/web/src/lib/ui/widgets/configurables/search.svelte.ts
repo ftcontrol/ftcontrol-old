@@ -122,8 +122,8 @@ export function handleSearch(value: string) {
 
 export function handleDiff() {
   if (info.configurablesState == ConfigurablesStates.DIFF) {
-    info.configurablesState = ConfigurablesStates.NORMAL
     restoreState()
+    info.configurablesState = ConfigurablesStates.NORMAL
     return
   }
   if (info.configurablesState == ConfigurablesStates.NORMAL) {
