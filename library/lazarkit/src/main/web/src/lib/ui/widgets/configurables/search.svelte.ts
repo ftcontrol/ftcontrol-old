@@ -1,5 +1,6 @@
 import { info } from "$lib"
 import { Types, type GenericTypeJson } from "$lib/genericType"
+import { ConfigurablesStates } from "$lib/socket.svelte"
 import { forAll, forAllRecursive } from "./utils"
 
 function search(p: string, fields: GenericTypeJson[]) {
@@ -91,21 +92,35 @@ function restoreState() {
   )
 }
 
-let wasSaved = false
-
 export function handleSearch(value: string) {
   info.searchParam = value
   if (value != "") {
-    if (!wasSaved) saveState()
-    wasSaved = true
+    if (info.configurablesState == ConfigurablesStates.NORMAL) saveState()
+    info.configurablesState = ConfigurablesStates.SEARCH
     search(value, info.jvmFields)
   } else {
-    restoreState()
-    wasSaved = false
+    if (info.configurablesState == ConfigurablesStates.SEARCH) {
+      info.configurablesState = ConfigurablesStates.NORMAL
+      restoreState()
+      return
+    }
   }
 }
 
-export function computeDiff(fields: GenericTypeJson[]) {
+export function handleDiff() {
+  if (info.configurablesState == ConfigurablesStates.DIFF) {
+    info.configurablesState = ConfigurablesStates.NORMAL
+    restoreState()
+    return
+  }
+  if (info.configurablesState == ConfigurablesStates.NORMAL) {
+    saveState()
+  }
+  info.configurablesState = ConfigurablesStates.DIFF
+  computeDiff(info.jvmFields)
+}
+
+function computeDiff(fields: GenericTypeJson[]) {
   if (!fields) return
 
   const newOpenedStates: { [key: string]: boolean } = {}

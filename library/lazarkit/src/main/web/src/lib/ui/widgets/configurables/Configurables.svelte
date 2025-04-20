@@ -5,6 +5,7 @@
     type ChangeJson,
     type GenericTypeJson,
   } from "$lib/genericType"
+  import { ConfigurablesStates } from "$lib/socket.svelte"
   import { Section } from "$primitives"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
   import Header from "$ui/primitives/Header.svelte"
@@ -12,7 +13,7 @@
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
   import Hiddable from "./Hiddable.svelte"
-  import { computeDiff, handleSearch } from "./search.svelte"
+  import { handleDiff, handleSearch } from "./search.svelte"
   import { forAll, forAllRecursive } from "./utils"
 
   function processFields(fields: GenericTypeJson[]): {
@@ -91,20 +92,22 @@
     </button>
     <button
       onclick={() => {
-        computeDiff(info.jvmFields)
+        handleDiff()
       }}>Compute Diff</button
     >
   </Header>
   <div class="content">
     {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-      <div>
-        <ClassName {name} bind:isOpened={info.openedStates[name]} />
-        <Hiddable isShown={info.openedStates[name] == true}>
-          {#each items as item}
-            <Field {item} />
-          {/each}
-        </Hiddable>
-      </div>
+      {#if info.openedStates[name] || info.configurablesState == ConfigurablesStates.NORMAL}
+        <div>
+          <ClassName {name} bind:isOpened={info.openedStates[name]} />
+          <Hiddable isShown={info.openedStates[name] == true}>
+            {#each items as item}
+              <Field {item} />
+            {/each}
+          </Hiddable>
+        </div>
+      {/if}
     {/each}
     {#if info.jvmFields.length == 0}
       <p>No configurables found.</p>

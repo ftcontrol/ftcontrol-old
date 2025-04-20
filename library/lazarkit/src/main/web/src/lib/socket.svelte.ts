@@ -168,7 +168,14 @@ export class InfoManager {
   initialJvmFields = $state<Map<string, string>>(new Map())
   openedStates: { [key: string]: boolean } = $state({})
   searchParam = $state("")
+  configurablesState = $state(ConfigurablesStates.NORMAL)
 
   batteryVoltage = $state<number>(-1.0)
   flows = $state([])
+}
+
+export enum ConfigurablesStates {
+  NORMAL = "NORMAL",
+  SEARCH = "SEARCH",
+  DIFF = "DIFF",
 }
