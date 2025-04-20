@@ -6,7 +6,7 @@ on:
     paths:
       - lazarkit-website/**
       - test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/**
-      - .github/workflows/deploy-docs.yml
+      - .github/workflows/deploy.yml
   workflow_dispatch:
 
 concurrency:
