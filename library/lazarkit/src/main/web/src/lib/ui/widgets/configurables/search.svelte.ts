@@ -1,27 +1,29 @@
 import { info } from "$lib"
-import { Types, type GenericTypeJson } from "$lib/genericType"
+import {
+  Types,
+  type CustomTypeJson,
+  type GenericTypeJson,
+} from "$lib/genericType"
 import { ConfigurablesStates } from "$lib/socket.svelte"
 import { forAll, forAllRecursive } from "./utils"
 
-function search(p: string, fields: GenericTypeJson[]) {
+function genericSearch(
+  fields: GenericTypeJson[],
+  condition: (field: GenericTypeJson) => boolean
+) {
   if (!fields) return
 
-  p = p.toLowerCase()
   const newOpenedStates: { [key: string]: boolean } = {}
 
   forAllRecursive(
     fields,
     (field) => {
-      const matches =
-        field.fieldName?.toLowerCase().includes(p) ||
-        field.className?.toLowerCase().includes(p)
+      const matches = condition(field)
       field.isShown = matches
       return matches
     },
     (field, childResults) => {
-      const nameMatches =
-        field.fieldName?.toLowerCase().includes(p) ||
-        field.className?.toLowerCase().includes(p)
+      const nameMatches = condition(field)
       const childrenMatch = childResults.some(Boolean)
 
       const isMatch = nameMatches || childrenMatch
@@ -54,6 +56,17 @@ function search(p: string, fields: GenericTypeJson[]) {
   forAll(info.jvmFields, openStuff, openStuff)
 
   info.openedStates = newOpenedStates
+}
+
+function search(p: string, fields: GenericTypeJson[]) {
+  p = p.toLowerCase()
+
+  genericSearch(fields, (field) => {
+    return (
+      field.fieldName?.toLowerCase().includes(p) ||
+      field.className?.toLowerCase().includes(p)
+    )
+  })
 }
 
 let savedStates: {
@@ -121,50 +134,7 @@ export function handleDiff() {
 }
 
 function computeDiff(fields: GenericTypeJson[]) {
-  if (!fields) return
-
-  const newOpenedStates: { [key: string]: boolean } = {}
-
-  forAllRecursive(
-    fields,
-    (field) => {
-      const matches = field.valueString != info.initialJvmFields.get(field.id)
-      field.isShown = matches
-      return matches
-    },
-    (field, childResults) => {
-      const nameMatches =
-        field.valueString != info.initialJvmFields.get(field.id)
-      const childrenMatch = childResults.some(Boolean)
-
-      const isMatch = nameMatches || childrenMatch
-
-      if (nameMatches) {
-        field.isOpened = true
-        field.isShown = true
-        forAll(
-          field.customValues ?? [],
-          (field) => {
-            field.isShown = true
-          },
-          (field) => {
-            field.isShown = true
-            field.isOpened = true
-          }
-        )
-      } else {
-        field.isOpened = childrenMatch
-        field.isShown = isMatch
-      }
-      return isMatch
-    }
-  )
-
-  const openStuff = (field: GenericTypeJson) => {
-    if (field.isShown) newOpenedStates[field.className] = true
-  }
-
-  forAll(info.jvmFields, openStuff, openStuff)
-
-  info.openedStates = newOpenedStates
+  genericSearch(fields, (field) => {
+    return field.valueString != info.initialJvmFields.get(field.id)
+  })
 }
