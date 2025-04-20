@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: "docs-site-deploy"
+  group: "docs-deploy"
   cancel-in-progress: true
 
 env:
@@ -27,7 +27,7 @@ env:
 jobs:
   build:
     name: Build and Deploy
-    runs-on: lazarstatic
+    runs-on: lazarvps
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
           "
 
   deploy:
-    runs-on: lazarstatic
+    runs-on: lazarvps
     needs: build
     steps:
       - name: Checkout code
