@@ -62,10 +62,7 @@ function search(p: string, fields: GenericTypeJson[]) {
   p = p.toLowerCase()
 
   genericSearch(fields, (field) => {
-    return (
-      field.fieldName?.toLowerCase().includes(p) ||
-      field.className?.toLowerCase().includes(p)
-    )
+    return field.fieldName?.toLowerCase().includes(p)
   })
 }
 
@@ -137,4 +134,22 @@ function computeDiff(fields: GenericTypeJson[]) {
   genericSearch(fields, (field) => {
     return field.valueString != info.initialJvmFields.get(field.id)
   })
+}
+
+export function hasDiff(fields: GenericTypeJson[]): boolean {
+  let foundDiff = false
+
+  forAllRecursive(
+    fields,
+    (field) => {
+      if (field.valueString !== info.initialJvmFields.get(field.id)) {
+        foundDiff = true
+        return true
+      }
+      return false
+    },
+    () => foundDiff
+  )
+
+  return foundDiff
 }

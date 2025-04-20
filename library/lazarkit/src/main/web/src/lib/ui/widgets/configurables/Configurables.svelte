@@ -7,13 +7,14 @@
   } from "$lib/genericType"
   import { ConfigurablesStates } from "$lib/socket.svelte"
   import { Section } from "$primitives"
+  import Diff from "$ui/icons/Diff.svelte"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
   import Header from "$ui/primitives/Header.svelte"
   import Title from "$ui/primitives/Title.svelte"
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
   import Hiddable from "./Hiddable.svelte"
-  import { handleDiff, handleSearch } from "./search.svelte"
+  import { handleDiff, handleSearch, hasDiff } from "./search.svelte"
   import { forAllRecursive } from "./utils"
 
   function processFields(fields: GenericTypeJson[]): {
@@ -95,9 +96,10 @@
         handleDiff()
       }}
     >
-      {info.configurablesState == ConfigurablesStates.DIFF
-        ? "Hide Diff"
-        : "Show Diff"}
+      <Diff
+        isActive={hasDiff(info.jvmFields)}
+        isSelected={info.configurablesState == ConfigurablesStates.DIFF}
+      />
     </button>
   </Header>
   <div class="content">
