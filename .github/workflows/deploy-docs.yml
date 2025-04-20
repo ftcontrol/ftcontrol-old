@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: "docs-deploy"
+  group: "docs-site-deploy"
   cancel-in-progress: true
 
 env:
