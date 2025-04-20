@@ -27,7 +27,7 @@ env:
 jobs:
   build:
     name: Build and Deploy
-    runs-on: lazarvps
+    runs-on: [lazarvps, lazarstorage]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
           "
 
   deploy:
-    runs-on: lazarvps
+    runs-on: [lazarvps]
     needs: build
     steps:
       - name: Checkout code
