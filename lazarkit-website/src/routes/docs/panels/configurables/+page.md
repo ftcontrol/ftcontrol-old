@@ -21,6 +21,18 @@ Useful for things like:
 
 ---
 
+## Configurables UI Features
+
+<img src="/docs/configurables_ui.png"/>
+
+1. *Update current variable* – You can also use `ENTER` on supported types to update.
+2. *Update all modified variables* – Apply changes to all variables that have been modified.
+3. *Toggle Differential Mode* – Displays all modified variables.
+4. *Search bar* – Allows searching by variable name.
+
+
+---
+
 ## Annotating Classes with @Configurable
 
 To make a class’s fields configurable:

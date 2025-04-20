@@ -23,7 +23,7 @@ Inspired by the original [FTC Dashboard](https://github.com/acmerobotics/ftc-das
 | Graph | Full support | Full support |
 | Field View | Basic Support | More features |
 | Capture | Full support | Feature not present |
-| Configurables | More supported data types | Most data types |
+| Configurables | More supported data types and filtering options | Most data types |
 | Camera support | Limelight Proxy | Normal Camera Stream |
 
 Note that Panels is in active development, this list might change soon.
