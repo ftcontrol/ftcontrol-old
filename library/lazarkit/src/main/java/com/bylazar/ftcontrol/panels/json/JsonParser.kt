@@ -23,6 +23,7 @@ val json = Json {
             subclass(TelemetryPacket::class)
             subclass(GetJvmFieldsRequest::class)
             subclass(ReceivedJvmFields::class)
+            subclass(ReceivedInitialJvmFields::class)
             subclass(UpdatedJvmFields::class)
             subclass(BatteryVoltage::class)
             subclass(AllFlowsJson::class)

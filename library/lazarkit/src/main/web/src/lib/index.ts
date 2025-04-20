@@ -86,6 +86,18 @@ socket.addMessageHandler("jvmFields", (data: GenericData) => {
   forAll(info.jvmFields, process, process)
 })
 
+socket.addMessageHandler("initialJvmFields", (data: GenericData) => {
+  const initialFields = data.fields
+
+  const initialMap = new Map<string, string>()
+  function addToInitialMap(field: GenericTypeJson) {
+    initialMap.set(field.id, field.valueString)
+  }
+  forAll(initialFields, addToInitialMap, addToInitialMap)
+
+  info.initialJvmFields = initialMap
+})
+
 socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
   forAll(
     info.jvmFields,

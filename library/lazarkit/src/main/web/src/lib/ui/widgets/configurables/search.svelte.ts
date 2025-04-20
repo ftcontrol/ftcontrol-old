@@ -104,3 +104,52 @@ export function handleSearch(value: string) {
     wasSaved = false
   }
 }
+
+export function computeDiff(fields: GenericTypeJson[]) {
+  if (!fields) return
+
+  const newOpenedStates: { [key: string]: boolean } = {}
+
+  forAllRecursive(
+    fields,
+    (field) => {
+      const matches = field.valueString != info.initialJvmFields.get(field.id)
+      field.isShown = matches
+      return matches
+    },
+    (field, childResults) => {
+      const nameMatches =
+        field.valueString != info.initialJvmFields.get(field.id)
+      const childrenMatch = childResults.some(Boolean)
+
+      const isMatch = nameMatches || childrenMatch
+
+      if (nameMatches) {
+        field.isOpened = true
+        field.isShown = true
+        forAll(
+          field.customValues ?? [],
+          (field) => {
+            field.isShown = true
+          },
+          (field) => {
+            field.isShown = true
+            field.isOpened = true
+          }
+        )
+      } else {
+        field.isOpened = childrenMatch
+        field.isShown = isMatch
+      }
+      return isMatch
+    }
+  )
+
+  const openStuff = (field: GenericTypeJson) => {
+    if (field.isShown) newOpenedStates[field.className] = true
+  }
+
+  forAll(info.jvmFields, openStuff, openStuff)
+
+  info.openedStates = newOpenedStates
+}

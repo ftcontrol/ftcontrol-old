@@ -165,6 +165,7 @@ export class InfoManager {
   }
 
   jvmFields = $state<GenericTypeJson[]>([])
+  initialJvmFields = $state<Map<string, string>>(new Map())
   openedStates: { [key: string]: boolean } = $state({})
   searchParam = $state("")
 

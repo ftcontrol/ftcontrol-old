@@ -12,8 +12,8 @@
   import ClassName from "./ClassName.svelte"
   import Field from "./Field.svelte"
   import Hiddable from "./Hiddable.svelte"
-  import { handleSearch } from "./search.svelte"
-  import { forAllRecursive } from "./utils"
+  import { computeDiff, handleSearch } from "./search.svelte"
+  import { forAll, forAllRecursive } from "./utils"
 
   function processFields(fields: GenericTypeJson[]): {
     [key: string]: GenericTypeJson[]
@@ -89,6 +89,11 @@
     >
       <UpdateAll isActive={isChanged(info.jvmFields)} />
     </button>
+    <button
+      onclick={() => {
+        computeDiff(info.jvmFields)
+      }}>Compute Diff</button
+    >
   </Header>
   <div class="content">
     {#each Object.entries(processFields(info.jvmFields)) as [name, items]}

@@ -3,12 +3,14 @@ package com.bylazar.ftcontrol.panels.configurables
 import android.content.Context
 import com.bylazar.ftcontrol.panels.configurables.variables.MyField
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
+import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 
 object Configurables {
     var fieldsMap = mutableMapOf<String, MyField>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
 
     var jvmFields = listOf<GenericField>()
+    var initialJvmFields = listOf<GenericTypeJson>()
 
     private var finder = ClassFinder()
     private var variables = VariablesFinder({ finder.getAllClasses })
@@ -29,5 +31,6 @@ object Configurables {
             info.debug()
         }
         jvmFields = variables.getJvmFields
+        initialJvmFields = jvmFields.map { it.toJsonType }
     }
 }
