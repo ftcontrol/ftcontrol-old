@@ -8,6 +8,17 @@
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
   import { onMount } from "svelte"
 
+  let isMoving = $state(false)
+  let selectedCell = $state(-1)
+  let selectedWidget = $state(-1)
+
+  function getWidget(id) {
+    for (const w of widgets) {
+      if (w.id == id) return w
+    }
+    return null
+  }
+
   function getAllCells(widgets): number {
     var sum = 0
     for (const w of widgets) {
@@ -90,7 +101,7 @@
         y: 1,
       },
       sizes: {
-        x: 3,
+        x: 2,
         y: 3,
       },
     },
@@ -133,107 +144,175 @@
   })
 </script>
 
-<section>
-  {#each widgets as w}
-    <div
-      style="
-  grid-column: {w.start.x} / span {w.sizes.x};
-  grid-row: {w.start.y} / span {w.sizes.y};
-  "
-    >
-      <button class="mover"> MOVER </button>
-      {#if w.type == "controls"}
-        <OpModeControl />
-      {:else}
-        <p>Unknown type</p>
-      {/if}
-      <button
-        onclick={() => {
-          if (!canExpandRight(w)) {
-            notifications.add("Not enough space to move right.")
-            return
-          }
-          w.start.x++
-        }}
+<div class="container">
+  <section>
+    {#each widgets as w}
+      <div
+        class="item"
+        style="
+    grid-column: {w.start.x} / span {w.sizes.x};
+    grid-row: {w.start.y} / span {w.sizes.y};
+    "
       >
-        Move Right
-      </button>
-      <button
-        onclick={() => {
-          if (!canExpandRight(w)) {
-            notifications.add("Not enough space to expand right.")
-            return
-          }
-          w.sizes.x++
-        }}>Expand Right</button
+        <button
+          class="mover"
+          onmousedown={() => {
+            isMoving = true
+            selectedWidget = w.id
+          }}
+        >
+          MOVER
+        </button>
+        {#if w.type == "controls"}
+          <OpModeControl />
+        {:else}
+          <p>Unknown type</p>
+        {/if}
+        <button
+          onclick={() => {
+            if (!canExpandRight(w)) {
+              notifications.add("Not enough space to move right.")
+              return
+            }
+            w.start.x++
+          }}
+        >
+          Move Right
+        </button>
+        <button
+          onclick={() => {
+            if (!canExpandRight(w)) {
+              notifications.add("Not enough space to expand right.")
+              return
+            }
+            w.sizes.x++
+          }}>Expand Right</button
+        >
+        <button
+          onclick={() => {
+            if (w.sizes.x <= 1) {
+              notifications.add("Cannot make this small.")
+              return
+            }
+            w.sizes.x--
+          }}>Small Right</button
+        >
+        <button
+          onclick={() => {
+            if (!canExpandLeft(w)) {
+              notifications.add("Not enough space to move left.")
+              return
+            }
+            w.start.x--
+          }}
+        >
+          Move Left
+        </button>
+        <button
+          onclick={() => {
+            if (!canExpandLeft(w)) {
+              notifications.add("Not enough space to expand left.")
+              return
+            }
+            w.sizes.x++
+            w.start.x--
+          }}>Expand Left</button
+        >
+        <button
+          onclick={() => {
+            if (w.sizes.x <= 1) {
+              notifications.add("Cannot make this small.")
+              return
+            }
+            w.sizes.x--
+            w.start.x++
+          }}>Small Left</button
+        >
+      </div>
+    {/each}
+    {#if getWidget(selectedWidget) != null}
+      <div
+        class="item"
+        style="
+grid-column: {(selectedCell % 12) + 1} / span {getWidget(selectedWidget).sizes
+          .x};
+grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
+          .sizes.y};
+"
       >
-      <button
-        onclick={() => {
-          if (w.sizes.x <= 1) {
-            notifications.add("Cannot make this small.")
-            return
-          }
-          w.sizes.x--
-        }}>Small Right</button
-      >
-      <button
-        onclick={() => {
-          if (!canExpandLeft(w)) {
-            notifications.add("Not enough space to move left.")
-            return
-          }
-          w.start.x--
-        }}
-      >
-        Move Left
-      </button>
-      <button
-        onclick={() => {
-          if (!canExpandLeft(w)) {
-            notifications.add("Not enough space to expand left.")
-            return
-          }
-          w.sizes.x++
-          w.start.x--
-        }}>Expand Left</button
-      >
-      <button
-        onclick={() => {
-          if (w.sizes.x <= 1) {
-            notifications.add("Cannot make this small.")
-            return
-          }
-          w.sizes.x--
-          w.start.x++
-        }}>Small Left</button
-      >
-    </div>
-  {/each}
-
-  {#each Array.from({ length: 12 * 12 - getAllCells(widgets) }) as _, index}
-    <p>{index + 1}</p>
-  {/each}
-
-  <!-- <div>
-    <OpModeControl />
-    {#if gamepads.current != null}
-      <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+        <p>Moving {selectedCell}</p>
+      </div>
     {/if}
-  </div>
-  <div>
-    <GameField />
-    <Telemetry />
-  </div>
-  <div>
-    <Configurables />
-  </div>
-  <div>
-    <Graph />
-  </div> -->
-</section>
+
+    {#each Array.from({ length: 12 * 12 - getAllCells(widgets) }) as _, index}
+      <p class="m"></p>
+    {/each}
+
+    <!-- <div>
+      <OpModeControl />
+      {#if gamepads.current != null}
+        <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+      {/if}
+    </div>
+    <div>
+      <GameField />
+      <Telemetry />
+    </div>
+    <div>
+      <Configurables />
+    </div>
+    <div>
+      <Graph />
+    </div> -->
+  </section>
+
+  {#if isMoving}
+    <section
+      onmouseup={() => {
+        //save
+        for (const w of widgets) {
+          if (w.id == selectedWidget) {
+            w.start.x = (selectedCell % 12) + 1
+            w.start.y = Math.floor(selectedCell / 12) + 1
+          }
+        }
+        isMoving = false
+        selectedWidget = -1
+      }}
+    >
+      {#each Array.from({ length: 12 * 12 }) as _, index}
+        <p
+          class="m"
+          onmouseover={() => {
+            selectedCell = index
+          }}
+        >
+          <br />
+          {index} X: {index % 12} Y: {Math.floor(index / 12)}
+        </p>
+      {/each}
+    </section>
+  {/if}
+</div>
 
 <style>
+  .m {
+    border: 1px solid green;
+    height: 100%;
+  }
+  p {
+    border: 1px solid green;
+    margin: 0;
+  }
+  .mover {
+    width: 100%;
+    display: block;
+  }
+  .container {
+    background-color: red;
+  }
   section {
+    position: absolute;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(12, 1fr);
@@ -242,11 +321,16 @@
     padding: 0.5rem;
     gap: 0.5rem;
   }
-  div {
+  div.item {
     background-color: var(--card);
     border-radius: 16px;
     overflow: auto;
     border: 2px solid var(--bg);
     transition: background-color var(--d3);
+
+    border: 2px solid red;
+  }
+  div.item.isOverlay {
+    opacity: 0.5;
   }
 </style>
