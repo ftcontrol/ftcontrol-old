@@ -11,6 +11,7 @@
   import MoveIcon from "$ui/icons/MoveIcon.svelte"
   import VerticalIcon from "$ui/icons/VerticalIcon.svelte"
   import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
+  import Section from "$ui/primitives/Section.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
@@ -22,12 +23,12 @@
   <section>
     {#each gridManager.modules as w}
       <div
-        class="item"
+        class="item-wrapper"
         class:isOverlay={gridManager.selectedWidgetId == w.id}
         style="
-    grid-column: {w.start.x} / span {w.sizes.x};
-    grid-row: {w.start.y} / span {w.sizes.y};
-    "
+grid-column: {w.start.x} / span {w.sizes.x};
+grid-row: {w.start.y} / span {w.sizes.y};
+"
       >
         <div class="controls">
           <button
@@ -107,23 +108,25 @@
             alwaysValid={true}
           ></SelectInput>
         </div>
-        {#if w.type == WidgetTypes.CONTROLS}
-          <OpModeControl />
-        {:else if w.type == WidgetTypes.GAMEPAD}
-          <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-        {:else if w.type == WidgetTypes.FIELD}
-          <GameField />
-        {:else if w.type == WidgetTypes.TELEMETRY}
-          <Telemetry />
-        {:else if w.type == WidgetTypes.CONFIGURABLES}
-          <Configurables />
-        {:else if w.type == WidgetTypes.GRAPH}
-          <Graph />
-        {:else if w.type == WidgetTypes.CAPTURE}
-          <PlaybackHistory />
-        {:else}
-          <p>Unknown type</p>
-        {/if}
+        <div class="item">
+          {#if w.type == WidgetTypes.CONTROLS}
+            <OpModeControl />
+          {:else if w.type == WidgetTypes.GAMEPAD}
+            <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+          {:else if w.type == WidgetTypes.FIELD}
+            <GameField />
+          {:else if w.type == WidgetTypes.TELEMETRY}
+            <Telemetry />
+          {:else if w.type == WidgetTypes.CONFIGURABLES}
+            <Configurables />
+          {:else if w.type == WidgetTypes.GRAPH}
+            <Graph />
+          {:else if w.type == WidgetTypes.CAPTURE}
+            <PlaybackHistory />
+          {:else}
+            <Section><p>Unknown type</p></Section>
+          {/if}
+        </div>
       </div>
     {/each}
     {#if gridManager.selectedWidget != null}
@@ -218,15 +221,27 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
     gap: 0.5rem;
     align-items: center;
     padding: 0.25rem;
+    margin: 0.5rem;
+    flex-wrap: wrap;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+
+    border-radius: 0.75rem;
+    padding-inline: 0.5rem;
+    background: var(--cardTransparent);
+    border: 2px solid var(--bg);
+    transition: background-color var(--d3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
   .m {
     border: 1px solid green;
-  }
-  p {
-    border: 1px solid green;
     margin: 0;
   }
+
   button {
     background-color: transparent;
     border: none;
@@ -253,16 +268,18 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
     padding: 0.5rem;
     gap: 0.5rem;
   }
+  .item-wrapper {
+    position: relative;
+  }
   div.item {
     background-color: var(--card);
     border-radius: 16px;
     overflow: auto;
     border: 2px solid var(--bg);
     transition: background-color var(--d3);
-
-    border: 2px solid red;
+    height: 100%;
   }
-  div.item.isOverlay {
+  div.isOverlay {
     opacity: 0.5;
   }
 </style>
