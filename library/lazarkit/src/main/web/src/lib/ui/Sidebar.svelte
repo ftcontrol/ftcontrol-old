@@ -1,6 +1,7 @@
 <script lang="ts">
   import { info, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
+  import { allKeys } from "./grid"
   import { Logo, Arrow } from "./icons"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
@@ -55,7 +56,15 @@
       <div class="gap"></div>
 
       <h2>General</h2>
-      <a href="/">Robot Control</a>
+
+      {#each allKeys as title}
+        <a
+          href="/?preset={title}"
+          onclick={() => {
+            info.selectedManager = title
+          }}>{title}</a
+        >
+      {/each}
       <a href="/limelight">Limelight</a>
 
       <h2>Developer</h2>

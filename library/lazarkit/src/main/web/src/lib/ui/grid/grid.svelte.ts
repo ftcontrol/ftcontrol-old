@@ -61,7 +61,7 @@ const defaultModuled: Preset = {
   ],
 }
 
-class Grid {
+export class Grid {
   cellsX = $state(8)
   cellsY = $state(6)
 
@@ -110,7 +110,7 @@ class Grid {
   }
 
   private getWidgetById(id: string) {
-    for (const w of gridManager.modules) {
+    for (const w of this.modules) {
       if (w.id == id) return w
     }
     return null
@@ -184,7 +184,7 @@ class Grid {
 
   performMove() {
     if (this.selectedWidget == null) return
-    for (const w of gridManager.modules) {
+    for (const w of this.modules) {
       if (w.id == this.selectedWidgetId) {
         w.start.x = this.selectedCellX
         w.start.y = this.selectedCellY
@@ -245,5 +245,3 @@ class Grid {
     return this.canExpand(w, 0, -1)
   }
 }
-
-export let gridManager = new Grid(null)

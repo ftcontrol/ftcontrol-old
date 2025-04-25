@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gamepads, info, notifications } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
-  import { allWidgetTypes, gridManager, WidgetTypes } from "./grid.svelte"
+  import { allWidgetTypes, Grid, WidgetTypes } from "./grid.svelte"
   import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
   import HorizontalReversed from "$ui/icons/HorizontalReversed.svelte"
   import MoveIcon from "$ui/icons/MoveIcon.svelte"
@@ -13,6 +13,8 @@
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
+
+  let { gridManager }: { gridManager: Grid } = $props()
 </script>
 
 <div
