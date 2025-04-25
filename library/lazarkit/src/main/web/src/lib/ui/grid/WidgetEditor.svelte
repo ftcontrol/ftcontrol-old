@@ -17,6 +17,7 @@
   import LimelightDashboard from "$ui/widgets/LimelightDashboard.svelte"
   import LimelightFeed from "$ui/widgets/LimelightFeed.svelte"
   import Plus from "$ui/icons/Plus.svelte"
+  import Remove from "$ui/icons/Remove.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -112,6 +113,14 @@
             isValid={true}
             alwaysValid={true}
           ></SelectInput>
+
+          <button
+            onclick={() => {
+              gridManager.remove(w.id)
+            }}
+          >
+            <Remove />
+          </button>
         </div>
         <div class="item">
           {#if w.type == WidgetTypes.CONTROLS}
