@@ -176,7 +176,7 @@
   }
   .graph {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 3;
     position: relative;
     border: 1px solid var(--text);
     margin-top: 1rem;
@@ -193,12 +193,6 @@
     align-items: center;
     gap: 0.5rem;
     margin: 0.25rem 0;
-  }
-
-  svg {
-    width: 100%;
-    height: 100%;
-    min-width: 800px;
   }
 
   button {
