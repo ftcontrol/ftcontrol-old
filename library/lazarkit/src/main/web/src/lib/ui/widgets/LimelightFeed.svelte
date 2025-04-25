@@ -1,6 +1,8 @@
 <script lang="ts">
   import Section from "$ui/primitives/Section.svelte"
 
+  let isDisabled = $state(false)
+
   function getURL() {
     if (window.location.hostname == "localhost") return "http://192.168.43.1"
     return window.location.hostname
@@ -8,20 +10,22 @@
 
   async function fetchImage() {
     const url = `http://${getURL()}:5800`
-    const response = await fetch(url)
-    if (response.ok) {
+    try {
+      const response = await fetch(url)
+
       return url
-    } else {
-      console.error("Failed to fetch image")
+    } catch {
+      isDisabled = true
+      throw new Error("no limelight")
     }
   }
 </script>
 
-<Section title="Limelight Feed">
+<Section title="Limelight Feed" {isDisabled}>
   {#await fetchImage()}
     <p>Loading...</p>
   {:then url}
-    <img src={url} />
+    <img src={url} alt="limelight feed" />
   {:catch error}
     <p>Limelight not found.</p>
   {/await}
