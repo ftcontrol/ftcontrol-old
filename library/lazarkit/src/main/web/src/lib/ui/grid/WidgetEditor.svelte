@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gamepads, notifications } from "$lib"
+  import { gamepads, info, notifications } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import { allWidgetTypes, gridManager, WidgetTypes } from "./grid.svelte"
   import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
@@ -26,7 +26,7 @@
   grid-row: {w.start.y} / span {w.sizes.y};
   "
       >
-        <div class="controls">
+        <div class="controls" class:shown={info.showEdit}>
           <button
             onmousedown={() => {
               gridManager.startMoving(w.id)
@@ -239,9 +239,13 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
+    pointer-events: none;
+    animation: show var(--d3) forwards;
   }
-  .controls:hover {
+
+  .controls.shown {
     opacity: 1;
+    pointer-events: all;
   }
 
   button {

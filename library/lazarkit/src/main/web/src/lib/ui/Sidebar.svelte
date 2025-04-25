@@ -76,7 +76,7 @@
       <Button
         onclick={() => {
           info.showEdit = !info.showEdit
-        }}>Edit</Button
+        }}>{info.showEdit ? "Disable" : "Enable"} Edit</Button
       >
     </div>
   </nav>
