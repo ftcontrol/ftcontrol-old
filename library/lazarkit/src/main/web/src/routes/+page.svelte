@@ -1,12 +1,18 @@
 <script lang="ts">
   import { gamepads, notifications } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
-  import { gridManager, type Module } from "$ui/grid/grid.svelte"
+  import {
+    allWidgetTypes,
+    gridManager,
+    WidgetTypes,
+    type Module,
+  } from "$ui/grid/grid.svelte"
   import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
   import HorizontalReversed from "$ui/icons/HorizontalReversed.svelte"
   import MoveIcon from "$ui/icons/MoveIcon.svelte"
   import VerticalIcon from "$ui/icons/VerticalIcon.svelte"
   import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
+  import SelectInput from "$ui/primitives/SelectInput.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Flows from "$ui/widgets/Flows.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
@@ -147,33 +153,31 @@
           >
             <VerticalReversed />
           </button>
+
+          <SelectInput
+            startValue={w.type}
+            bind:currentValue={w.type}
+            value={w.type}
+            possibleValues={allWidgetTypes}
+            isValid={true}
+            alwaysValid={true}
+          ></SelectInput>
         </div>
-        {#if w.type == "controls"}
+        {#if w.type == WidgetTypes.CONTROLS}
           <OpModeControl />
+        {:else if w.type == WidgetTypes.GAMEPAD}
+          <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+        {:else if w.type == WidgetTypes.FIELD}
+          <GameField />
+        {:else if w.type == WidgetTypes.TELEMETRY}
+          <Telemetry />
+        {:else if w.type == WidgetTypes.CONFIGURABLES}
+          <Configurables />
+        {:else if w.type == WidgetTypes.GRAPH}
+          <Graph />
         {:else}
           <p>Unknown type</p>
         {/if}
-
-        <button
-          onclick={() => {
-            if (w.sizes.x <= 1) {
-              notifications.add("Cannot make this small.")
-              return
-            }
-            w.sizes.x--
-          }}>Small Right</button
-        >
-
-        <button
-          onclick={() => {
-            if (w.sizes.x <= 1) {
-              notifications.add("Cannot make this small.")
-              return
-            }
-            w.sizes.x--
-            w.start.x++
-          }}>Small Left</button
-        >
       </div>
     {/each}
     {#if gridManager.selectedWidget != null}
@@ -193,23 +197,6 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
     {#each Array.from({ length: 12 * 12 - gridManager.countCells }) as _, index}
       <!-- <p class="m"></p> -->
     {/each}
-
-    <!-- <div>
-      <OpModeControl />
-      {#if gamepads.current != null}
-        <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-      {/if}
-    </div>
-    <div>
-      <GameField />
-      <Telemetry />
-    </div>
-    <div>
-      <Configurables />
-    </div>
-    <div>
-      <Graph />
-    </div> -->
   </section>
 
   {#if gridManager.isMoving}

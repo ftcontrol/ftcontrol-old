@@ -2,7 +2,7 @@ import { notifications } from "$lib"
 
 export type Module = {
   id: number
-  type: "controls" | "test"
+  type: WidgetTypes
   start: {
     x: number
     y: number
@@ -13,10 +13,30 @@ export type Module = {
   }
 }
 
+export const allWidgetTypes = [
+  "controls",
+  "gamepad",
+  "field",
+  "telemetry",
+  "configurables",
+  "graph",
+  "test",
+]
+
+export enum WidgetTypes {
+  CONTROLS = "controls",
+  GAMEPAD = "gamepad",
+  FIELD = "field",
+  TELEMETRY = "telemetry",
+  CONFIGURABLES = "configurables",
+  GRAPH = "graph",
+  TEST = "test",
+}
+
 const defaultModuled: Module[] = [
   {
     id: 0,
-    type: "controls",
+    type: WidgetTypes.CONTROLS,
     start: {
       x: 1,
       y: 1,
@@ -28,13 +48,37 @@ const defaultModuled: Module[] = [
   },
   {
     id: 1,
-    type: "test",
+    type: WidgetTypes.TEST,
     start: {
       x: 7,
       y: 1,
     },
     sizes: {
       x: 2,
+      y: 3,
+    },
+  },
+  {
+    id: 2,
+    type: WidgetTypes.TEST,
+    start: {
+      x: 9,
+      y: 1,
+    },
+    sizes: {
+      x: 2,
+      y: 3,
+    },
+  },
+  {
+    id: 3,
+    type: WidgetTypes.TEST,
+    start: {
+      x: 9,
+      y: 4,
+    },
+    sizes: {
+      x: 4,
       y: 3,
     },
   },
