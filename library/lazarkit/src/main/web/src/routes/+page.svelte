@@ -169,8 +169,11 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
       }}
     >
       {#each Array.from({ length: 12 * 12 }) as _, index}
+        {@const id =
+          gridManager.modulesMap[Math.floor(index / 12) + 1][(index % 12) + 1]}
         <p
-          class="m"
+          class="overlay-item"
+          class:isEmpty={id != null && id != gridManager.selectedWidgetId}
           onfocus={() => {}}
           onmouseover={() => {
             console.log(index)
@@ -231,15 +234,16 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
     padding-inline: 0.5rem;
     background: var(--cardTransparent);
     border: 2px solid var(--bg);
-    transition: background-color var(--d3);
+    transition:
+      background-color var(--d3),
+      opacity var(--d3);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
   }
-
-  .m {
-    border: 1px solid green;
-    margin: 0;
+  .controls:hover {
+    opacity: 1;
   }
 
   button {
@@ -252,8 +256,15 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
     align-items: center;
   }
 
+  .overlay-item {
+    border: 1px solid var(--primary);
+    margin: 0;
+  }
+  .overlay-item.isEmpty {
+    opacity: 0;
+  }
+
   .container {
-    background-color: black;
     width: 100%;
     height: 100%;
     position: relative;
