@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gamepads, notifications } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
+  import { gridManager, type Module } from "$ui/grid/grid.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Flows from "$ui/widgets/Flows.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
@@ -8,26 +9,7 @@
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
   import { onMount } from "svelte"
 
-  let isMoving = $state(false)
-  let selectedCell = $state(-1)
-  let selectedWidget = $state(-1)
-
-  function getWidget(id) {
-    for (const w of widgets) {
-      if (w.id == id) return w
-    }
-    return null
-  }
-
-  function getAllCells(widgets): number {
-    var sum = 0
-    for (const w of widgets) {
-      sum += w.sizes.x * w.sizes.y
-    }
-    return sum
-  }
-
-  function canExpand(w, dx: number, dy: number): boolean {
+  function canExpand(w: Module, dx: number, dy: number): boolean {
     const { x: startX, y: startY } = w.start
     const { x: width, y: height } = w.sizes
 
@@ -36,120 +18,57 @@
       for (let dyOffset = 0; dyOffset < height; dyOffset++) {
         const y = startY + dyOffset
         const x = startX + width
-        if (widgetsMap[y]?.[x] !== null) return false
+        if (gridManager.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dx === -1) {
       // Left
       for (let dyOffset = 0; dyOffset < height; dyOffset++) {
         const y = startY + dyOffset
         const x = startX - 1
-        if (widgetsMap[y]?.[x] !== null) return false
+        if (gridManager.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dy === 1) {
       // Down
       for (let dxOffset = 0; dxOffset < width; dxOffset++) {
         const x = startX + dxOffset
         const y = startY + height
-        if (widgetsMap[y]?.[x] !== null) return false
+        if (gridManager.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dy === -1) {
       // Up
       for (let dxOffset = 0; dxOffset < width; dxOffset++) {
         const x = startX + dxOffset
         const y = startY - 1
-        if (widgetsMap[y]?.[x] !== null) return false
+        if (gridManager.modulesMap[y]?.[x] !== null) return false
       }
     }
 
     return true
   }
 
-  function canExpandRight(w) {
+  function canExpandRight(w: Module) {
     return canExpand(w, 1, 0)
   }
 
-  function canExpandLeft(w) {
+  function canExpandLeft(w: Module) {
     return canExpand(w, -1, 0)
   }
 
-  function canExpandDown(w) {
+  function canExpandDown(w: Module) {
     return canExpand(w, 0, 1)
   }
 
-  function canExpandUp(w) {
+  function canExpandUp(w: Module) {
     return canExpand(w, 0, -1)
   }
-
-  let widgets = $state([
-    {
-      id: 0,
-      type: "controls",
-      start: {
-        x: 1,
-        y: 1,
-      },
-      sizes: {
-        x: 3,
-        y: 3,
-      },
-    },
-    {
-      id: 1,
-      type: "test",
-      start: {
-        x: 4,
-        y: 1,
-      },
-      sizes: {
-        x: 2,
-        y: 3,
-      },
-    },
-  ])
-
-  let widgetsMap: any[][] = $state([])
-
-  function updateMap(widgets) {
-    let maxX = 0
-    let maxY = 0
-    for (const w of widgets) {
-      maxX = Math.max(maxX, w.start.x + w.sizes.x)
-      maxY = Math.max(maxY, w.start.y + w.sizes.y)
-    }
-
-    const map: any[][] = []
-    for (let y = 1; y < 13; y++) {
-      map[y] = []
-      for (let x = 1; x < 13; x++) {
-        map[y][x] = null
-      }
-    }
-
-    for (const widget of widgets) {
-      for (let dx = 0; dx < widget.sizes.x; dx++) {
-        for (let dy = 0; dy < widget.sizes.y; dy++) {
-          const x = widget.start.x + dx
-          const y = widget.start.y + dy
-          map[y][x] = widget.id
-        }
-      }
-    }
-
-    widgetsMap = map
-    console.table(map)
-  }
-
-  $effect(() => {
-    updateMap(widgets)
-  })
 </script>
 
 <div class="container">
   <section>
-    {#each widgets as w}
+    {#each gridManager.modules as w}
       <div
         class="item"
-        class:isOverlay={selectedWidget == w.id}
+        class:isOverlay={gridManager.selectedWidgetId == w.id}
         style="
     grid-column: {w.start.x} / span {w.sizes.x};
     grid-row: {w.start.y} / span {w.sizes.y};
@@ -158,8 +77,7 @@
         <button
           class="mover"
           onmousedown={() => {
-            isMoving = true
-            selectedWidget = w.id
+            gridManager.startMoving(w.id)
           }}
         >
           MOVER
@@ -231,21 +149,21 @@
         >
       </div>
     {/each}
-    {#if getWidget(selectedWidget) != null}
+    {#if gridManager.selectedWidget != null}
       <div
         class="item"
         style="
-grid-column: {(selectedCell % 12) + 1} / span {getWidget(selectedWidget).sizes
-          .x};
-grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
-          .sizes.y};
+grid-column: {gridManager.selectedCellX} / span {gridManager.selectedWidget
+          .sizes.x};
+grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
+          .y};
 "
       >
-        <p>Moving {selectedCell}</p>
+        <p>Moving {gridManager.selectedCell}</p>
       </div>
     {/if}
 
-    {#each Array.from({ length: 12 * 12 - getAllCells(widgets) }) as _, index}
+    {#each Array.from({ length: 12 * 12 - gridManager.countCells }) as _, index}
       <!-- <p class="m"></p> -->
     {/each}
 
@@ -267,92 +185,39 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
     </div> -->
   </section>
 
-  {#if isMoving}
+  {#if gridManager.isMoving}
     <section
+      role="button"
+      tabindex="0"
       onmouseup={() => {
-        //do all checks
-
-        const w = getWidget(selectedWidget)
-        if (w == null) {
-          notifications.add("W is null.")
-          isMoving = false
-          selectedWidget = -1
-          return
-        }
-        const newX = (selectedCell % 12) + 1
-        const newY = Math.floor(selectedCell / 12) + 1
-
-        let canPlace = true
-        for (let dx = 0; dx < w.sizes.x; dx++) {
-          for (let dy = 0; dy < w.sizes.y; dy++) {
-            const x = newX + dx
-            const y = newY + dy
-            if (
-              x >= 12 ||
-              y >= 12 ||
-              x < 1 ||
-              y < 1 ||
-              (widgetsMap[y][x] != null && widgetsMap[y][x] != w.id)
-            ) {
-              canPlace = false
-            }
-          }
-        }
-
-        if (!canPlace) {
-          notifications.add("Cannot move there.")
-          isMoving = false
-          selectedWidget = -1
+        if (gridManager.selectedWidget == null) {
           return
         }
 
-        for (const w of widgets) {
-          if (w.id == selectedWidget) {
-            w.start.x = (selectedCell % 12) + 1
-            w.start.y = Math.floor(selectedCell / 12) + 1
-          }
+        if (!gridManager.canPlace) {
+          gridManager.stopMoving("Cannot move there.")
+          return
         }
-        isMoving = false
-        selectedWidget = -1
+
+        gridManager.performMove()
+        gridManager.stopMoving(null)
       }}
     >
       {#each Array.from({ length: 12 * 12 }) as _, index}
         <p
           class="m"
+          onfocus={() => {}}
           onmouseover={() => {
-            const w = getWidget(selectedWidget)
-            if (w == null) {
-              notifications.add("W is null.")
-              isMoving = false
-              selectedWidget = -1
-              return
-            }
-            const newX = (index % 12) + 1
-            const newY = Math.floor(index / 12) + 1
-
-            let canPlace = true
-            for (let dx = 0; dx < w.sizes.x; dx++) {
-              for (let dy = 0; dy < w.sizes.y; dy++) {
-                const x = newX + dx
-                const y = newY + dy
-                if (
-                  x >= 12 ||
-                  y >= 12 ||
-                  x < 1 ||
-                  y < 1 ||
-                  (widgetsMap[y][x] != null && widgetsMap[y][x] != w.id)
-                ) {
-                  canPlace = false
-                }
-              }
-            }
-
-            if (canPlace) {
-              selectedCell = index
+            console.log(index)
+            if (gridManager.selectedWidget == null) {
               return
             }
 
-            notifications.add("Not allowed.")
+            if (!gridManager.checkIndex(index)) {
+              return
+            }
+
+            gridManager.selectedCell = index
           }}
         >
           <!-- {index} X: {index % 12} Y: {Math.floor(index / 12)} -->
