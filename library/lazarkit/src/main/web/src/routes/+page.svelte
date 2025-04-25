@@ -149,6 +149,7 @@
     {#each widgets as w}
       <div
         class="item"
+        class:isOverlay={selectedWidget == w.id}
         style="
     grid-column: {w.start.x} / span {w.sizes.x};
     grid-row: {w.start.y} / span {w.sizes.y};
@@ -245,7 +246,7 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
     {/if}
 
     {#each Array.from({ length: 12 * 12 - getAllCells(widgets) }) as _, index}
-      <p class="m"></p>
+      <!-- <p class="m"></p> -->
     {/each}
 
     <!-- <div>
@@ -269,7 +270,42 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
   {#if isMoving}
     <section
       onmouseup={() => {
-        //save
+        //do all checks
+
+        const w = getWidget(selectedWidget)
+        if (w == null) {
+          notifications.add("W is null.")
+          isMoving = false
+          selectedWidget = -1
+          return
+        }
+        const newX = (selectedCell % 12) + 1
+        const newY = Math.floor(selectedCell / 12) + 1
+
+        let canPlace = true
+        for (let dx = 0; dx < w.sizes.x; dx++) {
+          for (let dy = 0; dy < w.sizes.y; dy++) {
+            const x = newX + dx
+            const y = newY + dy
+            if (
+              x >= 12 ||
+              y >= 12 ||
+              x < 1 ||
+              y < 1 ||
+              (widgetsMap[y][x] != null && widgetsMap[y][x] != w.id)
+            ) {
+              canPlace = false
+            }
+          }
+        }
+
+        if (!canPlace) {
+          notifications.add("Cannot move there.")
+          isMoving = false
+          selectedWidget = -1
+          return
+        }
+
         for (const w of widgets) {
           if (w.id == selectedWidget) {
             w.start.x = (selectedCell % 12) + 1
@@ -284,11 +320,42 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
         <p
           class="m"
           onmouseover={() => {
-            selectedCell = index
+            const w = getWidget(selectedWidget)
+            if (w == null) {
+              notifications.add("W is null.")
+              isMoving = false
+              selectedWidget = -1
+              return
+            }
+            const newX = (index % 12) + 1
+            const newY = Math.floor(index / 12) + 1
+
+            let canPlace = true
+            for (let dx = 0; dx < w.sizes.x; dx++) {
+              for (let dy = 0; dy < w.sizes.y; dy++) {
+                const x = newX + dx
+                const y = newY + dy
+                if (
+                  x >= 12 ||
+                  y >= 12 ||
+                  x < 1 ||
+                  y < 1 ||
+                  (widgetsMap[y][x] != null && widgetsMap[y][x] != w.id)
+                ) {
+                  canPlace = false
+                }
+              }
+            }
+
+            if (canPlace) {
+              selectedCell = index
+              return
+            }
+
+            notifications.add("Not allowed.")
           }}
         >
-          <br />
-          {index} X: {index % 12} Y: {Math.floor(index / 12)}
+          <!-- {index} X: {index % 12} Y: {Math.floor(index / 12)} -->
         </p>
       {/each}
     </section>
@@ -298,7 +365,7 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
 <style>
   .m {
     border: 1px solid green;
-    height: 100%;
+    /* height: 100%; */
   }
   p {
     border: 1px solid green;
@@ -309,7 +376,10 @@ grid-row: {Math.floor(selectedCell / 12) + 1} / span {getWidget(selectedWidget)
     display: block;
   }
   .container {
-    background-color: red;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
   section {
     position: absolute;
