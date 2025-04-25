@@ -69,6 +69,7 @@
     background-color: var(--card);
     border: 1px solid var(--text);
     z-index: 10;
+    overflow: hidden;
   }
   .content {
     position: relative;
