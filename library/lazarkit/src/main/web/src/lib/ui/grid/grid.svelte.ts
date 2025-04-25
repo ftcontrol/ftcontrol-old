@@ -233,6 +233,30 @@ export class Grid {
     return true
   }
 
+  remove(id: string) {
+    this.modules = this.modules.filter((it) => it.id != id)
+  }
+
+  addNew(x: number, y: number) {
+    if (this.modulesMap[y][x] != null) {
+      notifications.add("Slot is already in use.")
+      return
+    }
+
+    this.modules.push({
+      id: uuidv4(),
+      type: WidgetTypes.TEST,
+      start: {
+        x,
+        y,
+      },
+      sizes: {
+        x: 1,
+        y: 1,
+      },
+    })
+  }
+
   canExpandRight(w: Module) {
     return this.canExpand(w, 1, 0)
   }

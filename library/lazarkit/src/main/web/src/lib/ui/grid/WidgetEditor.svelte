@@ -16,6 +16,7 @@
   import Limelight from "$ui/widgets/LimelightDashboard.svelte"
   import LimelightDashboard from "$ui/widgets/LimelightDashboard.svelte"
   import LimelightFeed from "$ui/widgets/LimelightFeed.svelte"
+  import Plus from "$ui/icons/Plus.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -155,7 +156,25 @@
       </div>
     {/if}
 
-    {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY - gridManager.countCells } ) as _, index}{/each}
+    {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY } ) as _, index}
+      {@const id =
+        gridManager.modulesMap[Math.floor(index / gridManager.cellsX) + 1][
+          (index % gridManager.cellsX) + 1
+        ]}
+      <button
+        style={id != null ? "display: none;" : ""}
+        class:shown={info.showEdit && !gridManager.isMoving}
+        class="add"
+        onclick={() => {
+          gridManager.addNew(
+            (index % gridManager.cellsX) + 1,
+            Math.floor(index / gridManager.cellsX) + 1
+          )
+        }}
+      >
+        <Plus />
+      </button>
+    {/each}
   </section>
 
   {#if gridManager.isMoving}
@@ -259,7 +278,16 @@
     animation: show var(--d3) forwards;
   }
 
-  .controls.shown {
+  .add {
+    transition: opacity var(--d3);
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+  }
+
+  .controls.shown,
+  .add.shown {
     opacity: 1;
     pointer-events: all;
   }
