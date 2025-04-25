@@ -22,6 +22,8 @@ export const allWidgetTypes = [
   "configurables",
   "graph",
   "capture",
+  "dash limelight",
+  "feed limelight",
   "test",
 ]
 
@@ -33,6 +35,8 @@ export enum WidgetTypes {
   CONFIGURABLES = "configurables",
   GRAPH = "graph",
   CAPTURE = "capture",
+  LIMELIGHT_DASH = "dash limelight",
+  LIMELIGHT_FEED = "feed limelight",
   TEST = "test",
 }
 

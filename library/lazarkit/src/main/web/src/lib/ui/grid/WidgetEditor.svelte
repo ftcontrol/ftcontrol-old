@@ -13,6 +13,9 @@
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
+  import Limelight from "$ui/widgets/LimelightDashboard.svelte"
+  import LimelightDashboard from "$ui/widgets/LimelightDashboard.svelte"
+  import LimelightFeed from "$ui/widgets/LimelightFeed.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -122,6 +125,10 @@
             <Configurables />
           {:else if w.type == WidgetTypes.GRAPH}
             <Graph />
+          {:else if w.type == WidgetTypes.LIMELIGHT_DASH}
+            <LimelightDashboard />
+          {:else if w.type == WidgetTypes.LIMELIGHT_FEED}
+            <LimelightFeed />
           {:else if w.type == WidgetTypes.CAPTURE}
             <PlaybackHistory />
           {:else}

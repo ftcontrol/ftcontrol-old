@@ -62,6 +62,7 @@
     width: 100%;
     padding-left: 0.25rem;
     cursor: pointer;
+    text-wrap: nowrap;
   }
   .select {
     position: absolute;
