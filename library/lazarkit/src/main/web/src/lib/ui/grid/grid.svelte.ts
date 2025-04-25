@@ -1,7 +1,8 @@
 import { notifications } from "$lib"
+import { v4 as uuidv4 } from "uuid"
 
 export type Module = {
-  id: number
+  id: string
   type: WidgetTypes
   start: {
     x: number
@@ -20,6 +21,7 @@ export const allWidgetTypes = [
   "telemetry",
   "configurables",
   "graph",
+  "capture",
   "test",
 ]
 
@@ -30,12 +32,13 @@ export enum WidgetTypes {
   TELEMETRY = "telemetry",
   CONFIGURABLES = "configurables",
   GRAPH = "graph",
+  CAPTURE = "capture",
   TEST = "test",
 }
 
 const defaultModuled: Module[] = [
   {
-    id: 0,
+    id: uuidv4(),
     type: WidgetTypes.CONTROLS,
     start: {
       x: 1,
@@ -47,7 +50,7 @@ const defaultModuled: Module[] = [
     },
   },
   {
-    id: 1,
+    id: uuidv4(),
     type: WidgetTypes.TEST,
     start: {
       x: 7,
@@ -59,7 +62,7 @@ const defaultModuled: Module[] = [
     },
   },
   {
-    id: 2,
+    id: uuidv4(),
     type: WidgetTypes.TEST,
     start: {
       x: 9,
@@ -71,7 +74,7 @@ const defaultModuled: Module[] = [
     },
   },
   {
-    id: 3,
+    id: uuidv4(),
     type: WidgetTypes.TEST,
     start: {
       x: 9,
@@ -90,7 +93,7 @@ class Grid {
   selectedCellX = $state(-1)
   selectedCellY = $state(-1)
 
-  selectedWidgetId = $state(-1)
+  selectedWidgetId = $state("")
 
   selectedWidget = $derived(this.getWidgetById(this.selectedWidgetId))
 
@@ -129,7 +132,7 @@ class Grid {
     return this.coreCheckPlace(this.selectedCellX, this.selectedCellY, selected)
   }
 
-  private getWidgetById(id: number) {
+  private getWidgetById(id: string) {
     for (const w of gridManager.modules) {
       if (w.id == id) return w
     }
@@ -182,7 +185,7 @@ class Grid {
     this.modules = modules
   }
 
-  startMoving(id: number) {
+  startMoving(id: string) {
     this.isMoving = true
     this.selectedWidgetId = id
     for (const w of this.modules) {
@@ -196,7 +199,7 @@ class Grid {
   stopMoving(error: string | null) {
     if (error != "" && error != null) notifications.add(error)
     this.isMoving = false
-    this.selectedWidgetId = -1
+    this.selectedWidgetId = ""
     return
   }
 
@@ -208,6 +211,59 @@ class Grid {
         w.start.y = this.selectedCellY
       }
     }
+  }
+
+  canExpand(w: Module, dx: number, dy: number): boolean {
+    const { x: startX, y: startY } = w.start
+    const { x: width, y: height } = w.sizes
+
+    if (dx === 1) {
+      // Right
+      for (let dyOffset = 0; dyOffset < height; dyOffset++) {
+        const y = startY + dyOffset
+        const x = startX + width
+        if (this.modulesMap[y]?.[x] !== null) return false
+      }
+    } else if (dx === -1) {
+      // Left
+      for (let dyOffset = 0; dyOffset < height; dyOffset++) {
+        const y = startY + dyOffset
+        const x = startX - 1
+        if (this.modulesMap[y]?.[x] !== null) return false
+      }
+    } else if (dy === 1) {
+      // Down
+      for (let dxOffset = 0; dxOffset < width; dxOffset++) {
+        const x = startX + dxOffset
+        const y = startY + height
+        if (this.modulesMap[y]?.[x] !== null) return false
+      }
+    } else if (dy === -1) {
+      // Up
+      for (let dxOffset = 0; dxOffset < width; dxOffset++) {
+        const x = startX + dxOffset
+        const y = startY - 1
+        if (this.modulesMap[y]?.[x] !== null) return false
+      }
+    }
+
+    return true
+  }
+
+  canExpandRight(w: Module) {
+    return this.canExpand(w, 1, 0)
+  }
+
+  canExpandLeft(w: Module) {
+    return this.canExpand(w, -1, 0)
+  }
+
+  canExpandDown(w: Module) {
+    return this.canExpand(w, 0, 1)
+  }
+
+  canExpandUp(w: Module) {
+    return this.canExpand(w, 0, -1)
   }
 }
 

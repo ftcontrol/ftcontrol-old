@@ -5,7 +5,6 @@
     allWidgetTypes,
     gridManager,
     WidgetTypes,
-    type Module,
   } from "$ui/grid/grid.svelte"
   import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
   import HorizontalReversed from "$ui/icons/HorizontalReversed.svelte"
@@ -14,64 +13,9 @@
   import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
-  import Flows from "$ui/widgets/Flows.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
-  import { onMount } from "svelte"
-
-  function canExpand(w: Module, dx: number, dy: number): boolean {
-    const { x: startX, y: startY } = w.start
-    const { x: width, y: height } = w.sizes
-
-    if (dx === 1) {
-      // Right
-      for (let dyOffset = 0; dyOffset < height; dyOffset++) {
-        const y = startY + dyOffset
-        const x = startX + width
-        if (gridManager.modulesMap[y]?.[x] !== null) return false
-      }
-    } else if (dx === -1) {
-      // Left
-      for (let dyOffset = 0; dyOffset < height; dyOffset++) {
-        const y = startY + dyOffset
-        const x = startX - 1
-        if (gridManager.modulesMap[y]?.[x] !== null) return false
-      }
-    } else if (dy === 1) {
-      // Down
-      for (let dxOffset = 0; dxOffset < width; dxOffset++) {
-        const x = startX + dxOffset
-        const y = startY + height
-        if (gridManager.modulesMap[y]?.[x] !== null) return false
-      }
-    } else if (dy === -1) {
-      // Up
-      for (let dxOffset = 0; dxOffset < width; dxOffset++) {
-        const x = startX + dxOffset
-        const y = startY - 1
-        if (gridManager.modulesMap[y]?.[x] !== null) return false
-      }
-    }
-
-    return true
-  }
-
-  function canExpandRight(w: Module) {
-    return canExpand(w, 1, 0)
-  }
-
-  function canExpandLeft(w: Module) {
-    return canExpand(w, -1, 0)
-  }
-
-  function canExpandDown(w: Module) {
-    return canExpand(w, 0, 1)
-  }
-
-  function canExpandUp(w: Module) {
-    return canExpand(w, 0, -1)
-  }
 </script>
 
 <div class="container">
@@ -95,14 +39,14 @@
           </button>
           <button
             onclick={() => {
-              if (!canExpandRight(w)) {
+              if (!gridManager.canExpandRight(w)) {
                 notifications.add("Not enough space to expand right.")
               } else {
                 w.sizes.x++
                 return
               }
 
-              if (!canExpandLeft(w)) {
+              if (!gridManager.canExpandLeft(w)) {
                 notifications.add("Not enough space to expand left.")
               } else {
                 w.sizes.x++
@@ -125,14 +69,14 @@
           </button>
           <button
             onclick={() => {
-              if (!canExpandDown(w)) {
+              if (!gridManager.canExpandDown(w)) {
                 notifications.add("Not enough space to expand down.")
               } else {
                 w.sizes.y++
                 return
               }
 
-              if (!canExpandUp(w)) {
+              if (!gridManager.canExpandUp(w)) {
                 notifications.add("Not enough space to expand up.")
               } else {
                 w.sizes.y++
@@ -175,6 +119,8 @@
           <Configurables />
         {:else if w.type == WidgetTypes.GRAPH}
           <Graph />
+        {:else if w.type == WidgetTypes.CAPTURE}
+          <PlaybackHistory />
         {:else}
           <p>Unknown type</p>
         {/if}
