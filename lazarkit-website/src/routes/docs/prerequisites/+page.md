@@ -68,6 +68,26 @@ buildscript {
 
 ## Add FTControl to Your Project
 
+> [if you aren't using Kotlin] Edit TeamCode/build.gradle:
+
+```groovy title="build.gradle"
+android {
+    namespace = 'org.firstinspires.ftc.teamcode'
+
+    //ADD THIS // [svp! ~~:5]
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 24
+    }
+    //
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging true
+    }
+}
+```
+
 In your root build.gradle or settings.gradle, add this Maven repository:
 
 ```groovy title="build.gradle"
