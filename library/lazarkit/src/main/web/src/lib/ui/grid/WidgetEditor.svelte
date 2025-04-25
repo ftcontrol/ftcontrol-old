@@ -15,7 +15,10 @@
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
 </script>
 
-<div class="container">
+<div
+  class="container"
+  style="--cellsX:{gridManager.cellsX} ;--cellsY: {gridManager.cellsY};"
+>
   <section>
     {#each gridManager.modules as w}
       <div
@@ -143,9 +146,7 @@
       </div>
     {/if}
 
-    {#each Array.from({ length: 12 * 12 - gridManager.countCells }) as _, index}
-      <!-- <p class="m"></p> -->
-    {/each}
+    {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY - gridManager.countCells } ) as _, index}{/each}
   </section>
 
   {#if gridManager.isMoving}
@@ -166,9 +167,11 @@
         gridManager.stopMoving(null)
       }}
     >
-      {#each Array.from({ length: 12 * 12 }) as _, index}
+      {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY } ) as _, index}
         {@const id =
-          gridManager.modulesMap[Math.floor(index / 12) + 1][(index % 12) + 1]}
+          gridManager.modulesMap[Math.floor(index / gridManager.cellsX) + 1][
+            (index % gridManager.cellsX) + 1
+          ]}
         <p
           class="overlay-item"
           class:isEmpty={id != null && id != gridManager.selectedWidgetId}
@@ -181,8 +184,8 @@
 
             const selected = gridManager.selectedWidget
 
-            const newX = (index % 12) + 1
-            const newY = Math.floor(index / 12) + 1
+            const newX = (index % gridManager.cellsX) + 1
+            const newY = Math.floor(index / gridManager.cellsX) + 1
 
             const canPlaceBoth = gridManager.coreCheckPlace(
               newX,
@@ -200,6 +203,12 @@
               selected
             )
 
+            console.log("canPlaceBoth", canPlaceBoth)
+
+            console.log("canPlaceX", canPlaceX)
+
+            console.log("canPlaceY", canPlaceY)
+
             if (canPlaceX || canPlaceBoth) {
               gridManager.selectedCellX = newX
             }
@@ -208,9 +217,7 @@
               gridManager.selectedCellY = newY
             }
           }}
-        >
-          <!-- {index} X: {index % 12} Y: {Math.floor(index / 12)} -->
-        </p>
+        ></p>
       {/each}
     </section>
   {/if}
@@ -267,6 +274,8 @@
   }
 
   .container {
+    --cellsX: 12;
+    --cellsY: 12;
     width: 100%;
     height: 100%;
     position: relative;
@@ -274,8 +283,8 @@
   section {
     position: absolute;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
+    grid-template-columns: repeat(var(--cellsX), 1fr);
+    grid-template-rows: repeat(var(--cellsY), 1fr);
     height: 100%;
     width: 100%;
     padding: 0.5rem;

@@ -36,58 +36,35 @@ export enum WidgetTypes {
   TEST = "test",
 }
 
-const defaultModuled: Module[] = [
-  {
-    id: uuidv4(),
-    type: WidgetTypes.CONTROLS,
-    start: {
-      x: 1,
-      y: 1,
+export type Preset = {
+  x: number
+  y: number
+  modules: Module[]
+}
+
+const defaultModuled: Preset = {
+  x: 12,
+  y: 8,
+  modules: [
+    {
+      id: uuidv4(),
+      type: WidgetTypes.CONTROLS,
+      start: {
+        x: 1,
+        y: 1,
+      },
+      sizes: {
+        x: 6,
+        y: 3,
+      },
     },
-    sizes: {
-      x: 6,
-      y: 3,
-    },
-  },
-  {
-    id: uuidv4(),
-    type: WidgetTypes.TEST,
-    start: {
-      x: 7,
-      y: 1,
-    },
-    sizes: {
-      x: 2,
-      y: 3,
-    },
-  },
-  {
-    id: uuidv4(),
-    type: WidgetTypes.TEST,
-    start: {
-      x: 9,
-      y: 1,
-    },
-    sizes: {
-      x: 2,
-      y: 3,
-    },
-  },
-  {
-    id: uuidv4(),
-    type: WidgetTypes.TEST,
-    start: {
-      x: 9,
-      y: 4,
-    },
-    sizes: {
-      x: 4,
-      y: 3,
-    },
-  },
-]
+  ],
+}
 
 class Grid {
+  cellsX = $state(8)
+  cellsY = $state(6)
+
   isMoving = $state(false)
 
   selectedCellX = $state(-1)
@@ -101,8 +78,8 @@ class Grid {
 
   checkIndex(index: number): boolean {
     return this.coreCheckPlace(
-      (index % 12) + 1,
-      Math.floor(index / 12) + 1,
+      (index % this.cellsX) + 1,
+      Math.floor(index / this.cellsX) + 1,
       this.selectedWidget
     )
   }
@@ -114,8 +91,8 @@ class Grid {
         const x = newX + dx
         const y = newY + dy
         if (
-          x >= 13 ||
-          y >= 13 ||
+          x > this.cellsX ||
+          y > this.cellsY ||
           x < 1 ||
           y < 1 ||
           (this.modulesMap[y][x] != null &&
@@ -152,9 +129,9 @@ class Grid {
     }
 
     const map: any[][] = []
-    for (let y = 1; y < 13; y++) {
+    for (let y = 1; y < this.cellsY + 1; y++) {
       map[y] = []
-      for (let x = 1; x < 13; x++) {
+      for (let x = 1; x < this.cellsX + 1; x++) {
         map[y][x] = null
       }
     }
@@ -180,9 +157,11 @@ class Grid {
     return sum
   })
 
-  constructor(modules: Module[]) {
-    if (modules.length == 0) modules = structuredClone(defaultModuled)
-    this.modules = modules
+  constructor(preset: Preset | null) {
+    if (preset == null) preset = defaultModuled
+    this.cellsX = preset.x
+    this.cellsY = preset.y
+    this.modules = preset.modules
   }
 
   startMoving(id: string) {
@@ -213,7 +192,7 @@ class Grid {
     }
   }
 
-  canExpand(w: Module, dx: number, dy: number): boolean {
+  private canExpand(w: Module, dx: number, dy: number): boolean {
     const { x: startX, y: startY } = w.start
     const { x: width, y: height } = w.sizes
 
@@ -222,28 +201,28 @@ class Grid {
       for (let dyOffset = 0; dyOffset < height; dyOffset++) {
         const y = startY + dyOffset
         const x = startX + width
-        if (this.modulesMap[y]?.[x] !== null) return false
+        if (x > this.cellsX || this.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dx === -1) {
       // Left
       for (let dyOffset = 0; dyOffset < height; dyOffset++) {
         const y = startY + dyOffset
         const x = startX - 1
-        if (this.modulesMap[y]?.[x] !== null) return false
+        if (x < 1 || this.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dy === 1) {
       // Down
       for (let dxOffset = 0; dxOffset < width; dxOffset++) {
         const x = startX + dxOffset
         const y = startY + height
-        if (this.modulesMap[y]?.[x] !== null) return false
+        if (y > this.cellsY || this.modulesMap[y]?.[x] !== null) return false
       }
     } else if (dy === -1) {
       // Up
       for (let dxOffset = 0; dxOffset < width; dxOffset++) {
         const x = startX + dxOffset
         const y = startY - 1
-        if (this.modulesMap[y]?.[x] !== null) return false
+        if (y < 1 || this.modulesMap[y]?.[x] !== null) return false
       }
     }
 
@@ -267,4 +246,4 @@ class Grid {
   }
 }
 
-export let gridManager = new Grid([])
+export let gridManager = new Grid(null)
