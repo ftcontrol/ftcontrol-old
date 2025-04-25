@@ -40,6 +40,13 @@ body {
   --d3: calc(var(--multiplier) * 3s);
 }
 
+body.blue {
+  --primary: #005bac;
+}
+body.red {
+  --primary: #e60012;
+}
+
 *,
 *::after,
 *::before {

@@ -7,9 +7,14 @@
   import SelectInput from "./primitives/SelectInput.svelte"
 
   let animationSpeed = $state(settings.animationSpeed)
+  let primaryColor = $state(settings.primaryColor)
 
   $effect(() => {
     settings.setSpeed(animationSpeed)
+  })
+
+  $effect(() => {
+    settings.setPrimaryColor(primaryColor)
   })
 </script>
 
@@ -46,6 +51,18 @@
         bind:currentValue={animationSpeed}
         value="normal"
         possibleValues={["instant", "fast", "normal", "slow"]}
+        isValid={true}
+        alwaysValid={true}
+      ></SelectInput>
+    </div>
+
+    <div class="flex">
+      <p>Primary Color</p>
+      <SelectInput
+        startValue={settings.primaryColor}
+        bind:currentValue={primaryColor}
+        value="blue"
+        possibleValues={["red", "blue"]}
         isValid={true}
         alwaysValid={true}
       ></SelectInput>
