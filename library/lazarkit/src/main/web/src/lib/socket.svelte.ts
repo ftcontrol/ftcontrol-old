@@ -119,6 +119,7 @@ export type TelemetryPacket = {
 
 export class InfoManager {
   showSettings = $state(false)
+  showEdit = $state(false)
 
   time = $state("")
   opModes = $state<OpMode[]>([])
