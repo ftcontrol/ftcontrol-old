@@ -190,7 +190,9 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
           .y};
 "
       >
-        <p>Moving {gridManager.selectedCell}</p>
+        <p>
+          Moving X: {gridManager.selectedCellX} Y: {gridManager.selectedCellY}
+        </p>
       </div>
     {/if}
 
@@ -227,11 +229,34 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
               return
             }
 
-            if (!gridManager.checkIndex(index)) {
-              return
+            const selected = gridManager.selectedWidget
+
+            const newX = (index % 12) + 1
+            const newY = Math.floor(index / 12) + 1
+
+            const canPlaceBoth = gridManager.coreCheckPlace(
+              newX,
+              newY,
+              selected
+            )
+            const canPlaceX = gridManager.coreCheckPlace(
+              newX,
+              gridManager.selectedCellY,
+              selected
+            )
+            const canPlaceY = gridManager.coreCheckPlace(
+              gridManager.selectedCellX,
+              newY,
+              selected
+            )
+
+            if (canPlaceX || canPlaceBoth) {
+              gridManager.selectedCellX = newX
             }
 
-            gridManager.selectedCell = index
+            if (canPlaceY || canPlaceBoth) {
+              gridManager.selectedCellY = newY
+            }
           }}
         >
           <!-- {index} X: {index % 12} Y: {Math.floor(index / 12)} -->

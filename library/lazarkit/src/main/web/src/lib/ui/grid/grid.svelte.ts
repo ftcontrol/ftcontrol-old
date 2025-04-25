@@ -86,10 +86,9 @@ const defaultModuled: Module[] = [
 
 class Grid {
   isMoving = $state(false)
-  selectedCell = $state(-1)
 
-  selectedCellX = $derived((this.selectedCell % 12) + 1)
-  selectedCellY = $derived(Math.floor(this.selectedCell / 12) + 1)
+  selectedCellX = $state(-1)
+  selectedCellY = $state(-1)
 
   selectedWidgetId = $state(-1)
 
@@ -167,8 +166,6 @@ class Grid {
       }
     }
 
-    console.table(map)
-
     return map
   }
 
@@ -190,7 +187,8 @@ class Grid {
     this.selectedWidgetId = id
     for (const w of this.modules) {
       if (w.id == id) {
-        this.selectedCell = 12 * (w.start.y - 1) + w.start.x - 1
+        this.selectedCellX = w.start.x - 1
+        this.selectedCellY = w.start.y - 1
       }
     }
   }
