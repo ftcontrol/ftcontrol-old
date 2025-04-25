@@ -6,17 +6,15 @@
   let {
     children,
     title = "",
-    hasMargin = true,
     maxHeight = false,
   }: {
     children: Snippet
     title?: string
-    hasMargin?: boolean
     maxHeight?: boolean
   } = $props()
 </script>
 
-<section class:hasMargin class:maxHeight>
+<section class:maxHeight>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>
@@ -29,19 +27,9 @@
 
 <style>
   section {
-    background-color: var(--card);
-    border: 2px solid var(--bg);
     position: relative;
-    border-radius: 16px;
-    overflow-x: auto;
-    overflow-y: hidden;
 
-    min-width: 400px;
-    transition: background-color var(--d3);
-  }
-  section.hasMargin {
-    margin: 0.5rem;
-    margin-bottom: 1rem;
+    height: 100%;
   }
   section.maxHeight {
     height: 100%;

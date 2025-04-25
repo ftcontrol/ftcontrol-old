@@ -23,7 +23,7 @@
 ></button>
 
 <section class:shown={info.showSettings}>
-  <Section hasMargin={false} maxHeight={true}>
+  <Section maxHeight={true}>
     <Header>
       <button
         class="arrow"
@@ -68,7 +68,15 @@
     height: calc(100vh - 2 * var(--margin));
     z-index: 101;
     transform: translateY(-125%);
-    transition: transform var(--d3);
+
+    background-color: var(--card);
+    border-radius: 16px;
+    overflow: auto;
+    border: 2px solid var(--bg);
+
+    transition:
+      transform var(--d3),
+      background-color var(--d3);
   }
   section.shown {
     transform: translateY(0%);
