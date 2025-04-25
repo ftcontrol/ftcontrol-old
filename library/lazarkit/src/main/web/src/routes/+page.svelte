@@ -2,6 +2,11 @@
   import { gamepads, notifications } from "$lib"
   import GamepadDrawing from "$lib/ui/GamepadDrawing.svelte"
   import { gridManager, type Module } from "$ui/grid/grid.svelte"
+  import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
+  import HorizontalReversed from "$ui/icons/HorizontalReversed.svelte"
+  import MoveIcon from "$ui/icons/MoveIcon.svelte"
+  import VerticalIcon from "$ui/icons/VerticalIcon.svelte"
+  import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Flows from "$ui/widgets/Flows.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
@@ -74,39 +79,81 @@
     grid-row: {w.start.y} / span {w.sizes.y};
     "
       >
-        <button
-          class="mover"
-          onmousedown={() => {
-            gridManager.startMoving(w.id)
-          }}
-        >
-          MOVER
-        </button>
+        <div class="controls">
+          <button
+            onmousedown={() => {
+              gridManager.startMoving(w.id)
+            }}
+          >
+            <MoveIcon />
+          </button>
+          <button
+            onclick={() => {
+              if (!canExpandRight(w)) {
+                notifications.add("Not enough space to expand right.")
+              } else {
+                w.sizes.x++
+                return
+              }
+
+              if (!canExpandLeft(w)) {
+                notifications.add("Not enough space to expand left.")
+              } else {
+                w.sizes.x++
+                w.start.x--
+              }
+            }}
+          >
+            <HorizontalIcon />
+          </button>
+          <button
+            onclick={() => {
+              if (w.sizes.x <= 1) {
+                notifications.add("Cannot make this small.")
+              } else {
+                w.sizes.x--
+              }
+            }}
+          >
+            <HorizontalReversed />
+          </button>
+          <button
+            onclick={() => {
+              if (!canExpandDown(w)) {
+                notifications.add("Not enough space to expand down.")
+              } else {
+                w.sizes.y++
+                return
+              }
+
+              if (!canExpandUp(w)) {
+                notifications.add("Not enough space to expand up.")
+              } else {
+                w.sizes.y++
+                w.start.y--
+              }
+            }}
+          >
+            <VerticalIcon />
+          </button>
+          <button
+            onclick={() => {
+              if (w.sizes.y <= 1) {
+                notifications.add("Cannot make this small.")
+              } else {
+                w.sizes.y--
+              }
+            }}
+          >
+            <VerticalReversed />
+          </button>
+        </div>
         {#if w.type == "controls"}
           <OpModeControl />
         {:else}
           <p>Unknown type</p>
         {/if}
-        <button
-          onclick={() => {
-            if (!canExpandRight(w)) {
-              notifications.add("Not enough space to move right.")
-              return
-            }
-            w.start.x++
-          }}
-        >
-          Move Right
-        </button>
-        <button
-          onclick={() => {
-            if (!canExpandRight(w)) {
-              notifications.add("Not enough space to expand right.")
-              return
-            }
-            w.sizes.x++
-          }}>Expand Right</button
-        >
+
         <button
           onclick={() => {
             if (w.sizes.x <= 1) {
@@ -116,27 +163,7 @@
             w.sizes.x--
           }}>Small Right</button
         >
-        <button
-          onclick={() => {
-            if (!canExpandLeft(w)) {
-              notifications.add("Not enough space to move left.")
-              return
-            }
-            w.start.x--
-          }}
-        >
-          Move Left
-        </button>
-        <button
-          onclick={() => {
-            if (!canExpandLeft(w)) {
-              notifications.add("Not enough space to expand left.")
-              return
-            }
-            w.sizes.x++
-            w.start.x--
-          }}>Expand Left</button
-        >
+
         <button
           onclick={() => {
             if (w.sizes.x <= 1) {
@@ -228,18 +255,30 @@ grid-row: {gridManager.selectedCellY} / span {gridManager.selectedWidget.sizes
 </div>
 
 <style>
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.25rem;
+  }
+
   .m {
     border: 1px solid green;
-    /* height: 100%; */
   }
   p {
     border: 1px solid green;
     margin: 0;
   }
-  .mover {
-    width: 100%;
-    display: block;
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
+
   .container {
     background-color: black;
     width: 100%;

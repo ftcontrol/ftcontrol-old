@@ -68,8 +68,8 @@ class Grid {
         const x = newX + dx
         const y = newY + dy
         if (
-          x >= 12 ||
-          y >= 12 ||
+          x >= 13 ||
+          y >= 13 ||
           x < 1 ||
           y < 1 ||
           (this.modulesMap[y][x] != null &&
