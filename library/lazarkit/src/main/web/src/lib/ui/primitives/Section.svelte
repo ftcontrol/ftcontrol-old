@@ -37,6 +37,5 @@
   .main {
     padding-bottom: 1rem;
     padding-inline: 1rem;
-    min-height: 100px;
   }
 </style>

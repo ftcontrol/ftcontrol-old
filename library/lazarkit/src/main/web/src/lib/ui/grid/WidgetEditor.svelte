@@ -343,7 +343,6 @@
     background-color: var(--card);
     border-radius: 16px;
     overflow: auto;
-    border: 2px solid var(--bg);
     transition: background-color var(--d3);
     height: 100%;
   }
