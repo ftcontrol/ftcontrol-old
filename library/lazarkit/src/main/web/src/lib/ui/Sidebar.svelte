@@ -66,7 +66,7 @@
         {@const grid = settings.getGridById(id)}
         {#if grid != null}
           {#if info.showEdit}
-            <div class="item">
+            <div class="item controls">
               <button
                 class="icon"
                 onclick={() => {
@@ -97,8 +97,10 @@
                   href="/?preset={id}"
                   onclick={() => {
                     settings.selectedManagerID = id
-                  }}>Go</a
+                  }}
                 >
+                  <Arrow isOpened={false} isVertical={false} />
+                </a>
               {/if}
             </div>
           {:else}
@@ -114,7 +116,7 @@
 
       {#if info.showEdit}
         <form
-          class="item"
+          class="item controls"
           onsubmit={() => {
             if (newNameValue == "") {
               notifications.add("Cannot have an empty name.")
@@ -135,7 +137,7 @@
             validate={stringValidator}
             alwaysValid={true}
           />
-          <input type="submit" value="Submit" disabled={newNameValue == ""} />
+          <input type="submit" value="Create" disabled={newNameValue == ""} />
         </form>
       {/if}
 
@@ -181,6 +183,18 @@
 </section>
 
 <style>
+  .controls {
+    margin-block: 0.25rem;
+    padding: 0.25rem;
+
+    border-radius: 0.75rem;
+    padding-inline: 0.5rem;
+    background: var(--cardTransparent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
   input[type="submit"] {
     all: unset;
     cursor: pointer;
@@ -192,6 +206,8 @@
   button.icon {
     all: unset;
     cursor: pointer;
+    display: flex;
+    align-items: center;
   }
   .cover {
     background-color: var(--bg);

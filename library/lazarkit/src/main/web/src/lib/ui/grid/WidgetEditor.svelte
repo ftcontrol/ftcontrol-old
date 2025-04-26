@@ -278,7 +278,6 @@
     -webkit-backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
-    animation: show var(--d3) forwards;
   }
 
   .add {
