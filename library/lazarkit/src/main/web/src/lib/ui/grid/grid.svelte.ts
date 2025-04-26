@@ -52,7 +52,7 @@ export function defaultModuled(): Preset {
   return {
     id: uuidv4(),
     name: "Default",
-    x: 8,
+    x: 9,
     y: 8,
     modules: [
       {
@@ -253,6 +253,8 @@ export class Grid {
         }
       }
     }
+
+    console.table(map)
 
     return map
   }

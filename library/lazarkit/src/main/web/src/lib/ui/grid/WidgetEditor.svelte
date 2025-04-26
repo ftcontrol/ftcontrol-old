@@ -46,19 +46,18 @@
           </button>
           <button
             onclick={() => {
-              if (!gridManager.canExpandRight(w)) {
-                notifications.add("Not enough space to expand right.")
-              } else {
+              if (gridManager.canExpandRight(w)) {
                 w.sizes.x++
                 return
               }
 
-              if (!gridManager.canExpandLeft(w)) {
-                notifications.add("Not enough space to expand left.")
-              } else {
+              if (gridManager.canExpandLeft(w)) {
                 w.sizes.x++
                 w.start.x--
+                return
               }
+
+              notifications.add("Not enough space to expand horizontally.")
             }}
           >
             <HorizontalIcon />
@@ -76,19 +75,18 @@
           </button>
           <button
             onclick={() => {
-              if (!gridManager.canExpandDown(w)) {
-                notifications.add("Not enough space to expand down.")
-              } else {
+              if (gridManager.canExpandDown(w)) {
                 w.sizes.y++
                 return
               }
 
-              if (!gridManager.canExpandUp(w)) {
-                notifications.add("Not enough space to expand up.")
-              } else {
+              if (gridManager.canExpandUp(w)) {
                 w.sizes.y++
                 w.start.y--
+                return
               }
+
+              notifications.add("Not enough space to expand vertically.")
             }}
           >
             <VerticalIcon />
@@ -343,6 +341,7 @@
     height: 100%;
   }
   div.isOverlay {
+    display: none;
     opacity: 0.5;
   }
 </style>
