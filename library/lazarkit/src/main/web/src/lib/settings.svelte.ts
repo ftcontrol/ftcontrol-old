@@ -1,4 +1,4 @@
-import { notifications } from "$lib"
+import { info, notifications } from "$lib"
 import { Grid, type Preset } from "$ui/grid/grid.svelte"
 import { deleteCookie, getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
@@ -67,6 +67,7 @@ class Settings {
     this.gridManagers = [new Grid(null)]
     this.initialGrids = [new Grid(null)]
     this.hasPresets = false
+    info.showEdit = false
   }
 
   removePreset(id: string) {

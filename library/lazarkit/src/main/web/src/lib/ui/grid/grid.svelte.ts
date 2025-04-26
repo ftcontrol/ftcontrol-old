@@ -52,7 +52,7 @@ export function defaultModuled(): Preset {
   return {
     id: uuidv4(),
     name: "Default",
-    x: 12,
+    x: 8,
     y: 8,
     modules: [
       {
@@ -63,7 +63,103 @@ export function defaultModuled(): Preset {
           y: 1,
         },
         sizes: {
+          x: 2,
+          y: 1,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.CAPTURE,
+        start: {
+          x: 1,
+          y: 2,
+        },
+        sizes: {
+          x: 2,
+          y: 4,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.GAMEPAD,
+        start: {
+          x: 1,
+          y: 6,
+        },
+        sizes: {
+          x: 2,
+          y: 3,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.FIELD,
+        start: {
+          x: 3,
+          y: 1,
+        },
+        sizes: {
+          x: 3,
+          y: 3,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.TELEMETRY,
+        start: {
+          x: 3,
+          y: 4,
+        },
+        sizes: {
+          x: 3,
+          y: 2,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.GRAPH,
+        start: {
+          x: 3,
+          y: 6,
+        },
+        sizes: {
+          x: 2,
+          y: 3,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.CONFIGURABLES,
+        start: {
           x: 6,
+          y: 1,
+        },
+        sizes: {
+          x: 4,
+          y: 5,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.LIMELIGHT_FEED,
+        start: {
+          x: 7,
+          y: 6,
+        },
+        sizes: {
+          x: 3,
+          y: 3,
+        },
+      },
+      {
+        id: uuidv4(),
+        type: WidgetTypes.LIMELIGHT_DASH,
+        start: {
+          x: 5,
+          y: 6,
+        },
+        sizes: {
+          x: 2,
           y: 3,
         },
       },
