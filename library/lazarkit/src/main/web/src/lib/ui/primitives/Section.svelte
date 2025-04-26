@@ -24,9 +24,7 @@
       <Title>{title}</Title>
     </Header>
   {/if}
-  <div class="main">
-    {@render children?.()}
-  </div>
+  {@render children?.()}
 </section>
 
 <style>
@@ -45,11 +43,5 @@
   }
   section.isPrimary {
     background-color: var(--primary);
-  }
-  .main {
-    padding-bottom: 1rem;
-    padding-inline: 1rem;
-    overflow: auto;
-    height: 100%;
   }
 </style>

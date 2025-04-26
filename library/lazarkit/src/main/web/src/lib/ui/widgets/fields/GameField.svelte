@@ -14,6 +14,7 @@
     init,
   } from "./draw"
   import { info } from "$lib"
+  import Content from "$ui/primitives/Content.svelte"
 
   let canvas: HTMLCanvasElement
   let base64Image: string
@@ -85,9 +86,11 @@
 </script>
 
 <Section title={"Field"}>
-  <div style="width: 100%; overflow: hidden;">
-    <canvas bind:this={canvas}></canvas>
-  </div>
+  <Content>
+    <div style="width: 100%; overflow: hidden;">
+      <canvas bind:this={canvas}></canvas>
+    </div>
+  </Content>
 </Section>
 
 <style>

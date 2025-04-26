@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Content from "$ui/primitives/Content.svelte"
   import Section from "$ui/primitives/Section.svelte"
 
   let isDisabled = $state(false)
@@ -22,13 +23,15 @@
 </script>
 
 <Section title="Limelight Feed" {isDisabled}>
-  {#await fetchImage()}
-    <p>Loading...</p>
-  {:then url}
-    <img src={url} alt="limelight feed" />
-  {:catch error}
-    <p>Limelight not found.</p>
-  {/await}
+  <Content>
+    {#await fetchImage()}
+      <p>Loading...</p>
+    {:then url}
+      <img src={url} alt="limelight feed" />
+    {:catch error}
+      <p>Limelight not found.</p>
+    {/await}
+  </Content>
 </Section>
 
 <style>
