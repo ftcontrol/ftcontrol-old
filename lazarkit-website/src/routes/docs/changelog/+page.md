@@ -1,6 +1,6 @@
 # Changelog
 
-## v3.0.0
+## v0.3.0
 - Modular Widgets UI
 - Custom Primary Color
 - Limelight Feed & Dashboard Widget
