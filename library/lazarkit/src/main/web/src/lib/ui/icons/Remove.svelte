@@ -18,8 +18,8 @@
 
 <style>
   svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     cursor: pointer;
     transition: opacity var(--d2) ease-in-out;
   }

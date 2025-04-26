@@ -42,8 +42,8 @@
 
 <style>
   svg {
-    height: 20px;
-    min-width: 20px;
+    height: 16px;
+    min-width: 16px;
     cursor: pointer;
     transition: opacity var(--d2) ease-in-out;
   }

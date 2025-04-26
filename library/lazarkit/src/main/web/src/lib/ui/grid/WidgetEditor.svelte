@@ -46,6 +46,13 @@
           </button>
           <button
             onclick={() => {
+              gridManager.remove(w.id)
+            }}
+          >
+            <Remove />
+          </button>
+          <button
+            onclick={() => {
               if (gridManager.canExpandRight(w)) {
                 w.sizes.x++
                 return
@@ -64,7 +71,7 @@
           </button>
           <button
             onclick={() => {
-              if (w.sizes.x <= 1) {
+              if (w.sizes.x <= 2) {
                 notifications.add("Cannot make this small.")
               } else {
                 w.sizes.x--
@@ -93,7 +100,7 @@
           </button>
           <button
             onclick={() => {
-              if (w.sizes.y <= 1) {
+              if (w.sizes.y <= 2) {
                 notifications.add("Cannot make this small.")
               } else {
                 w.sizes.y--
@@ -104,6 +111,7 @@
           </button>
 
           <SelectInput
+            type={""}
             startValue={w.type}
             bind:currentValue={w.type}
             value={w.type}
@@ -111,14 +119,6 @@
             isValid={true}
             alwaysValid={true}
           ></SelectInput>
-
-          <button
-            onclick={() => {
-              gridManager.remove(w.id)
-            }}
-          >
-            <Remove />
-          </button>
         </div>
         {#if w.type == WidgetTypes.CONTROLS}
           <OpModeControl />
@@ -257,14 +257,17 @@
 <style>
   .controls {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
     align-items: center;
     padding: 0.25rem;
-    margin: 0.5rem;
+    margin: 0.25rem;
     flex-wrap: wrap;
     position: absolute;
     z-index: 100;
     top: 0;
+
+    max-height: calc(100% - 0.5rem);
+    max-width: calc(100% - 0.5rem);
 
     border-radius: 0.75rem;
     padding-inline: 0.5rem;

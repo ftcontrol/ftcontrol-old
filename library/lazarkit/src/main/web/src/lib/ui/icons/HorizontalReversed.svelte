@@ -22,7 +22,7 @@
 
 <style>
   svg {
-    width: 20px;
+    width: 16px;
     cursor: pointer;
     transition: opacity var(--d2) ease-in-out;
   }
