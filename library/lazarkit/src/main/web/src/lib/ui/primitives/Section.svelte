@@ -32,7 +32,8 @@
     position: relative;
     opacity: 1;
     transition: opacity var(--d3);
-
+    display: flex;
+    flex-direction: column;
     height: 100%;
   }
   section.maxHeight {

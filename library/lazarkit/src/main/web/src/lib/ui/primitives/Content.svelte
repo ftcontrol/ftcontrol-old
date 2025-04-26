@@ -17,6 +17,6 @@
     padding-bottom: 1rem;
     padding-inline: 1rem;
     overflow: auto;
-    height: 100%;
+    flex-grow: 1;
   }
 </style>

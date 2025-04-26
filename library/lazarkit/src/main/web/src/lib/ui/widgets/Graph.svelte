@@ -85,7 +85,9 @@
           >
             {key}
           </button>
-          – {list.length} entries / {list[list.length - 1].data}
+          – {list.length} entries / {parseFloat(
+            list[list.length - 1].data.toString()
+          ).toFixed(3)}
         </li>
       {/each}
     </ul>

@@ -3,6 +3,7 @@
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
   import Button from "./primitives/Button.svelte"
+  import Content from "./primitives/Content.svelte"
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
@@ -43,41 +44,43 @@
       <div></div>
     </Header>
 
-    <h3>General</h3>
+    <Content>
+      <h3>General</h3>
 
-    <div class="flex">
-      <p>Animation speed</p>
-      <SelectInput
-        startValue={settings.animationSpeed}
-        bind:currentValue={animationSpeed}
-        value="normal"
-        possibleValues={["instant", "fast", "normal", "slow"]}
-        isValid={true}
-        alwaysValid={true}
-      ></SelectInput>
-    </div>
+      <div class="flex">
+        <p>Animation speed</p>
+        <SelectInput
+          startValue={settings.animationSpeed}
+          bind:currentValue={animationSpeed}
+          value="normal"
+          possibleValues={["instant", "fast", "normal", "slow"]}
+          isValid={true}
+          alwaysValid={true}
+        ></SelectInput>
+      </div>
 
-    <div class="flex">
-      <p>Primary Color</p>
-      <SelectInput
-        startValue={settings.primaryColor}
-        bind:currentValue={primaryColor}
-        value="blue"
-        possibleValues={["red", "blue"]}
-        isValid={true}
-        alwaysValid={true}
-      ></SelectInput>
-    </div>
+      <div class="flex">
+        <p>Primary Color</p>
+        <SelectInput
+          startValue={settings.primaryColor}
+          bind:currentValue={primaryColor}
+          value="blue"
+          possibleValues={["red", "blue"]}
+          isValid={true}
+          alwaysValid={true}
+        ></SelectInput>
+      </div>
 
-    <div class="flex">
-      <p>Reset Presets</p>
-      <Button
-        disabled={!settings.hasPresets}
-        onclick={() => {
-          settings.resetPresets()
-        }}>Reset all presets</Button
-      >
-    </div>
+      <div class="flex">
+        <p>Reset Presets</p>
+        <Button
+          disabled={!settings.hasPresets}
+          onclick={() => {
+            settings.resetPresets()
+          }}>Reset all presets</Button
+        >
+      </div>
+    </Content>
   </Section>
 </section>
 
@@ -101,7 +104,6 @@
 
     background-color: var(--card);
     border-radius: 16px;
-    overflow: auto;
     border: 2px solid var(--bg);
 
     transition:
