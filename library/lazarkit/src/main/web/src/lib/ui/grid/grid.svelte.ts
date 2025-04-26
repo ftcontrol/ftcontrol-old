@@ -48,25 +48,27 @@ export type Preset = {
   modules: Module[]
 }
 
-export const defaultModuled: Preset = {
-  id: uuidv4(),
-  name: "Default",
-  x: 12,
-  y: 8,
-  modules: [
-    {
-      id: uuidv4(),
-      type: WidgetTypes.CONTROLS,
-      start: {
-        x: 1,
-        y: 1,
+export function defaultModuled(): Preset {
+  return {
+    id: uuidv4(),
+    name: "Default",
+    x: 12,
+    y: 8,
+    modules: [
+      {
+        id: uuidv4(),
+        type: WidgetTypes.CONTROLS,
+        start: {
+          x: 1,
+          y: 1,
+        },
+        sizes: {
+          x: 6,
+          y: 3,
+        },
       },
-      sizes: {
-        x: 6,
-        y: 3,
-      },
-    },
-  ],
+    ],
+  }
 }
 
 export class Grid {
@@ -168,7 +170,7 @@ export class Grid {
   })
 
   constructor(preset: Preset | null) {
-    if (preset == null) preset = defaultModuled
+    if (preset == null) preset = defaultModuled()
     this.id = preset.id
     this.name = preset.name
     this.cellsX = preset.x

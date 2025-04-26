@@ -9,6 +9,7 @@
   import StringInput from "./primitives/StringInput.svelte"
   import { stringValidator } from "./primitives/validators"
   import { defaultModuled, Grid } from "./grid/grid.svelte"
+  import Remove from "./icons/Remove.svelte"
   let isCovering = $state(false)
 
   let newNameValue = $state("")
@@ -65,22 +66,32 @@
         {@const grid = settings.getGridById(id)}
         {#if grid != null}
           {#if info.showEdit}
-            <form
-              class="item"
-              onsubmit={() => {
-                settings.savePresets()
-                info.showEdit = false
-              }}
-            >
-              <StringInput
-                value={grid.name}
-                isValid={true}
-                startValue={grid.name}
-                bind:currentValue={grid.name}
-                type={""}
-                validate={stringValidator}
-                alwaysValid={true}
-              />
+            <div class="item">
+              <button
+                class="icon"
+                onclick={() => {
+                  settings.removePreset(id)
+                }}
+              >
+                <Remove />
+              </button>
+              <form
+                class="item"
+                onsubmit={() => {
+                  settings.savePresets()
+                  info.showEdit = false
+                }}
+              >
+                <StringInput
+                  value={grid.name}
+                  isValid={true}
+                  startValue={grid.name}
+                  bind:currentValue={grid.name}
+                  type={""}
+                  validate={stringValidator}
+                  alwaysValid={true}
+                />
+              </form>
               {#if settings.selectedManagerID != id}
                 <a
                   href="/?preset={id}"
@@ -89,7 +100,7 @@
                   }}>Go</a
                 >
               {/if}
-            </form>
+            </div>
           {:else}
             <a
               href="/?preset={id}"
@@ -109,7 +120,7 @@
               notifications.add("Cannot have an empty name.")
               return
             }
-            var newPreset = structuredClone(defaultModuled)
+            var newPreset = structuredClone(defaultModuled())
             newPreset.name = newNameValue
             settings.gridManagers.push(new Grid(newPreset))
             newNameValue = ""
@@ -155,10 +166,12 @@
           }
         }}
       >
-        {#if settings.isGridEdited}
-          Save changes
-        {:else if info.showEdit}
-          Disable Edit
+        {#if info.showEdit}
+          {#if settings.isGridEdited}
+            Save changes
+          {:else}
+            Disable Edit
+          {/if}
         {:else}
           Enable Edit
         {/if}
@@ -175,6 +188,10 @@
   }
   input[type="submit"]:disabled {
     opacity: 0.5;
+  }
+  button.icon {
+    all: unset;
+    cursor: pointer;
   }
   .cover {
     background-color: var(--bg);

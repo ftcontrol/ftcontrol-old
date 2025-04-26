@@ -1,3 +1,4 @@
+import { notifications } from "$lib"
 import { Grid, type Preset } from "$ui/grid/grid.svelte"
 import { deleteCookie, getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
@@ -49,6 +50,14 @@ class Settings {
       grids.push(Grid.fromJSON(value as Preset))
     }
 
+    if (grids.length < 1) {
+      const newGrid = [new Grid(null)]
+      const serialized = newGrid.map((it) => it.toJSON())
+
+      setCookie("presets", JSON.stringify(serialized))
+      return newGrid
+    }
+
     return grids
   }
 
@@ -58,6 +67,14 @@ class Settings {
     this.gridManagers = [new Grid(null)]
     this.initialGrids = [new Grid(null)]
     this.hasPresets = false
+  }
+
+  removePreset(id: string) {
+    if (this.gridManagers.length == 1) {
+      notifications.add("Cannot remove last preset.")
+      return
+    }
+    this.gridManagers = this.gridManagers.filter((it) => it.id != id)
   }
 
   hasPresets = $state(getCookie("presets") ? true : false)
