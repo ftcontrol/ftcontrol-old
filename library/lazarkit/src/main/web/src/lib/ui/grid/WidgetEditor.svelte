@@ -155,9 +155,7 @@
           .y};
   "
       >
-        <p>
-          Moving X: {gridManager.selectedCellX} Y: {gridManager.selectedCellY}
-        </p>
+        <Section isPrimary={true}></Section>
       </div>
     {/if}
 
@@ -309,6 +307,7 @@
 
   .overlay-item {
     border: 1px solid var(--primary);
+    border-radius: 16px;
     margin: 0;
   }
   .overlay-item.isEmpty {

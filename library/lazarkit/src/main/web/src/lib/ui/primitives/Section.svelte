@@ -8,22 +8,24 @@
     title = "",
     maxHeight = false,
     isDisabled = false,
+    isPrimary = false,
   }: {
-    children: Snippet
+    children?: Snippet
     title?: string
     maxHeight?: boolean
     isDisabled?: boolean
+    isPrimary?: boolean
   } = $props()
 </script>
 
-<section class:maxHeight class:isDisabled>
+<section class:maxHeight class:isDisabled class:isPrimary>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>
     </Header>
   {/if}
   <div class="main">
-    {@render children()}
+    {@render children?.()}
   </div>
 </section>
 
@@ -40,6 +42,9 @@
   }
   section.isDisabled {
     opacity: 0.5;
+  }
+  section.isPrimary {
+    background-color: var(--primary);
   }
   .main {
     padding-bottom: 1rem;

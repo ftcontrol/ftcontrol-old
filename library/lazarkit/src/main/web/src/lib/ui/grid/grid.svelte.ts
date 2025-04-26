@@ -15,29 +15,29 @@ export type Module = {
 }
 
 export const allWidgetTypes = [
-  "controls",
-  "gamepad",
-  "field",
-  "telemetry",
-  "configurables",
-  "graph",
-  "capture",
-  "dash limelight",
-  "feed limelight",
-  "test",
+  "OpMode Control",
+  "Gamepad",
+  "Field",
+  "Telemetry",
+  "Configurables",
+  "Graph",
+  "Capture",
+  "LL Dash",
+  "LL Feed",
+  "Test",
 ]
 
 export enum WidgetTypes {
-  CONTROLS = "controls",
-  GAMEPAD = "gamepad",
-  FIELD = "field",
-  TELEMETRY = "telemetry",
-  CONFIGURABLES = "configurables",
-  GRAPH = "graph",
-  CAPTURE = "capture",
-  LIMELIGHT_DASH = "dash limelight",
-  LIMELIGHT_FEED = "feed limelight",
-  TEST = "test",
+  CONTROLS = "OpMode Control",
+  GAMEPAD = "Gamepad",
+  FIELD = "Field",
+  TELEMETRY = "Telemetry",
+  CONFIGURABLES = "Configurables",
+  GRAPH = "Graph",
+  CAPTURE = "Capture",
+  LIMELIGHT_DASH = "LL Dash",
+  LIMELIGHT_FEED = "LL Feed",
+  TEST = "Test",
 }
 
 export type Preset = {
