@@ -6,49 +6,43 @@
   let {
     children,
     title = "",
-    hasMargin = true,
     maxHeight = false,
+    isDisabled = false,
+    isPrimary = false,
   }: {
-    children: Snippet
+    children?: Snippet
     title?: string
-    hasMargin?: boolean
     maxHeight?: boolean
+    isDisabled?: boolean
+    isPrimary?: boolean
   } = $props()
 </script>
 
-<section class:hasMargin class:maxHeight>
+<section class:maxHeight class:isDisabled class:isPrimary>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>
     </Header>
   {/if}
-  <div class="main">
-    {@render children()}
-  </div>
+  {@render children?.()}
 </section>
 
 <style>
   section {
-    background-color: var(--card);
-    border: 2px solid var(--bg);
     position: relative;
-    border-radius: 16px;
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    min-width: 400px;
-    transition: background-color var(--d3);
-  }
-  section.hasMargin {
-    margin: 0.5rem;
-    margin-bottom: 1rem;
+    opacity: 1;
+    transition: opacity var(--d3);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
   section.maxHeight {
     height: 100%;
   }
-  .main {
-    padding-bottom: 1rem;
-    padding-inline: 1rem;
-    min-height: 100px;
+  section.isDisabled {
+    opacity: 0.5;
+  }
+  section.isPrimary {
+    background-color: var(--primary);
   }
 </style>

@@ -3,6 +3,7 @@
   import type { OpMode } from "$lib/socket.svelte"
   import { Section, Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
+  import Content from "$ui/primitives/Content.svelte"
   import Header from "$ui/primitives/Header.svelte"
   import Title from "$ui/primitives/Title.svelte"
   import OpModeList from "../OpModeList.svelte"
@@ -64,65 +65,66 @@
       </span>
     </button>
   </Header>
+  <Content>
+    <div class="modal autos">
+      <Hiddable isShown={modalOpened == "autos"}>
+        <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
+      </Hiddable>
+    </div>
+    <div class="modal teleops">
+      <Hiddable isShown={modalOpened == "teleops"}>
+        <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
+      </Hiddable>
+    </div>
 
-  <div class="modal autos">
-    <Hiddable isShown={modalOpened == "autos"}>
-      <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
-    </Hiddable>
-  </div>
-  <div class="modal teleops">
-    <Hiddable isShown={modalOpened == "teleops"}>
-      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
-    </Hiddable>
-  </div>
+    {#if currentOpMode.name == ""}
+      <p class="title">Nothing selected</p>
+    {:else}
+      <p class="title">
+        <span class="title_small">{currentOpMode.flavour}</span>
+        {currentOpMode.name}
+      </p>
+    {/if}
 
-  {#if currentOpMode.name == ""}
-    <p class="title">Nothing selected</p>
-  {:else}
-    <p class="title">
-      <span class="title_small">{currentOpMode.flavour}</span>
-      {currentOpMode.name}
-    </p>
-  {/if}
-
-  <div class="flex">
-    <Button
-      disabled={currentOpMode.name == "" ||
-        (info.activeOpModeStatus == "running" &&
-          info.activeOpMode != "$Stop$Robot$") ||
-        (info.activeOpModeStatus == "stopped" &&
-          info.activeOpMode != "$Stop$Robot$") ||
-        (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
-      onclick={() => {
-        socket.sendMessage({
-          kind: "initOpMode",
-          opModeName: currentOpMode.name,
-        })
-      }}
-    >
-      Initialize
-    </Button>
-    <Button
-      disabled={info.activeOpMode == "$Stop$Robot$" ||
-        currentOpMode.name == "" ||
-        info.activeOpModeStatus != "init"}
-      onclick={() => {
-        socket.sendMessage({ kind: "startActiveOpMode" })
-      }}
-    >
-      Start
-    </Button>
-    <Button
-      disabled={info.activeOpMode == "$Stop$Robot$" ||
-        currentOpMode.name == "" ||
-        info.activeOpModeStatus == "stopped"}
-      onclick={() => {
-        socket.sendMessage({ kind: "stopActiveOpMode" })
-      }}
-    >
-      Stop
-    </Button>
-  </div>
+    <div class="flex">
+      <Button
+        disabled={currentOpMode.name == "" ||
+          (info.activeOpModeStatus == "running" &&
+            info.activeOpMode != "$Stop$Robot$") ||
+          (info.activeOpModeStatus == "stopped" &&
+            info.activeOpMode != "$Stop$Robot$") ||
+          (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
+        onclick={() => {
+          socket.sendMessage({
+            kind: "initOpMode",
+            opModeName: currentOpMode.name,
+          })
+        }}
+      >
+        Initialize
+      </Button>
+      <Button
+        disabled={info.activeOpMode == "$Stop$Robot$" ||
+          currentOpMode.name == "" ||
+          info.activeOpModeStatus != "init"}
+        onclick={() => {
+          socket.sendMessage({ kind: "startActiveOpMode" })
+        }}
+      >
+        Start
+      </Button>
+      <Button
+        disabled={info.activeOpMode == "$Stop$Robot$" ||
+          currentOpMode.name == "" ||
+          info.activeOpModeStatus == "stopped"}
+        onclick={() => {
+          socket.sendMessage({ kind: "stopActiveOpMode" })
+        }}
+      >
+        Stop
+      </Button>
+    </div>
+  </Content>
 </Section>
 
 <style>
@@ -152,7 +154,7 @@
   }
 
   .title {
-    font-size: 2rem;
+    font-size: 1.25rem;
     text-align: center;
     position: relative;
     margin: 0;

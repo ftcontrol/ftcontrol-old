@@ -19,9 +19,10 @@
     justify-content: space-between;
     align-items: center;
     position: relative;
+    margin-inline: 1rem;
   }
   .header {
-    padding-top: 1rem;
-    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 </style>

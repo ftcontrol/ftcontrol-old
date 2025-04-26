@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.0
+- Modular Widgets UI
+- Custom Primary Color
+- Limelight Feed & Dashboard Widget
+- Improved settings menu
+- Fixed some UI bugs
+
 ## v0.2.6
 - *Configurables Differential Mode*: Displays all modified variables
 - Search improvements

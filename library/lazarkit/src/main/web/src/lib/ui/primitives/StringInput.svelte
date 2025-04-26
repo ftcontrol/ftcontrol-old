@@ -10,6 +10,7 @@
     validate = (value: string) => true,
     extraChar = "",
     type = "",
+    alwaysValid = false,
   }: {
     startValue: string
     currentValue: string
@@ -18,6 +19,7 @@
     validate: (value: string) => boolean
     extraChar?: string
     type?: string
+    alwaysValid?: boolean
   } = $props()
 
   $effect(() => {
@@ -48,6 +50,6 @@
     isValid = true
     currentValue = value
   }}
-  {isValid}
+  isValid={isValid || socket.state == "opened" || alwaysValid}
   {extraChar}
 />

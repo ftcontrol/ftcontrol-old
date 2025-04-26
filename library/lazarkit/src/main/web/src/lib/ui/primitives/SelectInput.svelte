@@ -62,6 +62,7 @@
     width: 100%;
     padding-left: 0.25rem;
     cursor: pointer;
+    text-wrap: nowrap;
   }
   .select {
     position: absolute;
@@ -69,6 +70,9 @@
     background-color: var(--card);
     border: 1px solid var(--text);
     z-index: 10;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 250%;
   }
   .content {
     position: relative;

@@ -9,6 +9,7 @@
   import { Section } from "$primitives"
   import Diff from "$ui/icons/Diff.svelte"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
+  import Content from "$ui/primitives/Content.svelte"
   import Header from "$ui/primitives/Header.svelte"
   import Title from "$ui/primitives/Title.svelte"
   import ClassName from "./ClassName.svelte"
@@ -102,24 +103,26 @@
       />
     </button>
   </Header>
-  <div class="content">
-    {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-      <Hiddable
-        isShown={info.openedStates[name] ||
-          info.configurablesState == ConfigurablesStates.NORMAL}
-      >
-        <ClassName {name} bind:isOpened={info.openedStates[name]} />
-        <Hiddable isShown={info.openedStates[name] == true}>
-          {#each items as item}
-            <Field {item} />
-          {/each}
+  <Content>
+    <div class="content">
+      {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
+        <Hiddable
+          isShown={info.openedStates[name] ||
+            info.configurablesState == ConfigurablesStates.NORMAL}
+        >
+          <ClassName {name} bind:isOpened={info.openedStates[name]} />
+          <Hiddable isShown={info.openedStates[name] == true}>
+            {#each items as item}
+              <Field {item} />
+            {/each}
+          </Hiddable>
         </Hiddable>
-      </Hiddable>
-    {/each}
-    {#if info.jvmFields.length == 0}
-      <p>No configurables found.</p>
-    {/if}
-  </div>
+      {/each}
+      {#if info.jvmFields.length == 0}
+        <p>No configurables found.</p>
+      {/if}
+    </div>
+  </Content>
 </Section>
 
 <style>
@@ -135,8 +138,6 @@
     margin-top: 8px;
   }
   .content {
-    height: 500px;
-    overflow-y: auto;
     margin-right: -1rem;
     padding-right: 1rem;
   }

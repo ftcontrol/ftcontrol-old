@@ -3,6 +3,7 @@
 :root {
   --bg: #f6f6f6;
   --card: #ffffff;
+  --cardTransparent: #ffffff50;
   --text: #1b1b1b;
 
   --primary: #e60012;
@@ -17,6 +18,7 @@ html {
 body.dark-mode {
   --bg: #1b1b1b;
   --card: #131314;
+  --cardTransparent: #13131450;
   --text: #c4c7c5;
 }
 body.instant {
@@ -36,6 +38,13 @@ body {
   --d1: calc(var(--multiplier) * 1s);
   --d2: calc(var(--multiplier) * 2s);
   --d3: calc(var(--multiplier) * 3s);
+}
+
+body.blue {
+  --primary: #005bac;
+}
+body.red {
+  --primary: #e60012;
 }
 
 *,

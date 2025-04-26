@@ -123,14 +123,6 @@ socket.addMessageHandler("allFlows", (data: GenericData) => {
   info.flows = data.flows
 })
 
-// setTimeout(() => {
-//   socket.sendMessage({ kind: "getOpmodes" })
-//   socket.sendMessage({ kind: "getActiveOpMode" })
-//   socket.sendMessage({ kind: "getJvmFieldsRequest" })
-// }, 1500)
-
 export const gamepads = new GamepadManager()
 
 export const notifications = new NotificationsManager()
-
-// TODO: on reconnect reset states

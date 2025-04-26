@@ -1,12 +1,18 @@
 <script lang="ts">
-  import { info, socket } from "$lib"
+  import { info, notifications, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import { Logo, Arrow } from "./icons"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
   import { tick } from "svelte"
+  import StringInput from "./primitives/StringInput.svelte"
+  import { stringValidator } from "./primitives/validators"
+  import { defaultModuled, Grid } from "./grid/grid.svelte"
+  import Remove from "./icons/Remove.svelte"
   let isCovering = $state(false)
+
+  let newNameValue = $state("")
 
   async function toggleTheme() {
     isCovering = true
@@ -54,8 +60,89 @@
 
       <div class="gap"></div>
 
-      <h2>General</h2>
-      <a href="/">Robot Control</a>
+      <h2>My Panels</h2>
+
+      {#each settings.allIDs as id}
+        {@const grid = settings.getGridById(id)}
+        {#if grid != null}
+          {#if info.showEdit}
+            <div class="item controls">
+              <button
+                class="icon"
+                onclick={() => {
+                  settings.removePreset(id)
+                }}
+              >
+                <Remove />
+              </button>
+              <form
+                class="item"
+                onsubmit={() => {
+                  settings.savePresets()
+                  info.showEdit = false
+                }}
+              >
+                <StringInput
+                  value={grid.name}
+                  isValid={true}
+                  startValue={grid.name}
+                  bind:currentValue={grid.name}
+                  type={""}
+                  validate={stringValidator}
+                  alwaysValid={true}
+                />
+              </form>
+              {#if settings.selectedManagerID != id}
+                <a
+                  href="/?preset={id}"
+                  onclick={() => {
+                    settings.selectedManagerID = id
+                  }}
+                >
+                  <Arrow isOpened={false} isVertical={false} />
+                </a>
+              {/if}
+            </div>
+          {:else}
+            <a
+              href="/?preset={id}"
+              onclick={() => {
+                settings.selectedManagerID = id
+              }}>{grid?.name}</a
+            >
+          {/if}
+        {/if}
+      {/each}
+
+      {#if info.showEdit}
+        <form
+          class="item controls"
+          onsubmit={() => {
+            if (newNameValue == "") {
+              notifications.add("Cannot have an empty name.")
+              return
+            }
+            var newPreset = structuredClone(defaultModuled())
+            newPreset.name = newNameValue
+            settings.gridManagers.push(new Grid(newPreset))
+            newNameValue = ""
+          }}
+        >
+          <StringInput
+            value={newNameValue}
+            isValid={true}
+            startValue={newNameValue}
+            bind:currentValue={newNameValue}
+            type={""}
+            validate={stringValidator}
+            alwaysValid={true}
+          />
+          <input type="submit" value="Create" disabled={newNameValue == ""} />
+        </form>
+      {/if}
+
+      <h2>Other Panels</h2>
+
       <a href="/limelight">Limelight</a>
 
       <h2>Developer</h2>
@@ -73,11 +160,55 @@
           info.showSettings = !info.showSettings
         }}>Settings</Button
       >
+      <Button
+        onclick={() => {
+          info.showEdit = !info.showEdit
+          if (settings.isGridEdited) {
+            settings.savePresets()
+          }
+        }}
+      >
+        {#if info.showEdit}
+          {#if settings.isGridEdited}
+            Save changes
+          {:else}
+            Disable Edit
+          {/if}
+        {:else}
+          Enable Edit
+        {/if}
+      </Button>
     </div>
   </nav>
 </section>
 
 <style>
+  .controls {
+    margin-block: 0.25rem;
+    padding: 0.25rem;
+
+    border-radius: 0.75rem;
+    padding-inline: 0.5rem;
+    background: var(--cardTransparent);
+    border: 2px solid var(--bg);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  input[type="submit"] {
+    all: unset;
+    cursor: pointer;
+    transition: opacity var(--d3);
+  }
+  input[type="submit"]:disabled {
+    opacity: 0.5;
+  }
+  button.icon {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
   .cover {
     background-color: var(--bg);
     position: fixed;
@@ -126,6 +257,8 @@
   .item {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 200px;
   }
   .shell {
     max-width: 400px;
