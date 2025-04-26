@@ -52,8 +52,8 @@ export function defaultModuled(): Preset {
   return {
     id: uuidv4(),
     name: "Default",
-    x: 9,
-    y: 8,
+    x: 10,
+    y: 10,
     modules: [
       {
         id: uuidv4(),
@@ -63,8 +63,8 @@ export function defaultModuled(): Preset {
           y: 1,
         },
         sizes: {
-          x: 2,
-          y: 1,
+          x: 3,
+          y: 2,
         },
       },
       {
@@ -72,10 +72,10 @@ export function defaultModuled(): Preset {
         type: WidgetTypes.CAPTURE,
         start: {
           x: 1,
-          y: 2,
+          y: 3,
         },
         sizes: {
-          x: 2,
+          x: 3,
           y: 4,
         },
       },
@@ -84,31 +84,31 @@ export function defaultModuled(): Preset {
         type: WidgetTypes.GAMEPAD,
         start: {
           x: 1,
-          y: 6,
+          y: 7,
         },
         sizes: {
-          x: 2,
-          y: 3,
+          x: 3,
+          y: 4,
         },
       },
       {
         id: uuidv4(),
         type: WidgetTypes.FIELD,
         start: {
-          x: 3,
+          x: 4,
           y: 1,
         },
         sizes: {
           x: 3,
-          y: 3,
+          y: 4,
         },
       },
       {
         id: uuidv4(),
         type: WidgetTypes.TELEMETRY,
         start: {
-          x: 3,
-          y: 4,
+          x: 4,
+          y: 5,
         },
         sizes: {
           x: 3,
@@ -119,24 +119,24 @@ export function defaultModuled(): Preset {
         id: uuidv4(),
         type: WidgetTypes.GRAPH,
         start: {
-          x: 3,
-          y: 6,
+          x: 4,
+          y: 7,
         },
         sizes: {
-          x: 2,
-          y: 3,
+          x: 3,
+          y: 4,
         },
       },
       {
         id: uuidv4(),
         type: WidgetTypes.CONFIGURABLES,
         start: {
-          x: 6,
+          x: 7,
           y: 1,
         },
         sizes: {
           x: 4,
-          y: 5,
+          y: 6,
         },
       },
       {
@@ -144,23 +144,23 @@ export function defaultModuled(): Preset {
         type: WidgetTypes.LIMELIGHT_FEED,
         start: {
           x: 7,
-          y: 6,
+          y: 7,
         },
         sizes: {
-          x: 3,
-          y: 3,
+          x: 4,
+          y: 2,
         },
       },
       {
         id: uuidv4(),
         type: WidgetTypes.LIMELIGHT_DASH,
         start: {
-          x: 5,
-          y: 6,
+          x: 7,
+          y: 9,
         },
         sizes: {
-          x: 2,
-          y: 3,
+          x: 4,
+          y: 2,
         },
       },
     ],
