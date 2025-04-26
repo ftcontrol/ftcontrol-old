@@ -4,6 +4,7 @@
 - Modular Widgets UI
 - Custom Primary Color
 - Limelight Feed & Dashboard Widget
+- Improved settings menu
 - Fixed some UI bugs
 
 ## v0.2.6
