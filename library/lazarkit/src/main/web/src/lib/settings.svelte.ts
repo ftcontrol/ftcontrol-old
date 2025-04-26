@@ -51,11 +51,7 @@ class Settings {
     }
 
     if (grids.length < 1) {
-      const newGrid = [new Grid(null)]
-      const serialized = newGrid.map((it) => it.toJSON())
-
-      setCookie("presets", JSON.stringify(serialized))
-      return newGrid
+      return [new Grid(null)]
     }
 
     return grids
