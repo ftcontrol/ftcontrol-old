@@ -44,5 +44,7 @@
   .main {
     padding-bottom: 1rem;
     padding-inline: 1rem;
+    overflow: auto;
+    height: 100%;
   }
 </style>

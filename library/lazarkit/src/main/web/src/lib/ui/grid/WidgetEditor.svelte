@@ -29,12 +29,12 @@
   <section>
     {#each gridManager.modules as w}
       <div
-        class="item-wrapper"
+        class="item"
         class:isOverlay={gridManager.selectedWidgetId == w.id}
         style="
-  grid-column: {w.start.x} / span {w.sizes.x};
-  grid-row: {w.start.y} / span {w.sizes.y};
-  "
+        grid-column: {w.start.x} / span {w.sizes.x};
+        grid-row: {w.start.y} / span {w.sizes.y};
+        "
       >
         <div class="controls" class:shown={info.showEdit}>
           <button
@@ -122,31 +122,29 @@
             <Remove />
           </button>
         </div>
-        <div class="item">
-          {#if w.type == WidgetTypes.CONTROLS}
-            <OpModeControl />
-          {:else if w.type == WidgetTypes.GAMEPAD}
-            <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-          {:else if w.type == WidgetTypes.FIELD}
-            <GameField />
-          {:else if w.type == WidgetTypes.TELEMETRY}
-            <Telemetry />
-          {:else if w.type == WidgetTypes.CONFIGURABLES}
-            <Configurables />
-          {:else if w.type == WidgetTypes.GRAPH}
-            <Graph />
-          {:else if w.type == WidgetTypes.LIMELIGHT_DASH}
-            <LimelightDashboard />
-          {:else if w.type == WidgetTypes.LIMELIGHT_FEED}
-            <LimelightFeed />
-          {:else if w.type == WidgetTypes.CAPTURE}
-            <PlaybackHistory />
-          {:else}
-            <Section title="Unknown Type"
-              >This is an unknown widget of type "{w.type}"</Section
-            >
-          {/if}
-        </div>
+        {#if w.type == WidgetTypes.CONTROLS}
+          <OpModeControl />
+        {:else if w.type == WidgetTypes.GAMEPAD}
+          <GamepadDrawing gamepad={gamepads.gamepads[0]} />
+        {:else if w.type == WidgetTypes.FIELD}
+          <GameField />
+        {:else if w.type == WidgetTypes.TELEMETRY}
+          <Telemetry />
+        {:else if w.type == WidgetTypes.CONFIGURABLES}
+          <Configurables />
+        {:else if w.type == WidgetTypes.GRAPH}
+          <Graph />
+        {:else if w.type == WidgetTypes.LIMELIGHT_DASH}
+          <LimelightDashboard />
+        {:else if w.type == WidgetTypes.LIMELIGHT_FEED}
+          <LimelightFeed />
+        {:else if w.type == WidgetTypes.CAPTURE}
+          <PlaybackHistory />
+        {:else}
+          <Section title="Unknown Type"
+            >This is an unknown widget of type "{w.type}"</Section
+          >
+        {/if}
       </div>
     {/each}
     {#if gridManager.selectedWidget != null}
@@ -336,13 +334,11 @@
     padding: 0.5rem;
     gap: 0.5rem;
   }
-  .item-wrapper {
-    position: relative;
-  }
   div.item {
+    position: relative;
     background-color: var(--card);
     border-radius: 16px;
-    overflow: auto;
+    overflow: hidden;
     transition: background-color var(--d3);
     height: 100%;
   }
