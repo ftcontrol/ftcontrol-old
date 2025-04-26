@@ -86,16 +86,18 @@
     display: flex;
     gap: 1rem;
     align-items: center;
+    justify-content: space-between;
   }
   section {
     --margin: 2rem;
     position: fixed;
     top: var(--margin);
     right: var(--margin);
+    max-width: 500px;
     width: calc(100vw - 2 * var(--margin));
     height: calc(100vh - 2 * var(--margin));
     z-index: 101;
-    transform: translateY(-125%);
+    transform: translateX(125%);
 
     background-color: var(--card);
     border-radius: 16px;
@@ -107,7 +109,7 @@
       background-color var(--d3);
   }
   section.shown {
-    transform: translateY(0%);
+    transform: translateX(0%);
   }
   button {
     all: unset;
