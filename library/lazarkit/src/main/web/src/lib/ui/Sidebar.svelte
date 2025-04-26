@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { info, socket } from "$lib"
+  import { info, notifications, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
-  import { allKeys } from "./grid"
   import { Logo, Arrow } from "./icons"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
   import { tick } from "svelte"
+  import StringInput from "./primitives/StringInput.svelte"
+  import { stringValidator } from "./primitives/validators"
+  import { defaultModuled, Grid } from "./grid/grid.svelte"
   let isCovering = $state(false)
+
+  let newNameValue = $state("")
 
   async function toggleTheme() {
     isCovering = true
@@ -55,16 +59,71 @@
 
       <div class="gap"></div>
 
-      <h2>General</h2>
+      <h2>My Panels</h2>
 
-      {#each allKeys as title}
-        <a
-          href="/?preset={title}"
-          onclick={() => {
-            info.selectedManager = title
-          }}>{title}</a
-        >
+      {#each settings.allIDs as id}
+        {@const grid = settings.getGridById(id)}
+        {#if grid != null}
+          {#if info.showEdit}
+            <div class="item">
+              <StringInput
+                value={grid.name}
+                isValid={true}
+                startValue={grid.name}
+                bind:currentValue={grid.name}
+                type={""}
+                validate={stringValidator}
+                alwaysValid={true}
+              />
+              {#if settings.selectedManagerID != id}
+                <a
+                  href="/?preset={id}"
+                  onclick={() => {
+                    settings.selectedManagerID = id
+                  }}>Go</a
+                >
+              {/if}
+            </div>
+          {:else}
+            <a
+              href="/?preset={id}"
+              onclick={() => {
+                settings.selectedManagerID = id
+              }}>{grid?.name}</a
+            >
+          {/if}
+        {/if}
       {/each}
+
+      {#if info.showEdit}
+        <form
+          class="item"
+          onsubmit={() => {
+            if (newNameValue == "") {
+              notifications.add("Cannot have an empty name.")
+              return
+            }
+            var newPreset = structuredClone(defaultModuled)
+            newPreset.name = newNameValue
+            settings.gridManagers.push(new Grid(newPreset))
+            newNameValue = ""
+          }}
+        >
+          <StringInput
+            value={newNameValue}
+            isValid={true}
+            startValue={newNameValue}
+            bind:currentValue={newNameValue}
+            type={""}
+            validate={stringValidator}
+            alwaysValid={true}
+          />
+          <input type="submit" value="Submit" disabled={newNameValue == ""} />
+        </form>
+      {/if}
+
+      <h2>Other Panels</h2>
+
       <a href="/limelight">Limelight</a>
 
       <h2>Developer</h2>
@@ -85,13 +144,32 @@
       <Button
         onclick={() => {
           info.showEdit = !info.showEdit
-        }}>{info.showEdit ? "Disable" : "Enable"} Edit</Button
+          if (settings.isGridEdited) {
+            settings.savePresets()
+          }
+        }}
       >
+        {#if settings.isGridEdited}
+          Save changes
+        {:else if info.showEdit}
+          Disable Edit
+        {:else}
+          Enable Edit
+        {/if}
+      </Button>
     </div>
   </nav>
 </section>
 
 <style>
+  input[type="submit"] {
+    all: unset;
+    cursor: pointer;
+    transition: opacity var(--d3);
+  }
+  input[type="submit"]:disabled {
+    opacity: 0.5;
+  }
   .cover {
     background-color: var(--bg);
     position: fixed;

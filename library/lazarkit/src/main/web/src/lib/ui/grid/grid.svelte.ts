@@ -41,12 +41,16 @@ export enum WidgetTypes {
 }
 
 export type Preset = {
+  id: string
+  name: string
   x: number
   y: number
   modules: Module[]
 }
 
-const defaultModuled: Preset = {
+export const defaultModuled: Preset = {
+  id: uuidv4(),
+  name: "Default",
   x: 12,
   y: 8,
   modules: [
@@ -68,6 +72,8 @@ const defaultModuled: Preset = {
 export class Grid {
   cellsX = $state(8)
   cellsY = $state(6)
+  name = $state("Default")
+  id = $state("")
 
   isMoving = $state(false)
 
@@ -163,6 +169,8 @@ export class Grid {
 
   constructor(preset: Preset | null) {
     if (preset == null) preset = defaultModuled
+    this.id = preset.id
+    this.name = preset.name
     this.cellsX = preset.x
     this.cellsY = preset.y
     this.modules = preset.modules
@@ -271,5 +279,19 @@ export class Grid {
 
   canExpandUp(w: Module) {
     return this.canExpand(w, 0, -1)
+  }
+
+  static fromJSON(jsonObj: Preset): Grid {
+    return new Grid(jsonObj)
+  }
+
+  toJSON(): Preset {
+    return {
+      id: this.id,
+      name: this.name,
+      x: this.cellsX,
+      y: this.cellsY,
+      modules: this.modules,
+    }
   }
 }

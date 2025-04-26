@@ -1,3 +1,4 @@
+import { Grid, type Preset } from "$ui/grid/grid.svelte"
 import { getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
 type PrimaryColor = "blue" | "red"
@@ -38,6 +39,51 @@ class Settings {
     document.body.classList.add(this.primaryColor)
     setCookie("primary", this.primaryColor)
   }
+
+  getInitialGrids(): Grid[] {
+    const raw = getCookie("presets")
+    const parsed = raw ? JSON.parse(raw) : [null]
+
+    const grids: Grid[] = []
+    for (const [key, value] of Object.entries(parsed)) {
+      grids.push(Grid.fromJSON(value as Preset))
+    }
+
+    return grids
+  }
+
+  selectedManagerID = $state("default")
+
+  initialGrids = $state(this.getInitialGrids())
+
+  gridManagers: Grid[] = $state(this.getInitialGrids())
+
+  isGridEdited = $derived(
+    JSON.stringify(this.initialGrids) != JSON.stringify(this.gridManagers)
+  )
+
+  getGridById(id: string): Grid | null {
+    for (const grid of this.gridManagers) {
+      if (grid.id == id) return grid
+    }
+    return null
+  }
+
+  currentGrid = $derived.by(() => {
+    const grid = this.getGridById(this.selectedManagerID)
+    if (grid != null) return grid
+    this.selectedManagerID = this.gridManagers[0].id
+    return this.gridManagers[0]
+  })
+
+  savePresets() {
+    const serialized = this.gridManagers.map((it) => it.toJSON())
+
+    setCookie("presets", JSON.stringify(serialized))
+    this.initialGrids = this.gridManagers
+  }
+
+  allIDs: string[] = $derived(this.gridManagers.map((it) => it.id))
 }
 
 export const settings = new Settings()
