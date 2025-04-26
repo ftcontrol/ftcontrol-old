@@ -1,5 +1,5 @@
 import { Grid, type Preset } from "$ui/grid/grid.svelte"
-import { getCookie, setCookie } from "./cookies"
+import { deleteCookie, getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
 type PrimaryColor = "blue" | "red"
 class Settings {
@@ -52,6 +52,16 @@ class Settings {
     return grids
   }
 
+  resetPresets() {
+    this.selectedManagerID = "default"
+    deleteCookie("presets")
+    this.gridManagers = [new Grid(null)]
+    this.initialGrids = [new Grid(null)]
+    this.hasPresets = false
+  }
+
+  hasPresets = $state(getCookie("presets") ? true : false)
+
   selectedManagerID = $state("default")
 
   initialGrids = $state(this.getInitialGrids())
@@ -80,6 +90,7 @@ class Settings {
     const serialized = this.gridManagers.map((it) => it.toJSON())
 
     setCookie("presets", JSON.stringify(serialized))
+    this.hasPresets = true
     this.initialGrids = this.gridManagers
   }
 

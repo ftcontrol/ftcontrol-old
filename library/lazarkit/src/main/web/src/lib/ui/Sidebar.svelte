@@ -65,7 +65,13 @@
         {@const grid = settings.getGridById(id)}
         {#if grid != null}
           {#if info.showEdit}
-            <div class="item">
+            <form
+              class="item"
+              onsubmit={() => {
+                settings.savePresets()
+                info.showEdit = false
+              }}
+            >
               <StringInput
                 value={grid.name}
                 isValid={true}
@@ -83,7 +89,7 @@
                   }}>Go</a
                 >
               {/if}
-            </div>
+            </form>
           {:else}
             <a
               href="/?preset={id}"

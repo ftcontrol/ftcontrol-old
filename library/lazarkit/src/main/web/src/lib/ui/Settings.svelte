@@ -2,6 +2,7 @@
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
+  import Button from "./primitives/Button.svelte"
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
@@ -66,6 +67,16 @@
         isValid={true}
         alwaysValid={true}
       ></SelectInput>
+    </div>
+
+    <div class="flex">
+      <p>Reset Presets</p>
+      <Button
+        disabled={!settings.hasPresets}
+        onclick={() => {
+          settings.resetPresets()
+        }}>Reset all presets</Button
+      >
     </div>
   </Section>
 </section>
