@@ -2,14 +2,10 @@ package com.bylazar.ftcontrol.panels.server
 
 import android.content.Context
 import android.content.res.AssetManager
-import com.bylazar.ftcontrol.panels.plugins.Helpers
-import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
-import java.net.URLClassLoader
-import java.util.ServiceLoader
 
 class Server(var context: Context) : NanoHTTPD(8001) {
     private val assetManager: AssetManager = context.assets
@@ -19,13 +15,11 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
         val file = File(context.filesDir, "myfile.txt")
         file.writeText("Hello, world!")
-
-        Helpers.loadPlugins(context)
-
     }
 
     override fun serve(session: IHTTPSession): Response {
-        val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html").ifEmpty { "index.html" }
+        val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html")
+            .ifEmpty { "index.html" }
 
         if (uri.startsWith("limelight")) {
             return handleReverseProxy(session)

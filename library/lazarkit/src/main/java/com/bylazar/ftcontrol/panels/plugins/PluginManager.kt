@@ -9,11 +9,20 @@ import java.io.FileOutputStream
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 
-object Helpers {
-    fun loadPlugins(context: Context) {
+class PluginManager(var context: Context) {
+    val plugins = mutableMapOf<String, PanelsPlugin>()
+
+    fun loadPlugins() {
         println("DASH: Length: ${context.assets.list("plugins")?.size}")
         context.assets.list("plugins")?.forEach { pluginName ->
             println("DASH: Found plugin in assets: $pluginName")
+
+            val isDexFile = pluginName.endsWith(".dex")
+
+            if (!isDexFile) {
+                println("DASH: Skipping non-dex file: $pluginName")
+                return@forEach
+            }
 
             try {
                 val tempFile = File.createTempFile("plugin_", ".dex", context.cacheDir)
@@ -37,7 +46,7 @@ object Helpers {
                 }
 
                 val classNames = byteBuffer.extractClassNamesFromDex()
-                println("DASH: Found classes in $pluginName: $classNames")
+                classNames.forEach{ println("DASH: $it") }
 
                 classNames.forEach { className ->
                     try {
@@ -47,12 +56,18 @@ object Helpers {
                             println("DASH: Found plugin implementation: $className")
 
                             val pluginInstance = pluginClass.getDeclaredConstructor().newInstance() as PanelsPlugin
-                            pluginInstance.onRegister()
+
+                            if (plugins.containsKey(pluginInstance.id)) {
+                                println("DASH: Plugin with ID ${pluginInstance.id} is already registered")
+                                return
+                            }
+
+                            plugins[pluginInstance.id] = pluginInstance
+
                             println("DASH: Successfully registered plugin: $className")
                         }
                     } catch (e: Exception) {
-                        println("DASH: Error processing class $className: ${e.message}")
-                        e.printStackTrace()
+
                     }
                 }
 

@@ -1,10 +1,9 @@
 package com.bylazar.ftcontrol.panels.plugins
 
-interface PanelsPlugin {
-    val name: String
-    fun onRegister()
+import com.bylazar.ftcontrol.panels.CorePanels
 
-    fun test(){
-        val x = 0
-    }
+interface PanelsPlugin {
+    val id: String
+    val name: String
+    fun onRegister(corePanels: CorePanels)
 }

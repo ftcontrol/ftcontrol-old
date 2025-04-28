@@ -9,6 +9,7 @@ import com.bylazar.ftcontrol.panels.integration.OpModeRegistrar
 import com.bylazar.ftcontrol.panels.integration.Preferences
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.bylazar.ftcontrol.panels.integration.UIManager
+import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import com.bylazar.ftcontrol.panels.server.GenericProxy
 import com.bylazar.ftcontrol.panels.server.GenericSocketProxy
 import com.bylazar.ftcontrol.panels.server.GenericStreamingProxy
@@ -26,6 +27,8 @@ class CorePanels {
     var menuManager = MenuManager(this::enable, this::disable)
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
+
+    lateinit var pluginManager: PluginManager
 
     var isLimelightProxyEnabled = false
         set(value) {
@@ -70,6 +73,12 @@ class CorePanels {
         testLimelightServer.startServer()
 
         if (!Preferences.isEnabled) return
+
+        pluginManager = PluginManager(context)
+
+        pluginManager.loadPlugins()
+
+        pluginManager.plugins.forEach { (_, panelsPlugin) -> panelsPlugin.onRegister(this)  }
 
         server.startServer()
         isLimelightProxyEnabled = true
