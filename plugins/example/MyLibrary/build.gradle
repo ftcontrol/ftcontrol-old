@@ -50,36 +50,19 @@ tasks.register('generateLibraryDex') {
     dependsOn("assembleRelease")
 
     doLast {
-        // Input JAR (extracted from AAR)
         def inputJar = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/my-library-release.jar")
-        // Output directory for DEX
-        def outputDir = file("${layout.buildDirectory.get()}/outputs/dex/")
-        // Final DEX file path
-        def dexFile = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/my-library.dex")
+        def outputDir = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
 
-        // Ensure directories exist
         outputDir.mkdirs()
-        dexFile.parentFile.mkdirs()
 
-        // Use Android's D8 tool directly
-        com.android.tools.r8.D8.main(
+        D8.main(
                 "--release",
                 "--output", outputDir.absolutePath,
                 inputJar.absolutePath
         )
-
-        // Find the generated DEX file (could be classes.dex or similar)
-        def generatedDex = outputDir.listFiles().find { it.name.endsWith('.dex') }
-        if (generatedDex) {
-            // Copy to final location
-            ant.copy(file: generatedDex, tofile: dexFile)
-        } else {
-            throw new GradleException("DEX file was not generated")
-        }
     }
 }
 
-// Combined task that does everything
 tasks.register('prepareLibraryForTeamCode') {
     dependsOn("copyReleaseJarToTeamcodeAssets", "generateLibraryDex")
 }
