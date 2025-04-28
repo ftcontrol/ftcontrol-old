@@ -1,26 +1,85 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.android.tools.r8.D8
 
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
 }
 
-java {
-    sourceCompatibility JavaVersion.VERSION_11
-    targetCompatibility JavaVersion.VERSION_11
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
-    }
-}
-
 android {
     namespace 'com.bylazar.mylibrary'
 
     compileSdkVersion 35
+
+    defaultConfig {
+        minSdk 24
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
 }
 
 dependencies {
     implementation project(':ftcontrol')
+}
+
+// First task: Copy the JAR
+tasks.register('copyReleaseJarToTeamcodeAssets', Copy) {
+    dependsOn(":MyLibrary:build")
+
+    from(zipTree("${layout.buildDirectory.get()}/outputs/aar/${project.name}-release.aar")) {
+        include("classes.jar")
+        rename { "my-library-release.jar" }
+    }
+
+    into("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
+}
+
+tasks.register('generateLibraryDex') {
+    dependsOn("assembleRelease")
+
+    doLast {
+        // Input JAR (extracted from AAR)
+        def inputJar = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/my-library-release.jar")
+        // Output directory for DEX
+        def outputDir = file("${layout.buildDirectory.get()}/outputs/dex/")
+        // Final DEX file path
+        def dexFile = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/my-library.dex")
+
+        // Ensure directories exist
+        outputDir.mkdirs()
+        dexFile.parentFile.mkdirs()
+
+        // Use Android's D8 tool directly
+        com.android.tools.r8.D8.main(
+                "--release",
+                "--output", outputDir.absolutePath,
+                inputJar.absolutePath
+        )
+
+        // Find the generated DEX file (could be classes.dex or similar)
+        def generatedDex = outputDir.listFiles().find { it.name.endsWith('.dex') }
+        if (generatedDex) {
+            // Copy to final location
+            ant.copy(file: generatedDex, tofile: dexFile)
+        } else {
+            throw new GradleException("DEX file was not generated")
+        }
+    }
+}
+
+// Combined task that does everything
+tasks.register('prepareLibraryForTeamCode') {
+    dependsOn("copyReleaseJarToTeamcodeAssets", "generateLibraryDex")
 }

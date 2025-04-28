@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.server
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.bylazar.ftcontrol.panels.plugins.Helpers
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
@@ -19,36 +20,7 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         val file = File(context.filesDir, "myfile.txt")
         file.writeText("Hello, world!")
 
-        val tempDir = File(context.cacheDir, "plugins")
-        if (!tempDir.exists()) {
-            tempDir.mkdirs()
-        }
-
-        assetManager.list("plugins")?.forEach { pluginName ->
-            val inputStream = assetManager.open("plugins/$pluginName")
-            val outputFile = File(tempDir, pluginName)
-            outputFile.outputStream().use { outputStream ->
-                inputStream.copyTo(outputStream)
-            }
-            println("Extracted plugin: $pluginName")
-        }
-
-        val pluginFiles = tempDir.listFiles { it -> it.extension == "jar" } ?: arrayOf()
-        for (pluginFile in pluginFiles) {
-            try {
-                // Create a class loader for the JAR file
-                val classLoader = URLClassLoader(arrayOf(pluginFile.toURI().toURL()), this.javaClass.classLoader)
-
-                // Use ServiceLoader to load DashboardPlugin implementations
-                val serviceLoader = ServiceLoader.load(PanelsPlugin::class.java, classLoader)
-                for (plugin in serviceLoader) {
-                    plugin.onRegister()
-                    println("Loaded plugin: ${plugin.name()}")
-                }
-            } catch (e: Exception) {
-                println("Failed to load plugin: ${pluginFile.name}, error: ${e.message}")
-            }
-        }
+        Helpers.loadPlugins(context)
 
     }
 
