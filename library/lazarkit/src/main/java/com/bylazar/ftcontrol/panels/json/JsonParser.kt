@@ -27,6 +27,7 @@ val json = Json {
             subclass(UpdatedJvmFields::class)
             subclass(BatteryVoltage::class)
             subclass(AllFlowsJson::class)
+            subclass(ReceivedPlugins::class)
         }
         polymorphic(JsonFlow::class) {
             subclass(DoIfJson::class)

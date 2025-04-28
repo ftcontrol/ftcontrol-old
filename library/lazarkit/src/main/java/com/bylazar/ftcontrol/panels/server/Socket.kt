@@ -12,9 +12,11 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
+import com.bylazar.ftcontrol.panels.json.Plugin
 import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
+import com.bylazar.ftcontrol.panels.json.ReceivedPlugins
 import com.bylazar.ftcontrol.panels.json.StartActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.StopActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.TelemetryPacket
@@ -126,6 +128,7 @@ class Socket(
             sendActiveOpMode()
             sendJvmFields()
             sendAllFlows()
+            sendAllPlugins()
         }
 
         var lastBatteryVoltage: Double = 0.0
@@ -202,7 +205,7 @@ class Socket(
         }
 
         fun sendAllPlugins(){
-            send(ReceivedPlugins(PluginManager.plugins.values.toList()))
+            send(ReceivedPlugins(PluginManager.plugins.values.map { Plugin(it.id, it.name) }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
