@@ -123,6 +123,10 @@ socket.addMessageHandler("allFlows", (data: GenericData) => {
   info.flows = data.flows
 })
 
+socket.addMessageHandler("plugins", (data: GenericData) => {
+  info.plugins = data.plugins
+})
+
 export const gamepads = new GamepadManager()
 
 export const notifications = new NotificationsManager()

@@ -1,6 +1,7 @@
 package com.bylazar.ftcontrol.panels.plugins
 
 import android.content.Context
+import com.bylazar.ftcontrol.panels.CorePanels
 import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
 import dalvik.system.DexClassLoader
 import java.io.File
@@ -11,6 +12,10 @@ import java.nio.channels.FileChannel
 
 object PluginManager {
     var plugins = mutableMapOf<String, PanelsPlugin>()
+
+    fun onRegister(corePanels: CorePanels) {
+        plugins.values.forEach { it.onRegister(corePanels) }
+    }
 
     fun loadPlugins(context: Context) {
         plugins = mutableMapOf<String, PanelsPlugin>()
@@ -60,7 +65,7 @@ object PluginManager {
 
                             if (plugins.containsKey(pluginInstance.id)) {
                                 println("DASH: Plugin with ID ${pluginInstance.id} is already registered")
-                                return
+                                pluginInstance.id += "DUPLICATED"
                             }
 
                             plugins[pluginInstance.id] = pluginInstance

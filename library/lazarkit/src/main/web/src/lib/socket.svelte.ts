@@ -117,7 +117,14 @@ export type TelemetryPacket = {
   graphs: Graph
 }
 
+export type Plugin = {
+  id: string
+  name: string
+}
+
 export class InfoManager {
+  plugins: Plugin[] = $state([])
+
   showSettings = $state(false)
   showEdit = $state(false)
 

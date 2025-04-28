@@ -3,7 +3,7 @@ package com.bylazar.ftcontrol.panels.plugins
 import com.bylazar.ftcontrol.panels.CorePanels
 
 interface PanelsPlugin {
-    val id: String
+    var id: String
     val name: String
     fun onRegister(corePanels: CorePanels)
 }

@@ -71,6 +71,8 @@ class CorePanels {
 
         PluginManager.loadPlugins(context)
 
+        PluginManager.onRegister(this)
+
         testLimelightServer.startServer()
 
         if (!Preferences.isEnabled) return

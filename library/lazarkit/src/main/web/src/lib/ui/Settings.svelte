@@ -80,6 +80,19 @@
           }}>Reset all presets</Button
         >
       </div>
+
+      <h3>Plugins</h3>
+      <p>
+        Found {info.plugins.length} plugin{info.plugins.length > 1 ? "s" : ""}.
+      </p>
+      {#each info.plugins as plugin}
+        <div class="flex">
+          <h4>{plugin.name}</h4>
+          <p>
+            {plugin.id}
+          </p>
+        </div>
+      {/each}
     </Content>
   </Section>
 </section>
@@ -96,7 +109,7 @@
     position: fixed;
     top: var(--margin);
     right: var(--margin);
-    max-width: 500px;
+    max-width: 600px;
     width: calc(100vw - 2 * var(--margin));
     height: calc(100vh - 2 * var(--margin));
     z-index: 101;
