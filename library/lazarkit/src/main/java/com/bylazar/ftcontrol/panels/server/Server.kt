@@ -15,6 +15,10 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
         val file = File(context.filesDir, "myfile.txt")
         file.writeText("Hello, world!")
+
+        assetManager.list(".")?.forEach {
+            println("DASH: ASSETS: $it")
+        }
     }
 
     override fun serve(session: IHTTPSession): Response {
