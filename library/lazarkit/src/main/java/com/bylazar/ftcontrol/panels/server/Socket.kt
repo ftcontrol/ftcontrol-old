@@ -23,6 +23,7 @@ import com.bylazar.ftcontrol.panels.json.TimeObject
 import com.bylazar.ftcontrol.panels.json.UpdatedJvmFields
 import com.bylazar.ftcontrol.panels.json.json
 import com.bylazar.ftcontrol.panels.json.toJson
+import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import com.qualcomm.hardware.lynx.LynxModule
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
@@ -198,6 +199,10 @@ class Socket(
         }
 
         fun sendAllFlows() {
+        }
+
+        fun sendAllPlugins(){
+            send(ReceivedPlugins(PluginManager.plugins.values.toList()))
         }
 
         override fun onMessage(message: WebSocketFrame) {

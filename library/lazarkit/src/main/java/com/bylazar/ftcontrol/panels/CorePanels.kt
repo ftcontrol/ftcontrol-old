@@ -28,8 +28,6 @@ class CorePanels {
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
-    lateinit var pluginManager: PluginManager
-
     var isLimelightProxyEnabled = false
         set(value) {
             when (value) {
@@ -70,15 +68,12 @@ class CorePanels {
         } catch (e: IOException) {
             println("Failed to start: " + e.message)
         }
+
+        PluginManager.loadPlugins(context)
+
         testLimelightServer.startServer()
 
         if (!Preferences.isEnabled) return
-
-        pluginManager = PluginManager(context)
-
-        pluginManager.loadPlugins()
-
-        pluginManager.plugins.forEach { (_, panelsPlugin) -> panelsPlugin.onRegister(this)  }
 
         server.startServer()
         isLimelightProxyEnabled = true

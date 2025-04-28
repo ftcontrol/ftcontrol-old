@@ -9,10 +9,11 @@ import java.io.FileOutputStream
 import java.nio.ByteOrder
 import java.nio.channels.FileChannel
 
-class PluginManager(var context: Context) {
-    val plugins = mutableMapOf<String, PanelsPlugin>()
+object PluginManager {
+    var plugins = mutableMapOf<String, PanelsPlugin>()
 
-    fun loadPlugins() {
+    fun loadPlugins(context: Context) {
+        plugins = mutableMapOf<String, PanelsPlugin>()
         println("DASH: Length: ${context.assets.list("plugins")?.size}")
         context.assets.list("plugins")?.forEach { pluginName ->
             println("DASH: Found plugin in assets: $pluginName")
