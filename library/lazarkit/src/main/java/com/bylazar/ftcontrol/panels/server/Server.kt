@@ -2,9 +2,9 @@ package com.bylazar.ftcontrol.panels.server
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.File
 
 class Server(var context: Context) : NanoHTTPD(8001) {
@@ -21,8 +21,47 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html")
             .ifEmpty { "index.html" }
 
-        if (uri.startsWith("limelight")) {
-            return handleReverseProxy(session)
+        if (uri.startsWith("plugins")) {
+            val parts = uri.split("/")
+            val pluginId = if (parts.size > 1) parts[1] else "unknown"
+
+            if (pluginId == "unknown") return newFixedLengthResponse(
+                Response.Status.NOT_FOUND,
+                "text/plain",
+                "Plugin not found"
+            )
+
+            val endpoint = if (parts.size > 2) parts[2] else "details"
+
+            when (endpoint) {
+                "details" -> {
+                    val jsonString =
+                        """{"path": "$uri", "id": "$pluginId", "name": "${PluginManager.plugins.values.find { it.id == pluginId }?.name ?: "Unknown"}"}"""
+
+                    return newFixedLengthResponse(Response.Status.OK, "application/json", jsonString)
+                }
+                "html" -> {
+                    return newFixedLengthResponse(Response.Status.OK, "text/html", """
+                        <html>
+                            <head>
+                                <title>Plugin Details</title>
+                            </head>
+                            <body>
+                                <h1>Plugin Details</h1>
+                                <p>Path: $uri</p>
+                                <p>ID: $pluginId</p>
+                                <p>Name: ${PluginManager.plugins.values.find { it.id == pluginId }?.name ?: "Unknown"}</p>
+                                <p>Timestamp: ${System.currentTimeMillis()}</p>                           
+                            </body>
+                        </html>
+                    """.trimIndent())
+                }
+                else -> return newFixedLengthResponse(
+                    Response.Status.NOT_FOUND,
+                    "text/plain",
+                    "Endpoint not found"
+                )
+            }
         }
 
         val path = when {
@@ -46,36 +85,6 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             return newChunkedResponse(Response.Status.OK, mime, inputStream)
         } catch (e: Exception) {
             val message = "DASH: Server error: ${e.message}"
-            println(message)
-            e.printStackTrace()
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", message)
-        }
-    }
-
-    private fun handleReverseProxy(session: IHTTPSession): Response {
-        val targetUri = session.uri.removePrefix("/limelight")
-        val url = "http://172.29.0.1:5801$targetUri"
-
-        println("DASH: Proxying request to $url")
-
-        try {
-            val request = Request.Builder()
-                .url(url)
-                .method(session.method.name, null) // Forward the HTTP method
-                .build()
-
-            val response = client.newCall(request).execute()
-
-            val responseBody = response.body?.byteStream()
-            val contentType = response.header("Content-Type") ?: "application/octet-stream"
-
-            return newChunkedResponse(
-                Response.Status.lookup(response.code),
-                contentType,
-                responseBody
-            )
-        } catch (e: Exception) {
-            val message = "DASH: Proxy error: ${e.message}"
             println(message)
             e.printStackTrace()
             return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", message)

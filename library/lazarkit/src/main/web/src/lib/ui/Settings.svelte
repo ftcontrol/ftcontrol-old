@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { dev } from "$app/environment"
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
@@ -18,6 +19,13 @@
   $effect(() => {
     settings.setPrimaryColor(primaryColor)
   })
+
+  function getAPIEndpoint() {
+    if (dev) {
+      return "http://localhost:8001"
+    }
+    return window.location.origin
+  }
 </script>
 
 <button
@@ -92,6 +100,8 @@
             {plugin.id}
           </p>
         </div>
+        <iframe src="{getAPIEndpoint()}/plugins/{plugin.id}/html" title="HTML"
+        ></iframe>
       {/each}
     </Content>
   </Section>
