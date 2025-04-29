@@ -6,12 +6,9 @@ import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
 import java.io.File
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
 
 class Server(var context: Context) : NanoHTTPD(8001) {
     private val assetManager: AssetManager = context.assets
-    private val client = OkHttpClient()
 
     init {
         //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
@@ -19,7 +16,32 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         file.writeText("Hello, world!")
     }
 
+    fun allowCors(response: Response): Response {
+        response.addHeader("Access-Control-Allow-Origin", "*")
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        response.addHeader("Access-Control-Allow-Headers", "*")
+        return response
+    }
+
+    fun getResponse(
+        content: String,
+        contentType: String = "text/html",
+        status: Response.Status = Response.Status.OK
+    ): Response {
+        return allowCors(
+            newFixedLengthResponse(
+                status,
+                contentType,
+                content
+            )
+        )
+    }
+
+
     override fun serve(session: IHTTPSession): Response {
+        if (session.method == Method.OPTIONS) {
+            return getResponse("")
+        }
         val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html")
             .ifEmpty { "index.html" }
 
@@ -27,10 +49,9 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             val parts = uri.split("/")
             val pluginId = if (parts.size > 1) parts[1] else "unknown"
 
-            if (pluginId == "unknown") return newFixedLengthResponse(
-                Response.Status.NOT_FOUND,
-                "text/plain",
-                "Plugin not found"
+            if (pluginId == "unknown") return getResponse(
+                "Plugin not found",
+                status = Response.Status.NOT_FOUND
             )
 
             val endpoint = if (parts.size > 2) parts[2] else "details"
@@ -40,8 +61,9 @@ class Server(var context: Context) : NanoHTTPD(8001) {
                     val jsonString =
                         """{"path": "$uri", "id": "$pluginId", "name": "${PluginManager.plugins.values.find { it.id == pluginId }?.name ?: "Unknown"}"}"""
 
-                    return newFixedLengthResponse(Response.Status.OK, "application/json", jsonString)
+                    return getResponse(jsonString, contentType = "application/json")
                 }
+
                 "html" -> {
                     val htmlString = """
                         <h1>Plugin Details</h1>
@@ -51,12 +73,12 @@ class Server(var context: Context) : NanoHTTPD(8001) {
                         <p style="color: var(--primary);">Timestamp: ${System.currentTimeMillis()}</p>                           
                     """.trimIndent()
 
-                    return newFixedLengthResponse(Response.Status.OK, "text/html", htmlString)
+                    return getResponse(htmlString)
                 }
-                else -> return newFixedLengthResponse(
-                    Response.Status.NOT_FOUND,
-                    "text/plain",
-                    "Endpoint not found"
+
+                else -> return getResponse(
+                    "Endpoint not found",
+                    status = Response.Status.NOT_FOUND,
                 )
             }
         }
@@ -64,7 +86,7 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         return getStaticResponse(uri)
     }
 
-    private fun getStaticResponse(uri: String): NanoHTTPD.Response{
+    private fun getStaticResponse(uri: String): NanoHTTPD.Response {
         val path = when {
             !uri.contains(".") -> "web/$uri/index.html"
             else -> "web/$uri"
@@ -80,12 +102,12 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         try {
             val inputStream = assetManager.open(path)
             println("DASH: success")
-            return newChunkedResponse(Response.Status.OK, mime, inputStream)
+            return allowCors(newChunkedResponse(Response.Status.OK, mime, inputStream))
         } catch (e: Exception) {
             val message = "DASH: Server error: ${e.message}"
             println(message)
             e.printStackTrace()
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", message)
+            return getResponse(message, status = Response.Status.INTERNAL_ERROR)
         }
     }
 
