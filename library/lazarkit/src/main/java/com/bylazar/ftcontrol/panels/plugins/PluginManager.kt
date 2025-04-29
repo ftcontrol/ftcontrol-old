@@ -14,7 +14,8 @@ object PluginManager {
     var plugins = mutableMapOf<String, PanelsPlugin>()
 
     fun onRegister(corePanels: CorePanels) {
-        plugins.values.forEach { it.onRegister(corePanels) }
+        val context = ModContext()
+        plugins.values.forEach { it.onRegister(context) }
     }
 
     fun loadPlugins(context: Context) {

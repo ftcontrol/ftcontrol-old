@@ -205,7 +205,7 @@ class Socket(
         }
 
         fun sendAllPlugins(){
-            send(ReceivedPlugins(PluginManager.plugins.values.map { Plugin(it.id, it.name) }))
+            send(ReceivedPlugins(PluginManager.plugins.values.map { Plugin(it.id, it.name, it.pages) }))
         }
 
         override fun onMessage(message: WebSocketFrame) {
