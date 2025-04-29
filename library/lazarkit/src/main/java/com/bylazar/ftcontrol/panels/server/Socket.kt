@@ -12,7 +12,6 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
-import com.bylazar.ftcontrol.panels.json.Plugin
 import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
@@ -204,8 +203,8 @@ class Socket(
         fun sendAllFlows() {
         }
 
-        fun sendAllPlugins(){
-            send(ReceivedPlugins(PluginManager.plugins.values.map { Plugin(it.id, it.name, it.pages) }))
+        fun sendAllPlugins() {
+            send(ReceivedPlugins(PluginManager.plugins.values.map { it.toJson }))
         }
 
         override fun onMessage(message: WebSocketFrame) {

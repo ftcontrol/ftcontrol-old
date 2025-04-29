@@ -10,5 +10,5 @@
 {#if plugin == undefined}
   <p>Plugin with id {data.id} is not loaded.</p>
 {:else}
-  {@render children()}
+  {@render children?.()}
 {/if}

@@ -120,6 +120,7 @@ export type TelemetryPacket = {
 export type Page = {
   id: string
   title: string
+  html: string
 }
 
 export type Plugin = {
