@@ -6,6 +6,8 @@ import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.OkHttpClient
 import java.io.File
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 class Server(var context: Context) : NanoHTTPD(8001) {
     private val assetManager: AssetManager = context.assets
@@ -41,20 +43,15 @@ class Server(var context: Context) : NanoHTTPD(8001) {
                     return newFixedLengthResponse(Response.Status.OK, "application/json", jsonString)
                 }
                 "html" -> {
-                    return newFixedLengthResponse(Response.Status.OK, "text/html", """
-                        <html>
-                            <head>
-                                <title>Plugin Details</title>
-                            </head>
-                            <body>
-                                <h1>Plugin Details</h1>
-                                <p>Path: $uri</p>
-                                <p>ID: $pluginId</p>
-                                <p>Name: ${PluginManager.plugins.values.find { it.id == pluginId }?.name ?: "Unknown"}</p>
-                                <p>Timestamp: ${System.currentTimeMillis()}</p>                           
-                            </body>
-                        </html>
-                    """.trimIndent())
+                    val htmlString = """
+                        <h1>Plugin Details</h1>
+                        <p>Path: $uri</p>
+                        <p>ID: $pluginId</p>
+                        <p>Name: ${PluginManager.plugins.values.find { it.id == pluginId }?.name ?: "Unknown"}</p>
+                        <p style="color: var(--primary);">Timestamp: ${System.currentTimeMillis()}</p>                           
+                    """.trimIndent()
+
+                    return newFixedLengthResponse(Response.Status.OK, "text/html", htmlString)
                 }
                 else -> return newFixedLengthResponse(
                     Response.Status.NOT_FOUND,
@@ -64,6 +61,10 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             }
         }
 
+        return getStaticResponse(uri)
+    }
+
+    private fun getStaticResponse(uri: String): NanoHTTPD.Response{
         val path = when {
             !uri.contains(".") -> "web/$uri/index.html"
             else -> "web/$uri"
@@ -75,9 +76,6 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             "js" -> "application/javascript"
             else -> "application/octet-stream"
         }
-
-        println("DASH: Request for ${session.uri} / $uri / $path / $mime")
-
 
         try {
             val inputStream = assetManager.open(path)

@@ -8,6 +8,7 @@
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
+  import Render from "./Render.svelte"
 
   let animationSpeed = $state(settings.animationSpeed)
   let primaryColor = $state(settings.primaryColor)
@@ -25,6 +26,12 @@
       return "http://localhost:8001"
     }
     return window.location.origin
+  }
+
+  async function getHTML(path: string) {
+    const response = await fetch(path)
+    const data = await response.text()
+    return data
   }
 </script>
 
@@ -100,8 +107,11 @@
             {plugin.id}
           </p>
         </div>
-        <iframe src="{getAPIEndpoint()}/plugins/{plugin.id}/html" title="HTML"
-        ></iframe>
+        {#await getHTML(`${getAPIEndpoint()}/plugins/${plugin.id}/html`)}
+          <p>Fetching</p>
+        {:then html}
+          <Render {html} />
+        {/await}
       {/each}
     </Content>
   </Section>
