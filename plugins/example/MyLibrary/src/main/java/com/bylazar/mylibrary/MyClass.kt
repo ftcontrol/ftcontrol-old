@@ -16,25 +16,19 @@ class MyClass : PanelsPlugin() {
             Page(
                 title = "Test HTML",
                 getHTML = {
+                    //language=HTML
                     """
                     <h1>Test Page 3</h1>
                     
                     <p style="color: var(--primary)">Primary colored</p>
                     
                     <button onclick="alert('Hello World!')">Click Me!</button>
-                """.trimIndent()
+                    """.trimIndent()
                 }
             ))
-        createPage(
-            Page(
-            title = "Test Dynamic",
-            isDynamic = true,
-            getHTML = {
-                """
-                    <h1>Test Dynamic</h1>       
-                    <p style="color: var(--primary)">${System.currentTimeMillis()}</p>
-                """.trimIndent()
-            }
-        ))
+        fun loadResource(path: String): String {
+            return MyClass::class.java.getResource(path)?.readText()
+                ?: throw RuntimeException("Missing resource: $path")
+        }
     }
 }
