@@ -14,4 +14,6 @@
 <h2>{data.id}</h2>
 <h2>{data.page}</h2>
 
-<Render html={page.html} />
+{#key page}
+  <Render html={page.html} />
+{/key}

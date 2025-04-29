@@ -12,6 +12,7 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
+import com.bylazar.ftcontrol.panels.json.PluginsUpdate
 import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
@@ -132,6 +133,15 @@ class Socket(
 
         var lastBatteryVoltage: Double = 0.0
 
+        fun updatePages() {
+            val updatedPlugins =
+                PluginManager.plugins.filter { it.value.pages.any { it.isDynamic } }
+                    .map { it.value.toJson }
+            if (updatedPlugins.isNotEmpty()) {
+                send(PluginsUpdate(plugins = updatedPlugins))
+            }
+        }
+
         fun startSendingTime() {
             timer.schedule(object : TimerTask() {
                 override fun run() {
@@ -139,6 +149,7 @@ class Socket(
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
                         updateBatteryVoltage()
+                        updatePages()
                         if (GlobalData.batteryVoltage != lastBatteryVoltage) {
                             send(BatteryVoltage(GlobalData.batteryVoltage))
                             lastBatteryVoltage = GlobalData.batteryVoltage

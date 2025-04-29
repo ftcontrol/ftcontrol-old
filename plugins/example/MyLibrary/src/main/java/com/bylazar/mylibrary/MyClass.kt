@@ -14,14 +14,25 @@ class MyClass : PanelsPlugin() {
         createPage("Test Page 2")
         createPage(
             Page(
-            title = "Test HTML",
-            getHTML = {
-                """
+                title = "Test HTML",
+                getHTML = {
+                    """
                     <h1>Test Page 3</h1>
                     
                     <p style="color: var(--primary)">Primary colored</p>
                     
                     <button onclick="alert('Hello World!')">Click Me!</button>
+                """.trimIndent()
+                }
+            ))
+        createPage(
+            Page(
+            title = "Test Dynamic",
+            isDynamic = true,
+            getHTML = {
+                """
+                    <h1>Test Dynamic</h1>       
+                    <p style="color: var(--primary)">${System.currentTimeMillis()}</p>
                 """.trimIndent()
             }
         ))

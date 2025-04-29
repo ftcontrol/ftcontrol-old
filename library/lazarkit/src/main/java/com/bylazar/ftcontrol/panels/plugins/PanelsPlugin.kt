@@ -44,12 +44,13 @@ class Page(
     var title: String,
     var getHTML: () -> String = { "" },
     val id: String = UUID.randomUUID().toString(),
+    var isDynamic: Boolean = false
 ) {
     val toJson: PageJson
         get() = PageJson(
             title = title,
             id = id,
-            html = getHTML()
+            html = getHTML(),
         )
 }
 
@@ -57,5 +58,5 @@ class Page(
 class PageJson(
     var title: String,
     val id: String,
-    var html: String
+    var html: String,
 )

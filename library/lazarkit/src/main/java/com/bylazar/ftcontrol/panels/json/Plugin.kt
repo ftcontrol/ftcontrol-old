@@ -9,3 +9,9 @@ import kotlinx.serialization.Serializable
 data class ReceivedPlugins(
     val plugins: List<PluginJson>
 ) : JSONData()
+
+@Serializable
+@SerialName("pluginsUpdate")
+data class PluginsUpdate(
+    val plugins: List<PluginJson>
+) : JSONData()
