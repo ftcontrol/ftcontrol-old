@@ -12,7 +12,8 @@ enum class HTMLTags {
     H3,
     H4,
     H5,
-    SPAN
+    SPAN,
+    CUSTOM
 }
 
 @HtmlDsl

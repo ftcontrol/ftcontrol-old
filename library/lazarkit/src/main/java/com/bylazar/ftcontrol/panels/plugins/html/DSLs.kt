@@ -87,3 +87,11 @@ inline fun span(id: String = "", classes: List<String> = emptyList(), styles: St
 fun HTMLElement.text(content: String) {
     this.textContent = content
 }
+
+fun HTMLElement.custom(content: String) {
+    this.textContent = content
+}
+
+fun custom(content: String) {
+    this.textContent = content
+}
