@@ -117,9 +117,15 @@ export type TelemetryPacket = {
   graphs: Graph
 }
 
+export type Page = {
+  id: string
+  title: string
+}
+
 export type Plugin = {
   id: string
   name: string
+  pages: Page[]
 }
 
 export class InfoManager {

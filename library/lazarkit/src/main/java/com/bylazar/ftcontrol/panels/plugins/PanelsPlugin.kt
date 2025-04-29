@@ -1,6 +1,7 @@
 package com.bylazar.ftcontrol.panels.plugins
 
 import kotlinx.serialization.Serializable
+import java.util.UUID
 
 abstract class PanelsPlugin {
     internal var pages = mutableListOf<Page>()
@@ -25,4 +26,5 @@ class ModContext(
 @Serializable
 class Page(
     var title: String,
+    val id: String = UUID.randomUUID().toString()
 )

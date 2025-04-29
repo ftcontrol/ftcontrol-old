@@ -44,18 +44,10 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         }
         val uri = session.uri.removePrefix("/").removeSuffix("/").removePrefix("index.html")
             .ifEmpty { "index.html" }
-
-        if (uri.startsWith("plugins")) {
-            val parts = uri.split("/")
-            val pluginId = if (parts.size > 1) parts[1] else "unknown"
-
-            if (pluginId == "unknown") return getResponse(
-                "Plugin not found",
-                status = Response.Status.NOT_FOUND
-            )
-
-            val endpoint = if (parts.size > 2) parts[2] else "details"
-
+        val parts = uri.split("/")
+        if (uri.startsWith("plugins") && parts.size > 2) {
+            val pluginId = parts[1]
+            val endpoint = parts[2]
             when (endpoint) {
                 "details" -> {
                     val jsonString =
@@ -75,18 +67,13 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
                     return getResponse(htmlString)
                 }
-
-                else -> return getResponse(
-                    "Endpoint not found",
-                    status = Response.Status.NOT_FOUND,
-                )
             }
         }
 
         return getStaticResponse(uri)
     }
 
-    private fun getStaticResponse(uri: String): NanoHTTPD.Response {
+    private fun getStaticResponse(uri: String): Response {
         val path = when {
             !uri.contains(".") -> "web/$uri/index.html"
             else -> "web/$uri"
@@ -104,12 +91,22 @@ class Server(var context: Context) : NanoHTTPD(8001) {
             println("DASH: success")
             return allowCors(newChunkedResponse(Response.Status.OK, mime, inputStream))
         } catch (e: Exception) {
-            val message = "DASH: Server error: ${e.message}"
-            println(message)
+            println("DASH: Primary asset not found: $path — ${e.message}")
             e.printStackTrace()
-            return getResponse(message, status = Response.Status.INTERNAL_ERROR)
+
+            return try {
+                val fallbackStream = assetManager.open("web/index.html")
+                println("DASH: Fallback to index.html")
+                allowCors(newChunkedResponse(Response.Status.OK, "text/html", fallbackStream))
+            } catch (fallbackException: Exception) {
+                val message = "DASH: Fallback also failed: ${fallbackException.message}"
+                println(message)
+                fallbackException.printStackTrace()
+                getResponse(message, status = Response.Status.INTERNAL_ERROR)
+            }
         }
     }
+
 
     fun startServer() {
         start()
