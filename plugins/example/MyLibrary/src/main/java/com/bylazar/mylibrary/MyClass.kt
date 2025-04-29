@@ -3,6 +3,11 @@ package com.bylazar.mylibrary
 import com.bylazar.ftcontrol.panels.plugins.ModContext
 import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
+import com.bylazar.ftcontrol.panels.plugins.html.div
+import com.bylazar.ftcontrol.panels.plugins.html.h2
+import com.bylazar.ftcontrol.panels.plugins.html.p
+import com.bylazar.ftcontrol.panels.plugins.html.span
+import com.bylazar.ftcontrol.panels.plugins.html.text
 
 class MyClass : PanelsPlugin() {
     override var id: String = "com.bylazar.myplugin"
@@ -26,9 +31,17 @@ class MyClass : PanelsPlugin() {
                     """.trimIndent()
                 }
             ))
-        fun loadResource(path: String): String {
-            return MyClass::class.java.getResource(path)?.readText()
-                ?: throw RuntimeException("Missing resource: $path")
-        }
+        createPage(
+            Page(
+                title = "Test HTML Builders",
+                getHTML = {
+                    div {
+                        h2 { text("Test HTML Builders") }
+                        p {
+                            span { text("Hi!") }
+                        }
+                    }.html
+                }
+            ))
     }
 }
