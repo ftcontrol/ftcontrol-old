@@ -149,6 +149,7 @@
       <a href="/time">Global Time</a>
       <a href="/controller">Controller</a>
       <a href="/field">Game Field</a>
+      <a href="/plugins">Plugins</a>
     </div>
 
     <div class="item">
