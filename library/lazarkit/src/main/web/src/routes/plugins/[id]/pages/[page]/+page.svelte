@@ -12,7 +12,14 @@
 
   let processedHTML = $derived.by(() => {
     return page.html.replace(/<dynamic>(.*?)<\/dynamic>/gi, (_, key) => {
-      return plugin.globalVariables[key.trim()] ?? "VARIABLE DOESN'T EXIST"
+      const trimmedKey = key.trim()
+
+      if (!plugin.globalVariables[key.trim()]) {
+        console.warn("Empty or invalid key inside <dynamic> tag")
+        return '<span class="dynamic-placeholder-error">[Missing Key]</span>'
+      }
+
+      return `<span class="dynamic" data-key="${trimmedKey}">${plugin.globalVariables[key.trim()]}</span>`
     })
   })
 
@@ -42,6 +49,5 @@
 <h1>{page.title}</h1>
 <h2>{data.id}</h2>
 <h2>{data.page}</h2>
-{#key processedHTML}
-  <Render html={processedHTML} id={plugin.id} />
-{/key}
+
+<Render html={processedHTML} id={plugin.id} />

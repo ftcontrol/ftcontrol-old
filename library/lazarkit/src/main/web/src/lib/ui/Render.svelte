@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { socket } from "$lib"
+  import { info, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import type { PluginAction } from "$lib/socket.svelte"
   import { onMount } from "svelte"
@@ -7,11 +7,28 @@
   let { html, id = "" }: { html: string; id?: string } = $props()
 
   let hostElement: HTMLDivElement
+  let shadowRoot: ShadowRoot | null = $state(null)
+
+  $effect(() => {
+    if (shadowRoot == undefined) return
+    const elements = shadowRoot.querySelectorAll(".dynamic")
+    console.log(elements)
+
+    info.plugins.forEach((it) => {
+      const global = it.globalVariables
+      elements.forEach((el) => {
+        const key = el.getAttribute("data-key")?.trim()
+        if (key && global[key]) {
+          el.textContent = global[key]
+        }
+      })
+    })
+  })
 
   function injectShadowContent(content: string) {
     const shadow =
       hostElement.shadowRoot || hostElement.attachShadow({ mode: "open" })
-
+    shadowRoot = shadow
     shadow.innerHTML = ""
 
     const style = document.createElement("style")
@@ -104,5 +121,4 @@
 <div bind:this={hostElement} class="shadow-host"></div>
 
 <style>
-  /* Optional: Styles for the host element */
 </style>
