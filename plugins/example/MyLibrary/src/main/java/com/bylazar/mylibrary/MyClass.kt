@@ -4,7 +4,6 @@ import com.bylazar.ftcontrol.panels.plugins.ModContext
 import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
-import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
 
 class MyClass : PanelsPlugin() {
     override var id: String = "com.bylazar.myplugin"

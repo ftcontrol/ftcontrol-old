@@ -60,6 +60,10 @@ tasks.register('generateLibraryDex') {
                 "--output", outputDir.absolutePath,
                 inputJar.absolutePath
         )
+
+        //rename file
+
+        //delete jar
     }
 }
 
