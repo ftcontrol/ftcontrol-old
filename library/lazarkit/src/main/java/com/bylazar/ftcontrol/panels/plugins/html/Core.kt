@@ -19,7 +19,7 @@ enum class HTMLTags {
 
 @HtmlDsl
 abstract class HTMLElement(
-    val id: String = "",
+    open val id: String = "",
     val classNames: List<String> = emptyList(),
     val styles: String = "",
     vararg children: HTMLElement

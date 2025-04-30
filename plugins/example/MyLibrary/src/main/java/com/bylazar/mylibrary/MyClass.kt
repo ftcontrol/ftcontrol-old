@@ -4,8 +4,15 @@ import com.bylazar.ftcontrol.panels.plugins.ModContext
 import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
 
 class MyClass : PanelsPlugin() {
+    //    TODO: error handling
+    override val globalVariables = mapOf<String, () -> Any>(
+        "test" to { 6 },
+        "timestamp" to { System.currentTimeMillis() }
+    )
+
     override var id: String = "com.bylazar.myplugin"
     override val name: String = "Lazar's Example Plugin"
     override fun onRegister(context: ModContext) {
@@ -16,7 +23,7 @@ class MyClass : PanelsPlugin() {
         createPage(
             Page(
                 title = "Test HTML",
-                getHTML = {
+                html = text(
                     //language=HTML
                     """
                     <h1>Test Page 3</h1>
@@ -25,16 +32,20 @@ class MyClass : PanelsPlugin() {
                     
                     <button onclick="alert('Hello World!')">Click Me!</button>
                     """.trimIndent()
-                }
-            ))
+                )
+            )
+        )
         createPage(
             Page(
                 title = "Test HTML Builders",
-                getHTML = {
-                    div {
-                        p(styles = "color:red;") { text("hello!") }
-                        h1 { text("Heading") }
-                    }.html
+                html = div {
+                    p(styles = "color:red;") { dynamic("timestamp") }
+                    p(styles = "color:blue;") { dynamic("timestamp2") }
+                    h1 {
+                        text("Heading")
+                        text("Heading2")
+                        dynamic("test")
+                    }
                 }
             ))
     }

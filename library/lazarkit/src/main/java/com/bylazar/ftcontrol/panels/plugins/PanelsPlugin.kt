@@ -1,16 +1,21 @@
 package com.bylazar.ftcontrol.panels.plugins
 
+import com.bylazar.ftcontrol.panels.plugins.html.HTMLElement
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.Text
 import kotlinx.serialization.Serializable
 import java.util.UUID
 
 @Serializable
 class PluginJson(
+    val globalVariables: Map<String, String>,
     val id: String,
     val name: String,
     val pages: List<PageJson>
 )
 
 abstract class PanelsPlugin {
+    abstract val globalVariables: Map<String, () -> Any>
+
     internal var pages = mutableListOf<Page>()
 
     abstract var id: String
@@ -24,15 +29,21 @@ abstract class PanelsPlugin {
             )
         )
     }
+
     fun createPage(page: Page) {
         pages.add(page)
     }
 
+    val cachedPages: List<PageJson> by lazy {
+        pages.map { it.toJson }
+    }
+
     val toJson: PluginJson
         get() = PluginJson(
+            globalVariables = globalVariables.mapValues { it.value().toString() },
             id = id,
             name = name,
-            pages = pages.map { it.toJson }
+            pages = cachedPages
         )
 }
 
@@ -42,15 +53,14 @@ class ModContext(
 
 class Page(
     var title: String,
-    var getHTML: () -> String = { "" },
+    var html: HTMLElement = Text(""),
     val id: String = UUID.randomUUID().toString(),
-    var isDynamic: Boolean = false
 ) {
     val toJson: PageJson
         get() = PageJson(
             title = title,
             id = id,
-            html = getHTML(),
+            html = html.html,
         )
 }
 

@@ -129,15 +129,12 @@ socket.addMessageHandler("plugins", (data: GenericData) => {
 
 socket.addMessageHandler("pluginsUpdate", (data: GenericData) => {
   const updatedPlugins = data.plugins
+  return
 
   for (const updated of updatedPlugins) {
     const index = info.plugins.findIndex((p) => p.id === updated.id)
     if (index !== -1) {
-      info.plugins[index] = {
-        ...info.plugins[index],
-        ...updated,
-        pages: updated.pages,
-      }
+      info.plugins[index] = updated
     } else {
       info.plugins.push(updated)
     }

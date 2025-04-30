@@ -134,11 +134,9 @@ class Socket(
         var lastBatteryVoltage: Double = 0.0
 
         fun updatePages() {
-            val updatedPlugins =
-                PluginManager.plugins.filter { it.value.pages.any { it.isDynamic } }
-                    .map { it.value.toJson }
-            if (updatedPlugins.isNotEmpty()) {
-                send(PluginsUpdate(plugins = updatedPlugins))
+            val dynamicPlugins = PluginManager.plugins.values.filter { it.globalVariables.isNotEmpty() }
+            if (dynamicPlugins.isNotEmpty()) {
+                send(PluginsUpdate(plugins = dynamicPlugins.map { it.toJson }))
             }
         }
 
