@@ -1,5 +1,7 @@
 import com.android.tools.r8.D8
 
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
@@ -34,51 +36,46 @@ dependencies {
     implementation project(':ftcontrol')
 }
 
-tasks.register('generateLibraryDex', JavaExec) {
+def libName = "my-library"
+def libVersion = "0.1.0"
+def jarFileName = "${libName}-${libVersion}.jar"
+
+tasks.register('copyLibraryJar', Copy) {
     dependsOn(":MyLibrary:build")
 
-    def outputDir = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
-    def inputJar = file("$outputDir/my-library-release.jar")
-    def generatedDex = file("$outputDir/classes.dex")
-    def renamedDex = file("$outputDir/my-library.dex")
-
-    inputs.files(zipTree("${layout.buildDirectory.get()}/outputs/aar/MyLibrary-release.aar"))
-    outputs.file(renamedDex)
+    def libsDir = file("${rootProject.projectDir}/TeamCode/libs")
+    def stashDir = file("${rootProject.projectDir}/TeamCode/.lib-versions")
+    def aarPath = layout.buildDirectory.file("outputs/aar/MyLibrary-release.aar").get().asFile
 
     doFirst {
-        outputDir.mkdirs()
-        if (inputJar.exists()) inputJar.delete()
-        if (generatedDex.exists()) generatedDex.delete()
-        if (renamedDex.exists()) renamedDex.delete()
-
-        copy {
-            from zipTree("${layout.buildDirectory.get()}/outputs/aar/MyLibrary-release.aar")
-            include "classes.jar"
-            into outputDir
-            rename { "my-library-release.jar" }
+        libsDir.mkdirs()
+        libsDir.listFiles()?.findAll {
+            it.name.endsWith(".jar") && it.name.startsWith(libName)
+        }?.each {
+            println "Deleting old jar: ${it.name}"
+            it.delete()
         }
     }
 
-    mainClass.set("com.android.tools.r8.D8")
-    classpath = files("${android.sdkDirectory}/build-tools/${android.buildToolsVersion}/lib/d8.jar")
+    from(zipTree(aarPath)) {
+        include "classes.jar"
+        rename { jarFileName }
+    }
 
-    args = [
-            "--release",
-            "--output", outputDir.absolutePath,
-            inputJar.absolutePath
-    ]
+    into(libsDir)
 
     doLast {
-        if (generatedDex.exists()) {
-            generatedDex.renameTo(renamedDex)
-            println "Renamed classes.dex to my-library.dex"
-        } else {
-            throw new GradleException("DEX file not found after D8 execution!")
+        def finalJar = new File(libsDir, jarFileName)
+
+        stashDir.mkdirs()
+        def backupFile = new File(stashDir, jarFileName)
+        finalJar.withInputStream { input ->
+            backupFile.withOutputStream { output ->
+                output << input
+            }
         }
 
-        if (inputJar.exists()) {
-//            inputJar.delete()
-            println "Deleted original JAR file"
-        }
+        println "Copied ${jarFileName} to libs/"
+        println "Backed up as ${jarFileName} to .jar-stash/"
     }
 }
