@@ -21,7 +21,4 @@ inline fun span(
     classes: List<String> = emptyList(),
     styles: String = "",
     block: HTMLBuilder.() -> Unit
-): Span {
-    val span = Span(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
-    return span
-}
+) = Span(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

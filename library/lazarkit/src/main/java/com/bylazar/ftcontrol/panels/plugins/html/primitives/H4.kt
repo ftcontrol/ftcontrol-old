@@ -6,19 +6,19 @@ import com.bylazar.ftcontrol.panels.plugins.html.HTMLTags
 import com.bylazar.ftcontrol.panels.plugins.html.HtmlDsl
 
 @HtmlDsl
-open class Div(
+open class H4(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
     vararg children: HTMLElement
 ) :
     HTMLElement(id, classes, styles, *children) {
-    override val tag: HTMLTags = HTMLTags.DIV
+    override val tag: HTMLTags = HTMLTags.H4
 }
 
-inline fun div(
+inline fun h4(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
     block: HTMLBuilder.() -> Unit
-) = Div(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
+) = H4(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

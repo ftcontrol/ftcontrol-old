@@ -21,7 +21,4 @@ inline fun p(
     classes: List<String> = emptyList(),
     styles: String = "",
     block: HTMLBuilder.() -> Unit
-): P {
-    val p = P(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
-    return p
-}
+) = P(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

@@ -21,7 +21,4 @@ inline fun h1(
     classes: List<String> = emptyList(),
     styles: String = "",
     block: HTMLBuilder.() -> Unit
-): H1 {
-    val h1 = H1(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
-    return h1
-}
+) = H1(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

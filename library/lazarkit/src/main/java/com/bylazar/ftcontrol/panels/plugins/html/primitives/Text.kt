@@ -16,6 +16,4 @@ open class Text(
 
 fun text(
     content: String
-): Text {
-    return Text(content)
-}
+) = Text(content)

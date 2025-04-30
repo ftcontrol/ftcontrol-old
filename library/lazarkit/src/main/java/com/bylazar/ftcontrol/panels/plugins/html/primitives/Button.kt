@@ -21,7 +21,4 @@ inline fun button(
     classes: List<String> = emptyList(),
     styles: String = "",
     block: HTMLBuilder.() -> Unit
-): Button {
-    val button = Button(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
-    return button
-}
+) = Button(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
