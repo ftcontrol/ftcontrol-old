@@ -130,6 +130,12 @@ export type Plugin = {
   pages: Page[]
 }
 
+export type PluginAction = {
+  kind: "pluginsAction"
+  id: string
+  action: string
+}
+
 export class InfoManager {
   plugins: Plugin[] = $state([])
 

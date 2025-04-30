@@ -20,5 +20,5 @@ inline fun h1(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
-    block: HTMLBuilder.() -> Unit
+    block: HTMLBuilder.() -> Unit = { }
 ) = H1(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

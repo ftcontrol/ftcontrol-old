@@ -20,5 +20,5 @@ inline fun div(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
-    block: HTMLBuilder.() -> Unit
+    block: HTMLBuilder.() -> Unit = { }
 ) = Div(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

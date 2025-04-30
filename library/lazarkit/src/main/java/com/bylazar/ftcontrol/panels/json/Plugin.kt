@@ -15,3 +15,10 @@ data class ReceivedPlugins(
 data class PluginsUpdate(
     val plugins: List<PluginJson>
 ) : JSONData()
+
+@Serializable
+@SerialName("pluginsAction")
+data class PluginAction(
+    var id: String,
+    var action: String
+) : JSONData()

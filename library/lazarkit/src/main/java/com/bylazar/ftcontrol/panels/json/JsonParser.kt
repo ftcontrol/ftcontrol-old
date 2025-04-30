@@ -29,6 +29,7 @@ val json = Json {
             subclass(AllFlowsJson::class)
             subclass(ReceivedPlugins::class)
             subclass(PluginsUpdate::class)
+            subclass(PluginAction::class)
         }
         polymorphic(JsonFlow::class) {
             subclass(DoIfJson::class)

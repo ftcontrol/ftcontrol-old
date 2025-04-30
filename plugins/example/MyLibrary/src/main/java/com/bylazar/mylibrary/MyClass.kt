@@ -13,6 +13,10 @@ class MyClass : PanelsPlugin() {
         "timestamp" to { System.currentTimeMillis() }
     )
 
+    override val actions = mapOf<String, () -> Unit>(
+        "test" to { println("DASH: TEST ACTION") }
+    )
+
     override var id: String = "com.bylazar.myplugin"
     override val name: String = "Lazar's Example Plugin"
     override fun onRegister(context: ModContext) {
@@ -45,6 +49,9 @@ class MyClass : PanelsPlugin() {
                         text("Heading")
                         text("Heading2")
                         dynamic("test")
+                    }
+                    button(action = "test") {
+                        text("Run SSA")
                     }
                 }
             ))

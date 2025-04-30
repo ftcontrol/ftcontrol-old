@@ -12,6 +12,7 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
+import com.bylazar.ftcontrol.panels.json.PluginAction
 import com.bylazar.ftcontrol.panels.json.PluginsUpdate
 import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
@@ -134,7 +135,8 @@ class Socket(
         var lastBatteryVoltage: Double = 0.0
 
         fun updatePages() {
-            val dynamicPlugins = PluginManager.plugins.values.filter { it.globalVariables.isNotEmpty() }
+            val dynamicPlugins =
+                PluginManager.plugins.values.filter { it.globalVariables.isNotEmpty() }
             if (dynamicPlugins.isNotEmpty()) {
                 send(PluginsUpdate(plugins = dynamicPlugins.map { it.toJson }))
             }
@@ -263,6 +265,10 @@ class Socket(
                                 decoded.fields
                             )
                         )
+                    }
+
+                    is PluginAction -> {
+                        PluginManager.plugins[decoded.id]?.actions?.get(decoded.action)?.invoke()
                     }
 
                     else -> {

@@ -15,6 +15,7 @@ class PluginJson(
 
 abstract class PanelsPlugin {
     abstract val globalVariables: Map<String, () -> Any>
+    abstract val actions: Map<String, () -> Unit>
 
     internal var pages = mutableListOf<Page>()
 

@@ -19,35 +19,36 @@ class HTMLBuilder(
         id: String = "",
         classes: List<String> = emptyList(),
         styles: String = "",
-        block: HTMLBuilder.() -> Unit
+        block: HTMLBuilder.() -> Unit = { }
     ) = divHelper(id, classes, styles, block).also { add(it) }
 
     fun button(
         id: String = "",
         classes: List<String> = emptyList(),
         styles: String = "",
-        block: HTMLBuilder.() -> Unit
-    ) = buttonHelper(id, classes, styles, block).also { add(it) }
+        action: String = "",
+        block: HTMLBuilder.() -> Unit = { }
+    ) = buttonHelper(id, classes, styles, action, block).also { add(it) }
 
     fun h1(
         id: String = "",
         classes: List<String> = emptyList(),
         styles: String = "",
-        block: HTMLBuilder.() -> Unit
+        block: HTMLBuilder.() -> Unit = { }
     ) = h1Helper(id, classes, styles, block).also { add(it) }
 
     fun p(
         id: String = "",
         classes: List<String> = emptyList(),
         styles: String = "",
-        block: HTMLBuilder.() -> Unit
+        block: HTMLBuilder.() -> Unit = { }
     ) = pHelper(id, classes, styles, block).also { add(it) }
 
     fun span(
         id: String = "",
         classes: List<String> = emptyList(),
         styles: String = "",
-        block: HTMLBuilder.() -> Unit
+        block: HTMLBuilder.() -> Unit = { }
     ) = spanHelper(id, classes, styles, block).also { add(it) }
 
     fun text(content: String) = textHelper(content).also { add(it) }

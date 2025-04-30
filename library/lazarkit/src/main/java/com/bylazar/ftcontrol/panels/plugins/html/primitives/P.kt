@@ -20,5 +20,5 @@ inline fun p(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
-    block: HTMLBuilder.() -> Unit
+    block: HTMLBuilder.() -> Unit = { }
 ) = P(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())

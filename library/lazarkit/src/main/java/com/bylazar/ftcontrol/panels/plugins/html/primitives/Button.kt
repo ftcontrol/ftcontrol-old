@@ -10,15 +10,22 @@ open class Button(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
+    val action: String = "",
     vararg children: HTMLElement
 ) :
     HTMLElement(id, classes, styles, *children) {
     override val tag: HTMLTags = HTMLTags.BUTTON
+    override val extraContent: String
+        get() {
+            if(action == "") return ""
+            return "class='action' data-action='$action'"
+        }
 }
 
 inline fun button(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
-    block: HTMLBuilder.() -> Unit
-) = Button(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
+    action: String = "",
+    block: HTMLBuilder.() -> Unit = { }
+) = Button(id, classes, styles, action, *HTMLBuilder().apply(block).children.toTypedArray())

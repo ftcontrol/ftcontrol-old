@@ -20,5 +20,5 @@ inline fun span(
     id: String = "",
     classes: List<String> = emptyList(),
     styles: String = "",
-    block: HTMLBuilder.() -> Unit
+    block: HTMLBuilder.() -> Unit = { }
 ) = Span(id, classes, styles, *HTMLBuilder().apply(block).children.toTypedArray())
