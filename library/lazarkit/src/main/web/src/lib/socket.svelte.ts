@@ -124,6 +124,7 @@ export type Page = {
 }
 
 export type Plugin = {
+  globalVariables: { [key: string]: string }
   id: string
   name: string
   pages: Page[]
