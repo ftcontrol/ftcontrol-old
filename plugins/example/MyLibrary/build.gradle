@@ -34,40 +34,46 @@ dependencies {
     implementation project(':ftcontrol')
 }
 
-tasks.register('copyReleaseJarToTeamcodeAssets', Copy) {
+tasks.register('generateLibraryDex', JavaExec) {
     dependsOn(":MyLibrary:build")
 
-    from(zipTree("${layout.buildDirectory.get()}/outputs/aar/${project.name}-release.aar")) {
-        include("classes.jar")
-        rename { "my-library-release.jar" }
+    def outputDir = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
+    def inputJar = file("$outputDir/my-library-release.jar")
+    def generatedDex = file("$outputDir/classes.dex")
+    def renamedDex = file("$outputDir/my-library.dex")
+
+    inputs.files(zipTree("${layout.buildDirectory.get()}/outputs/aar/MyLibrary-release.aar"))
+    outputs.file(renamedDex)
+
+    doFirst {
+        outputDir.mkdirs()
+        if (inputJar.exists()) inputJar.delete()
+        if (generatedDex.exists()) generatedDex.delete()
+        if (renamedDex.exists()) renamedDex.delete()
+
+        copy {
+            from zipTree("${layout.buildDirectory.get()}/outputs/aar/MyLibrary-release.aar")
+            include "classes.jar"
+            into outputDir
+            rename { "my-library-release.jar" }
+        }
     }
 
-    into("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
-}
+    mainClass.set("com.android.tools.r8.D8")
+    classpath = files("${android.sdkDirectory}/build-tools/${android.buildToolsVersion}/lib/d8.jar")
 
-tasks.register('generateLibraryDex') {
-    dependsOn("copyReleaseJarToTeamcodeAssets")
+    args = [
+            "--release",
+            "--output", outputDir.absolutePath,
+            inputJar.absolutePath
+    ]
 
     doLast {
-        def inputJar = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/my-library-release.jar")
-        def outputDir = file("${rootProject.projectDir}/TeamCode/src/main/assets/plugins/")
-
-        outputDir.mkdirs()
-
-        D8.main([
-                "--release",
-                "--output", outputDir.absolutePath,
-                inputJar.absolutePath
-        ] as String[])
-
-        def generatedDex = new File(outputDir, "classes.dex")
-        def renamedDex = new File(outputDir, "my-library.dex")
-
         if (generatedDex.exists()) {
             generatedDex.renameTo(renamedDex)
             println "Renamed classes.dex to my-library.dex"
         } else {
-            println "DEX file not found!"
+            throw new GradleException("DEX file not found after D8 execution!")
         }
 
         if (inputJar.exists()) {
@@ -75,9 +81,4 @@ tasks.register('generateLibraryDex') {
             println "Deleted original JAR file"
         }
     }
-}
-
-
-tasks.register('prepareLibraryForTeamCode') {
-    dependsOn("copyReleaseJarToTeamcodeAssets", "generateLibraryDex")
 }
