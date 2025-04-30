@@ -3,11 +3,8 @@ package com.bylazar.mylibrary
 import com.bylazar.ftcontrol.panels.plugins.ModContext
 import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
-import com.bylazar.ftcontrol.panels.plugins.html.div
-import com.bylazar.ftcontrol.panels.plugins.html.h2
-import com.bylazar.ftcontrol.panels.plugins.html.p
-import com.bylazar.ftcontrol.panels.plugins.html.span
-import com.bylazar.ftcontrol.panels.plugins.html.text
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
 
 class MyClass : PanelsPlugin() {
     override var id: String = "com.bylazar.myplugin"
@@ -36,10 +33,8 @@ class MyClass : PanelsPlugin() {
                 title = "Test HTML Builders",
                 getHTML = {
                     div {
-                        h2 { text("Test HTML Builders") }
-                        p {
-                            span { text("Hi!") }
-                        }
+                        p(styles = "color:red;") { text("hello!") }
+                        h1 { text("Heading") }
                     }.html
                 }
             ))

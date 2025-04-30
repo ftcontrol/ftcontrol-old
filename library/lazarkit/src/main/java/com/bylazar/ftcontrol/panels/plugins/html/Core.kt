@@ -8,11 +8,8 @@ enum class HTMLTags {
     P,
     BUTTON,
     H1,
-    H2,
-    H3,
-    H4,
-    H5,
     SPAN,
+    TEXT,
     CUSTOM
 }
 
@@ -23,15 +20,10 @@ abstract class HTMLElement(
     val styles: String = "",
     vararg children: HTMLElement
 ) {
-    var textContent: String = ""
     abstract val tag: HTMLTags
     open val extraContent: String = ""
 
-    protected open val childElements: MutableList<HTMLElement> = children.toMutableList()
-
-    fun addChild(child: HTMLElement) {
-        this.childElements.add(child)
-    }
+    val childElements: MutableList<HTMLElement> = children.toMutableList()
 
     open val html: String
         get() {

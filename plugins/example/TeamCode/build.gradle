@@ -43,5 +43,6 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.15.0'
     implementation project(':ftcontrol')
+    //add any plugin dependencies here
 //    implementation "com.bylazar.ftcontrol:ftcontrol:0.1.5"
 }
