@@ -12,7 +12,6 @@
   $effect(() => {
     if (shadowRoot == undefined) return
     const elements = shadowRoot.querySelectorAll(".dynamic")
-    console.log(elements)
 
     info.plugins.forEach((it) => {
       const global = it.globalVariables
