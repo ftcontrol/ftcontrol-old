@@ -4,3 +4,4 @@ include ':TeamCode'
 include ':ftcontrol'
 project(':ftcontrol').projectDir = new File(settingsDir, '../../library/lazarkit')
 include ':MyLibrary'
+include ':LimelightProxy'

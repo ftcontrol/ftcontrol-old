@@ -106,4 +106,11 @@ class MyClass : PanelsPlugin() {
                 }
             ))
     }
+
+    override fun onEnable() {
+
+    }
+
+    override fun onDisable() {
+    }
 }

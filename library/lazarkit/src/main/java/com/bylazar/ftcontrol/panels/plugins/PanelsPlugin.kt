@@ -22,6 +22,8 @@ abstract class PanelsPlugin {
     abstract var id: String
     abstract val name: String
     abstract fun onRegister(context: ModContext)
+    abstract fun onEnable()
+    abstract fun onDisable()
 
     fun createPage(title: String) {
         pages.add(

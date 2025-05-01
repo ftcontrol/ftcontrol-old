@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.bylazar.mylibrary'
+    namespace 'com.bylazar.panelslimelightproxy'
 
     compileSdkVersion 35
 
@@ -30,18 +30,21 @@ android {
 
 dependencies {
     implementation project(':ftcontrol')
+
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation("org.nanohttpd:nanohttpd:2.3.1")
 }
 
-def libName = "my-library"
+def libName = "limelight-proxy"
 def libVersion = "0.1.0"
 def jarFileName = "${libName}-${libVersion}.jar"
 
-tasks.register('copyMyLibraryJar', Copy) {
+tasks.register('copyLimelightProxyJar', Copy) {
     dependsOn("build")
 
     def libsDir = file("${rootProject.projectDir}/TeamCode/libs")
     def stashDir = file("${rootProject.projectDir}/TeamCode/.lib-versions")
-    def aarPath = layout.buildDirectory.file("outputs/aar/MyLibrary-release.aar").get().asFile
+    def aarPath = layout.buildDirectory.file("outputs/aar/LimelightProxy-release.aar").get().asFile
 
     doFirst {
         libsDir.mkdirs()

@@ -1,4 +1,4 @@
-package com.bylazar.ftcontrol.panels.server
+package com.bylazar.panelslimelightproxy.proxies
 
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.*

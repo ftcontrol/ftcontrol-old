@@ -1,8 +1,10 @@
-package com.bylazar.ftcontrol.panels.server
+package com.bylazar.panelslimelightproxy.proxies
 
 import fi.iki.elonen.NanoHTTPD
-import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayInputStream
 
@@ -60,7 +62,14 @@ class GenericProxy(
             resp.addHeader("Content-Encoding", it)
         }
 
-        listOf("Cache-Control", "Content-Language", "ETag", "Content-Type", "Content-Encoding", "Content-Length").forEach { header ->
+        listOf(
+            "Cache-Control",
+            "Content-Language",
+            "ETag",
+            "Content-Type",
+            "Content-Encoding",
+            "Content-Length"
+        ).forEach { header ->
             response.header(header)?.let { resp.addHeader(header, it) }
         }
 
