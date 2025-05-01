@@ -135,6 +135,7 @@ class Socket(
         var lastBatteryVoltage: Double = 0.0
 
         fun updatePages() {
+            //todo: send only changes
             val dynamicPlugins =
                 PluginManager.plugins.values.filter { it.globalVariables.isNotEmpty() }
             if (dynamicPlugins.isNotEmpty()) {
@@ -158,7 +159,7 @@ class Socket(
                         stopTimer()
                     }
                 }
-            }, 0, 1000)
+            }, 0, 100)
         }
 
         fun stopTimer() {

@@ -46,7 +46,9 @@ class ProxyPlugin : PanelsPlugin() {
         }
 
     override fun onRegister(context: ModContext) {
-        limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
+//        limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
+        limelightProxy = GenericProxy(5801, 3331, "localhost")
+
         limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
         limelightWebsocketProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
         limelightAPIProxy = GenericProxy(5807, 5807, "172.29.0.1")
@@ -64,6 +66,7 @@ class ProxyPlugin : PanelsPlugin() {
                 button(action = "toggle") {
                     text("Toggle")
                 }
+                text("<iframe src=\"http://localhost:5801/\" title=\"Limelight Dashboard\"> </iframe>")
             }
         ))
     }

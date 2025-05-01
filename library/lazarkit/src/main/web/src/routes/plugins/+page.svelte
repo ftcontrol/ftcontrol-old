@@ -29,11 +29,6 @@
     </p>
   </div>
   <a href="/plugins/{plugin.id}">Go to page</a>
-  {#await getHTML(`${getAPIEndpoint()}/plugins/${plugin.id}/html`)}
-    <p>Fetching</p>
-  {:then html}
-    <Render {html} />
-  {/await}
 {/each}
 
 <style>
