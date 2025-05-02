@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.4.0
+- Plugins
+- Limelight Dashboard is now a plugin.
+- UI Fixes
+
 ## v0.3.0
 - Modular Widgets UI
 - Custom Primary Color

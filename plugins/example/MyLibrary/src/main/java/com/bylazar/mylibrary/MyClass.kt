@@ -8,7 +8,9 @@ import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
 import com.qualcomm.ftccommon.FtcEventLoop
 
-class MyConfig : BasePluginConfig()
+open class MyConfig : BasePluginConfig(){
+    open var test = "test"
+}
 
 class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
     //    TODO: error handling
@@ -114,7 +116,6 @@ class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
     }
 
     override fun onEnable() {
-
     }
 
     override fun onDisable() {

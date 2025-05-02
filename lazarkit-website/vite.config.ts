@@ -104,7 +104,7 @@ const config = defineConfig({
                   to: "/docs/plugins/overview",
                 },
                 {
-                  title: "installing a plugin",
+                  title: "Installing a plugin",
                   to: "/docs/plugins/install",
                 },
                 {
@@ -112,7 +112,7 @@ const config = defineConfig({
                   to: "/docs/plugins/create",
                 },
                 {
-                  title: "Plugin Coding Guide",
+                  title: "Plugin Development Guide",
                   to: "/docs/plugins/guide",
                 },
                 {

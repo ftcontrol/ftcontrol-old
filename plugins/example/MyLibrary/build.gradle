@@ -6,6 +6,7 @@ plugins {
 apply from: '../build.dependencies.gradle'
 
 android {
+    //TODO: Change this, and the folder structure for the code files to reflect the package name
     namespace 'com.bylazar.mylibrary'
 
     compileSdkVersion 35
@@ -34,10 +35,12 @@ dependencies {
     implementation project(':ftcontrol')
 }
 
+//TODO: Change this
 def libName = "my-library"
 def libVersion = "0.1.0"
 def jarFileName = "${libName}-${libVersion}.jar"
 
+//TODO: This task builds a jar used for sharing your plugins.
 tasks.register('copyMyLibraryJar', Copy) {
     dependsOn("build")
 

@@ -14,11 +14,9 @@ Here’s a quick overview of the currently supported widgets:
 - Configurables: Adjust robot parameters on the fly without needing to redeploy your code. Useful for tuning constants.
 - Graph: Plot live data (such as velocities, PID values, sensor readings) over time with configurable graphing options.
 - Capture: Take snapshots of telemetry or field data during operation for later review and debugging.
-- LL Dash: Core dashboard for interacting with a Limelight camera's settings, modes, and outputs.
-- LL Feed: Live video feed directly from a Limelight, integrated into your dashboard for easy vision monitoring.
 - Test: An empty widget 
 
-> Support for custom widgets created by users is coming soon!
+> Users can create custom widgets using plugins.
 
 ## Controls
 Each widget has a control bar at the top with several useful buttons.

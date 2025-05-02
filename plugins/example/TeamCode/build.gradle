@@ -42,12 +42,12 @@ dependencies {
     implementation project(':FtcRobotController')
 
     implementation 'androidx.core:core-ktx:1.15.0'
-    implementation project(':ftcontrol')
 
+    implementation project(':ftcontrol')
+    //TODO: Add ftcontrol dependency of latest version
+    //implementation "com.bylazar.ftcontrol:ftcontrol:0.3.0"
+
+    //TODO: Add all plugins here
     implementation project(':MyLibrary')
     implementation project(':LimelightProxy')
-//    implementation files(fileTree(include: ['*.jar'], dir: 'libs'))
-
-    //add any plugin dependencies here
-//    implementation "com.bylazar.ftcontrol:ftcontrol:0.1.5"
 }

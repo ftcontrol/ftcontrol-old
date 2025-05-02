@@ -1,7 +1,11 @@
 include ':FtcRobotController'
 include ':TeamCode'
 
+//TODO: This is not required if you used an import form maven.
 include ':ftcontrol'
 project(':ftcontrol').projectDir = new File(settingsDir, '../../library/lazarkit')
+
+
 include ':MyLibrary'
 include ':LimelightProxy'
+//TODO: add here all plugins
