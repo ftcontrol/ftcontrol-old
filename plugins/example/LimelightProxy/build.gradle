@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+apply from: '../build.dependencies.gradle'
+
 android {
     namespace 'com.bylazar.panelslimelightproxy'
 
@@ -32,7 +34,6 @@ dependencies {
     implementation project(':ftcontrol')
 
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
 }
 
 def libName = "limelight-proxy"

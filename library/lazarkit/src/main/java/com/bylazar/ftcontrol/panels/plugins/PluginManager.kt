@@ -4,7 +4,9 @@ import android.content.Context
 import com.bylazar.ftcontrol.panels.CorePanels
 
 object PluginManager {
-    val plugins = mutableMapOf<String, PanelsPlugin>()
+    val allPlugins = mutableMapOf<String, PanelsPlugin<*>>()
+    val plugins: MutableMap<String, PanelsPlugin<*>>
+        get() = allPlugins.filter { it.value.isEnabled }.toMutableMap()
     private val finder = ClassFinder()
 
     fun onRegister(corePanels: CorePanels) {
@@ -13,55 +15,67 @@ object PluginManager {
             try {
                 plugin.onRegister(modContext)
             } catch (e: Exception) {
-                println("DASH: Failed to register plugin $id")
+                println("DASH: Failed to register plugin $id, ${e.message}")
                 e.printStackTrace()
             }
         }
+        println("DASH: Registered ${plugins.size} plugins.")
     }
 
     fun loadPlugins(context: Context) {
         println("DASH: Loading plugins...")
-        plugins.clear()
+        allPlugins.clear()
         finder.apkPath = context.packageCodePath
 
         val foundClasses = finder.getAllClasses
 
         println("DASH: Found ${foundClasses.size} classes:")
 
-        for (classEntry in foundClasses) {
+        foundClasses.forEach {
             try {
-                val clazz = Class.forName(classEntry.className)
+                val clazz = Class.forName(it.className)
+
+                val pack = clazz.`package` ?: return@forEach
+                if (pack.name.startsWith("com.bylazar.ftcontrol")) return@forEach
 
                 if (PanelsPlugin::class.java.isAssignableFrom(clazz)) {
                     println("DASH: Found plugin implementation: ${clazz.name}")
 
                     val constructor = clazz.getDeclaredConstructor()
-                    val pluginInstance = constructor.newInstance() as PanelsPlugin
+                    val pluginInstance = constructor.newInstance() as PanelsPlugin<*>
 
                     val originalId = pluginInstance.id
                     var uniqueId = originalId
                     var suffix = 1
 
-                    while (plugins.containsKey(uniqueId)) {
+                    while (allPlugins.containsKey(uniqueId)) {
                         println("DASH: Plugin ID '$originalId' is already registered. Renaming...")
                         uniqueId = "$originalId${suffix++}"
                     }
 
                     pluginInstance.id = uniqueId
-                    plugins[uniqueId] = pluginInstance
+
+                    pluginInstance.handleConfig(foundClasses)
+
+                    allPlugins[uniqueId] = pluginInstance
 
                     println("DASH: Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
                 }
             } catch (e: ClassNotFoundException) {
-                println("DASH: Class not found: ${classEntry.className}")
+                println("DASH: Class not found: ${it.className}")
                 e.printStackTrace()
             } catch (e: ClassCastException) {
-                println("DASH: Class does not implement PanelsPlugin: ${classEntry.className}")
+                println("DASH: Class does not implement PanelsPlugin: ${it.className}")
                 e.printStackTrace()
             } catch (e: Exception) {
-                println("DASH: Unexpected error loading plugin class: ${classEntry.className}")
+                println("DASH: Unexpected error loading plugin class: ${it.className}")
                 e.printStackTrace()
             }
         }
+
+        println("DASH: Plugins map contents: ${allPlugins.keys}")
+
+        println("DASH: Loaded ${allPlugins.size} plugins.")
+
     }
 }

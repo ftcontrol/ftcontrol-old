@@ -12,7 +12,6 @@ import com.bylazar.ftcontrol.panels.integration.UIManager
 import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import com.bylazar.ftcontrol.panels.server.Server
 import com.bylazar.ftcontrol.panels.server.Socket
-import com.bylazar.ftcontrol.panels.server.TestLimelightServer
 import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
@@ -29,8 +28,6 @@ class CorePanels {
 
     lateinit var socket: Socket
 
-    lateinit var testLimelightServer: TestLimelightServer
-
     var telemetryManager =
         TelemetryManager({ lines, canvas, graph -> socket.sendTelemetry(lines, canvas, graph) })
 
@@ -38,7 +35,6 @@ class CorePanels {
         try {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
-            testLimelightServer = TestLimelightServer(context)
         } catch (e: IOException) {
             println("Failed to start: " + e.message)
         }
@@ -46,8 +42,6 @@ class CorePanels {
         PluginManager.loadPlugins(context)
 
         PluginManager.onRegister(this)
-
-        testLimelightServer.startServer()
 
         if (!Preferences.isEnabled) return
 

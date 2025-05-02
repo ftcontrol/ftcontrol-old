@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.AssetManager
 import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import fi.iki.elonen.NanoHTTPD
-import okhttp3.OkHttpClient
 import java.io.File
 
 class Server(var context: Context) : NanoHTTPD(8001) {

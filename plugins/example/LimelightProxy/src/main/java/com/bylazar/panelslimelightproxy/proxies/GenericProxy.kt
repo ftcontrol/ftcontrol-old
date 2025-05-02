@@ -100,11 +100,13 @@ class GenericProxy(
     }
 
     fun startServer() {
+        if(isAlive) return
         start()
         println("DASH: Server started on port $outsidePort")
     }
 
     fun stopServer() {
+        if(!isAlive) return
         stop()
         println("DASH: Server stopped")
     }

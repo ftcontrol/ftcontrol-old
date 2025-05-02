@@ -1,5 +1,6 @@
 package com.bylazar.panelslimelightproxy
 
+import com.bylazar.ftcontrol.panels.plugins.BasePluginConfig
 import com.bylazar.ftcontrol.panels.plugins.ModContext
 import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
@@ -8,13 +9,19 @@ import com.bylazar.panelslimelightproxy.proxies.GenericProxy
 import com.bylazar.panelslimelightproxy.proxies.GenericSocketProxy
 import com.bylazar.panelslimelightproxy.proxies.GenericStreamingProxy
 
-class ProxyPlugin : PanelsPlugin() {
+open class ProxyPluginConfig : BasePluginConfig() {
+    open var customString = "hi!"
+}
+
+class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
     override val globalVariables: Map<String, () -> Any> = mapOf(
-        "isEnabled" to { isEnabled },
+        "isDev" to { isDev },
+        "isProxied" to { isProxied },
+        "customString" to { config.customString }
     )
     override val actions: Map<String, () -> Unit> = mapOf(
         "toggle" to {
-            isEnabled = !isEnabled
+            isProxied = !isProxied
         },
     )
     override var id: String = "com.bylazar.limelightproxy"
@@ -24,8 +31,9 @@ class ProxyPlugin : PanelsPlugin() {
     lateinit var limelightFeedProxy: GenericStreamingProxy
     lateinit var limelightWebsocketProxy: GenericSocketProxy
     lateinit var limelightAPIProxy: GenericProxy
+    lateinit var testServer: TestLimelightServer
 
-    var isEnabled = false
+    var isProxied = false
         set(value) {
             when (value) {
                 true -> {
@@ -33,6 +41,7 @@ class ProxyPlugin : PanelsPlugin() {
                     limelightFeedProxy.startServer()
                     limelightWebsocketProxy.startProxy()
                     limelightAPIProxy.startServer()
+                    if (isDev) limelightProxy.startServer()
                 }
 
                 false -> {
@@ -40,43 +49,59 @@ class ProxyPlugin : PanelsPlugin() {
                     limelightFeedProxy.stopServer()
                     limelightWebsocketProxy.stopProxy()
                     limelightAPIProxy.stopServer()
+                    if (isDev) limelightProxy.stopServer()
                 }
             }
             field = value
         }
 
     override fun onRegister(context: ModContext) {
-//        limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
-        limelightProxy = GenericProxy(5801, 3331, "localhost")
+        println("DASH: isDev $isDev")
+        if (isDev) {
+            limelightProxy = GenericProxy(5801, 3331, "localhost")
+            testServer = TestLimelightServer()
+            testServer.startServer()
+
+        } else {
+            limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
+        }
 
         limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
         limelightWebsocketProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
         limelightAPIProxy = GenericProxy(5807, 5807, "172.29.0.1")
 
-        isEnabled = true
+        isProxied = true
 
         createPage(
             Page(
-            title = "Limelight Dash",
-            html = div {
-                p {
-                    text("isEnabled: ")
-                    dynamic("isEnabled")
+                title = "Limelight Dash",
+                html = div {
+                    p {
+                        text("isProxied: ")
+                        dynamic("isProxied")
+                    }
+                    button(action = "toggle") {
+                        text("Toggle")
+                    }
+                    text("<iframe src=\"http://localhost:5801/\" title=\"Limelight Dashboard\"> </iframe>")
+                    p {
+                        text("customString: ")
+                        dynamic("customString")
+                    }
+                    p {
+                        text("isDev: ")
+                        dynamic("isDev")
+                    }
                 }
-                button(action = "toggle") {
-                    text("Toggle")
-                }
-                text("<iframe src=\"http://localhost:5801/\" title=\"Limelight Dashboard\"> </iframe>")
-            }
-        ))
+            ))
     }
 
     override fun onEnable() {
-        isEnabled = true
+        isProxied = true
     }
 
     override fun onDisable() {
-        isEnabled = false
+        isProxied = false
     }
 
 }

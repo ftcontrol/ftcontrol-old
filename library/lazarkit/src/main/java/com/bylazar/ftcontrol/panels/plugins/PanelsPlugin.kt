@@ -13,17 +13,55 @@ class PluginJson(
     val pages: List<PageJson>
 )
 
-abstract class PanelsPlugin {
+open class BasePluginConfig {
+    open var isDev: Boolean = false
+    open var isEnabled: Boolean = true
+}
+
+abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
+    val isDev: Boolean
+        get() = config.isDev
+    val isEnabled: Boolean
+        get() = config.isEnabled
+
+    var config = baseConfig
+
     abstract val globalVariables: Map<String, () -> Any>
     abstract val actions: Map<String, () -> Unit>
-
-    internal var pages = mutableListOf<Page>()
+    var pages = mutableListOf<Page>()
 
     abstract var id: String
     abstract val name: String
     abstract fun onRegister(context: ModContext)
     abstract fun onEnable()
     abstract fun onDisable()
+
+    fun handleConfig(foundClasses: List<ClassFinder.ClassEntry>) {
+        foundClasses.forEach {
+            val clazz = Class.forName(it.className)
+            val isConfig = config::class.java.isAssignableFrom(clazz)
+            val pluginPackage = javaClass.`package`?.name ?: return@forEach
+            val clazzPackage = clazz.`package`?.name ?: return@forEach
+
+            if (pluginPackage == clazzPackage || clazzPackage.startsWith("com.bylazar.ftcontrol") || !isConfig) {
+                return@forEach
+            }
+
+            val newConfig = try {
+                clazz.getDeclaredConstructor().newInstance()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@forEach
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            config = newConfig as T
+
+            println("DASH: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
+
+            //TODO: handle multiple configs
+        }
+    }
 
     fun createPage(title: String) {
         pages.add(
