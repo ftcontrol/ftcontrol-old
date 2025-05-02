@@ -4,6 +4,7 @@ import com.bylazar.ftcontrol.panels.plugins.html.primitives.button as buttonHelp
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div as divHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.dynamic as dynamicHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.h1 as h1Helper
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.iframe as iframeHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.p as pHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.span as spanHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.text as textHelper
@@ -54,4 +55,12 @@ class HTMLBuilder(
     fun text(content: String) = textHelper(content).also { add(it) }
 
     fun dynamic(id: String) = dynamicHelper(id).also { add(it) }
+
+    fun iframe(
+        id: String = "",
+        classes: List<String> = emptyList(),
+        src: String,
+        title: String,
+        styles: String = "",
+    ) = iframeHelper(id, classes, src, title, styles).also { add(it) }
 }

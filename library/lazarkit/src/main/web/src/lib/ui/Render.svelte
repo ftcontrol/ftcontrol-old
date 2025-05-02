@@ -76,6 +76,14 @@
       .wrapper.red {
         --primary: #e60012;
       }
+      .wrapper{
+        width: 100%;
+        height: 100%;
+      }
+      iframe{
+        outline: none;
+        border: none;
+      }
     `
 
     const wrapper = document.createElement("div")
@@ -120,4 +128,8 @@
 <div bind:this={hostElement} class="shadow-host"></div>
 
 <style>
+  div {
+    width: 100%;
+    height: 100%;
+  }
 </style>
