@@ -74,6 +74,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
 
         createPage(
             Page(
+                id = "test",
                 title = "Limelight Dash",
                 html = div {
                     p {

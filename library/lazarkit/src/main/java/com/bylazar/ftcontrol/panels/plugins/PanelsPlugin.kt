@@ -3,7 +3,6 @@ package com.bylazar.ftcontrol.panels.plugins
 import com.bylazar.ftcontrol.panels.plugins.html.HTMLElement
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.Text
 import kotlinx.serialization.Serializable
-import java.util.UUID
 
 @Serializable
 class PluginJson(
@@ -63,15 +62,17 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
         }
     }
 
-    fun createPage(title: String) {
-        pages.add(
+    fun createPage(id: String, title: String) {
+        createPage(
             Page(
+                id = id,
                 title = title
             )
         )
     }
 
     fun createPage(page: Page) {
+        //TODO: handle duplicate ids
         pages.add(page)
     }
 
@@ -95,7 +96,7 @@ class ModContext(
 class Page(
     var title: String,
     var html: HTMLElement = Text(""),
-    val id: String = UUID.randomUUID().toString(),
+    val id: String
 ) {
     val toJson: PageJson
         get() = PageJson(

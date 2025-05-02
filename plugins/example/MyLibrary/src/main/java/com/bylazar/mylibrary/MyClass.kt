@@ -68,11 +68,12 @@ class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
     override val name: String = "Lazar's Example Plugin"
     override fun onRegister(context: ModContext) {
         println("DASH: ran internal plugin register")
-        createPage("Test Page 1")
+        createPage("1", "Test Page 1")
 
-        createPage("Test Page 2")
+        createPage("2", "Test Page 2")
         createPage(
             Page(
+                id="3",
                 title = "Test HTML",
                 html = text(
                     //language=HTML
@@ -88,6 +89,7 @@ class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
         )
         createPage(
             Page(
+                id="4",
                 title = "Test HTML Builders",
                 html = div {
                     p(styles = "color:red;") { dynamic("timestamp") }

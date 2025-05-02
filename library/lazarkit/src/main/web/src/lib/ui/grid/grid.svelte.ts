@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid"
 export type Module = {
   id: string
   type: WidgetTypes
+  pluginID: string
+  pageID: string
   start: {
     x: number
     y: number
@@ -15,6 +17,7 @@ export type Module = {
 }
 
 export const allWidgetTypes = [
+  "Custom",
   "OpMode Control",
   "Gamepad",
   "Field",
@@ -37,6 +40,7 @@ export enum WidgetTypes {
   CAPTURE = "Capture",
   LIMELIGHT_DASH = "LL Dash",
   LIMELIGHT_FEED = "LL Feed",
+  CUSTOM = "Custom",
   TEST = "Test",
 }
 
@@ -57,6 +61,8 @@ export function defaultModuled(): Preset {
     modules: [
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.CONTROLS,
         start: {
           x: 1,
@@ -69,6 +75,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.CAPTURE,
         start: {
           x: 1,
@@ -81,6 +89,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.GAMEPAD,
         start: {
           x: 1,
@@ -93,6 +103,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.FIELD,
         start: {
           x: 4,
@@ -105,6 +117,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.TELEMETRY,
         start: {
           x: 4,
@@ -117,6 +131,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.GRAPH,
         start: {
           x: 4,
@@ -129,6 +145,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.CONFIGURABLES,
         start: {
           x: 7,
@@ -141,6 +159,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.LIMELIGHT_FEED,
         start: {
           x: 7,
@@ -153,6 +173,8 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
+        pluginID: "none",
+        pageID: "none",
         type: WidgetTypes.LIMELIGHT_DASH,
         start: {
           x: 7,
@@ -353,6 +375,8 @@ export class Grid {
 
     this.modules.push({
       id: uuidv4(),
+      pluginID: "none",
+      pageID: "none",
       type: WidgetTypes.TEST,
       start: {
         x,
