@@ -58,7 +58,7 @@ const config = defineConfig({
               ],
             },
             {
-              title: "Panels",
+              title: "Core Panels",
               collapsible: true,
               to: "/docs/panels",
               items: [
@@ -94,21 +94,33 @@ const config = defineConfig({
                   title: "Configurables",
                   to: "/docs/panels/configurables",
                 },
+              ],
+            },
+            {
+              title: "Plugins",
+              items: [
+                {
+                  title: "Overview",
+                  to: "/docs/plugins/overview",
+                },
+                {
+                  title: "installing a plugin",
+                  to: "/docs/plugins/install",
+                },
+                {
+                  title: "Creating a plugin",
+                  to: "/docs/plugins/create",
+                },
+                {
+                  title: "Plugin Coding Guide",
+                  to: "/docs/plugins/guide",
+                },
                 {
                   title: "Limelight Proxy",
-                  to: "/docs/panels/limelight",
+                  to: "/docs/plugins/core/limelight",
                 },
               ],
             },
-            // {
-            //   title: "Flows",
-            //   collapsible: true,
-            //   items: [
-            //     {
-            //       title: "Test Chapter",
-            //     },
-            //   ],
-            // },
             {
               title: "External github page",
               to: "https://github.com/lazarcloud/ftcontrol",
@@ -116,7 +128,6 @@ const config = defineConfig({
           ],
         },
         github: "https://github.com/lazarcloud/ftcontrol",
-        // discord: "https://discord.gg/9F7Kk4fRxB",
         logo: "/logo.svg",
       }),
       siteConfig: {
