@@ -54,7 +54,7 @@
   </button>
   <nav class:hidden={!isOpened}>
     <div>
-      <Logo />
+      <a href="/"><Logo /></a>
       <p>{socket.state == "opened" ? "Connected to server" : "Disconnected"}</p>
       <p>{info.batteryVoltage}V</p>
 
@@ -140,10 +140,6 @@
           <input type="submit" value="Create" disabled={newNameValue == ""} />
         </form>
       {/if}
-
-      <h2>Other Panels</h2>
-
-      <a href="/limelight">Limelight</a>
 
       <h2>Developer</h2>
       <a href="/time">Global Time</a>

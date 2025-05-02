@@ -45,8 +45,6 @@
 </script>
 
 {#if plugin && page}
-  <h1>{page.title}</h1>
-
   <Render html={processedHTML} id={plugin.id} />
 {:else}
   <p>Error</p>

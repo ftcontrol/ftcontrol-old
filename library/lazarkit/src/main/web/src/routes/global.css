@@ -79,3 +79,7 @@ body {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+a {
+  color: var(--primary);
+}

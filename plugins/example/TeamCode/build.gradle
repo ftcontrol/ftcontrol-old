@@ -46,7 +46,6 @@ dependencies {
 
     implementation project(':MyLibrary')
     implementation project(':LimelightProxy')
-    implementation project(':OpModeControl')
 //    implementation files(fileTree(include: ['*.jar'], dir: 'libs'))
 
     //add any plugin dependencies here

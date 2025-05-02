@@ -83,6 +83,25 @@
       iframe{
         outline: none;
         border: none;
+        background-color:white;
+      }
+
+      .widget-header {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        margin-inline: 1rem;
+        padding-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .widget-header > p {
+        margin: 0;
+        text-align: center;
+        flex-grow: 1;
+        font-size: 1.25rem;
       }
     `
 

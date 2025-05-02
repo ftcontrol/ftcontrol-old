@@ -3,11 +3,13 @@ package com.bylazar.ftcontrol.panels.plugins.html
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.button as buttonHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div as divHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.dynamic as dynamicHelper
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.empty as emptyHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.h1 as h1Helper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.iframe as iframeHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.p as pHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.span as spanHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.text as textHelper
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.widgetHeader as widgetHeaderHelper
 
 class HTMLBuilder(
     val children: MutableList<HTMLElement> = mutableListOf()
@@ -63,4 +65,13 @@ class HTMLBuilder(
         title: String,
         styles: String = "",
     ) = iframeHelper(id, classes, src, title, styles).also { add(it) }
+
+    fun widgetHeader(
+        title: String
+    ) = widgetHeaderHelper(title).also { add(it) }
+
+    fun empty(
+        block: HTMLBuilder.() -> Unit = { }
+    ) = emptyHelper(block).also { add(it) }
+
 }

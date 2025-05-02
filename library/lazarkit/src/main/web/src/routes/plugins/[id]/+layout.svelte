@@ -2,7 +2,6 @@
   import { info } from "$lib"
   import { onMount } from "svelte"
   import type { LayoutProps } from "./$types"
-  import { goto } from "$app/navigation"
 
   let { data, children }: LayoutProps = $props()
 

@@ -8,7 +8,6 @@
   import Header from "./primitives/Header.svelte"
   import Section from "./primitives/Section.svelte"
   import SelectInput from "./primitives/SelectInput.svelte"
-  import Render from "./Render.svelte"
 
   let animationSpeed = $state(settings.animationSpeed)
   let primaryColor = $state(settings.primaryColor)
@@ -95,24 +94,6 @@
           }}>Reset all presets</Button
         >
       </div>
-
-      <h3>Plugins</h3>
-      <p>
-        Found {info.plugins.length} plugin{info.plugins.length > 1 ? "s" : ""}.
-      </p>
-      {#each info.plugins as plugin}
-        <div class="flex">
-          <h4>{plugin.name}</h4>
-          <p>
-            {plugin.id}
-          </p>
-        </div>
-        {#await getHTML(`${getAPIEndpoint()}/plugins/${plugin.id}/html`)}
-          <p>Fetching</p>
-        {:then html}
-          <Render {html} />
-        {/await}
-      {/each}
     </Content>
   </Section>
 </section>
