@@ -6,17 +6,18 @@ import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
+import com.qualcomm.ftccommon.FtcEventLoop
 
 class MyConfig : BasePluginConfig()
 
 class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
     //    TODO: error handling
-    override val globalVariables = mapOf<String, () -> Any>(
+    override val globalVariables = mutableMapOf<String, () -> Any>(
         "test" to { 6 },
         "timestamp" to { System.currentTimeMillis() }
     )
 
-    override val actions = mapOf<String, () -> Unit>(
+    override val actions = mutableMapOf<String, () -> Unit>(
         "test" to { println("DASH: TEST ACTION") }
     )
 
@@ -117,5 +118,8 @@ class MyClass : PanelsPlugin<MyConfig>(MyConfig()) {
     }
 
     override fun onDisable() {
+    }
+
+    override fun onAttachEventLoop(eventLoop: FtcEventLoop) {
     }
 }

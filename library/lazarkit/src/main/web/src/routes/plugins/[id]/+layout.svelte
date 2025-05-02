@@ -9,7 +9,8 @@
   let plugin = $derived(info.plugins.find((it) => it.id === data.id))
 
   onMount(() => {
-    if (plugin == undefined) goto("/plugins")
+    //todo: fix this
+    // if (plugin == undefined) goto("/plugins")
   })
 </script>
 

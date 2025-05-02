@@ -59,7 +59,10 @@ class CorePanels {
         opModeManager = eventLoop.opModeManager
         opModeManager?.registerListener(registrar)
 
+        PluginManager.plugins.forEach { it.value.onAttachEventLoop(eventLoop) }
+
         opModeData.init(eventLoop)
+
     }
 
     fun registerOpMode(manager: OpModeManager) = opModeRegistrar.registerOpMode(manager)

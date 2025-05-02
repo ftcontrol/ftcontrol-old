@@ -11,7 +11,8 @@
   let page = $derived(plugin.pages.find((it) => it.id === data.page))
 
   onMount(() => {
-    if (plugin == undefined || page == undefined) goto("/plugins")
+    //todo: fix this
+    // if (plugin == undefined || page == undefined) goto("/plugins")
   })
 </script>
 

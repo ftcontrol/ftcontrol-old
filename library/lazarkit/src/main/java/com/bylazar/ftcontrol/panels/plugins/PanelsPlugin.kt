@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.plugins
 
 import com.bylazar.ftcontrol.panels.plugins.html.HTMLElement
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.Text
+import com.qualcomm.ftccommon.FtcEventLoop
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,8 +26,8 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
 
     var config = baseConfig
 
-    abstract val globalVariables: Map<String, () -> Any>
-    abstract val actions: Map<String, () -> Unit>
+    abstract val globalVariables: MutableMap<String, () -> Any>
+    abstract val actions: MutableMap<String, () -> Unit>
     var pages = mutableListOf<Page>()
 
     abstract var id: String
@@ -34,6 +35,7 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
     abstract fun onRegister(context: ModContext)
     abstract fun onEnable()
     abstract fun onDisable()
+    abstract fun onAttachEventLoop(eventLoop: FtcEventLoop)
 
     fun handleConfig(foundClasses: List<ClassFinder.ClassEntry>) {
         foundClasses.forEach {

@@ -9,19 +9,19 @@ import com.bylazar.ftcontrol.panels.plugins.html.primitives.iframe
 import com.bylazar.limelightproxy.proxies.GenericProxy
 import com.bylazar.limelightproxy.proxies.GenericSocketProxy
 import com.bylazar.limelightproxy.proxies.GenericStreamingProxy
-import com.bylazar.panelslimelightproxy.TestLimelightServer
+import com.qualcomm.ftccommon.FtcEventLoop
 
 open class ProxyPluginConfig : BasePluginConfig() {
     open var customString = "hi!"
 }
 
 class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
-    override val globalVariables: Map<String, () -> Any> = mapOf(
+    override val globalVariables: MutableMap<String, () -> Any> = mutableMapOf(
         "isDev" to { isDev },
         "isProxied" to { isProxied },
         "customString" to { config.customString }
     )
-    override val actions: Map<String, () -> Unit> = mapOf(
+    override val actions: MutableMap<String, () -> Unit> = mutableMapOf(
         "toggle" to {
             isProxied = !isProxied
         },
@@ -121,6 +121,10 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
 
     override fun onDisable() {
         isProxied = false
+    }
+
+    override fun onAttachEventLoop(eventLoop: FtcEventLoop) {
+
     }
 
 }
