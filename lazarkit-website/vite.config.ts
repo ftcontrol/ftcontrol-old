@@ -98,6 +98,8 @@ const config = defineConfig({
             },
             {
               title: "Plugins",
+              collapsible: true,
+              to: "/docs/plugins",
               items: [
                 {
                   title: "Overview",
