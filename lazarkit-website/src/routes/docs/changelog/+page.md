@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.1
+- Fixed the overflow of the select input
+
 ## v0.4.0
 - Plugins
 - Limelight Dashboard is now a plugin.

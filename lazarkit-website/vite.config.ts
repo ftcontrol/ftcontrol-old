@@ -124,6 +124,25 @@ const config = defineConfig({
               ],
             },
             {
+              title: "Extras",
+              collapsible: true,
+              to: "/docs/extras",
+              items: [
+                {
+                  title: "TPair",
+                  to: "/docs/extras/tpair",
+                },
+                {
+                  title: "Loop Timer",
+                  to: "/docs/extras/looptimer",
+                },
+                {
+                  title: "Moving Average",
+                  to: "/docs/extras/movingaverage",
+                },
+              ],
+            },
+            {
               title: "External github page",
               to: "https://github.com/lazarcloud/ftcontrol",
             },
