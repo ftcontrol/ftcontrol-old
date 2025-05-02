@@ -108,7 +108,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
             </style>
             <script>
                 async function fetchCurrentURL() {
-                    const document = shadow.getElementById('wrapper');
+                    const wrapper = document.getElementById('wrapper');
                     try {
                         const url = "http://" + window.location.hostname + "$path";
                         console.log("Fetching URL");
