@@ -152,35 +152,7 @@ export function defaultModuled(): Preset {
         },
         sizes: {
           x: 4,
-          y: 6,
-        },
-      },
-      {
-        id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.LIMELIGHT_FEED,
-        start: {
-          x: 7,
-          y: 7,
-        },
-        sizes: {
-          x: 4,
-          y: 2,
-        },
-      },
-      {
-        id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.LIMELIGHT_DASH,
-        start: {
-          x: 7,
-          y: 9,
-        },
-        sizes: {
-          x: 4,
-          y: 2,
+          y: 10,
         },
       },
     ],
