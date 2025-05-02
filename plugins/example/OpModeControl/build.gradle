@@ -6,7 +6,7 @@ plugins {
 apply from: '../build.dependencies.gradle'
 
 android {
-    namespace 'com.bylazar.limelightproxy'
+    namespace 'com.bylazar.opmodecontrol'
 
     compileSdkVersion 35
 
@@ -32,20 +32,18 @@ android {
 
 dependencies {
     implementation project(':ftcontrol')
-
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
 
-def libName = "limelight-proxy"
+def libName = "opmode-control"
 def libVersion = "0.1.0"
 def jarFileName = "${libName}-${libVersion}.jar"
 
-tasks.register('copyLimelightProxyJar', Copy) {
+tasks.register('copyMyLibraryJar', Copy) {
     dependsOn("build")
 
     def libsDir = file("${rootProject.projectDir}/TeamCode/libs")
     def stashDir = file("${rootProject.projectDir}/TeamCode/.lib-versions")
-    def aarPath = layout.buildDirectory.file("outputs/aar/LimelightProxy-release.aar").get().asFile
+    def aarPath = layout.buildDirectory.file("outputs/aar/MyLibrary-release.aar").get().asFile
 
     doFirst {
         libsDir.mkdirs()

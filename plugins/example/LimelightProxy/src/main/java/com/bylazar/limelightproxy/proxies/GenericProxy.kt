@@ -1,4 +1,4 @@
-package com.bylazar.panelslimelightproxy.proxies
+package com.bylazar.limelightproxy.proxies
 
 import fi.iki.elonen.NanoHTTPD
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

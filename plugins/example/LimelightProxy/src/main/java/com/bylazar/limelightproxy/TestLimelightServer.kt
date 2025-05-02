@@ -1,4 +1,4 @@
-package com.bylazar.panelslimelightproxy
+package com.bylazar.limelightproxy
 
 import fi.iki.elonen.NanoHTTPD
 

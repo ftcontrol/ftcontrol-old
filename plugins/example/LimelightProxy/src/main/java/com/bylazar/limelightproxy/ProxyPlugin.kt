@@ -1,4 +1,4 @@
-package com.bylazar.panelslimelightproxy
+package com.bylazar.limelightproxy
 
 import com.bylazar.ftcontrol.panels.plugins.BasePluginConfig
 import com.bylazar.ftcontrol.panels.plugins.ModContext
@@ -6,10 +6,10 @@ import com.bylazar.ftcontrol.panels.plugins.Page
 import com.bylazar.ftcontrol.panels.plugins.PanelsPlugin
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.div
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.iframe
-import com.bylazar.ftcontrol.panels.plugins.html.primitives.text
-import com.bylazar.panelslimelightproxy.proxies.GenericProxy
-import com.bylazar.panelslimelightproxy.proxies.GenericSocketProxy
-import com.bylazar.panelslimelightproxy.proxies.GenericStreamingProxy
+import com.bylazar.limelightproxy.proxies.GenericProxy
+import com.bylazar.limelightproxy.proxies.GenericSocketProxy
+import com.bylazar.limelightproxy.proxies.GenericStreamingProxy
+import com.bylazar.panelslimelightproxy.TestLimelightServer
 
 open class ProxyPluginConfig : BasePluginConfig() {
     open var customString = "hi!"
@@ -98,19 +98,21 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
                 }
             ))
 
-        createPage(Page(
-            id = "fullSizedDash",
-            title = "Full Size Dash Page",
-            html = iframe(
+        createPage(
+            Page(
+                id = "fullSizedDash",
+                title = "Full Size Dash Page",
+                html = iframe(
 //                TODO: get client ip
-                src = "http://localhost:5801/",
-                title = "Limelight Dashboard",
-                styles = """
+                    src = "http://localhost:5801/",
+                    title = "Limelight Dashboard",
+                    styles = """
                     width: 100%;
                     height: 100%;
                 """.trimIndent()
+                )
             )
-        ))
+        )
     }
 
     override fun onEnable() {

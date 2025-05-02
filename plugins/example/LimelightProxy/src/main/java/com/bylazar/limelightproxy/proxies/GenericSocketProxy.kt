@@ -1,4 +1,4 @@
-package com.bylazar.panelslimelightproxy.proxies
+package com.bylazar.limelightproxy.proxies
 
 import java.io.InputStream
 import java.io.OutputStream
