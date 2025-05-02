@@ -108,10 +108,10 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
             </style>
             <script>
                 async function fetchCurrentURL() {
-                    const wrapper = document.getElementById('wrapper');
+                    const document = shadow.getElementById('wrapper');
                     try {
-                        const url = window.location.hostname + "";
-                        console.log("Fetching URL:", url(${path});
+                        const url = "http://" + window.location.hostname + "$path";
+                        console.log("Fetching URL");
             
                         const response = await fetch(url);
             
@@ -143,7 +143,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
                     widgetHeader("Limelight Dashboard")
                     iframe(
                         id = "dynamicIFrame",
-                        src = "http://localhost:5801/",
+                        src = "",
                         title = "Limelight Dashboard",
                         styles = """
                         width: 100%;
@@ -167,7 +167,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
                     widgetHeader("Limelight Feed")
                     img(
                         id="dynamicImage",
-                        src = "http://localhost:5800/",
+                        src = "",
                         alt = "Limelight Feed",
                         styles = """
                             width: 100%;
