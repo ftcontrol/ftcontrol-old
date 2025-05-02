@@ -123,6 +123,22 @@ socket.addMessageHandler("allFlows", (data: GenericData) => {
   info.flows = data.flows
 })
 
+socket.addMessageHandler("plugins", (data: GenericData) => {
+  info.plugins = data.plugins
+})
+
+socket.addMessageHandler("pluginsUpdate", (data: GenericData) => {
+  const updatedPlugins = data.plugins
+  for (const updated of updatedPlugins) {
+    const index = info.plugins.findIndex((p) => p.id === updated.id)
+    if (index !== -1) {
+      info.plugins[index] = updated
+    } else {
+      info.plugins.push(updated)
+    }
+  }
+})
+
 export const gamepads = new GamepadManager()
 
 export const notifications = new NotificationsManager()

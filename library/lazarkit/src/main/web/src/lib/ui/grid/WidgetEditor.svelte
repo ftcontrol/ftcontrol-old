@@ -13,11 +13,9 @@
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
-  import Limelight from "$ui/widgets/LimelightDashboard.svelte"
-  import LimelightDashboard from "$ui/widgets/LimelightDashboard.svelte"
-  import LimelightFeed from "$ui/widgets/LimelightFeed.svelte"
   import Plus from "$ui/icons/Plus.svelte"
   import Remove from "$ui/icons/Remove.svelte"
+  import PluginPage from "$ui/PluginPage.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -119,6 +117,33 @@
             isValid={true}
             alwaysValid={true}
           ></SelectInput>
+          {#if w.type == WidgetTypes.CUSTOM}
+            <SelectInput
+              type={""}
+              startValue={w.pluginID}
+              bind:currentValue={w.pluginID}
+              value={w.pluginID}
+              possibleValues={[...info.plugins.map((it) => it.id), "none"]}
+              isValid={true}
+              alwaysValid={true}
+            ></SelectInput>
+            {#if w.pluginID != "none"}
+              <SelectInput
+                type={""}
+                startValue={w.pageID}
+                bind:currentValue={w.pageID}
+                value={w.pageID}
+                possibleValues={[
+                  ...info.plugins
+                    .find((it) => it.id == w.pluginID)
+                    .pages.map((it) => it.id),
+                  "none",
+                ]}
+                isValid={true}
+                alwaysValid={true}
+              ></SelectInput>
+            {/if}
+          {/if}
         </div>
         {#if w.type == WidgetTypes.CONTROLS}
           <OpModeControl />
@@ -132,16 +157,20 @@
           <Configurables />
         {:else if w.type == WidgetTypes.GRAPH}
           <Graph />
-        {:else if w.type == WidgetTypes.LIMELIGHT_DASH}
-          <LimelightDashboard />
-        {:else if w.type == WidgetTypes.LIMELIGHT_FEED}
-          <LimelightFeed />
         {:else if w.type == WidgetTypes.CAPTURE}
           <PlaybackHistory />
+        {:else if w.type == WidgetTypes.CUSTOM}
+          {#if w.pluginID && w.pageID}
+            <PluginPage pluginID={w.pluginID} pageID={w.pageID} />
+          {:else}
+            <p style="padding: 1rem;">CUSTOM not valid</p>
+          {/if}
         {:else}
-          <Section title="Unknown Type"
-            >This is an unknown widget of type "{w.type}"</Section
-          >
+          <Section title="Unknown Type">
+            <p style="padding: 1rem;">
+              This is an unknown widget of type "{w.type}"
+            </p>
+          </Section>
         {/if}
       </div>
     {/each}

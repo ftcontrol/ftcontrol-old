@@ -34,10 +34,6 @@ public class Panels implements OpModeManagerImpl.Notifications {
         return getInstance().corePanels.getTelemetryManager();
     }
 
-    public void sendTest(){
-        corePanels.socket.sendTest();
-    }
-    
     @OpModeRegistrar
     public static void registerOpMode(OpModeManager manager) {
         if (registrar != null) {

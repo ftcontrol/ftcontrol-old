@@ -91,3 +91,4 @@ gradle.properties
 /library/.kotlin
 /test-codebase/.kotlin
 /lazarkit-website/dist
+/plugins/example/.kotlin

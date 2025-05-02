@@ -117,7 +117,28 @@ export type TelemetryPacket = {
   graphs: Graph
 }
 
+export type Page = {
+  id: string
+  title: string
+  html: string
+}
+
+export type Plugin = {
+  globalVariables: { [key: string]: string }
+  id: string
+  name: string
+  pages: Page[]
+}
+
+export type PluginAction = {
+  kind: "pluginsAction"
+  id: string
+  action: string
+}
+
 export class InfoManager {
+  plugins: Plugin[] = $state([])
+
   showSettings = $state(false)
   showEdit = $state(false)
 

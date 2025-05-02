@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { info, socket } from "$lib"
   import Gamepads from "$lib/ui/Gamepads.svelte"
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
+  import Settings from "$ui/Settings.svelte"
+  import { info, socket } from "$lib"
   import { onMount } from "svelte"
   let { children } = $props()
 
   import "./global.css"
-  import Settings from "$ui/Settings.svelte"
 
   onMount(() => {
     socket.init()

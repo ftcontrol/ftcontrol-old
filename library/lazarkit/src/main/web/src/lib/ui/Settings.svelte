@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { dev } from "$app/environment"
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
@@ -18,6 +19,19 @@
   $effect(() => {
     settings.setPrimaryColor(primaryColor)
   })
+
+  function getAPIEndpoint() {
+    if (dev) {
+      return "http://localhost:8001"
+    }
+    return window.location.origin
+  }
+
+  async function getHTML(path: string) {
+    const response = await fetch(path)
+    const data = await response.text()
+    return data
+  }
 </script>
 
 <button
@@ -96,7 +110,7 @@
     position: fixed;
     top: var(--margin);
     right: var(--margin);
-    max-width: 500px;
+    max-width: 600px;
     width: calc(100vw - 2 * var(--margin));
     height: calc(100vh - 2 * var(--margin));
     z-index: 101;

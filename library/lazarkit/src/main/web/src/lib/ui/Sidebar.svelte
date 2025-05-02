@@ -54,7 +54,7 @@
   </button>
   <nav class:hidden={!isOpened}>
     <div>
-      <Logo />
+      <a href="/"><Logo /></a>
       <p>{socket.state == "opened" ? "Connected to server" : "Disconnected"}</p>
       <p>{info.batteryVoltage}V</p>
 
@@ -141,14 +141,10 @@
         </form>
       {/if}
 
-      <h2>Other Panels</h2>
-
-      <a href="/limelight">Limelight</a>
-
       <h2>Developer</h2>
       <a href="/time">Global Time</a>
       <a href="/controller">Controller</a>
-      <a href="/field">Game Field</a>
+      <a href="/plugins">Plugins</a>
     </div>
 
     <div class="item">

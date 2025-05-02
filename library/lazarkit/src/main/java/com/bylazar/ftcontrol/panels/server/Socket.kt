@@ -12,9 +12,12 @@ import com.bylazar.ftcontrol.panels.json.GetOpModesRequest
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import com.bylazar.ftcontrol.panels.json.InitOpModeRequest
 import com.bylazar.ftcontrol.panels.json.JSONData
+import com.bylazar.ftcontrol.panels.json.PluginAction
+import com.bylazar.ftcontrol.panels.json.PluginsUpdate
 import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
+import com.bylazar.ftcontrol.panels.json.ReceivedPlugins
 import com.bylazar.ftcontrol.panels.json.StartActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.StopActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.TelemetryPacket
@@ -23,6 +26,7 @@ import com.bylazar.ftcontrol.panels.json.TimeObject
 import com.bylazar.ftcontrol.panels.json.UpdatedJvmFields
 import com.bylazar.ftcontrol.panels.json.json
 import com.bylazar.ftcontrol.panels.json.toJson
+import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import com.qualcomm.hardware.lynx.LynxModule
 import fi.iki.elonen.NanoWSD
 import kotlinx.serialization.PolymorphicSerializer
@@ -125,9 +129,19 @@ class Socket(
             sendActiveOpMode()
             sendJvmFields()
             sendAllFlows()
+            sendAllPlugins()
         }
 
         var lastBatteryVoltage: Double = 0.0
+
+        fun updatePages() {
+            //todo: send only changes
+            val dynamicPlugins =
+                PluginManager.plugins.values.filter { it.globalVariables.isNotEmpty() }
+            if (dynamicPlugins.isNotEmpty()) {
+                send(PluginsUpdate(plugins = dynamicPlugins.map { it.toJson }))
+            }
+        }
 
         fun startSendingTime() {
             timer.schedule(object : TimerTask() {
@@ -136,6 +150,7 @@ class Socket(
                         val time = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH).format(Date())
                         send(TimeObject(time = time))
                         updateBatteryVoltage()
+                        updatePages()
                         if (GlobalData.batteryVoltage != lastBatteryVoltage) {
                             send(BatteryVoltage(GlobalData.batteryVoltage))
                             lastBatteryVoltage = GlobalData.batteryVoltage
@@ -144,7 +159,7 @@ class Socket(
                         stopTimer()
                     }
                 }
-            }, 0, 1000)
+            }, 0, 100)
         }
 
         fun stopTimer() {
@@ -200,6 +215,10 @@ class Socket(
         fun sendAllFlows() {
         }
 
+        fun sendAllPlugins() {
+            send(ReceivedPlugins(PluginManager.plugins.values.map { it.toJson }))
+        }
+
         override fun onMessage(message: WebSocketFrame) {
             println("DASH: Received message: ${message.textPayload}")
             try {
@@ -247,6 +266,10 @@ class Socket(
                                 decoded.fields
                             )
                         )
+                    }
+
+                    is PluginAction -> {
+                        PluginManager.plugins[decoded.id]?.actions?.get(decoded.action)?.invoke()
                     }
 
                     else -> {

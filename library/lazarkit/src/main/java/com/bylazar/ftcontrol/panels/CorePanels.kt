@@ -9,12 +9,9 @@ import com.bylazar.ftcontrol.panels.integration.OpModeRegistrar
 import com.bylazar.ftcontrol.panels.integration.Preferences
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.bylazar.ftcontrol.panels.integration.UIManager
-import com.bylazar.ftcontrol.panels.server.GenericProxy
-import com.bylazar.ftcontrol.panels.server.GenericSocketProxy
-import com.bylazar.ftcontrol.panels.server.GenericStreamingProxy
+import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import com.bylazar.ftcontrol.panels.server.Server
 import com.bylazar.ftcontrol.panels.server.Socket
-import com.bylazar.ftcontrol.panels.server.TestLimelightServer
 import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
@@ -27,34 +24,9 @@ class CorePanels {
     var opModeRegistrar = OpModeRegistrar(this::toggle)
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
-    var isLimelightProxyEnabled = false
-        set(value) {
-            when (value) {
-                true -> {
-                    limelightProxy.startServer()
-                    limelightFeedProxy.startServer()
-                    limelightWebsocketProxy.startProxy()
-                    limelightAPIProxy.startServer()
-                }
-
-                false -> {
-                    limelightProxy.stopServer()
-                    limelightFeedProxy.stopServer()
-                    limelightWebsocketProxy.stopProxy()
-                    limelightAPIProxy.stopServer()
-                }
-            }
-            field = value
-        }
-
     lateinit var server: Server
-    var limelightProxy: GenericProxy = GenericProxy(5801, 5801, "172.29.0.1")
-    var limelightFeedProxy: GenericStreamingProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
-    var limelightWebsocketProxy: GenericSocketProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
-    var limelightAPIProxy: GenericProxy = GenericProxy(5807, 5807, "172.29.0.1")
-    lateinit var socket: Socket
 
-    lateinit var testLimelightServer: TestLimelightServer
+    lateinit var socket: Socket
 
     var telemetryManager =
         TelemetryManager({ lines, canvas, graph -> socket.sendTelemetry(lines, canvas, graph) })
@@ -63,16 +35,17 @@ class CorePanels {
         try {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
-            testLimelightServer = TestLimelightServer(context)
         } catch (e: IOException) {
             println("Failed to start: " + e.message)
         }
-        testLimelightServer.startServer()
+
+        PluginManager.loadPlugins(context)
+
+        PluginManager.onRegister(this)
 
         if (!Preferences.isEnabled) return
 
         server.startServer()
-        isLimelightProxyEnabled = true
         socket.startServer()
 
         Configurables.findConfigurables(context)
@@ -86,7 +59,10 @@ class CorePanels {
         opModeManager = eventLoop.opModeManager
         opModeManager?.registerListener(registrar)
 
+        PluginManager.plugins.forEach { it.value.onAttachEventLoop(eventLoop) }
+
         opModeData.init(eventLoop)
+
     }
 
     fun registerOpMode(manager: OpModeManager) = opModeRegistrar.registerOpMode(manager)
@@ -103,7 +79,6 @@ class CorePanels {
     fun close(registrar: Panels) {
         server.stopServer()
         socket.stopServer()
-        isLimelightProxyEnabled = false
 
         opModeManager?.unregisterListener(registrar)
         disable()
@@ -115,8 +90,8 @@ class CorePanels {
         if (Preferences.isEnabled) return
         Preferences.isEnabled = true
         uiManager.updateText()
-        isLimelightProxyEnabled = true
         socket.startServer()
+        PluginManager.plugins.values.forEach { it.onEnable() }
     }
 
     fun disable() {
@@ -124,8 +99,8 @@ class CorePanels {
         Preferences.isEnabled = false
         uiManager.updateText()
         server.stopServer()
-        isLimelightProxyEnabled = false
         socket.stopServer()
+        PluginManager.plugins.values.forEach { it.onDisable() }
     }
 
     fun toggle() {

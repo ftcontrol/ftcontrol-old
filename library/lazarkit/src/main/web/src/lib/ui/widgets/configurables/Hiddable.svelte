@@ -24,7 +24,10 @@
     opacity: 1;
   }
   .inner {
-    padding-top: 4px;
     overflow: hidden;
+    transition: padding-top var(--d2) ease-out;
+  }
+  .hiddable.shown > .inner {
+    padding-top: 4px;
   }
 </style>
