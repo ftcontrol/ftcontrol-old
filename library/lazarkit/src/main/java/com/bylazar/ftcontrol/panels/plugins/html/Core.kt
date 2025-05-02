@@ -16,7 +16,8 @@ enum class HTMLTags {
     TEXT,
     CUSTOM,
     IFRAME,
-    EMPTY
+    EMPTY,
+    IMG
 }
 
 @HtmlDsl

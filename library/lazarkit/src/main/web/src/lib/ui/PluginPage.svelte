@@ -47,5 +47,5 @@
 {#if plugin && page}
   <Render html={processedHTML} id={plugin.id} />
 {:else}
-  <p>Error</p>
+  <p style="padding: 1rem;">Waiting for data</p>
 {/if}

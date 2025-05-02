@@ -38,8 +38,6 @@ export enum WidgetTypes {
   CONFIGURABLES = "Configurables",
   GRAPH = "Graph",
   CAPTURE = "Capture",
-  LIMELIGHT_DASH = "LL Dash",
-  LIMELIGHT_FEED = "LL Feed",
   CUSTOM = "Custom",
   TEST = "Test",
 }

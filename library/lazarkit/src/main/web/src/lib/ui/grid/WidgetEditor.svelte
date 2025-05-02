@@ -13,12 +13,9 @@
   import Graph from "$ui/widgets/Graph.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import { OpModeControl, Telemetry, Configurables } from "$widgets"
-  import LimelightDashboard from "$ui/widgets/LimelightDashboard.svelte"
-  import LimelightFeed from "$ui/widgets/LimelightFeed.svelte"
   import Plus from "$ui/icons/Plus.svelte"
   import Remove from "$ui/icons/Remove.svelte"
   import PluginPage from "$ui/PluginPage.svelte"
-  import plugin from "@sveltejs/adapter-static"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -160,22 +157,20 @@
           <Configurables />
         {:else if w.type == WidgetTypes.GRAPH}
           <Graph />
-        {:else if w.type == WidgetTypes.LIMELIGHT_DASH}
-          <LimelightDashboard />
-        {:else if w.type == WidgetTypes.LIMELIGHT_FEED}
-          <LimelightFeed />
         {:else if w.type == WidgetTypes.CAPTURE}
           <PlaybackHistory />
         {:else if w.type == WidgetTypes.CUSTOM}
           {#if w.pluginID && w.pageID}
             <PluginPage pluginID={w.pluginID} pageID={w.pageID} />
           {:else}
-            <p>CUSTOM not valid</p>
+            <p style="padding: 1rem;">CUSTOM not valid</p>
           {/if}
         {:else}
-          <Section title="Unknown Type"
-            >This is an unknown widget of type "{w.type}"</Section
-          >
+          <Section title="Unknown Type">
+            <p style="padding: 1rem;">
+              This is an unknown widget of type "{w.type}"
+            </p>
+          </Section>
         {/if}
       </div>
     {/each}

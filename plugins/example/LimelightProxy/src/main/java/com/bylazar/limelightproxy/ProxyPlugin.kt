@@ -61,20 +61,21 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
         println("DASH: isDev $isDev")
         if (isDev) {
             limelightProxy = GenericProxy(5801, 3331, "localhost")
+            limelightFeedProxy = GenericStreamingProxy(5800, 3331, "localhost")
             testServer = TestLimelightServer()
             testServer.startServer()
 
         } else {
             limelightProxy = GenericProxy(5801, 5801, "172.29.0.1")
+            limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
         }
 
-        limelightFeedProxy = GenericStreamingProxy(5800, 5800, "172.29.0.1")
         limelightWebsocketProxy = GenericSocketProxy(5805, 5805, "172.29.0.1")
         limelightAPIProxy = GenericProxy(5807, 5807, "172.29.0.1")
 
         isProxied = true
 
-        createPage(
+        if(isDev) createPage(
             Page(
                 id = "test",
                 title = "Limelight Dash",
@@ -98,20 +99,80 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
                 }
             ))
 
+        fun genericScript(path: String): String {
+            return """
+            <style>
+            .isDisabled {
+                opacity: 0.5;
+              }
+            </style>
+            <script>
+                async function fetchCurrentURL() {
+                    const wrapper = document.getElementById('wrapper');
+                    try {
+                        const url = window.location.hostname + "";
+                        console.log("Fetching URL:", url(${path});
+            
+                        const response = await fetch(url);
+            
+                        if (!response.ok) {
+                            throw new Error(`HTTP error!`);
+                        } 
+                        console.log("Fetch successful");
+                    } catch (error) {
+                        console.error("Failed to fetch URL:", error);
+                        wrapper.classList.add('isDisabled');
+                    }
+                }
+                fetchCurrentURL();
+            </script>
+        """.trimIndent()
+        }
+
         createPage(
             Page(
                 id = "fullSizedDash",
                 title = "Full Size Dash Page",
                 html = empty {
+                    text(genericScript(":5801"))
+                    text("""
+                        <script>
+                            document.getElementById("dynamicIFrame").src = "http://" + window.location.hostname + ":5801";
+                        </script>
+                    """.trimIndent())
                     widgetHeader("Limelight Dashboard")
                     iframe(
-//                TODO: get client ip
+                        id = "dynamicIFrame",
                         src = "http://localhost:5801/",
                         title = "Limelight Dashboard",
                         styles = """
                         width: 100%;
                         height: 100%;
                     """.trimIndent()
+                    )
+                }
+            )
+        )
+        createPage(
+            Page(
+                id = "fullSizedFeed",
+                title = "Full Size Feed Page",
+                html = empty {
+                    text(genericScript(":5800"))
+                    text("""
+                        <script>
+                            document.getElementById("dynamicImage").src = "http://" + window.location.hostname + ":5800";
+                        </script>
+                    """.trimIndent())
+                    widgetHeader("Limelight Feed")
+                    img(
+                        id="dynamicImage",
+                        src = "http://localhost:5800/",
+                        alt = "Limelight Feed",
+                        styles = """
+                            width: 100%;
+                            height: 100%;
+                        """.trimIndent()
                     )
                 }
             )

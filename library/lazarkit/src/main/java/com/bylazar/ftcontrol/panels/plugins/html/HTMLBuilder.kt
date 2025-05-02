@@ -6,6 +6,7 @@ import com.bylazar.ftcontrol.panels.plugins.html.primitives.dynamic as dynamicHe
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.empty as emptyHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.h1 as h1Helper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.iframe as iframeHelper
+import com.bylazar.ftcontrol.panels.plugins.html.primitives.img as imgHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.p as pHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.span as spanHelper
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.text as textHelper
@@ -74,4 +75,11 @@ class HTMLBuilder(
         block: HTMLBuilder.() -> Unit = { }
     ) = emptyHelper(block).also { add(it) }
 
+    fun img(
+        id: String = "",
+        classes: List<String> = emptyList(),
+        src: String,
+        alt: String = "",
+        styles: String = "",
+    ) = imgHelper(id, classes, src, alt, styles).also { add(it) }
 }

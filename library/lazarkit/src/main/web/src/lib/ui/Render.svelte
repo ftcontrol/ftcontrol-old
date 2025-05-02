@@ -102,11 +102,13 @@
         text-align: center;
         flex-grow: 1;
         font-size: 1.25rem;
+        font-weight: bold;
       }
     `
 
     const wrapper = document.createElement("div")
     wrapper.className = "wrapper"
+    wrapper.id = "wrapper"
     wrapper.classList.add(settings.isDark ? "dark-mode" : "")
     wrapper.classList.add(settings.animationSpeed)
     wrapper.classList.add(settings.primaryColor)
