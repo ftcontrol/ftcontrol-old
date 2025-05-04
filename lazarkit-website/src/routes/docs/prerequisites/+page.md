@@ -74,7 +74,7 @@ buildscript {
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
-    //ADD THIS // [svp! ~~:5]
+    //ADD THIS // [svp! ~~:7]
     compileSdk 35
 
     defaultConfig {
@@ -117,6 +117,15 @@ dependencies {
 {:catch err}
     Latest version fetch failed: {err.message}.
 {/await}
+
+Make sure you have the sdk-35 isntalled. Go to Settings > SDK Manager and install the appropriate version.
+
+<video width="100%" controls>
+  <source src="/docs/sdk.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+Possible error: `Failed to find Platform SDK with path: platforms;android-35`
 
 ## Before Updating: Check the Changelog
 
