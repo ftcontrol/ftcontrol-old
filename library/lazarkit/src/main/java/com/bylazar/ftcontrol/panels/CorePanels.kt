@@ -25,30 +25,47 @@ class CorePanels {
     var opModeData = OpModeData({ _ -> socket.sendOpModesList() })
 
     lateinit var server: Server
-
     lateinit var socket: Socket
 
     var telemetryManager =
         TelemetryManager({ lines, canvas, graph -> socket.sendTelemetry(lines, canvas, graph) })
 
     fun attachWebServer(context: Context, webServer: WebServer) {
+        println("DASH: Preferences.isEnabled: ${Preferences.isEnabled}")
+
         try {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
-        } catch (e: IOException) {
-            println("Failed to start: " + e.message)
+        } catch (e: Exception) {
+            println("DASH: Failed to start: " + e.message)
         }
 
-        PluginManager.loadPlugins(context)
+        if (Preferences.isEnabled){
+            socket.startServer()
+            server.startServer()
+        }
 
-        PluginManager.onRegister(this)
+        try {
+            println("DASH: Finding configurables")
+            Configurables.findConfigurables(context)
+        } catch(e: Exception){
+            println("DASH: Failed to find configurables: ${e.message}")
+            e.printStackTrace()
+        } catch (t: Throwable) {
+            println("DASH: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
 
-        if (!Preferences.isEnabled) return
-
-        server.startServer()
-        socket.startServer()
-
-        Configurables.findConfigurables(context)
+        try {
+            PluginManager.loadPlugins(context)
+            PluginManager.onRegister(this)
+        }catch(e: Exception){
+            println("DASH: Failed to load plugins: ${e.message}")
+            e.printStackTrace()
+        }  catch (t: Throwable) {
+            println("DASH: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
     }
 
     private var opModeManager: OpModeManagerImpl? = null
@@ -69,8 +86,6 @@ class CorePanels {
     fun createMenu(menu: Menu) = menuManager.createMenu(menu)
 
     fun start() {
-        Preferences.init()
-
         if (Preferences.isEnabled) enable();
 
         uiManager.injectText()
@@ -91,6 +106,7 @@ class CorePanels {
         Preferences.isEnabled = true
         uiManager.updateText()
         socket.startServer()
+        server.startServer()
         PluginManager.plugins.values.forEach { it.onEnable() }
     }
 

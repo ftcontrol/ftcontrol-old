@@ -88,8 +88,8 @@ class ClassFinder {
                         }
                     }
                 }
-            } catch (e: IOException) {
-                println("DASH: IOException occurred: ${e.message}")
+            } catch (e: Exception) {
+                println("DASH: Exception occurred: ${e.message}")
                 e.printStackTrace()
             } catch (e: IllegalArgumentException) {
                 println("DASH: IllegalArgumentException occurred: ${e.message}")
@@ -97,7 +97,6 @@ class ClassFinder {
             }
         }
     }
-
 
     val getAllClasses: List<ClassEntry>
         get() = allClasses

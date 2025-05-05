@@ -70,6 +70,9 @@ object PluginManager {
             } catch (e: Exception) {
                 println("DASH: Unexpected error loading plugin class: ${it.className}")
                 e.printStackTrace()
+            } catch(t: Throwable) {
+                println("DASH: Throwable caught: ${t::class.simpleName} - ${t.message}")
+                t.printStackTrace()
             }
         }
 

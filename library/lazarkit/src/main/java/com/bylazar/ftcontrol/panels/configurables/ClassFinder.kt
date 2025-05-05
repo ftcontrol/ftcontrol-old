@@ -7,6 +7,7 @@ import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.ZipFile
+import kotlin.jvm.Throws
 
 class ClassFinder {
     private val ignored: Set<String> = HashSet(
@@ -112,6 +113,9 @@ class ClassFinder {
             } catch (e: IllegalArgumentException) {
                 println("DASH: IllegalArgumentException occurred: ${e.message}")
                 e.printStackTrace()
+            } catch(t: Throwable){
+                println("DASH: Throwable caught: ${t::class.simpleName} - ${t.message}")
+                t.printStackTrace()
             }
         }
     }

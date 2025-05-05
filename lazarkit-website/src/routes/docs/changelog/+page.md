@@ -1,11 +1,18 @@
 # Changelog
 
+## v0.4.3
+- Improved error handling
+
+## v0.4.2
+- Fixed Preferences default to `false`
+- Tested compatibility with Roadrunner and FTC Dashboard
+
 ## v0.4.1
 - Fixed the overflow of the select input
 
 ## v0.4.0
 - Plugins
-- Limelight Dashboard is now a plugin.
+- Limelight Dashboard is now a plugin
 - UI Fixes
 
 ## v0.3.0
