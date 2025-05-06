@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.4
+- Fixed a bug that prevented plugins from loading
+
 ## v0.4.3
 - Improved error handling
 
