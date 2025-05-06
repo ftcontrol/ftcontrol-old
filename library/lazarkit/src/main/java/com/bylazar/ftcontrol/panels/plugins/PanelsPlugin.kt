@@ -39,28 +39,33 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
 
     fun handleConfig(foundClasses: List<ClassFinder.ClassEntry>) {
         foundClasses.forEach {
-            val clazz = Class.forName(it.className)
-            val isConfig = config::class.java.isAssignableFrom(clazz)
-            val pluginPackage = javaClass.`package`?.name ?: return@forEach
-            val clazzPackage = clazz.`package`?.name ?: return@forEach
+            try {
+                val clazz = Class.forName(it.className)
+                val isConfig = config::class.java.isAssignableFrom(clazz)
+                val pluginPackage = javaClass.`package`?.name ?: return@forEach
+                val clazzPackage = clazz.`package`?.name ?: return@forEach
 
-            if (pluginPackage == clazzPackage || clazzPackage.startsWith("com.bylazar.ftcontrol") || !isConfig) {
-                return@forEach
+                if (pluginPackage == clazzPackage || clazzPackage.startsWith("com.bylazar.ftcontrol") || !isConfig) {
+                    return@forEach
+                }
+
+                val newConfig = try {
+                    clazz.getDeclaredConstructor().newInstance()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return@forEach
+                }
+
+                @Suppress("UNCHECKED_CAST")
+                config = newConfig as T
+
+                println("DASH: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
+
+                //TODO: handle multiple configs
+            } catch (t: Throwable) {
+                println("DASH: Throwable caught while searching config: ${t::class.simpleName} - ${t.message}")
+                t.printStackTrace()
             }
-
-            val newConfig = try {
-                clazz.getDeclaredConstructor().newInstance()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@forEach
-            }
-
-            @Suppress("UNCHECKED_CAST")
-            config = newConfig as T
-
-            println("DASH: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
-
-            //TODO: handle multiple configs
         }
     }
 

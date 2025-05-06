@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.plugins
 
 import android.content.Context
 import com.bylazar.ftcontrol.panels.CorePanels
+import dalvik.system.DexClassLoader
 
 object PluginManager {
     val allPlugins = mutableMapOf<String, PanelsPlugin<*>>()
@@ -35,12 +36,11 @@ object PluginManager {
             try {
                 val clazz = Class.forName(it.className)
 
-                val pack = clazz.`package` ?: return@forEach
-                if (pack.name.startsWith("com.bylazar.ftcontrol")) return@forEach
+                val pack = clazz.`package`
+                if (pack != null && pack.name.startsWith("com.bylazar.ftcontrol")) return@forEach
 
                 if (PanelsPlugin::class.java.isAssignableFrom(clazz)) {
                     println("DASH: Found plugin implementation: ${clazz.name}")
-
                     val constructor = clazz.getDeclaredConstructor()
                     val pluginInstance = constructor.newInstance() as PanelsPlugin<*>
 
@@ -60,7 +60,11 @@ object PluginManager {
                     allPlugins[uniqueId] = pluginInstance
 
                     println("DASH: Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
+
                 }
+            } catch (e: NoClassDefFoundError) {
+                println("DASH: Skipping plugin '${it.className}' due to missing class: ${e.message}")
+                e.printStackTrace()
             } catch (e: ClassNotFoundException) {
                 println("DASH: Class not found: ${it.className}")
                 e.printStackTrace()
