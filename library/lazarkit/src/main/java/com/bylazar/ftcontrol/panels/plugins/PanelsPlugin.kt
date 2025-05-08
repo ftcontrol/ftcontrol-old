@@ -83,9 +83,7 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
         pages.add(page)
     }
 
-    val cachedPages: List<PageJson> by lazy {
-        pages.map { it.toJson }
-    }
+    var cachedPages: List<PageJson> = emptyList()
 
     val toJson: PluginJson
         get() = PluginJson(

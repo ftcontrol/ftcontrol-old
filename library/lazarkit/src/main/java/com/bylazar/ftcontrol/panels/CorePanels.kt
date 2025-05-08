@@ -58,12 +58,21 @@ class CorePanels {
 
         try {
             PluginManager.loadPlugins(context)
-            PluginManager.onRegister(this)
         }catch(e: Exception){
             println("DASH: Failed to load plugins: ${e.message}")
             e.printStackTrace()
         }  catch (t: Throwable) {
             println("DASH: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
+
+        try {
+            PluginManager.onRegister(this)
+        }catch(e: Exception){
+            println("DASH: Failed to register plugins: ${e.message}")
+            e.printStackTrace()
+        }  catch (t: Throwable) {
+            println("DASH: Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
     }

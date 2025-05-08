@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.5
+- Fixed plugin pages not updating after register
+
 ## v0.4.4
 - Fixed a bug that prevented plugins from loading
 

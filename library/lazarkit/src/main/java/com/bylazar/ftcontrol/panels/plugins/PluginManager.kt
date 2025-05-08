@@ -13,8 +13,11 @@ object PluginManager {
     fun onRegister(corePanels: CorePanels) {
         val modContext = ModContext()
         plugins.forEach { (id, plugin) ->
+            println("DASH: Plugin pages count: ${plugin.pages.size}")
             try {
                 plugin.onRegister(modContext)
+                plugin.cachedPages = plugin.pages.map { it.toJson }
+                println("DASH: Registered plugin $id")
             } catch (e: Exception) {
                 println("DASH: Failed to register plugin $id, ${e.message}")
                 e.printStackTrace()
