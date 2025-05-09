@@ -35,7 +35,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
     lateinit var limelightAPIProxy: GenericProxy
     lateinit var testServer: TestLimelightServer
 
-    var isProxied = false
+    var isProxied: Boolean = false
         set(value) {
             when (value) {
                 true -> {
@@ -111,7 +111,7 @@ class ProxyPlugin : PanelsPlugin<ProxyPluginConfig>(ProxyPluginConfig()) {
                     const wrapper = document.getElementById('wrapper');
                     try {
                         const url = "http://" + window.location.hostname + "$path";
-                        console.log("Fetching URL");
+                        console.log("Fetching URL " + url);
             
                         const response = await fetch(url);
             

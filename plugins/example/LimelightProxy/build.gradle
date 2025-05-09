@@ -37,7 +37,7 @@ dependencies {
 }
 
 def libName = "limelight-proxy"
-def libVersion = "0.1.0"
+def libVersion = "0.1.1"
 def jarFileName = "${libName}-${libVersion}.jar"
 
 tasks.register('copyLimelightProxyJar', Copy) {
