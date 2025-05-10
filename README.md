@@ -1,6 +1,6 @@
 # FTControl
 
-![dashboard](./dash2.png)
+![dashboard](./dash3.png)
 
 **FTControl** is an all-in-one toolbox for your FTC robot, developed by [**Lazar**](https://bylazar.com) from team **19234 ByteForce**.  
 It provides a powerful set of features with minimal boilerplate, using **Kotlin** for cleaner syntax (also works in **Java**).
