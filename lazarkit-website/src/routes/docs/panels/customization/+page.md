@@ -48,3 +48,6 @@ How to fix:
 2. Find the Presets section.
 3. Reset all presets. (This will delete all your current layouts.)
 <img src="/docs/customization_ids.png"/>
+
+Alternative fix: delete the `presets` cookie.
+<img src="/docs/cookies.png"/>
