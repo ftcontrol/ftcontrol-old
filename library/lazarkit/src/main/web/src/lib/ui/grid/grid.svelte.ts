@@ -28,8 +28,6 @@ export const allWidgetTypes = [
   "Configurables",
   "Graph",
   "Capture",
-  "LL Dash",
-  "LL Feed",
   "Test",
 ]
 

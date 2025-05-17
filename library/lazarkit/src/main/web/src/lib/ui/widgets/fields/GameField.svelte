@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Section } from "$primitives"
   import { onMount } from "svelte"
   import { Distance, Point } from "./primitives"
   import {
@@ -15,6 +14,8 @@
   } from "./draw"
   import { info } from "$lib"
   import Content from "$ui/primitives/Content.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
 
   let canvas: HTMLCanvasElement
   let base64Image: string
@@ -85,13 +86,14 @@
   })
 </script>
 
-<Section title={"Field"}>
-  <Content>
-    <div style="width: 100%; overflow: hidden;">
-      <canvas bind:this={canvas}></canvas>
-    </div>
-  </Content>
-</Section>
+<Header>
+  <Title>Field</Title>
+</Header>
+<Content>
+  <div style="width: 100%; overflow: hidden;">
+    <canvas bind:this={canvas}></canvas>
+  </div>
+</Content>
 
 <style>
   canvas {

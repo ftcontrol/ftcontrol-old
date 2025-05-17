@@ -1,19 +1,21 @@
 <script lang="ts">
   import { info } from "$lib"
-  import { Section } from "$primitives"
   import Content from "$ui/primitives/Content.svelte"
+  import Header from "$ui/primitives/Header.svelte"
+  import Title from "$ui/primitives/Title.svelte"
 </script>
 
-<Section title={"Telemetry"}>
-  <Content>
-    {#each info.telemetry as line}
-      <p>{line}</p>
-    {/each}
-    {#if info.telemetry.length == 0}
-      <p>No telemetry found.</p>
-    {/if}
-  </Content>
-</Section>
+<Header>
+  <Title>Telemetry</Title>
+</Header>
+<Content>
+  {#each info.telemetry as line}
+    <p>{line}</p>
+  {/each}
+  {#if info.telemetry.length == 0}
+    <p>No telemetry found.</p>
+  {/if}
+</Content>
 
 <style>
 </style>

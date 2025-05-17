@@ -16,6 +16,7 @@
   import Plus from "$ui/icons/Plus.svelte"
   import Remove from "$ui/icons/Remove.svelte"
   import PluginPage from "$ui/PluginPage.svelte"
+  import BaseWidget from "./BaseWidget.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -146,36 +147,7 @@
             {/if}
           {/if}
         </div>
-        {#if activeType.type == WidgetTypes.CONTROLS}
-          <OpModeControl />
-        {:else if activeType.type == WidgetTypes.GAMEPAD}
-          <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-        {:else if activeType.type == WidgetTypes.FIELD}
-          <GameField />
-        {:else if activeType.type == WidgetTypes.TELEMETRY}
-          <Telemetry />
-        {:else if activeType.type == WidgetTypes.CONFIGURABLES}
-          <Configurables />
-        {:else if activeType.type == WidgetTypes.GRAPH}
-          <Graph />
-        {:else if activeType.type == WidgetTypes.CAPTURE}
-          <PlaybackHistory />
-        {:else if activeType.type == WidgetTypes.CUSTOM}
-          {#if activeType.pluginID && activeType.pageID}
-            <PluginPage
-              pluginID={activeType.pluginID}
-              pageID={activeType.pageID}
-            />
-          {:else}
-            <p style="padding: 1rem;">CUSTOM not valid</p>
-          {/if}
-        {:else}
-          <Section title="Unknown Type">
-            <p style="padding: 1rem;">
-              This is an unknown widget of type "{activeType.type}"
-            </p>
-          </Section>
-        {/if}
+        <BaseWidget m={w} />
       </div>
     {/each}
     {#if gridManager.selectedWidget != null}
