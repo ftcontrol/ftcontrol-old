@@ -2,7 +2,6 @@
   import { info } from "$lib"
   import type { GraphPacket } from "$lib/socket.svelte"
   import Content from "$ui/primitives/Content.svelte"
-  import Section from "$ui/primitives/Section.svelte"
 
   interface Point {
     x: number
@@ -63,117 +62,115 @@
   const colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
 </script>
 
-<Section title="Graph View">
-  <Content>
-    <div class="flex">
-      <input
-        type="range"
-        min="1"
-        max="60"
-        bind:value={info.timeWindow}
-        aria-label="Time window"
-      />
-      <p>(last {info.timeWindow}s)</p>
-    </div>
-    <ul>
-      {#each Object.entries(info.graphs) as [key, list]}
-        <li>
-          <button
-            onclick={() => toggleKey(key)}
-            class:selected={selectedKeys[key]}
-            aria-pressed={selectedKeys[key]}
-          >
-            {key}
-          </button>
-          – {list.length} entries / {parseFloat(
-            list[list.length - 1].data.toString()
-          ).toFixed(3)}
-        </li>
+<Content>
+  <div class="flex">
+    <input
+      type="range"
+      min="1"
+      max="60"
+      bind:value={info.timeWindow}
+      aria-label="Time window"
+    />
+    <p>(last {info.timeWindow}s)</p>
+  </div>
+  <ul>
+    {#each Object.entries(info.graphs) as [key, list]}
+      <li>
+        <button
+          onclick={() => toggleKey(key)}
+          class:selected={selectedKeys[key]}
+          aria-pressed={selectedKeys[key]}
+        >
+          {key}
+        </button>
+        – {list.length} entries / {parseFloat(
+          list[list.length - 1].data.toString()
+        ).toFixed(3)}
+      </li>
+    {/each}
+  </ul>
+
+  <div class="graph">
+    <svg viewBox="-10 -10 120 120" preserveAspectRatio="none">
+      <rect x="0" y="0" width="100" height="100" fill="var(--card)" />
+
+      {#each [0, 25, 50, 75, 100] as x}
+        <text
+          {x}
+          y="-2"
+          font-size="2.5"
+          fill="white"
+          stroke="var(--text)"
+          stroke-width="0.1"
+          text-anchor="middle"
+        >
+          {Math.round((x / 100) * info.timeWindow)}s
+        </text>
       {/each}
-    </ul>
 
-    <div class="graph">
-      <svg viewBox="-10 -10 120 120" preserveAspectRatio="none">
-        <rect x="0" y="0" width="100" height="100" fill="var(--card)" />
-
-        {#each [0, 25, 50, 75, 100] as x}
-          <text
-            {x}
-            y="-2"
-            font-size="2.5"
-            fill="white"
-            stroke="var(--text)"
-            stroke-width="0.1"
-            text-anchor="middle"
-          >
-            {Math.round((x / 100) * info.timeWindow)}s
-          </text>
-        {/each}
-
-        {#each [0, 25, 50, 75, 100] as y}
-          <text
-            x="-2"
-            y={100 - y}
-            font-size="2.5"
-            fill="white"
-            stroke="var(--text)"
-            stroke-width="0.1"
-            text-anchor="end"
-          >
-            {(
-              (y / 100) *
-                (Object.values(
-                  Object.values(info.graphs)
-                    .flat()
-                    .map((l) => l.data)
-                ).reduce((a, b) => Math.max(a, b), -Infinity) -
-                  Object.values(
-                    Object.values(info.graphs)
-                      .flat()
-                      .map((l) => l.data)
-                  ).reduce((a, b) => Math.min(a, b), Infinity)) +
-              Object.values(
+      {#each [0, 25, 50, 75, 100] as y}
+        <text
+          x="-2"
+          y={100 - y}
+          font-size="2.5"
+          fill="white"
+          stroke="var(--text)"
+          stroke-width="0.1"
+          text-anchor="end"
+        >
+          {(
+            (y / 100) *
+              (Object.values(
                 Object.values(info.graphs)
                   .flat()
                   .map((l) => l.data)
-              ).reduce((a, b) => Math.min(a, b), Infinity)
-            ).toFixed(2)}
-          </text>
-        {/each}
+              ).reduce((a, b) => Math.max(a, b), -Infinity) -
+                Object.values(
+                  Object.values(info.graphs)
+                    .flat()
+                    .map((l) => l.data)
+                ).reduce((a, b) => Math.min(a, b), Infinity)) +
+            Object.values(
+              Object.values(info.graphs)
+                .flat()
+                .map((l) => l.data)
+            ).reduce((a, b) => Math.min(a, b), Infinity)
+          ).toFixed(2)}
+        </text>
+      {/each}
 
-        {#each [25, 50, 75] as value}
-          <line
-            x1="0"
-            y1={value}
-            x2="100"
-            y2={value}
-            stroke="var(--text)"
-            stroke-width="0.2"
-          />
-          <line
-            x1={value}
-            y1="0"
-            x2={value}
-            y2="100"
-            stroke="var(--text)"
-            stroke-width="0.2"
+      {#each [25, 50, 75] as value}
+        <line
+          x1="0"
+          y1={value}
+          x2="100"
+          y2={value}
+          stroke="var(--text)"
+          stroke-width="0.2"
+        />
+        <line
+          x1={value}
+          y1="0"
+          x2={value}
+          y2="100"
+          stroke="var(--text)"
+          stroke-width="0.2"
+        />
+      {/each}
+
+      {#if Object.keys(selectedKeys).some((key) => selectedKeys[key])}
+        {#each Object.entries(getNormalizedGraphPoints(Object.fromEntries(Object.entries(info.graphs).filter(([key]) => selectedKeys[key])))) as [key, points], index}
+          <polyline
+            fill="none"
+            stroke={colors[index % colors.length]}
+            stroke-width="0.6"
+            points={points.map((p) => `${p.x},${p.y}`).join(" ")}
           />
         {/each}
-
-        {#if Object.keys(selectedKeys).some((key) => selectedKeys[key])}
-          {#each Object.entries(getNormalizedGraphPoints(Object.fromEntries(Object.entries(info.graphs).filter(([key]) => selectedKeys[key])))) as [key, points], index}
-            <polyline
-              fill="none"
-              stroke={colors[index % colors.length]}
-              stroke-width="0.6"
-              points={points.map((p) => `${p.x},${p.y}`).join(" ")}
-            />
-          {/each}
-        {/if}
-      </svg>
-    </div>
-  </Content>
-</Section>
+      {/if}
+    </svg>
+  </div>
+</Content>
 
 <style>
   .flex {

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Section } from "$primitives"
   import { onMount } from "svelte"
   import { Distance, Point } from "./primitives"
   import {
@@ -85,13 +84,11 @@
   })
 </script>
 
-<Section title={"Field"}>
-  <Content>
-    <div style="width: 100%; overflow: hidden;">
-      <canvas bind:this={canvas}></canvas>
-    </div>
-  </Content>
-</Section>
+<Content>
+  <div style="width: 100%; overflow: hidden;">
+    <canvas bind:this={canvas}></canvas>
+  </div>
+</Content>
 
 <style>
   canvas {

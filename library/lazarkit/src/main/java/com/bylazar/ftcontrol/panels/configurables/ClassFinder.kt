@@ -7,7 +7,6 @@ import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.ZipFile
-import kotlin.jvm.Throws
 
 class ClassFinder {
     private val ignored: Set<String> = HashSet(
@@ -69,6 +68,7 @@ class ClassFinder {
                     while (entries.hasMoreElements()) {
                         val entry = entries.nextElement()
                         if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
+                            println("DASH: Checking ${entry.name}")
                             zipFile.getInputStream(entry).use { inputStream ->
                                 val dexBytes = inputStream.readBytes()
                                 val dexBuffer =
@@ -79,6 +79,7 @@ class ClassFinder {
                                         ignored.none { prefix -> className.startsWith(prefix) }
                                     return@filter isNotIgnored
                                 }
+                                println("DASH: Found ${filteredClassNames.size} classes in ${entry.name}")
                                 val processedClassNames = filteredClassNames.mapNotNull {
                                     try {
                                         val clazz = Class.forName(it)
@@ -100,8 +101,12 @@ class ClassFinder {
                                     } catch (e: Exception) {
                                         println("DASH: Error loading class $it: ${e.message}")
                                         null
+                                    } catch (t: Throwable) {
+                                        println("DASH: C1 Throwable caught: ${t::class.simpleName} - ${t.message}")
+                                        null
                                     }
                                 }
+                                println("DASH: Found ${processedClassNames.size} processed classes in ${entry.name}")
                                 addAll(processedClassNames)
                             }
                         }
@@ -113,8 +118,8 @@ class ClassFinder {
             } catch (e: IllegalArgumentException) {
                 println("DASH: IllegalArgumentException occurred: ${e.message}")
                 e.printStackTrace()
-            } catch(t: Throwable){
-                println("DASH: Throwable caught: ${t::class.simpleName} - ${t.message}")
+            } catch (t: Throwable) {
+                println("DASH: C Throwable caught: ${t::class.simpleName} - ${t.message}")
                 t.printStackTrace()
             }
         }

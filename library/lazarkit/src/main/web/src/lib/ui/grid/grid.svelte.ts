@@ -1,11 +1,14 @@
 import { notifications } from "$lib"
 import { v4 as uuidv4 } from "uuid"
-
-export type Module = {
-  id: string
-  type: WidgetTypes
+export type ModuleType = {
   pluginID: string
   pageID: string
+  type: WidgetTypes
+}
+export type Module = {
+  id: string
+  activeType: number
+  types: ModuleType[]
   start: {
     x: number
     y: number
@@ -25,8 +28,6 @@ export const allWidgetTypes = [
   "Configurables",
   "Graph",
   "Capture",
-  "LL Dash",
-  "LL Feed",
   "Test",
 ]
 
@@ -59,9 +60,14 @@ export function defaultModuled(): Preset {
     modules: [
       {
         id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.CONTROLS,
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.CONTROLS,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
         start: {
           x: 1,
           y: 1,
@@ -73,79 +79,95 @@ export function defaultModuled(): Preset {
       },
       {
         id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.CAPTURE,
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.CAPTURE,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
+        start: {
+          x: 4,
+          y: 1,
+        },
+        sizes: {
+          x: 3,
+          y: 4,
+        },
+      },
+      {
+        id: uuidv4(),
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.GAMEPAD,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
         start: {
           x: 1,
           y: 3,
         },
         sizes: {
           x: 3,
-          y: 4,
+          y: 2,
         },
       },
       {
         id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.GAMEPAD,
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.FIELD,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
         start: {
           x: 1,
-          y: 7,
+          y: 5,
         },
         sizes: {
           x: 3,
-          y: 4,
+          y: 6,
         },
       },
       {
         id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.FIELD,
-        start: {
-          x: 4,
-          y: 1,
-        },
-        sizes: {
-          x: 3,
-          y: 4,
-        },
-      },
-      {
-        id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.TELEMETRY,
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.TELEMETRY,
+            pluginID: "none",
+            pageID: "none",
+          },
+          {
+            type: WidgetTypes.GRAPH,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
         start: {
           x: 4,
           y: 5,
         },
         sizes: {
           x: 3,
-          y: 2,
+          y: 6,
         },
       },
       {
         id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.GRAPH,
-        start: {
-          x: 4,
-          y: 7,
-        },
-        sizes: {
-          x: 3,
-          y: 4,
-        },
-      },
-      {
-        id: uuidv4(),
-        pluginID: "none",
-        pageID: "none",
-        type: WidgetTypes.CONFIGURABLES,
+        activeType: 0,
+        types: [
+          {
+            type: WidgetTypes.CONFIGURABLES,
+            pluginID: "none",
+            pageID: "none",
+          },
+        ],
         start: {
           x: 7,
           y: 1,
@@ -345,9 +367,14 @@ export class Grid {
 
     this.modules.push({
       id: uuidv4(),
-      pluginID: "none",
-      pageID: "none",
-      type: WidgetTypes.TEST,
+      activeType: 0,
+      types: [
+        {
+          type: WidgetTypes.TEST,
+          pluginID: "none",
+          pageID: "none",
+        },
+      ],
       start: {
         x,
         y,
