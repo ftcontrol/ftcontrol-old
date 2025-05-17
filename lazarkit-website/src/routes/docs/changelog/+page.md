@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.0
+- Implemented widgets tabs.
+
 ## v0.4.5
 - Fixed plugin pages not updating after register
 

@@ -4,7 +4,6 @@
   import { Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
   import Content from "$ui/primitives/Content.svelte"
-  import Header from "$ui/primitives/Header.svelte"
   import OpModeList from "../OpModeList.svelte"
   import Hiddable from "./configurables/Hiddable.svelte"
 
@@ -51,27 +50,27 @@
 </script>
 
 <Content>
+  <div class="modal autos">
+    <Hiddable isShown={modalOpened == "autos"}>
+      <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
+    </Hiddable>
+  </div>
+  <div class="modal teleops">
+    <Hiddable isShown={modalOpened == "teleops"}>
+      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
+    </Hiddable>
+  </div>
+
   <div class="controls">
     <button onclick={() => toggle("autos")}>
       <span>
         Autos<Arrow isOpened={modalOpened == "autos"} />
       </span>
-      <div class="modal autos">
-        <Hiddable isShown={modalOpened == "autos"}>
-          <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
-        </Hiddable>
-      </div>
     </button>
-
     <button onclick={() => toggle("teleops")}>
       <span>
         TeleOps<Arrow isOpened={modalOpened == "teleops"} />
       </span>
-      <div class="modal teleops">
-        <Hiddable isShown={modalOpened == "teleops"}>
-          <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
-        </Hiddable>
-      </div>
     </button>
   </div>
   {#if currentOpMode.name == ""}
