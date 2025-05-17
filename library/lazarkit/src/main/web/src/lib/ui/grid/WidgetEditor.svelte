@@ -25,7 +25,9 @@
         "
       >
         <BaseWidget m={w}>
-          <GridControls {w} {gridManager} />
+          {#if info.showEdit}
+            <GridControls {w} {gridManager} />
+          {/if}
         </BaseWidget>
       </div>
     {/each}
