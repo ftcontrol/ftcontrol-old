@@ -13,33 +13,33 @@
     type Grid,
     type Module,
   } from "./grid.svelte"
-  let { w, gridManager }: { w: Module; gridManager: Grid } = $props()
+  let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
 <button
   onmousedown={() => {
-    gridManager.startMoving(w.id)
+    gridManager.startMoving(m.id)
   }}
 >
   <MoveIcon />
 </button>
 <button
   onclick={() => {
-    gridManager.remove(w.id)
+    gridManager.remove(m.id)
   }}
 >
   <Remove />
 </button>
 <button
   onclick={() => {
-    if (gridManager.canExpandRight(w)) {
-      w.sizes.x++
+    if (gridManager.canExpandRight(m)) {
+      m.sizes.x++
       return
     }
 
-    if (gridManager.canExpandLeft(w)) {
-      w.sizes.x++
-      w.start.x--
+    if (gridManager.canExpandLeft(m)) {
+      m.sizes.x++
+      m.start.x--
       return
     }
 
@@ -50,10 +50,10 @@
 </button>
 <button
   onclick={() => {
-    if (w.sizes.x <= 2) {
+    if (m.sizes.x <= 2) {
       notifications.add("Cannot make this small.")
     } else {
-      w.sizes.x--
+      m.sizes.x--
     }
   }}
 >
@@ -61,14 +61,14 @@
 </button>
 <button
   onclick={() => {
-    if (gridManager.canExpandDown(w)) {
-      w.sizes.y++
+    if (gridManager.canExpandDown(m)) {
+      m.sizes.y++
       return
     }
 
-    if (gridManager.canExpandUp(w)) {
-      w.sizes.y++
-      w.start.y--
+    if (gridManager.canExpandUp(m)) {
+      m.sizes.y++
+      m.start.y--
       return
     }
 
@@ -79,10 +79,10 @@
 </button>
 <button
   onclick={() => {
-    if (w.sizes.y <= 2) {
+    if (m.sizes.y <= 2) {
       notifications.add("Cannot make this small.")
     } else {
-      w.sizes.y--
+      m.sizes.y--
     }
   }}
 >
@@ -91,32 +91,32 @@
 
 <SelectInput
   type={""}
-  startValue={w.types[w.activeType].type}
-  bind:currentValue={w.types[w.activeType].type}
-  value={w.types[w.activeType].type}
+  startValue={m.types[m.activeType].type}
+  bind:currentValue={m.types[m.activeType].type}
+  value={m.types[m.activeType].type}
   possibleValues={allWidgetTypes}
   isValid={true}
   alwaysValid={true}
 ></SelectInput>
-{#if w.types[w.activeType].type == WidgetTypes.CUSTOM}
+{#if m.types[m.activeType].type == WidgetTypes.CUSTOM}
   <SelectInput
     type={""}
-    startValue={w.types[w.activeType].pluginID}
-    bind:currentValue={w.types[w.activeType].pluginID}
-    value={w.types[w.activeType].pluginID}
+    startValue={m.types[m.activeType].pluginID}
+    bind:currentValue={m.types[m.activeType].pluginID}
+    value={m.types[m.activeType].pluginID}
     possibleValues={[...info.plugins.map((it) => it.id), "none"]}
     isValid={true}
     alwaysValid={true}
   ></SelectInput>
-  {#if w.types[w.activeType].pluginID != "none"}
+  {#if m.types[m.activeType].pluginID != "none"}
     <SelectInput
       type={""}
-      startValue={w.types[w.activeType].pageID}
-      bind:currentValue={w.types[w.activeType].pageID}
-      value={w.types[w.activeType].pageID}
+      startValue={m.types[m.activeType].pageID}
+      bind:currentValue={m.types[m.activeType].pageID}
+      value={m.types[m.activeType].pageID}
       possibleValues={[
         ...info.plugins
-          .find((it) => it.id == w.types[w.activeType].pluginID)
+          .find((it) => it.id == m.types[m.activeType].pluginID)
           .pages.map((it) => it.id),
         "none",
       ]}

@@ -11,28 +11,29 @@
   import OpModeControl from "$ui/widgets/OpModeControl.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import Telemetry from "$ui/widgets/Telemetry.svelte"
-  import type { Snippet } from "svelte"
-  import { WidgetTypes, type Module } from "./grid.svelte"
-  let { m, children }: { m: Module; children?: Snippet } = $props()
-  let type = $derived(m.types[m.activeType].type)
+  import { Grid, WidgetTypes, type Module } from "./grid.svelte"
+  import GridControls from "./GridControls.svelte"
+  let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
 <Section>
   <div class="controls">
     {#each m.types as t, index}
       <button
+        class="base"
         class:selected={index == m.activeType}
         onclick={() => {
           m.activeType = index
-        }}>{t.type}</button
-      >
-      {#if info.showEdit}
-        <button
-          onclick={() => {
-            m.types = m.types.filter((_, i) => i !== index)
-          }}>x</button
-        >
-      {/if}
+        }}
+        >{t.type}
+        {#if info.showEdit}
+          <button
+            onclick={() => {
+              m.types = m.types.filter((_, i) => i !== index)
+            }}>x</button
+          >
+        {/if}
+      </button>
     {/each}
     {#if info.showEdit}
       <button
@@ -46,8 +47,13 @@
         }}>+</button
       >
     {/if}
-    {@render children?.()}
   </div>
+  {#if info.showEdit}
+    <div class="controls">
+      <GridControls {m} {gridManager} />
+    </div>
+  {/if}
+
   {#each m.types as item, index}
     <div class="content" class:shown={index == m.activeType}>
       {#if item.type == WidgetTypes.CONTROLS}
@@ -94,8 +100,9 @@
     display: flex;
     flex-wrap: wrap;
     padding: 1rem;
-    padding-bottom: 0rem;
+    /* padding-bottom: 0rem; */
     gap: 0.5rem;
+    outline: 1px solid var(--text);
   }
 
   button {
@@ -107,9 +114,12 @@
     justify-content: center;
     align-items: center;
     color: inherit;
-    outline: 1px solid var(--gray);
   }
-  button.selected {
+  button.base {
     outline: 1px solid var(--text);
+    opacity: 0.5;
+  }
+  button.base.selected {
+    opacity: 1;
   }
 </style>

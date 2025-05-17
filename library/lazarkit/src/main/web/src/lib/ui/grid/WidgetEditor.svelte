@@ -24,11 +24,7 @@
         grid-row: {w.start.y} / span {w.sizes.y};
         "
       >
-        <BaseWidget m={w}>
-          {#if info.showEdit}
-            <GridControls {w} {gridManager} />
-          {/if}
-        </BaseWidget>
+        <BaseWidget m={w} {gridManager}></BaseWidget>
       </div>
     {/each}
     {#if gridManager.selectedWidget != null}
