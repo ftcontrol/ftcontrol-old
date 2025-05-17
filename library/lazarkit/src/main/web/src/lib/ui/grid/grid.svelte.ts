@@ -88,8 +88,8 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 1,
-          y: 3,
+          x: 4,
+          y: 1,
         },
         sizes: {
           x: 3,
@@ -108,11 +108,11 @@ export function defaultModuled(): Preset {
         ],
         start: {
           x: 1,
-          y: 7,
+          y: 3,
         },
         sizes: {
           x: 3,
-          y: 4,
+          y: 2,
         },
       },
       {
@@ -126,12 +126,12 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 4,
-          y: 1,
+          x: 1,
+          y: 5,
         },
         sizes: {
           x: 3,
-          y: 4,
+          y: 6,
         },
       },
       {
@@ -143,20 +143,6 @@ export function defaultModuled(): Preset {
             pluginID: "none",
             pageID: "none",
           },
-        ],
-        start: {
-          x: 4,
-          y: 5,
-        },
-        sizes: {
-          x: 3,
-          y: 2,
-        },
-      },
-      {
-        id: uuidv4(),
-        activeType: 0,
-        types: [
           {
             type: WidgetTypes.GRAPH,
             pluginID: "none",
@@ -165,11 +151,11 @@ export function defaultModuled(): Preset {
         ],
         start: {
           x: 4,
-          y: 7,
+          y: 5,
         },
         sizes: {
           x: 3,
-          y: 4,
+          y: 6,
         },
       },
       {
