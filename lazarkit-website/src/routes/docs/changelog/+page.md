@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.0
+- Implemented widgets tabs.
+- Fixed a bug that skipped some Configurable classes.
+
 ## v0.4.5
 - Fixed plugin pages not updating after register
 

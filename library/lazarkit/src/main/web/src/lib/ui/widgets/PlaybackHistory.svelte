@@ -1,6 +1,5 @@
 <script lang="ts">
   import { info } from "$lib"
-  import { Section } from "$primitives"
   import Button from "$ui/primitives/Button.svelte"
   import Content from "$ui/primitives/Content.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
@@ -63,72 +62,70 @@
   })
 </script>
 
-<Section title={"Capture"}>
-  <Content>
-    <p>Got {info.history.length} entries</p>
-    <p>
-      Timestamp: {(info.timestamp / 1000).toFixed(2)}s / {(
-        info.duration / 1000
-      ).toFixed(2)}s
-    </p>
-    <input
-      disabled={!info.hasRecording}
-      bind:value={info.timestamp}
-      type="range"
-      min={0}
-      max={info.duration}
-    />
-    <div class="flex-item">
-      <p>Animation speed</p>
+<Content>
+  <p>Got {info.history.length} entries</p>
+  <p>
+    Timestamp: {(info.timestamp / 1000).toFixed(2)}s / {(
+      info.duration / 1000
+    ).toFixed(2)}s
+  </p>
+  <input
+    disabled={!info.hasRecording}
+    bind:value={info.timestamp}
+    type="range"
+    min={0}
+    max={info.duration}
+  />
+  <div class="flex-item">
+    <p>Animation speed</p>
 
-      <SelectInput
-        startValue={"1x"}
-        bind:currentValue={playbackSpeed}
-        value={"1x"}
-        possibleValues={["0.1x", "0.25x", "0.5x", "1x", "2x", "3x", "4x"]}
-        isValid={info.hasRecording}
-        alwaysValid={true}
-      ></SelectInput>
+    <SelectInput
+      startValue={"1x"}
+      bind:currentValue={playbackSpeed}
+      value={"1x"}
+      possibleValues={["0.1x", "0.25x", "0.5x", "1x", "2x", "3x", "4x"]}
+      isValid={info.hasRecording}
+      alwaysValid={true}
+    ></SelectInput>
+  </div>
+  <div>
+    <div class="flex">
+      <Button
+        onclick={() => {
+          info.isRecording = true
+        }}
+        disabled={info.isRecording}>Start</Button
+      >
+      <Button
+        onclick={() => {
+          info.isRecording = false
+        }}
+        disabled={!info.isRecording}>Stop</Button
+      >
+      <Button
+        onclick={() => {
+          info.isRecording = false
+          info.history = []
+          info.timestamp = 0
+          info.isPlaying = false
+        }}
+        disabled={!info.hasRecording}>Reset</Button
+      >
     </div>
-    <div>
-      <div class="flex">
-        <Button
-          onclick={() => {
-            info.isRecording = true
-          }}
-          disabled={info.isRecording}>Start</Button
-        >
-        <Button
-          onclick={() => {
-            info.isRecording = false
-          }}
-          disabled={!info.isRecording}>Stop</Button
-        >
-        <Button
-          onclick={() => {
-            info.isRecording = false
-            info.history = []
-            info.timestamp = 0
-            info.isPlaying = false
-          }}
-          disabled={!info.hasRecording}>Reset</Button
-        >
-      </div>
-      <div class="flex">
-        <Button
-          onclick={() => {
-            info.isPlaying = !info.isPlaying
-          }}
-          disabled={!info.hasRecording}
-          >{info.isPlaying ? "Disable" : "Enable"} Visual Sync</Button
-        >
-        <Button onclick={togglePlayback} disabled={!info.hasRecording}>
-          {info.isForwarding ? "Stop" : "Start"} Playing
-        </Button>
-      </div>
+    <div class="flex">
+      <Button
+        onclick={() => {
+          info.isPlaying = !info.isPlaying
+        }}
+        disabled={!info.hasRecording}
+        >{info.isPlaying ? "Disable" : "Enable"} Visual Sync</Button
+      >
+      <Button onclick={togglePlayback} disabled={!info.hasRecording}>
+        {info.isForwarding ? "Stop" : "Start"} Playing
+      </Button>
     </div>
-  </Content>
-</Section>
+  </div>
+</Content>
 
 <style>
   .flex-item {

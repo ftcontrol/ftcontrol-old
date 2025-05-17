@@ -1,11 +1,9 @@
 <script lang="ts">
   import { info, socket } from "$lib"
   import type { OpMode } from "$lib/socket.svelte"
-  import { Section, Button } from "$primitives"
+  import { Button } from "$primitives"
   import Arrow from "$ui/icons/Arrow.svelte"
   import Content from "$ui/primitives/Content.svelte"
-  import Header from "$ui/primitives/Header.svelte"
-  import Title from "$ui/primitives/Title.svelte"
   import OpModeList from "../OpModeList.svelte"
   import Hiddable from "./configurables/Hiddable.svelte"
 
@@ -51,83 +49,83 @@
   })
 </script>
 
-<Section>
-  <Header>
+<Content>
+  <div class="modal autos">
+    <Hiddable isShown={modalOpened == "autos"}>
+      <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
+    </Hiddable>
+  </div>
+  <div class="modal teleops">
+    <Hiddable isShown={modalOpened == "teleops"}>
+      <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
+    </Hiddable>
+  </div>
+
+  <div class="controls">
     <button onclick={() => toggle("autos")}>
       <span>
         Autos<Arrow isOpened={modalOpened == "autos"} />
       </span>
     </button>
-    <Title>OpMode Control</Title>
     <button onclick={() => toggle("teleops")}>
       <span>
         TeleOps<Arrow isOpened={modalOpened == "teleops"} />
       </span>
     </button>
-  </Header>
-  <Content>
-    <div class="modal autos">
-      <Hiddable isShown={modalOpened == "autos"}>
-        <OpModeList flavour="AUTONOMOUS" onselect={selectedOpMode} />
-      </Hiddable>
-    </div>
-    <div class="modal teleops">
-      <Hiddable isShown={modalOpened == "teleops"}>
-        <OpModeList flavour="TELEOP" onselect={selectedOpMode} />
-      </Hiddable>
-    </div>
-
-    {#if currentOpMode.name == ""}
-      <p class="title">Nothing selected</p>
-    {:else}
-      <p class="title">
-        <span class="title_small">{currentOpMode.flavour}</span>
-        {currentOpMode.name}
-      </p>
-    {/if}
-
-    <div class="flex">
-      <Button
-        disabled={currentOpMode.name == "" ||
-          (info.activeOpModeStatus == "running" &&
-            info.activeOpMode != "$Stop$Robot$") ||
-          (info.activeOpModeStatus == "stopped" &&
-            info.activeOpMode != "$Stop$Robot$") ||
-          (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
-        onclick={() => {
-          socket.sendMessage({
-            kind: "initOpMode",
-            opModeName: currentOpMode.name,
-          })
-        }}
-      >
-        Initialize
-      </Button>
-      <Button
-        disabled={info.activeOpMode == "$Stop$Robot$" ||
-          currentOpMode.name == "" ||
-          info.activeOpModeStatus != "init"}
-        onclick={() => {
-          socket.sendMessage({ kind: "startActiveOpMode" })
-        }}
-      >
-        Start
-      </Button>
-      <Button
-        disabled={info.activeOpMode == "$Stop$Robot$" ||
-          currentOpMode.name == "" ||
-          info.activeOpModeStatus == "stopped"}
-        onclick={() => {
-          socket.sendMessage({ kind: "stopActiveOpMode" })
-        }}
-      >
-        Stop
-      </Button>
-    </div>
-  </Content>
-</Section>
+  </div>
+  {#if currentOpMode.name == ""}
+    <p class="title">Nothing selected</p>
+  {:else}
+    <p class="title">
+      <span class="title_small">{currentOpMode.flavour}</span>
+      {currentOpMode.name}
+    </p>
+  {/if}
+  <div class="flex">
+    <Button
+      disabled={currentOpMode.name == "" ||
+        (info.activeOpModeStatus == "running" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (info.activeOpModeStatus == "stopped" &&
+          info.activeOpMode != "$Stop$Robot$") ||
+        (currentOpMode.name != "" && info.activeOpModeStatus == "init")}
+      onclick={() => {
+        socket.sendMessage({
+          kind: "initOpMode",
+          opModeName: currentOpMode.name,
+        })
+      }}
+    >
+      Initialize
+    </Button>
+    <Button
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
+        currentOpMode.name == "" ||
+        info.activeOpModeStatus != "init"}
+      onclick={() => {
+        socket.sendMessage({ kind: "startActiveOpMode" })
+      }}
+    >
+      Start
+    </Button>
+    <Button
+      disabled={info.activeOpMode == "$Stop$Robot$" ||
+        currentOpMode.name == "" ||
+        info.activeOpModeStatus == "stopped"}
+      onclick={() => {
+        socket.sendMessage({ kind: "stopActiveOpMode" })
+      }}
+    >
+      Stop
+    </Button>
+  </div>
+</Content>
 
 <style>
+  .controls {
+    display: flex;
+    justify-content: space-between;
+  }
   span {
     display: flex;
     align-items: center;
@@ -139,7 +137,7 @@
     z-index: 100;
     max-height: 133px;
     overflow-y: auto;
-    top: 3rem;
+    top: 4.5rem;
   }
   .flex {
     display: flex;

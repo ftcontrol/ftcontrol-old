@@ -1,12 +1,7 @@
 <script lang="ts">
   import { info, socket } from "$lib"
-  import {
-    Types,
-    type ChangeJson,
-    type GenericTypeJson,
-  } from "$lib/genericType"
+  import { type ChangeJson, type GenericTypeJson } from "$lib/genericType"
   import { ConfigurablesStates } from "$lib/socket.svelte"
-  import { Section } from "$primitives"
   import Diff from "$ui/icons/Diff.svelte"
   import UpdateAll from "$ui/icons/UpdateAll.svelte"
   import Content from "$ui/primitives/Content.svelte"
@@ -72,19 +67,18 @@
   }
 </script>
 
-<Section>
-  <Header>
-    <Title>Configurables</Title>
-    <input
-      class="search"
-      type="text"
-      placeholder="Search"
-      oninput={(e) => {
-        const target = e.target as HTMLInputElement | null
-        if (!target) return
-        handleSearch(target.value)
-      }}
-    />
+<Header>
+  <input
+    class="search"
+    type="text"
+    placeholder="Search"
+    oninput={(e) => {
+      const target = e.target as HTMLInputElement | null
+      if (!target) return
+      handleSearch(target.value)
+    }}
+  />
+  <div>
     <button
       onclick={() => {
         sendAllUpdates(info.jvmFields)
@@ -102,28 +96,28 @@
         isSelected={info.configurablesState == ConfigurablesStates.DIFF}
       />
     </button>
-  </Header>
-  <Content>
-    <div class="content">
-      {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
-        <Hiddable
-          isShown={info.openedStates[name] ||
-            info.configurablesState == ConfigurablesStates.NORMAL}
-        >
-          <ClassName {name} bind:isOpened={info.openedStates[name]} />
-          <Hiddable isShown={info.openedStates[name] == true}>
-            {#each items as item}
-              <Field {item} />
-            {/each}
-          </Hiddable>
+  </div>
+</Header>
+<Content>
+  <div class="content">
+    {#each Object.entries(processFields(info.jvmFields)) as [name, items]}
+      <Hiddable
+        isShown={info.openedStates[name] ||
+          info.configurablesState == ConfigurablesStates.NORMAL}
+      >
+        <ClassName {name} bind:isOpened={info.openedStates[name]} />
+        <Hiddable isShown={info.openedStates[name] == true}>
+          {#each items as item}
+            <Field {item} />
+          {/each}
         </Hiddable>
-      {/each}
-      {#if info.jvmFields.length == 0}
-        <p>No configurables found.</p>
-      {/if}
-    </div>
-  </Content>
-</Section>
+      </Hiddable>
+    {/each}
+    {#if info.jvmFields.length == 0}
+      <p>No configurables found.</p>
+    {/if}
+  </div>
+</Content>
 
 <style>
   .search {
