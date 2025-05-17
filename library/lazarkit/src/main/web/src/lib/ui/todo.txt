@@ -1,3 +1,2 @@
-widget generic component
 widgets handle different sizes
 standard grid increments

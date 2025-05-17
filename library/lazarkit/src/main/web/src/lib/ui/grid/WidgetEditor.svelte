@@ -4,7 +4,6 @@
   import Section from "$ui/primitives/Section.svelte"
   import Plus from "$ui/icons/Plus.svelte"
   import BaseWidget from "./BaseWidget.svelte"
-  import GridControls from "./GridControls.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
