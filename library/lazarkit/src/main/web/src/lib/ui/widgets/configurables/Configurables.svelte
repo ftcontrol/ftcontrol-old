@@ -68,7 +68,6 @@
 </script>
 
 <Header>
-  <Title>Configurables</Title>
   <input
     class="search"
     type="text"
@@ -79,23 +78,25 @@
       handleSearch(target.value)
     }}
   />
-  <button
-    onclick={() => {
-      sendAllUpdates(info.jvmFields)
-    }}
-  >
-    <UpdateAll isActive={isChanged(info.jvmFields)} />
-  </button>
-  <button
-    onclick={() => {
-      handleDiff()
-    }}
-  >
-    <Diff
-      isActive={hasDiff(info.jvmFields)}
-      isSelected={info.configurablesState == ConfigurablesStates.DIFF}
-    />
-  </button>
+  <div>
+    <button
+      onclick={() => {
+        sendAllUpdates(info.jvmFields)
+      }}
+    >
+      <UpdateAll isActive={isChanged(info.jvmFields)} />
+    </button>
+    <button
+      onclick={() => {
+        handleDiff()
+      }}
+    >
+      <Diff
+        isActive={hasDiff(info.jvmFields)}
+        isSelected={info.configurablesState == ConfigurablesStates.DIFF}
+      />
+    </button>
+  </div>
 </Header>
 <Content>
   <div class="content">

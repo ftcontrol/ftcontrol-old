@@ -1,14 +1,9 @@
 <script lang="ts">
   import Content from "./primitives/Content.svelte"
-  import Header from "./primitives/Header.svelte"
-  import Title from "./primitives/Title.svelte"
 
   let { gamepad }: { gamepad: Gamepad } = $props()
 </script>
 
-<Header>
-  <Title>Gamepad</Title>
-</Header>
 <Content>
   {#if gamepad != null}
     <div class="photo reversed">

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { gamepads, info } from "$lib"
+  import { gamepads, info, notifications } from "$lib"
   import GamepadDrawing from "$ui/GamepadDrawing.svelte"
   import PluginPage from "$ui/PluginPage.svelte"
   import Header from "$ui/primitives/Header.svelte"
@@ -17,42 +17,50 @@
 </script>
 
 <Section>
-  <div class="controls">
-    {#each m.types as t, index}
-      <button
-        class="base"
-        class:selected={index == m.activeType}
-        onclick={() => {
-          m.activeType = index
-        }}
-        >{t.type}
-        {#if info.showEdit}
+  <div class="bar">
+    <div class="controls">
+      {#each m.types as t, index}
+        <button
+          class="base"
+          class:selected={index == m.activeType}
+          onclick={() => {
+            m.activeType = index
+          }}
+          >{t.type}
+        </button>
+        {#if info.showEdit && m.types.length > 1}
           <button
             onclick={() => {
+              if (m.types.length <= 1) {
+                notifications.add("Cannot remove last widget.")
+                return
+              }
               m.types = m.types.filter((_, i) => i !== index)
+              m.activeType--
+              if (m.activeType < 0) m.activeType = 0
             }}>x</button
           >
         {/if}
-      </button>
-    {/each}
+      {/each}
+      {#if info.showEdit}
+        <button
+          onclick={() => {
+            m.types.push({
+              pluginID: "none",
+              pageID: "none",
+              type: WidgetTypes.TEST,
+            })
+            console.log(m)
+          }}>+</button
+        >
+      {/if}
+    </div>
     {#if info.showEdit}
-      <button
-        onclick={() => {
-          m.types.push({
-            pluginID: "none",
-            pageID: "none",
-            type: WidgetTypes.TEST,
-          })
-          console.log(m)
-        }}>+</button
-      >
+      <div class="controls">
+        <GridControls {m} {gridManager} />
+      </div>
     {/if}
   </div>
-  {#if info.showEdit}
-    <div class="controls">
-      <GridControls {m} {gridManager} />
-    </div>
-  {/if}
 
   {#each m.types as item, index}
     <div class="content" class:shown={index == m.activeType}>
@@ -77,9 +85,6 @@
           <p style="padding: 1rem;">CUSTOM not valid</p>
         {/if}
       {:else}
-        <Header>
-          <Title>Unknown Type</Title>
-        </Header>
         <p style="padding: 1rem;">
           This is an unknown widget of type "{item.type}"
         </p>
@@ -89,6 +94,9 @@
 </Section>
 
 <style>
+  .bar {
+    margin-bottom: 1rem;
+  }
   .content {
     display: none;
   }
@@ -100,9 +108,8 @@
     display: flex;
     flex-wrap: wrap;
     padding: 1rem;
-    /* padding-bottom: 0rem; */
+    padding-bottom: 0;
     gap: 0.5rem;
-    outline: 1px solid var(--text);
   }
 
   button {
@@ -118,6 +125,7 @@
   button.base {
     outline: 1px solid var(--text);
     opacity: 0.5;
+    padding: 0.25rem 0.5rem;
   }
   button.base.selected {
     opacity: 1;

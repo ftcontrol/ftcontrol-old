@@ -2,9 +2,6 @@
   import { info } from "$lib"
   import type { GraphPacket } from "$lib/socket.svelte"
   import Content from "$ui/primitives/Content.svelte"
-  import Header from "$ui/primitives/Header.svelte"
-  import Section from "$ui/primitives/Section.svelte"
-  import Title from "$ui/primitives/Title.svelte"
 
   interface Point {
     x: number
@@ -65,9 +62,6 @@
   const colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
 </script>
 
-<Header>
-  <Title>Graph</Title>
-</Header>
 <Content>
   <div class="flex">
     <input

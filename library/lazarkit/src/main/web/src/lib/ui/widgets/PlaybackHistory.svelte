@@ -2,9 +2,7 @@
   import { info } from "$lib"
   import Button from "$ui/primitives/Button.svelte"
   import Content from "$ui/primitives/Content.svelte"
-  import Header from "$ui/primitives/Header.svelte"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
-  import Title from "$ui/primitives/Title.svelte"
   import { onDestroy } from "svelte"
 
   let playbackSpeed = $state("1x")
@@ -64,9 +62,6 @@
   })
 </script>
 
-<Header>
-  <Title>Capture</Title>
-</Header>
 <Content>
   <p>Got {info.history.length} entries</p>
   <p>
