@@ -26,6 +26,7 @@
 >
   <section>
     {#each gridManager.modules as w}
+      {@const activeType = w.types[w.activeType]}
       <div
         class="item"
         class:isOverlay={gridManager.selectedWidgetId == w.id}
@@ -110,32 +111,32 @@
 
           <SelectInput
             type={""}
-            startValue={w.type}
-            bind:currentValue={w.type}
-            value={w.type}
+            startValue={activeType.type}
+            bind:currentValue={activeType.type}
+            value={activeType.type}
             possibleValues={allWidgetTypes}
             isValid={true}
             alwaysValid={true}
           ></SelectInput>
-          {#if w.type == WidgetTypes.CUSTOM}
+          {#if activeType.type == WidgetTypes.CUSTOM}
             <SelectInput
               type={""}
-              startValue={w.pluginID}
-              bind:currentValue={w.pluginID}
-              value={w.pluginID}
+              startValue={activeType.pluginID}
+              bind:currentValue={activeType.pluginID}
+              value={activeType.pluginID}
               possibleValues={[...info.plugins.map((it) => it.id), "none"]}
               isValid={true}
               alwaysValid={true}
             ></SelectInput>
-            {#if w.pluginID != "none"}
+            {#if activeType.pluginID != "none"}
               <SelectInput
                 type={""}
-                startValue={w.pageID}
-                bind:currentValue={w.pageID}
-                value={w.pageID}
+                startValue={activeType.pageID}
+                bind:currentValue={activeType.pageID}
+                value={activeType.pageID}
                 possibleValues={[
                   ...info.plugins
-                    .find((it) => it.id == w.pluginID)
+                    .find((it) => it.id == activeType.pluginID)
                     .pages.map((it) => it.id),
                   "none",
                 ]}
@@ -145,30 +146,33 @@
             {/if}
           {/if}
         </div>
-        {#if w.type == WidgetTypes.CONTROLS}
+        {#if activeType.type == WidgetTypes.CONTROLS}
           <OpModeControl />
-        {:else if w.type == WidgetTypes.GAMEPAD}
+        {:else if activeType.type == WidgetTypes.GAMEPAD}
           <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-        {:else if w.type == WidgetTypes.FIELD}
+        {:else if activeType.type == WidgetTypes.FIELD}
           <GameField />
-        {:else if w.type == WidgetTypes.TELEMETRY}
+        {:else if activeType.type == WidgetTypes.TELEMETRY}
           <Telemetry />
-        {:else if w.type == WidgetTypes.CONFIGURABLES}
+        {:else if activeType.type == WidgetTypes.CONFIGURABLES}
           <Configurables />
-        {:else if w.type == WidgetTypes.GRAPH}
+        {:else if activeType.type == WidgetTypes.GRAPH}
           <Graph />
-        {:else if w.type == WidgetTypes.CAPTURE}
+        {:else if activeType.type == WidgetTypes.CAPTURE}
           <PlaybackHistory />
-        {:else if w.type == WidgetTypes.CUSTOM}
-          {#if w.pluginID && w.pageID}
-            <PluginPage pluginID={w.pluginID} pageID={w.pageID} />
+        {:else if activeType.type == WidgetTypes.CUSTOM}
+          {#if activeType.pluginID && activeType.pageID}
+            <PluginPage
+              pluginID={activeType.pluginID}
+              pageID={activeType.pageID}
+            />
           {:else}
             <p style="padding: 1rem;">CUSTOM not valid</p>
           {/if}
         {:else}
           <Section title="Unknown Type">
             <p style="padding: 1rem;">
-              This is an unknown widget of type "{w.type}"
+              This is an unknown widget of type "{activeType.type}"
             </p>
           </Section>
         {/if}
