@@ -11,12 +11,20 @@
   import OpModeControl from "$ui/widgets/OpModeControl.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import Telemetry from "$ui/widgets/Telemetry.svelte"
+  import type { Snippet } from "svelte"
   import { WidgetTypes, type Module } from "./grid.svelte"
-  let { m }: { m: Module } = $props()
-  let activeType = m.types[m.activeType]
+  let { m, children }: { m: Module; children?: Snippet } = $props()
+  let activeType = $derived(m.types[m.activeType])
 </script>
 
 <Section>
+  {#each m.types as t}
+    <button>{t.type}</button>
+    {#if info.showEdit}
+      <button>+</button>
+    {/if}
+    {@render children?.()}
+  {/each}
   {#if activeType.type == WidgetTypes.CONTROLS}
     <OpModeControl />
   {:else if activeType.type == WidgetTypes.GAMEPAD}
