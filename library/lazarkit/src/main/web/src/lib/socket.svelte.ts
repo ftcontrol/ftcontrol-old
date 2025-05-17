@@ -193,7 +193,6 @@ export class InfoManager {
   configurablesState = $state(ConfigurablesStates.NORMAL)
 
   batteryVoltage = $state<number>(-1.0)
-  flows = $state([])
 }
 
 export enum ConfigurablesStates {
