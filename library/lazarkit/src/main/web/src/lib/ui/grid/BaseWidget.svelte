@@ -99,6 +99,7 @@
   }
   .content {
     display: none;
+    overflow-y: auto;
   }
   .content.shown {
     display: block;
