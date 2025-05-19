@@ -3,6 +3,11 @@ It provides real-time data logging and visualization capabilities, allowing team
 
 ---
 
+Here’s a quick overview of the telemetry widgets:
+- Field: A top-down representation of the competition field. Useful for live tracking of robot position and paths.
+- Telemetry: View custom telemetry data sent from the robot code in real time.
+- Graph: Plot live data (such as velocities, PID values, sensor readings) over time with configurable graphing options.
+
 ## Example OpMode File: `TestOpMode.kt`
 Below is an example of how telemetry can be implemented in an OpMode:
 
@@ -36,3 +41,6 @@ The `update` function is responsible for transmitting logged data to the appropr
     ```kotlin
     panelsTelemetry.update(telemetry)
     ```
+### Updating individual widgets
+You can update individual widgets by sending specific packets using the following methods: `sendCanvas(c: Canvas)`, `sendGraph(g: MutableMap<String, MutableList<GraphPacket>>)`, and `sendLines(l: MutableList<String>)`.
+This functionality is designed for use in libraries that maintain a separate update loop.

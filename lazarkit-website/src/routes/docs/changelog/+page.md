@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.5
+- Separated telemetry packets into lines, graph and canvas
+- Fixed graph wrong display scale and constant value normalization
+- Hidden Field coordinates grid
+
 ## v0.5.1
 - Fixed widgets not scrolling
 
