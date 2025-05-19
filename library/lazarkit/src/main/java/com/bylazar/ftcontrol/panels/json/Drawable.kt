@@ -21,6 +21,9 @@ class Canvas(
             is Circle -> circles.add(drawable)
         }
     }
+
+    val isEmpty: Boolean
+        get() = lines.isEmpty() && rectangles.isEmpty() && circles.isEmpty()
 }
 
 @Serializable

@@ -19,7 +19,7 @@ class TelemetryManager(
     var graphUpdates: MutableMap<String, Long> = mutableMapOf()
 
 
-    var linesUpdateInterval = 100L
+    var linesUpdateInterval = 50L
     var lastLinesUpdate = 0L
     val timeSinceLastLinesUpdate: Long
         get() = System.currentTimeMillis() - lastLinesUpdate
@@ -106,6 +106,7 @@ class TelemetryManager(
     }
 
     fun sendCanvas(c: Canvas){
+        if(c.isEmpty) return
         if (shouldUpdateCanvas){
             sendCanvasSocket(c)
             lastCanvasUpdate = System.currentTimeMillis()
@@ -113,6 +114,7 @@ class TelemetryManager(
     }
 
     fun sendGraph(g: MutableMap<String, MutableList<GraphPacket>>) {
+        if (g.isEmpty()) return
         if (shouldUpdateGraph) {
             sendGraphSocket(g)
             lastGraphUpdate = System.currentTimeMillis()
@@ -120,6 +122,7 @@ class TelemetryManager(
     }
 
     fun sendLines(l: MutableList<String>) {
+        if (l.isEmpty()) return
         if (shouldUpdateLines) {
             sendLinesSocket(l)
             lastLinesUpdate = System.currentTimeMillis()
