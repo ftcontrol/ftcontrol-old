@@ -8,7 +8,12 @@ It works live a canvas, so it can be used for any drawing application.
 2. Circle
 3. Rectangle
 
-more will be added soon
+More will be added soon
+
+## Customization
+You can change the orientation and show a coordinates grid inside the `settings menu`.
+
+<img src="/docs/field_settings.png" alt="field settings"/>
 
 ## Gotchas
 1. Objects are drawn in the order they are sent to the `debug` function, and their layering (z-index) is automatically managed by the system.
@@ -19,3 +24,8 @@ more will be added soon
 Below is an example of how field telemetry can be implemented in an OpMode:
 
 @code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/field/TestOpMode.kt)
+
+## Example Drawer File: `Drawer.kt`
+Below is an example of how field telemetry can be implemented in an utility without the opMode loop:
+
+@code(/../test-codebase/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/examples/field/Drawer.kt)

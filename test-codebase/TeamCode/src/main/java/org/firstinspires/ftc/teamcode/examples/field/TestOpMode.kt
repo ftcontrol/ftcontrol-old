@@ -15,6 +15,7 @@ class TestOpMode : OpMode() {
     var panelsTelemetry = Panels.getTelemetry()
 
     override fun init() {
+        panelsTelemetry.setOffsets(24.0, 24.0) //field offsets in inches
         panelsTelemetry.debug("Init was ran!")
         panelsTelemetry.update(telemetry)
     }

@@ -105,7 +105,6 @@
           alwaysValid={true}
         ></SelectInput>
       </div>
-      {settings.fieldShowCoordinates}
       <div class="flex">
         <p>Show Coordinates Grid</p>
         <SelectInput
