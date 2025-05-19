@@ -84,6 +84,14 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
+    fun sendConfigurables(){
+        if (!isAlive) return
+        println("DASH: sent configurables")
+        for (client in clients) {
+            client.sendJvmFields()
+        }
+    }
+
     fun sendLines(
         lines: MutableList<String>
     ) {

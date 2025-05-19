@@ -2,6 +2,7 @@
 
 ## v0.5.7
 - Canvas offsets
+- Resend Configurables on init
 
 ## v0.5.6
 - Fixed Field transparent colors

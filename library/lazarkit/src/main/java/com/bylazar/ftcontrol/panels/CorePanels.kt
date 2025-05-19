@@ -52,6 +52,7 @@ class CorePanels {
         try {
             println("DASH: Finding configurables")
             Configurables.findConfigurables(context)
+            socket.sendConfigurables()
         } catch(e: Exception){
             println("DASH: Failed to find configurables: ${e.message}")
             e.printStackTrace()
