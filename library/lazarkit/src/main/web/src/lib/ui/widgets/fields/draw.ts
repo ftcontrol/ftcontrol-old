@@ -5,6 +5,28 @@ export let ctx: CanvasRenderingContext2D | null
 var appliedOffsetX = new Distance(0)
 var appliedOffsetY = new Distance(0)
 
+let fieldImage: HTMLImageElement | null = null
+
+export async function initFieldImage() {
+  const imageUrl = "/fields/field.png"
+  const base64Image = await imageToBase64(imageUrl)
+
+  fieldImage = await getImage(base64Image)
+}
+
+export function drawFieldImage() {
+  if (fieldImage == null) {
+    console.error("Field Image not found.")
+    return
+  }
+  drawImage(
+    fieldImage,
+    new Point(-72 + appliedOffsetX.inches, 72 + appliedOffsetY.inches),
+    new Distance(24 * 6),
+    new Distance(24 * 6)
+  )
+}
+
 export function updateOffsets(
   canvas: HTMLCanvasElement,
   offsetX: Distance,
@@ -92,7 +114,8 @@ export function setFontSizeInInches(
 export function drawGrid(
   cellSize: Distance,
   color: string = "#333",
-  textColor: string = "#fff"
+  textColor: string = "#fff",
+  extend: Distance = new Distance(24 * 6)
 ) {
   if (ctx == null) return
   ctx.strokeStyle = color
@@ -100,8 +123,8 @@ export function drawGrid(
   ctx.fillStyle = textColor
   setFontSizeInInches(ctx, 3)
 
-  const halfWidth = new Distance(FIELD_WIDTH.inches / 2)
-  const halfHeight = new Distance(FIELD_HEIGHT.inches / 2)
+  const halfWidth = new Distance(FIELD_WIDTH.inches / 2 + extend.inches)
+  const halfHeight = new Distance(FIELD_HEIGHT.inches / 2 + extend.inches)
 
   for (let x = -halfWidth.inches; x <= halfWidth.inches; x += cellSize.inches) {
     drawLine(

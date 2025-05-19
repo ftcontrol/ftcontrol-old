@@ -3,13 +3,12 @@
   import { Distance, Point } from "./primitives"
   import {
     drawCircle,
+    drawFieldImage,
     drawGrid,
-    drawImage,
     drawLine,
     drawRectangle,
-    getImage,
-    imageToBase64,
     init,
+    initFieldImage,
     updateOffsets,
   } from "./draw"
   import { info } from "$lib"
@@ -17,34 +16,24 @@
   import { settings } from "$lib/settings.svelte"
 
   let canvas: HTMLCanvasElement
-  let base64Image: string
-  let fieldImage: HTMLImageElement
 
-  onMount(async () => {
+  let wasInit = $state(false)
+
+  onMount(() => {
     init(
       canvas,
       new Distance(info.canvas.offsetX),
       new Distance(info.canvas.offsetY)
     )
 
-    const imageUrl = "/fields/field.png"
-    base64Image = await imageToBase64(imageUrl)
-
-    fieldImage = await getImage(base64Image)
-
-    drawImage(
-      fieldImage,
-      new Point(-72, 72),
-      new Distance(24 * 6),
-      new Distance(24 * 6)
-    )
-
     // drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
     if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     // drawPoint(new Point(0.0, 0.0))
+    wasInit = true
   })
 
   $effect(() => {
+    if (!wasInit) return
     updateOffsets(
       canvas,
       new Distance(info.canvas.offsetX),
@@ -53,12 +42,8 @@
   })
 
   $effect(() => {
-    drawImage(
-      fieldImage,
-      new Point(-72, 72),
-      new Distance(24 * 6),
-      new Distance(24 * 6)
-    )
+    if (!wasInit) return
+    drawFieldImage()
     if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     if (info.canvas.lines) {
       info.canvas.lines.forEach((line) => {
@@ -100,16 +85,31 @@
 
 <Content>
   <div style="width: 100%; overflow: hidden;">
+    <img
+      style="rotate: {settings.fieldOrientation};"
+      src="/fields/field.png"
+      alt="field"
+    />
     <canvas style="rotate: {settings.fieldOrientation};" bind:this={canvas}
     ></canvas>
   </div>
 </Content>
 
 <style>
+  div {
+    position: relative;
+  }
   canvas {
     display: block;
     max-width: 100%;
     height: auto;
+    rotate: 0deg;
+    transition: rotate 0.5s;
+  }
+  img {
+    width: 100%;
+    position: absolute;
+    top: 0;
     rotate: 0deg;
     transition: rotate 0.5s;
   }

@@ -34,6 +34,8 @@ export const info = new InfoManager()
 var lastLines: string[] = []
 var lastGraph: Graph = {}
 var lastCanvas: Canvas = {
+  offsetX: 0,
+  offsetY: 0,
   rectangles: [],
   circles: [],
   lines: [],
