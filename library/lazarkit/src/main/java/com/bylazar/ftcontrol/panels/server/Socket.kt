@@ -20,7 +20,9 @@ import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
 import com.bylazar.ftcontrol.panels.json.ReceivedPlugins
 import com.bylazar.ftcontrol.panels.json.StartActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.StopActiveOpModeRequest
-import com.bylazar.ftcontrol.panels.json.TelemetryPacket
+import com.bylazar.ftcontrol.panels.json.TelemetryCanvasPacket
+import com.bylazar.ftcontrol.panels.json.TelemetryGraphPacket
+import com.bylazar.ftcontrol.panels.json.TelemetryLinesPacket
 import com.bylazar.ftcontrol.panels.json.TestObject
 import com.bylazar.ftcontrol.panels.json.TimeObject
 import com.bylazar.ftcontrol.panels.json.UpdatedJvmFields
@@ -82,15 +84,33 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendTelemetry(
-        lines: List<String>,
-        canvas: Canvas,
+    fun sendLines(
+        lines: MutableList<String>
+    ) {
+        if (!isAlive) return
+        println("DASH: sent lines")
+        for (client in clients) {
+            client.send(TelemetryLinesPacket(lines, System.currentTimeMillis()))
+        }
+    }
+
+    fun sendGraph(
         graph: MutableMap<String, MutableList<GraphPacket>>
     ) {
         if (!isAlive) return
-        println("DASH: sent telemetry")
+        println("DASH: sent graph")
         for (client in clients) {
-            client.send(TelemetryPacket(lines, canvas, graph, System.currentTimeMillis()))
+            client.send(TelemetryGraphPacket(graph, System.currentTimeMillis()))
+        }
+    }
+
+    fun sendCanvas(
+        canvas: Canvas,
+    ) {
+        if (!isAlive) return
+        println("DASH: sent canvas")
+        for (client in clients) {
+            client.send(TelemetryCanvasPacket(canvas, System.currentTimeMillis()))
         }
     }
 
@@ -128,7 +148,6 @@ class Socket(
             sendOpModesList()
             sendActiveOpMode()
             sendJvmFields()
-            sendAllFlows()
             sendAllPlugins()
         }
 
@@ -210,9 +229,6 @@ class Socket(
         fun sendJvmFields() {
             send(ReceivedInitialJvmFields(Configurables.initialJvmFields))
             send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
-        }
-
-        fun sendAllFlows() {
         }
 
         fun sendAllPlugins() {

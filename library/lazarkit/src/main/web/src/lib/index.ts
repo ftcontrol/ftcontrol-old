@@ -4,8 +4,6 @@ import {
   SocketManager,
   type GenericData,
   type GraphPacket,
-  type OpMode,
-  type TelemetryPacket,
 } from "./socket.svelte"
 import { NotificationsManager } from "./notifications.svelte"
 import {
@@ -15,7 +13,8 @@ import {
   type GenericTypeJson,
 } from "./genericType"
 import { forAll } from "$ui/widgets/configurables/utils"
-import type { Graph } from "./socket.svelte"
+import type { Graph, TelemetryFullPacket } from "./socket.svelte"
+import type { Canvas } from "$ui/widgets/fields/canvas"
 
 export const socket = new SocketManager()
 
@@ -32,7 +31,29 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
 
 export const info = new InfoManager()
 
-socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
+var lastLines: string[] = []
+var lastGraph: Graph = {}
+var lastCanvas: Canvas = {
+  rectangles: [],
+  circles: [],
+  lines: [],
+}
+
+socket.addMessageHandler("telemetryLinesPacket", (data: GenericData) => {
+  lastLines = data.lines
+  if (!info.isPlaying) {
+    info.telemetry = data.lines
+  }
+  if (info.isRecording) {
+    info.history.push({
+      canvas: lastCanvas,
+      lines: lastLines,
+      graphs: lastGraph,
+      timestamp: data.timestamp,
+    } as TelemetryFullPacket)
+  }
+})
+socket.addMessageHandler("telemetryGraphPacket", (data: GenericData) => {
   const maxEntries = 1200
   const now = new Date(data.timestamp).getTime()
   const windowStart = now - info.timeWindow * 1000
@@ -61,18 +82,32 @@ socket.addMessageHandler("telemetryPacket", (data: GenericData) => {
     filteredGraphs[key] = limitedEntries
   }
 
+  lastGraph = filteredGraphs
+
   if (!info.isPlaying) {
-    info.telemetry = data.lines
-    info.canvas = data.canvas
     info.graphs = filteredGraphs
   }
   if (info.isRecording) {
     info.history.push({
-      canvas: data.canvas,
-      lines: data.lines,
-      graphs: filteredGraphs,
+      canvas: lastCanvas,
+      lines: lastLines,
+      graphs: lastGraph,
       timestamp: data.timestamp,
-    } as TelemetryPacket)
+    } as TelemetryFullPacket)
+  }
+})
+socket.addMessageHandler("telemetryCanvasPacket", (data: GenericData) => {
+  lastCanvas = data.canvas
+  if (!info.isPlaying) {
+    info.canvas = data.canvas
+  }
+  if (info.isRecording) {
+    info.history.push({
+      canvas: lastCanvas,
+      lines: lastLines,
+      graphs: lastGraph,
+      timestamp: data.timestamp,
+    } as TelemetryFullPacket)
   }
 })
 
@@ -117,10 +152,6 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
 
 socket.addMessageHandler("batteryVoltage", (data: GenericData) => {
   info.batteryVoltage = data.value
-})
-
-socket.addMessageHandler("allFlows", (data: GenericData) => {
-  info.flows = data.flows
 })
 
 socket.addMessageHandler("plugins", (data: GenericData) => {

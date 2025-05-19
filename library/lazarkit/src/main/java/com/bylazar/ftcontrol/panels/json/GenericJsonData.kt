@@ -21,13 +21,26 @@ data class TimeObject(
 ) : JSONData()
 
 @Serializable
-@SerialName("telemetryPacket")
-data class TelemetryPacket(
+@SerialName("telemetryLinesPacket")
+data class TelemetryLinesPacket(
     var lines: List<String>,
-    var canvas: Canvas,
+    var timestamp: Long
+) : JSONData()
+
+@Serializable
+@SerialName("telemetryGraphPacket")
+data class TelemetryGraphPacket(
     var graphs: Map<String, List<GraphPacket>>,
     var timestamp: Long
 ) : JSONData()
+
+@Serializable
+@SerialName("telemetryCanvasPacket")
+data class TelemetryCanvasPacket(
+    var canvas: Canvas,
+    var timestamp: Long
+) : JSONData()
+
 
 @Serializable
 data class GraphPacket(

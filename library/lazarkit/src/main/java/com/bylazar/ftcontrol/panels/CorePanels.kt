@@ -28,7 +28,11 @@ class CorePanels {
     lateinit var socket: Socket
 
     var telemetryManager =
-        TelemetryManager({ lines, canvas, graph -> socket.sendTelemetry(lines, canvas, graph) })
+        TelemetryManager(
+            { lines -> socket.sendLines(lines) },
+            { graph -> socket.sendGraph(graph) },
+            { canvas -> socket.sendCanvas(canvas) },
+        )
 
     fun attachWebServer(context: Context, webServer: WebServer) {
         println("DASH: Preferences.isEnabled: ${Preferences.isEnabled}")

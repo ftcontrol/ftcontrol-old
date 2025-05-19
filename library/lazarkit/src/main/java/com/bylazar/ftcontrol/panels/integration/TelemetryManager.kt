@@ -6,7 +6,9 @@ import com.bylazar.ftcontrol.panels.json.GraphPacket
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
 class TelemetryManager(
-    private val sendTelemetry: (lines: List<String>, canvas: Canvas, graph: MutableMap<String, MutableList<GraphPacket>>) -> Unit,
+    private val sendLinesSocket: (lines: MutableList<String>) -> Unit,
+    private val sendGraphSocket: (graph: MutableMap<String, MutableList<GraphPacket>>) -> Unit,
+    private val sendCanvasSocket: (canvas: Canvas) -> Unit,
 ) {
     var lines = mutableListOf<String>()
     var canvas = Canvas()
@@ -14,14 +16,29 @@ class TelemetryManager(
 
     var lastZIndex = 0
 
-    var lastUpdate = 0L
-    var updateInterval = 100L
-    var graphUpdateInterval = 10L
     var graphUpdates: MutableMap<String, Long> = mutableMapOf()
-    val timeSinceLastUpdate: Long
-        get() = System.currentTimeMillis() - lastUpdate
-    val shouldUpdate: Boolean
-        get() = timeSinceLastUpdate >= updateInterval
+
+
+    var linesUpdateInterval = 100L
+    var lastLinesUpdate = 0L
+    val timeSinceLastLinesUpdate: Long
+        get() = System.currentTimeMillis() - lastLinesUpdate
+    val shouldUpdateLines: Boolean
+        get() = timeSinceLastLinesUpdate >= linesUpdateInterval
+
+    var graphUpdateInterval = 10L
+    var lastGraphUpdate = 0L
+    val timeSinceLastGraphUpdate: Long
+        get() = System.currentTimeMillis() - lastGraphUpdate
+    val shouldUpdateGraph: Boolean
+        get() = timeSinceLastGraphUpdate >= graphUpdateInterval
+
+    var canvasUpdateInterval = 50L
+    var lastCanvasUpdate = 0L
+    val timeSinceLastCanvasUpdate: Long
+        get() = System.currentTimeMillis() - lastCanvasUpdate
+    val shouldUpdateCanvas: Boolean
+        get() = timeSinceLastCanvasUpdate >= canvasUpdateInterval
 
     fun resetGraphs(){
         graph.clear()
@@ -65,17 +82,54 @@ class TelemetryManager(
                     lastZIndex++
                     canvas.add(it)
                 }
+                is Canvas -> {
+                    it.lines.forEach { line ->
+                        line.zIndex = lastZIndex + if (line.zIndex > 0) line.zIndex else 0
+                        lastZIndex++
+                        canvas.add(line)
+                    }
+                    it.rectangles.forEach { rectangle ->
+                        rectangle.zIndex = lastZIndex + if (rectangle.zIndex > 0) rectangle.zIndex else 0
+                        lastZIndex++
+                        canvas.add(rectangle)
+                    }
+                    it.circles.forEach { circle ->
+                        circle.zIndex = lastZIndex + if (circle.zIndex > 0) circle.zIndex else 0
+                        lastZIndex++
+                        canvas.add(circle)
+                    }
+                }
 
                 else -> {}
             }
         }
     }
 
-    fun update() {
-        if (shouldUpdate) {
-            sendTelemetry(lines, canvas, graph)
-            lastUpdate = System.currentTimeMillis()
+    fun sendCanvas(c: Canvas){
+        if (shouldUpdateCanvas){
+            sendCanvasSocket(c)
+            lastCanvasUpdate = System.currentTimeMillis()
         }
+    }
+
+    fun sendGraph(g: MutableMap<String, MutableList<GraphPacket>>) {
+        if (shouldUpdateGraph) {
+            sendGraphSocket(g)
+            lastGraphUpdate = System.currentTimeMillis()
+        }
+    }
+
+    fun sendLines(l: MutableList<String>) {
+        if (shouldUpdateLines) {
+            sendLinesSocket(l)
+            lastLinesUpdate = System.currentTimeMillis()
+        }
+    }
+
+    fun update() {
+        sendLines(lines)
+        sendGraph(graph)
+        sendCanvas(canvas)
         lastZIndex = 0
         lines.clear()
         canvas.clear()

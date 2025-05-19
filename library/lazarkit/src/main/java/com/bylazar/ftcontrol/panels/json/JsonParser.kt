@@ -20,26 +20,17 @@ val json = Json {
             subclass(InitOpModeRequest::class)
             subclass(StartActiveOpModeRequest::class)
             subclass(StopActiveOpModeRequest::class)
-            subclass(TelemetryPacket::class)
+            subclass(TelemetryLinesPacket::class)
+            subclass(TelemetryGraphPacket::class)
+            subclass(TelemetryCanvasPacket::class)
             subclass(GetJvmFieldsRequest::class)
             subclass(ReceivedJvmFields::class)
             subclass(ReceivedInitialJvmFields::class)
             subclass(UpdatedJvmFields::class)
             subclass(BatteryVoltage::class)
-            subclass(AllFlowsJson::class)
             subclass(ReceivedPlugins::class)
             subclass(PluginsUpdate::class)
             subclass(PluginAction::class)
-        }
-        polymorphic(JsonFlow::class) {
-            subclass(DoIfJson::class)
-            subclass(EmptyJson::class)
-            subclass(InstantJson::class)
-            subclass(ParallelJson::class)
-            subclass(RaceJson::class)
-            subclass(SequentialJson::class)
-            subclass(WaitJson::class)
-
         }
     }
     encodeDefaults = false

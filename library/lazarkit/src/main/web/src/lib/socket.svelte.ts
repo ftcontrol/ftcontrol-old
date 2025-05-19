@@ -110,11 +110,24 @@ export type GraphPacket = {
 
 export type Graph = { [key: string]: GraphPacket[] }
 
-export type TelemetryPacket = {
+export type TelemetryLinesPacket = {
   lines: string[]
+  timestamp: number
+}
+export type TelemetryGraphPacket = {
+  graphs: Graph
+  timestamp: number
+}
+export type TelemetryCanvasPacket = {
   canvas: Canvas
   timestamp: number
+}
+
+export type TelemetryFullPacket = {
+  lines: string[]
   graphs: Graph
+  canvas: Canvas
+  timestamp: number
 }
 
 export type Page = {
@@ -154,7 +167,8 @@ export class InfoManager {
   isRecording = $state(false)
   isPlaying = $state(false)
   isForwarding = $state(false)
-  history: TelemetryPacket[] = $state([])
+
+  history: TelemetryFullPacket[] = $state([])
 
   hasRecording = $derived<boolean>(this.history.length > 0)
   startTimestamp = $derived<number>(this.history.at(0)?.timestamp || 0)
@@ -163,14 +177,14 @@ export class InfoManager {
   )
   duration = $derived(this.endTimestamp - this.startTimestamp)
   timestamp = $state(0)
-  entry: TelemetryPacket | null = $derived.by(() => {
+  entry: TelemetryFullPacket | null = $derived.by(() => {
     var answerIndex = 0
     var index = 0
     for (const entry of this.history) {
       if (entry.timestamp <= this.timestamp + this.startTimestamp) {
         answerIndex = index
       } else {
-        return this.history.at(answerIndex) as TelemetryPacket
+        return this.history.at(answerIndex) as TelemetryFullPacket
       }
       index++
     }
