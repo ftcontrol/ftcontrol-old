@@ -165,6 +165,7 @@ export function drawCircle(
   outlineColor: string = "black",
   outlineWidth: Distance = new Distance(0.02)
 ) {
+  if (fillColor == "") fillColor = "transparent"
   if (ctx == null) return
   ctx.beginPath()
   ctx.arc(center.x, center.y, radius.pixels, 0, 2 * Math.PI)
@@ -187,6 +188,7 @@ export function drawRectangle(
   outlineColor: string = "black",
   outlineWidth: Distance = new Distance(0.02)
 ) {
+  if (fillColor == "") fillColor = "transparent"
   if (ctx == null) return
 
   const topLeft = new Point(

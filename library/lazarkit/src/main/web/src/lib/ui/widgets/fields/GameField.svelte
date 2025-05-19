@@ -14,6 +14,7 @@
   } from "./draw"
   import { info } from "$lib"
   import Content from "$ui/primitives/Content.svelte"
+  import { settings } from "$lib/settings.svelte"
 
   let canvas: HTMLCanvasElement
   let base64Image: string
@@ -35,7 +36,7 @@
     )
 
     // drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
-    // drawGrid(new Distance(24))
+    if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     // drawPoint(new Point(0.0, 0.0))
   })
 
@@ -46,6 +47,7 @@
       new Distance(24 * 6),
       new Distance(24 * 6)
     )
+    if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     if (info.canvas.lines) {
       info.canvas.lines.forEach((line) => {
         drawLine(
@@ -86,7 +88,8 @@
 
 <Content>
   <div style="width: 100%; overflow: hidden;">
-    <canvas bind:this={canvas}></canvas>
+    <canvas style="rotate: {settings.fieldOrientation};" bind:this={canvas}
+    ></canvas>
   </div>
 </Content>
 
@@ -95,5 +98,7 @@
     display: block;
     max-width: 100%;
     height: auto;
+    rotate: 0deg;
+    transition: rotate 0.5s;
   }
 </style>

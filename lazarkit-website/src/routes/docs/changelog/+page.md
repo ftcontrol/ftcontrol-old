@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.6
+- Fixed Field transparent colors
+- Field coordinates grid and orientation control
+
 ## v0.5.5
 - Separated telemetry packets into lines, graph and canvas
 - Fixed graph wrong display scale and constant value normalization

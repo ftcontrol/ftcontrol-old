@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { dev } from "$app/environment"
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
+  import BooleanInput from "./primitives/BooleanInput.svelte"
   import Button from "./primitives/Button.svelte"
   import Content from "./primitives/Content.svelte"
   import Header from "./primitives/Header.svelte"
@@ -11,6 +11,8 @@
 
   let animationSpeed = $state(settings.animationSpeed)
   let primaryColor = $state(settings.primaryColor)
+  let fieldOrientation = $state(settings.fieldOrientation)
+  let fieldShowCoordinates = $state(settings.fieldShowCoordinates)
 
   $effect(() => {
     settings.setSpeed(animationSpeed)
@@ -20,18 +22,13 @@
     settings.setPrimaryColor(primaryColor)
   })
 
-  function getAPIEndpoint() {
-    if (dev) {
-      return "http://localhost:8001"
-    }
-    return window.location.origin
-  }
+  $effect(() => {
+    settings.setFieldOrientation(fieldOrientation)
+  })
 
-  async function getHTML(path: string) {
-    const response = await fetch(path)
-    const data = await response.text()
-    return data
-  }
+  $effect(() => {
+    settings.setFieldShowCoordinates(fieldShowCoordinates)
+  })
 </script>
 
 <button
@@ -93,6 +90,32 @@
             settings.resetPresets()
           }}>Reset all presets</Button
         >
+      </div>
+
+      <h3>Field</h3>
+
+      <div class="flex">
+        <p>Orientation</p>
+        <SelectInput
+          startValue={settings.fieldOrientation}
+          bind:currentValue={fieldOrientation}
+          value="0deg"
+          possibleValues={["0deg", "90deg", "180deg", "270deg"]}
+          isValid={true}
+          alwaysValid={true}
+        ></SelectInput>
+      </div>
+      {settings.fieldShowCoordinates}
+      <div class="flex">
+        <p>Show Coordinates Grid</p>
+        <SelectInput
+          startValue={settings.fieldShowCoordinates}
+          bind:currentValue={fieldShowCoordinates}
+          possibleValues={["true", "false"]}
+          value="0deg"
+          isValid={true}
+          alwaysValid={true}
+        ></SelectInput>
       </div>
     </Content>
   </Section>

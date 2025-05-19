@@ -3,6 +3,8 @@ import { Grid, type Preset } from "$ui/grid/grid.svelte"
 import { deleteCookie, getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
 type PrimaryColor = "blue" | "red"
+type FieldOrientation = "0deg" | "90deg" | "180deg" | "270deg"
+type ShowFieldCoordinates = "true" | "false"
 class Settings {
   isDark = $state(getCookie("theme") === "dark")
 
@@ -12,6 +14,14 @@ class Settings {
 
   primaryColor: PrimaryColor = $state(
     (getCookie("primary") as PrimaryColor) || "blue"
+  )
+
+  fieldOrientation: FieldOrientation = $state(
+    (getCookie("fieldOrientation") as FieldOrientation) || "0deg"
+  )
+
+  fieldShowCoordinates: ShowFieldCoordinates = $state(
+    (getCookie("fieldShowCoordinates") as ShowFieldCoordinates) || "false"
   )
 
   constructor() {
@@ -39,6 +49,16 @@ class Settings {
 
     document.body.classList.add(this.primaryColor)
     setCookie("primary", this.primaryColor)
+  }
+
+  setFieldOrientation(newOrientation: FieldOrientation) {
+    this.fieldOrientation = newOrientation
+    setCookie("fieldOrientation", newOrientation)
+  }
+
+  setFieldShowCoordinates(newState: ShowFieldCoordinates) {
+    this.fieldShowCoordinates = newState
+    setCookie("fieldShowCoordinates", newState)
   }
 
   getInitialGrids(): Grid[] {
