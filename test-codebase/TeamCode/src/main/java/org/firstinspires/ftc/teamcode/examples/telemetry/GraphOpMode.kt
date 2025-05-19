@@ -24,6 +24,8 @@ class GraphOpMode : OpMode() {
     var wave2 = 0.0
     val constant = sin(0.0)
 
+    val constant2 = sin(0.0) + 5
+
     override fun init() {
         panelsTelemetry.debug("Init was ran!")
         panelsTelemetry.update(telemetry)
@@ -36,14 +38,16 @@ class GraphOpMode : OpMode() {
         timer.start()
         ticks += ticksIncrement
         wave = sin(ticks)
-        wave2 = sin(ticks + PI)
+        wave2 = sin(ticks + PI) * 2
 
         panelsTelemetry.debug("wave: $wave")
         panelsTelemetry.debug("wave2: $wave2")
         panelsTelemetry.debug("constant: $constant")
+        panelsTelemetry.debug("constant2: $constant2")
         panelsTelemetry.graph("wave", wave)
         panelsTelemetry.graph("wave2", wave2)
         panelsTelemetry.graph("constant", constant)
+        panelsTelemetry.graph("constant2", constant2)
 
         panelsTelemetry.debug("LoopTime: ${timer.ms}ms / ${timer.hz}Hz")
 

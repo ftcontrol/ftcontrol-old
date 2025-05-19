@@ -59,6 +59,18 @@
     return normalizedPoints
   }
 
+  function getSelectedValueRange(selectedGraphs: {
+    [key: string]: GraphPacket[]
+  }): [number, number] {
+    const values = Object.values(selectedGraphs)
+      .flat()
+      .map((l) => l.data)
+    if (values.length === 0) return [0, 1]
+    const min = Math.min(...values)
+    const max = Math.max(...values)
+    return [min, max]
+  }
+
   const colors = ["red", "lime", "cyan", "yellow", "magenta", "orange"]
 </script>
 
@@ -108,36 +120,25 @@
         </text>
       {/each}
 
-      {#each [0, 25, 50, 75, 100] as y}
-        <text
-          x="-2"
-          y={100 - y}
-          font-size="2.5"
-          fill="white"
-          stroke="var(--text)"
-          stroke-width="0.1"
-          text-anchor="end"
-        >
-          {(
-            (y / 100) *
-              (Object.values(
-                Object.values(info.graphs)
-                  .flat()
-                  .map((l) => l.data)
-              ).reduce((a, b) => Math.max(a, b), -Infinity) -
-                Object.values(
-                  Object.values(info.graphs)
-                    .flat()
-                    .map((l) => l.data)
-                ).reduce((a, b) => Math.min(a, b), Infinity)) +
-            Object.values(
-              Object.values(info.graphs)
-                .flat()
-                .map((l) => l.data)
-            ).reduce((a, b) => Math.min(a, b), Infinity)
-          ).toFixed(2)}
-        </text>
-      {/each}
+      {#if Object.keys(selectedKeys).some((key) => selectedKeys[key])}
+        {@const selectedGraphs = Object.fromEntries(
+          Object.entries(info.graphs).filter(([key]) => selectedKeys[key])
+        )}
+        {@const [min, max] = getSelectedValueRange(selectedGraphs)}
+        {#each [0, 25, 50, 75, 100] as y}
+          <text
+            x="-2"
+            y={100 - y}
+            font-size="2.5"
+            fill="white"
+            stroke="var(--text)"
+            stroke-width="0.1"
+            text-anchor="end"
+          >
+            {(min + (y / 100) * (max - min)).toFixed(2)}
+          </text>
+        {/each}
+      {/if}
 
       {#each [25, 50, 75] as value}
         <line
