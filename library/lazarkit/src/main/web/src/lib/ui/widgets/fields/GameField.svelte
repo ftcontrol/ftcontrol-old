@@ -34,9 +34,9 @@
       new Distance(24 * 6)
     )
 
-    drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
-    drawGrid(new Distance(24))
-    drawPoint(new Point(0.0, 0.0))
+    // drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
+    // drawGrid(new Distance(24))
+    // drawPoint(new Point(0.0, 0.0))
   })
 
   $effect(() => {
