@@ -143,4 +143,14 @@ class TelemetryManager(
         telemetry.update()
         update()
     }
+
+    fun setOffsets(offsetX: Double, offsetY: Double){
+        canvas = canvas.withOffsets(offsetX, offsetY)
+    }
+    fun setOffsetX(offsetX: Double){
+        canvas = canvas.withOffsetX(offsetX)
+    }
+    fun setOffsetY(offsetY: Double){
+        canvas = canvas.withOffsetY(offsetY)
+    }
 }

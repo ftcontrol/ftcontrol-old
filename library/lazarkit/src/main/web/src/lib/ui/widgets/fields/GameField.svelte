@@ -6,11 +6,11 @@
     drawGrid,
     drawImage,
     drawLine,
-    drawPoint,
     drawRectangle,
     getImage,
     imageToBase64,
     init,
+    updateOffsets,
   } from "./draw"
   import { info } from "$lib"
   import Content from "$ui/primitives/Content.svelte"
@@ -21,7 +21,11 @@
   let fieldImage: HTMLImageElement
 
   onMount(async () => {
-    init(canvas)
+    init(
+      canvas,
+      new Distance(info.canvas.offsetX),
+      new Distance(info.canvas.offsetY)
+    )
 
     const imageUrl = "/fields/field.png"
     base64Image = await imageToBase64(imageUrl)
@@ -38,6 +42,14 @@
     // drawLine(new Point(0, 0), new Point(0, 10), "blue", new Distance(1))
     if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     // drawPoint(new Point(0.0, 0.0))
+  })
+
+  $effect(() => {
+    updateOffsets(
+      canvas,
+      new Distance(info.canvas.offsetX),
+      new Distance(info.canvas.offsetY)
+    )
   })
 
   $effect(() => {

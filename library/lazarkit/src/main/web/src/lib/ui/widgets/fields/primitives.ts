@@ -1,6 +1,7 @@
 export class Distance {
   inches: number
   pixels: number
+  tiles: number
   constructor(inches: number, pixels?: number) {
     this.inches = inches
     if (pixels !== undefined) {
@@ -9,6 +10,7 @@ export class Distance {
       const pixelsPerInch = FIELD_WIDTH.pixels / FIELD_WIDTH.inches
       this.pixels = this.inches * pixelsPerInch
     }
+    this.tiles = this.inches / 24
   }
 }
 

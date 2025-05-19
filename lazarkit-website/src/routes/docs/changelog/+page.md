@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.7
+- Canvas offsets
+
 ## v0.5.6
 - Fixed Field transparent colors
 - Field coordinates grid and orientation control

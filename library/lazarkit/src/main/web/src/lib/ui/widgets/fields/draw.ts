@@ -2,8 +2,27 @@ import { Distance, FIELD_HEIGHT, FIELD_WIDTH, Point } from "./primitives"
 
 export let ctx: CanvasRenderingContext2D | null
 
-export function init(canvas: HTMLCanvasElement) {
+var appliedOffsetX = new Distance(0)
+var appliedOffsetY = new Distance(0)
+
+export function updateOffsets(
+  canvas: HTMLCanvasElement,
+  offsetX: Distance,
+  offsetY: Distance
+) {
+  if (appliedOffsetX == offsetX && appliedOffsetY == offsetY) return
+
+  init(canvas, offsetX, offsetY)
+}
+
+export function init(
+  canvas: HTMLCanvasElement,
+  offsetX: Distance,
+  offsetY: Distance
+) {
   if (!canvas) return
+  appliedOffsetX = offsetX
+  appliedOffsetY = offsetY
 
   const dpr = window.devicePixelRatio || 1
   const width = FIELD_WIDTH.pixels * dpr
@@ -17,8 +36,13 @@ export function init(canvas: HTMLCanvasElement) {
     ctx.scale(dpr, dpr)
   }
 
+  //24 inch > 1TILE > 1/6FIELD
+
   if (ctx) {
-    ctx.translate(FIELD_WIDTH.pixels / 2, FIELD_HEIGHT.pixels / 2)
+    ctx.translate(
+      FIELD_WIDTH.pixels / 2 + offsetX.pixels,
+      FIELD_HEIGHT.pixels / 2 + offsetY.pixels
+    )
   }
 }
 

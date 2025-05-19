@@ -5,12 +5,16 @@ export enum DrawableTypes {
 }
 
 export const emptyCanvas: Canvas = {
+  offsetX: 0,
+  offsetY: 0,
   lines: [],
   rectangles: [],
   circles: [],
 }
 
 export interface Canvas {
+  offsetX: number
+  offsetY: number
   lines: Line[]
   rectangles: Rectangle[]
   circles: Circle[]

@@ -7,6 +7,8 @@ class Canvas(
     var lines: MutableList<Line> = mutableListOf(),
     var rectangles: MutableList<Rectangle> = mutableListOf(),
     var circles: MutableList<Circle> = mutableListOf(),
+    var offsetX: Double = 0.0,
+    var offsetY: Double = 0.0,
 ) {
     fun clear() {
         lines = mutableListOf()
@@ -20,6 +22,22 @@ class Canvas(
             is Rectangle -> rectangles.add(drawable)
             is Circle -> circles.add(drawable)
         }
+    }
+
+    fun withOffsetX(offsetX: Double): Canvas {
+        this.offsetX = offsetX
+        return this
+    }
+
+    fun withOffsetY(offsetY: Double): Canvas {
+        this.offsetY = offsetY
+        return this
+    }
+
+    fun withOffsets(offsetX: Double, offsetY: Double): Canvas {
+        this.offsetX = offsetX
+        this.offsetY = offsetY
+        return this
     }
 
     val isEmpty: Boolean
