@@ -10,6 +10,7 @@ enum class BaseTypes {
     ENUM,
 
     UNKNOWN,
+    RECURSION_REACHED,
 
     CUSTOM,
     ARRAY,

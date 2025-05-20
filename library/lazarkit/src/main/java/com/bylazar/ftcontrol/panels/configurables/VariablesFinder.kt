@@ -39,6 +39,16 @@ class VariablesFinder(
             val isStatic = Modifier.isStatic(field.modifiers)
             val isIgnored = field.isAnnotationPresent(IgnoreConfigurable::class.java)
 
+//            val isPrivate = Modifier.isPrivate(field.modifiers)
+//            val isNull = try {
+//                if (field.get(null) == null) {
+//                    println("DASH: Field ${field.name} in $clazz is null")
+//                    true
+//                } else false
+//            }catch (t: Throwable){
+//                false
+//            }
+
             val isJvmField = !isFinal && isStatic && !isIgnored
 
             if (isJvmField) {

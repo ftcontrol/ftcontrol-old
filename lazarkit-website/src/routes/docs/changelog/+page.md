@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.5.8
+- Improved Configurables error handling
+- Handle Configurables recursion
+
 ## v0.5.7
 - Canvas offsets
 - Resend Configurables on init

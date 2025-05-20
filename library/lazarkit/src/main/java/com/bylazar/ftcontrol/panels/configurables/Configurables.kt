@@ -20,17 +20,37 @@ object Configurables {
         configurableClasses = listOf()
         jvmFields = listOf()
 
-        finder.apkPath = context.packageCodePath
-        println("DASH: Found ${finder.getAllClasses.size} configurable classes:")
-        finder.getAllClasses.forEach { className ->
-            println("DASH: $className")
+        try{
+            println("DASH: Searching for configurables classes...")
+            finder.apkPath = context.packageCodePath
+            println("DASH: Found ${finder.getAllClasses.size} configurable classes:")
+            finder.getAllClasses.forEach { className ->
+                println("DASH: $className")
+            }
+        }catch (t: Throwable){
+            println("DASH: ClassFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
         }
-        println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
-        variables.getJvmFields.forEach { info ->
-            println("DASH: ${info.className}.${info.reference.name}")
-            info.debug()
+
+        try {
+            println("DASH: Searching for configurables variables...")
+            println("DASH: Found ${variables.getJvmFields.size} @JvmField variables:")
+            variables.getJvmFields.forEach { info ->
+                println("DASH: ${info.className}.${info.reference.name}")
+                info.debug()
+            }
+        }catch (t: Throwable){
+            println("DASH: VariablesFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
         }
-        jvmFields = variables.getJvmFields
-        initialJvmFields = jvmFields.map { it.toJsonType }
+
+        try {
+            println("DASH: Searching for json...")
+            jvmFields = variables.getJvmFields
+            initialJvmFields = jvmFields.map { it.toJsonType }
+        }catch (t: Throwable){
+            println("DASH: JsonFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
     }
 }

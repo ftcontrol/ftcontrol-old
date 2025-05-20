@@ -31,9 +31,10 @@ class MyField(
         Configurables.fieldsMap[id] = this
     }
 
-    fun getValue(): Any? {
+    fun getValue(recursionDepth: Int = 0): Any? {
+        if(recursionDepth > MAX_RECURSION_DEPTH) return null
         return try {
-            get(parentField?.getValue())
+            get(parentField?.getValue(recursionDepth + 1))
         } catch (e: Exception) {
             println("DASH: Could not get value for ${name}: ${e.message}")
             null

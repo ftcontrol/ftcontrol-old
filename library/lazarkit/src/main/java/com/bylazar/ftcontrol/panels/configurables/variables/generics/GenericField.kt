@@ -12,7 +12,7 @@ class GenericField(
 ) {
 
     val type = getType(reference.type, convertToMyField(reference), null)
-    val value: GenericVariable = processValue(className, type, convertToMyField(reference), null)
+    val value: GenericVariable = processValue(0, className, type, convertToMyField(reference), null)
 
     val name: String
         get() = reference.name

@@ -52,12 +52,22 @@ class CorePanels {
         try {
             println("DASH: Finding configurables")
             Configurables.findConfigurables(context)
-            socket.sendConfigurables()
         } catch(e: Exception){
             println("DASH: Failed to find configurables: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
             println("DASH: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
+
+        try {
+            println("DASH: Sending configurables")
+            socket.sendConfigurables()
+        } catch(e: Exception){
+            println("DASH: Failed to send configurables: ${e.message}")
+            e.printStackTrace()
+        } catch (t: Throwable) {
+            println("DASH: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
