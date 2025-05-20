@@ -12,6 +12,7 @@ More will be added soon
 
 ## Customization
 You can change the orientation and show a coordinates grid inside the `settings menu`.
+There are also methods on the `Canvas` object to change the orientation programatically: `setOffsets`.
 
 <img src="/docs/field_settings.png" alt="field settings"/>
 
