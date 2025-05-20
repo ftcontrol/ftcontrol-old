@@ -2,6 +2,13 @@ package com.bylazar.ftcontrol.panels.json
 
 import kotlinx.serialization.Serializable
 
+enum class CanvasRotation {
+    DEG_0,
+    DEG_90,
+    DEG_180,
+    DEG_270
+}
+
 @Serializable
 class Canvas(
     var lines: MutableList<Line> = mutableListOf(),
@@ -9,6 +16,7 @@ class Canvas(
     var circles: MutableList<Circle> = mutableListOf(),
     var offsetX: Double = 0.0,
     var offsetY: Double = 0.0,
+    var rotation: CanvasRotation = CanvasRotation.DEG_0
 ) {
     fun clear() {
         lines = mutableListOf()
@@ -34,9 +42,15 @@ class Canvas(
         return this
     }
 
-    fun withOffsets(offsetX: Double, offsetY: Double): Canvas {
+    fun withRotation(rotation: CanvasRotation): Canvas {
+        this.rotation = rotation
+        return this
+    }
+
+    fun withOffsets(offsetX: Double, offsetY: Double, rotation: CanvasRotation = CanvasRotation.DEG_0): Canvas {
         this.offsetX = offsetX
         this.offsetY = offsetY
+        this.rotation = rotation
         return this
     }
 

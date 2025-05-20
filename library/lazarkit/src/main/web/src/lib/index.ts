@@ -36,6 +36,7 @@ var lastGraph: Graph = {}
 var lastCanvas: Canvas = {
   offsetX: 0,
   offsetY: 0,
+  rotation: "DEG_0",
   rectangles: [],
   circles: [],
   lines: [],

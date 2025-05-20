@@ -7,14 +7,18 @@ export enum DrawableTypes {
 export const emptyCanvas: Canvas = {
   offsetX: 0,
   offsetY: 0,
+  rotation: "DEG_0",
   lines: [],
   rectangles: [],
   circles: [],
 }
 
+export type CanvasRotation = "DEG_0" | "DEG_90" | "DEG_180" | "DEG_270"
+
 export interface Canvas {
   offsetX: number
   offsetY: number
+  rotation: CanvasRotation
   lines: Line[]
   rectangles: Rectangle[]
   circles: Circle[]

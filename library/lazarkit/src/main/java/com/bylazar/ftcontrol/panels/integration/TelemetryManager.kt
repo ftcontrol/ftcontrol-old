@@ -1,6 +1,7 @@
 package com.bylazar.ftcontrol.panels.integration
 
 import com.bylazar.ftcontrol.panels.json.Canvas
+import com.bylazar.ftcontrol.panels.json.CanvasRotation
 import com.bylazar.ftcontrol.panels.json.Drawable
 import com.bylazar.ftcontrol.panels.json.GraphPacket
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -144,13 +145,16 @@ class TelemetryManager(
         update()
     }
 
-    fun setOffsets(offsetX: Double, offsetY: Double){
-        canvas = canvas.withOffsets(offsetX, offsetY)
+    fun setOffsets(offsetX: Double, offsetY: Double, rotation: CanvasRotation = CanvasRotation.DEG_0){
+        canvas = canvas.withOffsets(offsetX, offsetY, rotation)
     }
     fun setOffsetX(offsetX: Double){
         canvas = canvas.withOffsetX(offsetX)
     }
     fun setOffsetY(offsetY: Double){
         canvas = canvas.withOffsetY(offsetY)
+    }
+    fun setRotation(rotation: CanvasRotation){
+        canvas = canvas.withRotation(rotation)
     }
 }

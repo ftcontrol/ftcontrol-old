@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.9
+- Canvas Orientation control
+
 ## v0.5.8
 - Improved Configurables error handling
 - Handle Configurables recursion

@@ -3,21 +3,27 @@
   import { Distance, Point } from "./primitives"
   import {
     drawCircle,
-    drawFieldImage,
     drawGrid,
     drawLine,
     drawRectangle,
     init,
-    initFieldImage,
     updateOffsets,
   } from "./draw"
   import { info } from "$lib"
   import Content from "$ui/primitives/Content.svelte"
   import { settings } from "$lib/settings.svelte"
+  import type { CanvasRotation } from "./canvas"
 
   let canvas: HTMLCanvasElement
 
   let wasInit = $state(false)
+
+  let rotationMap: Record<CanvasRotation, number> = {
+    DEG_0: 0,
+    DEG_90: 90,
+    DEG_180: 180,
+    DEG_270: 270,
+  }
 
   onMount(() => {
     init(
@@ -43,7 +49,6 @@
 
   $effect(() => {
     if (!wasInit) return
-    drawFieldImage()
     if (settings.fieldShowCoordinates == "true") drawGrid(new Distance(24))
     if (info.canvas.lines) {
       info.canvas.lines.forEach((line) => {
@@ -86,13 +91,19 @@
 <Content>
   <div style="width: 100%; overflow: hidden;">
     <img
-      style="rotate: {settings.fieldOrientation};"
+      style="rotate: {parseInt(settings.fieldOrientation.split('deg')[0]) +
+        rotationMap[info.canvas.rotation]}deg;"
       src="/fields/field.png"
       alt="field"
     />
-    <canvas style="rotate: {settings.fieldOrientation};" bind:this={canvas}
-    ></canvas>
+    <canvas bind:this={canvas}></canvas>
   </div>
+  <p>
+    offsetX: {info.canvas.offsetX}
+    offsetY: {info.canvas.offsetY}
+    Orientation: {parseInt(settings.fieldOrientation.split("deg")[0]) +
+      rotationMap[info.canvas.rotation]}deg
+  </p>
 </Content>
 
 <style>

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.examples.field
 
 import com.bylazar.ftcontrol.panels.Panels
+import com.bylazar.ftcontrol.panels.json.CanvasRotation
 import com.bylazar.ftcontrol.panels.json.Circle
 import com.bylazar.ftcontrol.panels.json.Line
 import com.bylazar.ftcontrol.panels.json.Look
@@ -15,7 +16,7 @@ class TestOpMode : OpMode() {
     var panelsTelemetry = Panels.getTelemetry()
 
     override fun init() {
-        panelsTelemetry.setOffsets(24.0, 24.0) //field offsets in inches
+        panelsTelemetry.setOffsets(24.0, 24.0, CanvasRotation.DEG_0) //field offsets in inches
         panelsTelemetry.debug("Init was ran!")
         panelsTelemetry.update(telemetry)
     }

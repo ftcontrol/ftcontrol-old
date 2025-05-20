@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.examples.field
 
 import com.bylazar.ftcontrol.panels.Panels
 import com.bylazar.ftcontrol.panels.json.Canvas
+import com.bylazar.ftcontrol.panels.json.CanvasRotation
 import com.bylazar.ftcontrol.panels.json.Circle
 import com.bylazar.ftcontrol.panels.json.Look
 import com.bylazar.ftcontrol.panels.json.Point
 
 class Drawer {
     fun draw() {
-        val canvas = Canvas().withOffsetX(0.0).withOffsetY(0.0)
+        val canvas = Canvas().withOffsetX(0.0).withOffsetY(0.0).withRotation(CanvasRotation.DEG_0)
 
         canvas.add(
             Circle(
