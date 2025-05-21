@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gamepads, info, notifications } from "$lib"
+  import { settings } from "$lib/settings.svelte"
   import GamepadDrawing from "$ui/GamepadDrawing.svelte"
   import PluginPage from "$ui/PluginPage.svelte"
   import Header from "$ui/primitives/Header.svelte"
@@ -42,6 +43,8 @@
           >
         {/if}
       {/each}
+      <div class="extra" />
+
       {#if info.showEdit}
         <button
           onclick={() => {
@@ -91,9 +94,33 @@
       {/if}
     </div>
   {/each}
+
+  <button
+    class="resizer"
+    onmousedown={() => {
+      info.showEdit = true
+    }}
+    onmouseup={() => {
+      info.showEdit = false
+    }}
+  >
+  </button>
 </Section>
 
 <style>
+  .extra {
+    flex-grow: 1;
+    background-color: blue;
+  }
+  .resizer {
+    background-color: red;
+    cursor: grabbing;
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
   .bar {
     margin-bottom: 1rem;
   }
