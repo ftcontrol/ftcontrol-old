@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.0
+- Renamed log cat prefix to `PANELS`
+
 ## v0.5.9
 - Canvas Orientation control
 

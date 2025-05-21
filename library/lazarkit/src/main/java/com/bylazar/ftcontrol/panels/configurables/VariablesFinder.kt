@@ -21,7 +21,7 @@ class VariablesFinder(
                         // no companion found
                     }
                 } catch (e: Exception) {
-                    println("DASH: Error inspecting class ${entry.className}: ${e.message}")
+                    println("PANELS: Error inspecting class ${entry.className}: ${e.message}")
                 }
             }
         }
@@ -42,7 +42,7 @@ class VariablesFinder(
 //            val isPrivate = Modifier.isPrivate(field.modifiers)
 //            val isNull = try {
 //                if (field.get(null) == null) {
-//                    println("DASH: Field ${field.name} in $clazz is null")
+//                    println("PANELS: Field ${field.name} in $clazz is null")
 //                    true
 //                } else false
 //            }catch (t: Throwable){

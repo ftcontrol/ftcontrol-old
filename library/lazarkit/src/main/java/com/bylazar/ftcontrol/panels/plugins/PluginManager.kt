@@ -13,27 +13,27 @@ object PluginManager {
     fun onRegister(corePanels: CorePanels) {
         val modContext = ModContext()
         plugins.forEach { (id, plugin) ->
-            println("DASH: Plugin pages count: ${plugin.pages.size}")
+            println("PANELS: Plugin pages count: ${plugin.pages.size}")
             try {
                 plugin.onRegister(modContext)
                 plugin.cachedPages = plugin.pages.map { it.toJson }
-                println("DASH: Registered plugin $id")
+                println("PANELS: Registered plugin $id")
             } catch (e: Exception) {
-                println("DASH: Failed to register plugin $id, ${e.message}")
+                println("PANELS: Failed to register plugin $id, ${e.message}")
                 e.printStackTrace()
             }
         }
-        println("DASH: Registered ${plugins.size} plugins.")
+        println("PANELS: Registered ${plugins.size} plugins.")
     }
 
     fun loadPlugins(context: Context) {
-        println("DASH: Loading plugins...")
+        println("PANELS: Loading plugins...")
         allPlugins.clear()
         finder.apkPath = context.packageCodePath
 
         val foundClasses = finder.getAllClasses
 
-        println("DASH: Found ${foundClasses.size} classes:")
+        println("PANELS: Found ${foundClasses.size} classes:")
 
         foundClasses.forEach {
             try {
@@ -43,7 +43,7 @@ object PluginManager {
                 if (pack != null && pack.name.startsWith("com.bylazar.ftcontrol")) return@forEach
 
                 if (PanelsPlugin::class.java.isAssignableFrom(clazz)) {
-                    println("DASH: Found plugin implementation: ${clazz.name}")
+                    println("PANELS: Found plugin implementation: ${clazz.name}")
                     val constructor = clazz.getDeclaredConstructor()
                     val pluginInstance = constructor.newInstance() as PanelsPlugin<*>
 
@@ -52,7 +52,7 @@ object PluginManager {
                     var suffix = 1
 
                     while (allPlugins.containsKey(uniqueId)) {
-                        println("DASH: Plugin ID '$originalId' is already registered. Renaming...")
+                        println("PANELS: Plugin ID '$originalId' is already registered. Renaming...")
                         uniqueId = "$originalId${suffix++}"
                     }
 
@@ -62,30 +62,30 @@ object PluginManager {
 
                     allPlugins[uniqueId] = pluginInstance
 
-                    println("DASH: Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
+                    println("PANELS: Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
 
                 }
             } catch (e: NoClassDefFoundError) {
-                println("DASH: Skipping plugin '${it.className}' due to missing class: ${e.message}")
+                println("PANELS: Skipping plugin '${it.className}' due to missing class: ${e.message}")
                 e.printStackTrace()
             } catch (e: ClassNotFoundException) {
-                println("DASH: Class not found: ${it.className}")
+                println("PANELS: Class not found: ${it.className}")
                 e.printStackTrace()
             } catch (e: ClassCastException) {
-                println("DASH: Class does not implement PanelsPlugin: ${it.className}")
+                println("PANELS: Class does not implement PanelsPlugin: ${it.className}")
                 e.printStackTrace()
             } catch (e: Exception) {
-                println("DASH: Unexpected error loading plugin class: ${it.className}")
+                println("PANELS: Unexpected error loading plugin class: ${it.className}")
                 e.printStackTrace()
             } catch(t: Throwable) {
-                println("DASH: Throwable caught: ${t::class.simpleName} - ${t.message}")
+                println("PANELS: Throwable caught: ${t::class.simpleName} - ${t.message}")
                 t.printStackTrace()
             }
         }
 
-        println("DASH: Plugins map contents: ${allPlugins.keys}")
+        println("PANELS: Plugins map contents: ${allPlugins.keys}")
 
-        println("DASH: Loaded ${allPlugins.size} plugins.")
+        println("PANELS: Loaded ${allPlugins.size} plugins.")
 
     }
 }

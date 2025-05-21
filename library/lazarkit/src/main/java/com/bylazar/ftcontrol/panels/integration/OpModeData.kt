@@ -68,7 +68,7 @@ class OpModeData(
 
             onListChanged(opModeList)
 
-            println("DASH OPMODES: ${GlobalData.opModeList.joinToString(", ")}")
+            println("PANELS OPMODES: ${GlobalData.opModeList.joinToString(", ")}")
         }
     }
 }

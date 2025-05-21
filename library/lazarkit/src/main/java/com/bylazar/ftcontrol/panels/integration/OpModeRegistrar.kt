@@ -13,7 +13,7 @@ class OpModeRegistrar(
             OpModeMeta.Builder()
                 .setName("Enable/Disable Panels")
                 .setFlavor(OpModeMeta.Flavor.TELEOP)
-                .setGroup("dash")
+                .setGroup("Panels")
                 .build(),
             object : LinearOpMode() {
                 @Throws(InterruptedException::class)

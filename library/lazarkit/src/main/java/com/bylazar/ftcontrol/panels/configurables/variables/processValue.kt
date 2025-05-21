@@ -23,13 +23,13 @@ fun processValue(
 
 
         if (recursionItems.contains("this\$0") && reference.name == "this\$0") {
-            println("DASH: Detected self-reference or cycle: $recursionItems")
+            println("PANELS: Detected self-reference or cycle: $recursionItems")
             throw RecursionDetectedException(reference.name)
         }
 
         recursionItems.add(reference.name)
         if (recursionDepth > MAX_RECURSION_DEPTH) {
-            println("DASH: Recursion depth exceeded: $recursionItems")
+            println("PANELS: Recursion depth exceeded: $recursionItems")
             return UnknownVariable(className, reference.name)
             throw RecursionDetectedException(reference.name)
         }
@@ -84,7 +84,7 @@ fun processValue(
                         componentType
                     }
 
-                    println("DASH: Array type: $itemType")
+                    println("PANELS: Array type: $itemType")
 
                     val currentElementReference = MyField(
                         name = i.toString(),
@@ -132,7 +132,7 @@ fun processValue(
                         reference.type.componentType
                     }
 
-                    println("DASH: Array type: $itemType")
+                    println("PANELS: Array type: $itemType")
 
                     val currentElementReference = MyField(
                         name = index.toString(),
@@ -168,9 +168,9 @@ fun processValue(
         if (type == BaseTypes.MAP) {
             val mapInstance = currentManager.getValue() as? MutableMap<*, *>
             if (mapInstance != null) {
-                println("   DASH: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
+                println("   PANELS: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
                 val mapValues: List<GenericVariable> = mapInstance.map { (key, _) ->
-                    println("   DASH: Map key: $key")
+                    println("   PANELS: Map key: $key")
                     val itemType = getType(mapInstance[key]?.javaClass)
                     val currentElementReference = MyField(
                         name = key.toString(),
@@ -195,7 +195,7 @@ fun processValue(
                     )
                 }
 
-                println("   DASH: Map keys2: ${mapValues.map { it.toJsonType }}")
+                println("   PANELS: Map keys2: ${mapValues.map { it.toJsonType }}")
 
 
                 return CustomVariable(reference.name, className, mapValues, BaseTypes.MAP)
@@ -205,7 +205,7 @@ fun processValue(
         return UnknownVariable(className, reference.name)
     } catch (e: RecursionDetectedException) {
         if (recursionDepth == 0) {
-            println("DASH: Recursion detected and aborted at top-level.")
+            println("PANELS: Recursion detected and aborted at top-level.")
             return RecursionReachedVariable(className, reference.name)
         } else {
             throw e

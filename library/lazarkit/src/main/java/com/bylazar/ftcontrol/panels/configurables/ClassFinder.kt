@@ -68,7 +68,7 @@ class ClassFinder {
                     while (entries.hasMoreElements()) {
                         val entry = entries.nextElement()
                         if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
-                            println("DASH: Checking ${entry.name}")
+                            println("PANELS: Checking ${entry.name}")
                             zipFile.getInputStream(entry).use { inputStream ->
                                 val dexBytes = inputStream.readBytes()
                                 val dexBuffer =
@@ -79,7 +79,7 @@ class ClassFinder {
                                         ignored.none { prefix -> className.startsWith(prefix) }
                                     return@filter isNotIgnored
                                 }
-                                println("DASH: Found ${filteredClassNames.size} classes in ${entry.name}")
+                                println("PANELS: Found ${filteredClassNames.size} classes in ${entry.name}")
                                 val processedClassNames = filteredClassNames.mapNotNull {
                                     try {
                                         val clazz = Class.forName(it)
@@ -96,30 +96,30 @@ class ClassFinder {
                                             className = it,
                                         )
                                     } catch (e: ClassNotFoundException) {
-                                        println("DASH: Class not found: $it")
+                                        println("PANELS: Class not found: $it")
                                         null
                                     } catch (e: Exception) {
-                                        println("DASH: Error loading class $it: ${e.message}")
+                                        println("PANELS: Error loading class $it: ${e.message}")
                                         null
                                     } catch (t: Throwable) {
-                                        println("DASH: C1 Throwable caught: ${t::class.simpleName} - ${t.message}")
+                                        println("PANELS: C1 Throwable caught: ${t::class.simpleName} - ${t.message}")
                                         null
                                     }
                                 }
-                                println("DASH: Found ${processedClassNames.size} processed classes in ${entry.name}")
+                                println("PANELS: Found ${processedClassNames.size} processed classes in ${entry.name}")
                                 addAll(processedClassNames)
                             }
                         }
                     }
                 }
             } catch (e: IOException) {
-                println("DASH: IOException occurred: ${e.message}")
+                println("PANELS: IOException occurred: ${e.message}")
                 e.printStackTrace()
             } catch (e: IllegalArgumentException) {
-                println("DASH: IllegalArgumentException occurred: ${e.message}")
+                println("PANELS: IllegalArgumentException occurred: ${e.message}")
                 e.printStackTrace()
             } catch (t: Throwable) {
-                println("DASH: C Throwable caught: ${t::class.simpleName} - ${t.message}")
+                println("PANELS: C Throwable caught: ${t::class.simpleName} - ${t.message}")
                 t.printStackTrace()
             }
         }

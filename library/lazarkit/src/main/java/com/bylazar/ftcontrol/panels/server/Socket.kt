@@ -58,7 +58,7 @@ class Socket(
             try {
                 client.send(data)
             } catch (e: IOException) {
-                println("DASH: Error sending message to client: ${e.message}")
+                println("PANELS: Error sending message to client: ${e.message}")
             }
         }
     }
@@ -71,7 +71,7 @@ class Socket(
             try {
                 client.sendActiveOpMode()
             } catch (e: IOException) {
-                println("DASH: Error sending message to client: ${e.message}")
+                println("PANELS: Error sending message to client: ${e.message}")
             }
         }
     }
@@ -86,7 +86,7 @@ class Socket(
 
     fun sendConfigurables(){
         if (!isAlive) return
-        println("DASH: sent configurables")
+        println("PANELS: sent configurables")
         for (client in clients) {
             client.sendJvmFields()
         }
@@ -96,7 +96,7 @@ class Socket(
         lines: MutableList<String>
     ) {
         if (!isAlive) return
-        println("DASH: sent lines")
+        println("PANELS: sent lines")
         for (client in clients) {
             client.send(TelemetryLinesPacket(lines, System.currentTimeMillis()))
         }
@@ -106,7 +106,7 @@ class Socket(
         graph: MutableMap<String, MutableList<GraphPacket>>
     ) {
         if (!isAlive) return
-        println("DASH: sent graph")
+        println("PANELS: sent graph")
         for (client in clients) {
             client.send(TelemetryGraphPacket(graph, System.currentTimeMillis()))
         }
@@ -116,7 +116,7 @@ class Socket(
         canvas: Canvas,
     ) {
         if (!isAlive) return
-        println("DASH: sent canvas")
+        println("PANELS: sent canvas")
         for (client in clients) {
             client.send(TelemetryCanvasPacket(canvas, System.currentTimeMillis()))
         }
@@ -131,7 +131,7 @@ class Socket(
             try {
                 send(data.toJson())
             } catch (e: IOException) {
-                println("DASH: Error sending message to client: ${e.message}")
+                println("PANELS: Error sending message to client: ${e.message}")
             }
         }
 
@@ -209,7 +209,7 @@ class Socket(
             reason: String,
             initiatedByRemote: Boolean
         ) {
-            println("DASH: WebSocket closed: $code, reason: $reason")
+            println("PANELS: WebSocket closed: $code, reason: $reason")
             stopTimer()
             ping?.cancel();
 
@@ -244,7 +244,7 @@ class Socket(
         }
 
         override fun onMessage(message: WebSocketFrame) {
-            println("DASH: Received message: ${message.textPayload}")
+            println("PANELS: Received message: ${message.textPayload}")
             try {
                 val decoded = json.decodeFromString(
                     PolymorphicSerializer(JSONData::class),
@@ -276,11 +276,11 @@ class Socket(
                     }
 
                     is UpdatedJvmFields -> {
-                        println("DASH: Received JvmFields: ${decoded.fields}")
+                        println("PANELS: Received JvmFields: ${decoded.fields}")
 
 
                         decoded.fields.forEach {
-                            println("DASH: Field id: ${it.id}, New value: ${it.newValueString}")
+                            println("PANELS: Field id: ${it.id}, New value: ${it.newValueString}")
                             val generalRef = Configurables.fieldsMap[it.id] ?: return
                             generalRef.setValue(it.newValueString)
                         }
@@ -297,11 +297,11 @@ class Socket(
                     }
 
                     else -> {
-                        println("DASH: Unknown message type: ${decoded::class.simpleName}")
+                        println("PANELS: Unknown message type: ${decoded::class.simpleName}")
                     }
                 }
             } catch (e: Exception) {
-                println("DASH: Error decoding JSON: ${e.message}")
+                println("PANELS: Error decoding JSON: ${e.message}")
                 close(
                     WebSocketFrame.CloseCode.InternalServerError,
                     "Error in message handling",
@@ -319,11 +319,11 @@ class Socket(
 
     fun startServer() {
         start()
-        println("DASH: Socket started on port 8002")
+        println("PANELS: Socket started on port 8002")
     }
 
     fun stopServer() {
         stop()
-        println("DASH: Socket stopped")
+        println("PANELS: Socket stopped")
     }
 }

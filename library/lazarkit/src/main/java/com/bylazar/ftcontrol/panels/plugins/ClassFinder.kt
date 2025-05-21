@@ -89,10 +89,10 @@ class ClassFinder {
                     }
                 }
             } catch (e: Exception) {
-                println("DASH: Exception occurred: ${e.message}")
+                println("PANELS: Exception occurred: ${e.message}")
                 e.printStackTrace()
             } catch (e: IllegalArgumentException) {
-                println("DASH: IllegalArgumentException occurred: ${e.message}")
+                println("PANELS: IllegalArgumentException occurred: ${e.message}")
                 e.printStackTrace()
             }
         }

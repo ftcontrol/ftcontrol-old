@@ -20,7 +20,7 @@ object Preferences {
                 prefs = activity.getSharedPreferences("FTControl Panels", Context.MODE_PRIVATE)
             }
 
-            val prefsInstance = prefs ?: error("DASH: Preferences not initialized!")
+            val prefsInstance = prefs ?: error("PANELS: Preferences not initialized!")
             return prefsInstance.getBoolean("autoEnable", true)
         }
 }

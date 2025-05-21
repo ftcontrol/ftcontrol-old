@@ -35,13 +35,13 @@ class CorePanels {
         )
 
     fun attachWebServer(context: Context, webServer: WebServer) {
-        println("DASH: Preferences.isEnabled: ${Preferences.isEnabled}")
+        println("PANELS: Preferences.isEnabled: ${Preferences.isEnabled}")
 
         try {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
         } catch (e: Exception) {
-            println("DASH: Failed to start: " + e.message)
+            println("PANELS: Failed to start: " + e.message)
         }
 
         if (Preferences.isEnabled){
@@ -50,44 +50,44 @@ class CorePanels {
         }
 
         try {
-            println("DASH: Finding configurables")
+            println("PANELS: Finding configurables")
             Configurables.findConfigurables(context)
         } catch(e: Exception){
-            println("DASH: Failed to find configurables: ${e.message}")
+            println("PANELS: Failed to find configurables: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("DASH: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
-            println("DASH: Sending configurables")
+            println("PANELS: Sending configurables")
             socket.sendConfigurables()
         } catch(e: Exception){
-            println("DASH: Failed to send configurables: ${e.message}")
+            println("PANELS: Failed to send configurables: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("DASH: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
             PluginManager.loadPlugins(context)
         }catch(e: Exception){
-            println("DASH: Failed to load plugins: ${e.message}")
+            println("PANELS: Failed to load plugins: ${e.message}")
             e.printStackTrace()
         }  catch (t: Throwable) {
-            println("DASH: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
             PluginManager.onRegister(this)
         }catch(e: Exception){
-            println("DASH: Failed to register plugins: ${e.message}")
+            println("PANELS: Failed to register plugins: ${e.message}")
             e.printStackTrace()
         }  catch (t: Throwable) {
-            println("DASH: Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
     }
@@ -152,19 +152,19 @@ class CorePanels {
         telemetryManager.resetGraphs()
         GlobalGamepad.reset()
         opModeManager?.initOpMode(name) ?: run {
-            println("DASH: opModeManager is null")
+            println("PANELS: opModeManager is null")
         }
     }
 
     fun startOpMode() {
         opModeManager?.startActiveOpMode() ?: run {
-            println("DASH: opModeManager is null")
+            println("PANELS: opModeManager is null")
         }
     }
 
     fun stopOpMode() {
         opModeManager?.stopActiveOpMode() ?: run {
-            println("DASH: opModeManager is null")
+            println("PANELS: opModeManager is null")
         }
     }
 }

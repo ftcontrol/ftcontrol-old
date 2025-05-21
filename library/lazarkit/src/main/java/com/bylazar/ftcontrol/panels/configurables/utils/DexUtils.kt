@@ -70,7 +70,7 @@ fun ByteBuffer.extractClassNamesFromDex(): List<String> {
                 classNames.add(className)
             }
         } catch (e: Exception) {
-            println("DASH: Error processing class descriptor at index $i: ${e.message}")
+            println("PANELS: Error processing class descriptor at index $i: ${e.message}")
         } finally {
             this.position(originalPosition)
         }
