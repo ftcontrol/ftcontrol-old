@@ -2,6 +2,7 @@
 
 ## v0.6.0
 - Renamed log cat prefix to `PANELS`
+- Improved logs
 
 ## v0.5.9
 - Canvas Orientation control
