@@ -41,7 +41,7 @@ class CorePanels {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
         } catch (e: Exception) {
-            println("PANELS: Failed to start: " + e.message)
+            println("PANELS: Failed to start webservers: " + e.message)
         }
 
         if (Preferences.isEnabled){
@@ -50,24 +50,24 @@ class CorePanels {
         }
 
         try {
-            println("PANELS: Finding configurables")
+            println("PANELS: CONFIGURABLES: Finding configurables")
             Configurables.findConfigurables(context)
         } catch(e: Exception){
-            println("PANELS: Failed to find configurables: ${e.message}")
+            println("PANELS: CONFIGURABLES: Failed to find configurables: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("PANELS: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: CONFIGURABLES: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
-            println("PANELS: Sending configurables")
+            println("PANELS: CONFIGURABLES: Sending configurables")
             socket.sendConfigurables()
         } catch(e: Exception){
-            println("PANELS: Failed to send configurables: ${e.message}")
+            println("PANELS: CONFIGURABLES: Failed to send configurables: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("PANELS: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: CONFIGURABLES: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 

@@ -21,35 +21,35 @@ object Configurables {
         jvmFields = listOf()
 
         try{
-            println("PANELS: Searching for configurables classes...")
+            println("PANELS: CONFIGURABLES: Searching for configurables classes...")
             finder.apkPath = context.packageCodePath
-            println("PANELS: Found ${finder.getAllClasses.size} configurable classes:")
+            println("PANELS: CONFIGURABLES: Found ${finder.getAllClasses.size} configurable classes:")
             finder.getAllClasses.forEach { className ->
-                println("PANELS: $className")
+                println("PANELS: CONFIGURABLES: $className")
             }
         }catch (t: Throwable){
-            println("PANELS: ClassFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: CONFIGURABLES: ClassFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
-            println("PANELS: Searching for configurables variables...")
-            println("PANELS: Found ${variables.getJvmFields.size} @JvmField variables:")
+            println("PANELS: CONFIGURABLES: Searching for configurables variables...")
+            println("PANELS: CONFIGURABLES: Found ${variables.getJvmFields.size} @JvmField variables:")
             variables.getJvmFields.forEach { info ->
-                println("PANELS: ${info.className}.${info.reference.name}")
+                println("PANELS: CONFIGURABLES: ${info.className}.${info.reference.name}")
                 info.debug()
             }
         }catch (t: Throwable){
-            println("PANELS: VariablesFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: CONFIGURABLES: VariablesFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
-            println("PANELS: Searching for json...")
+            println("PANELS: CONFIGURABLES: Searching for json...")
             jvmFields = variables.getJvmFields
             initialJvmFields = jvmFields.map { it.toJsonType }
         }catch (t: Throwable){
-            println("PANELS: JsonFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
+            println("PANELS: CONFIGURABLES: JsonFinder Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
     }

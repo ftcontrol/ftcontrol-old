@@ -21,7 +21,7 @@ class VariablesFinder(
                         // no companion found
                     }
                 } catch (e: Exception) {
-                    println("PANELS: Error inspecting class ${entry.className}: ${e.message}")
+                    println("PANELS: CONFIGURABLES: Error inspecting class ${entry.className}: ${e.message}")
                 }
             }
         }

@@ -86,7 +86,7 @@ class Socket(
 
     fun sendConfigurables(){
         if (!isAlive) return
-        println("PANELS: sent configurables")
+        println("PANELS: CONFIGURABLES: Sent configurables")
         for (client in clients) {
             client.sendJvmFields()
         }
