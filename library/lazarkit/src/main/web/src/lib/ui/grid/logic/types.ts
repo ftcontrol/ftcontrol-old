@@ -95,7 +95,7 @@ export function defaultModuled(): Preset {
           y: 1,
         },
         sizes: {
-          x: 6,
+          x: 5,
           y: 8,
         },
       },
@@ -149,7 +149,7 @@ export function defaultModuled(): Preset {
           y: 9,
         },
         sizes: {
-          x: 6,
+          x: 5,
           y: 12,
         },
       },
@@ -162,11 +162,11 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 13,
+          x: 12,
           y: 1,
         },
         sizes: {
-          x: 8,
+          x: 9,
           y: 20,
         },
       },

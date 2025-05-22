@@ -80,7 +80,6 @@
     flex-wrap: wrap;
     padding: 1rem;
     gap: 0.5rem;
-    background-color: green;
   }
   .extra {
     flex-grow: 1;

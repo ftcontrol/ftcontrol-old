@@ -1,2 +1,13 @@
 widgets handle different sizes
 standard grid increments
+
+handle small widgets / limit max and min sizes.
+ui work
+presets store
+sharing presets
+themes
+widgets state data w svelteContext
+handle plugins when importing
+handle empty widget groups
+
+docs

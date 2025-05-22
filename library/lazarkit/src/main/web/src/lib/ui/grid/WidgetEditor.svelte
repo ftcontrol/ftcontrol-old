@@ -36,7 +36,6 @@
     width: 100%;
     padding: 0.5rem;
     position: relative;
-    background-color: red;
   }
   .widget {
     position: relative;
