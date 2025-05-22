@@ -2,8 +2,6 @@
   import { notifications } from "$lib"
   import HorizontalIcon from "$ui/icons/HorizontalIcon.svelte"
   import HorizontalReversed from "$ui/icons/HorizontalReversed.svelte"
-  import MoveIcon from "$ui/icons/MoveIcon.svelte"
-  import Remove from "$ui/icons/Remove.svelte"
   import VerticalIcon from "$ui/icons/VerticalIcon.svelte"
   import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
   import ContextMenu from "./ContextMenu.svelte"
@@ -14,6 +12,14 @@
 </script>
 
 <ContextMenu id={m.id}>
+  <button
+    class="button"
+    onclick={() => {
+      gridManager.remove(m.id)
+    }}
+  >
+    Remove Widget
+  </button>
   <button
     class="button"
     onclick={() => {
@@ -30,11 +36,10 @@
   <button
     class="button"
     onclick={() => {
-      gridManager.remove(m.id)
-    }}
+      gridManager.addNewAnywhere()
+      hover.closeContextMenu()
+    }}>Add widget</button
   >
-    Remove Widget
-  </button>
 
   <button
     onclick={() => {
