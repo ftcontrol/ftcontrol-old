@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { info, notifications } from "$lib"
+  import { info } from "$lib"
   import Section from "$ui/primitives/Section.svelte"
-  import SelectInput from "$ui/primitives/SelectInput.svelte"
   import BaseWidgetContent from "./BaseWidgetContent.svelte"
   import BaseWidgetTab from "./BaseWidgetTab.svelte"
-  import { allWidgetTypes, Grid, WidgetTypes, type Module } from "./grid.svelte"
+  import ContextMenu from "./ContextMenu.svelte"
+  import { Grid, WidgetTypes, type Module } from "./grid.svelte"
   import GridControls from "./GridControls.svelte"
   import { hover } from "./hover.svelte"
 
@@ -37,8 +37,9 @@
       >
         {m.types.length}
         {#if hover.isContextOpened(m.id, -1)}
-          <div class="context-menu">
+          <ContextMenu>
             <button
+              class="button"
               onclick={() => {
                 m.types.push({
                   pluginID: "none",
@@ -51,13 +52,14 @@
             >
 
             <button
+              class="button"
               onclick={() => {
                 gridManager.remove(m.id)
               }}
             >
               Remove Widget
             </button>
-          </div>
+          </ContextMenu>
         {/if}
       </div>
     {/if}
@@ -87,17 +89,6 @@
 </Section>
 
 <style>
-  .context-menu {
-    background: var(--card);
-    color: var(--text);
-    border: 1px solid var(--text);
-    padding: 0.5rem;
-    z-index: 1000;
-    position: absolute;
-    left: 0;
-    top: 2rem;
-    min-width: 100%;
-  }
   nav {
     display: flex;
     flex-wrap: wrap;

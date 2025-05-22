@@ -1,4 +1,6 @@
 <script lang="ts">
+  import ContextMenu from "./ContextMenu.svelte"
+
   import { info } from "$lib"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
   import { allWidgetTypes, WidgetTypes, type Module } from "./grid.svelte"
@@ -39,8 +41,8 @@
     }}>{t.type}</button
   >
   {#if hover.isContextOpened(m.id, index)}
-    <div class="context-menu">
-      <button onclick={removeType}>Remove</button>
+    <ContextMenu>
+      <button class="button" onclick={removeType}>Remove</button>
 
       <SelectInput
         keepOpened={true}
@@ -71,9 +73,9 @@
             bind:currentValue={m.types[m.activeType].pageID}
             value={m.types[m.activeType].pageID}
             possibleValues={[
-              ...(info.plugins.find(
-                (it) => it.id == m.types[m.activeType].pluginID
-              ) || [].pages.map((it) => it.id)),
+              ...info.plugins
+                .find((it) => it.id == m.types[m.activeType].pluginID)
+                .pages.map((it) => it.id),
               "none",
             ]}
             isValid={true}
@@ -81,7 +83,7 @@
           ></SelectInput>
         {/if}
       {/if}
-    </div>
+    </ContextMenu>
   {/if}
 </div>
 
