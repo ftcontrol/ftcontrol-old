@@ -63,7 +63,7 @@
       <h2>My Panels</h2>
 
       {#each settings.allIDs as id}
-        {@const grid = settings.getGridById(id)}
+        {@const grid = settings.getPresetById(id)}
         {#if grid != null}
           {#if info.showEdit}
             <div class="item controls">
@@ -124,7 +124,7 @@
             }
             var newPreset = structuredClone(defaultModuled())
             newPreset.name = newNameValue
-            settings.gridManagers.push(new Grid(newPreset))
+            settings.presets.push(new Grid(newPreset))
             newNameValue = ""
           }}
         >
