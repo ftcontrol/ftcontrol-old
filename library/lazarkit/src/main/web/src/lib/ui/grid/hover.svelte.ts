@@ -1,6 +1,7 @@
 import { settings } from "$lib/settings.svelte"
 
 class Hover {
+  // TAB MOVING
   movingIndex: number | null = $state(null)
   movingID: string | null = $state(null)
 
@@ -15,7 +16,7 @@ class Hover {
 
   wasStartedMoving = $state(false)
 
-  showExtra(id: string, index: number, size: number) {
+  showExtra(id: string, index: number) {
     if (!this.isMoving) return false
 
     if (this.movingID != id) return true
@@ -51,6 +52,7 @@ class Hover {
 
   private moveBoundHandler!: (event: MouseEvent) => void
   private upBoundHandler!: (event: MouseEvent) => void
+  private keyBoundHandler!: (event: KeyboardEvent) => void
 
   stopMoving() {
     if (this.hoveringID != null && this.hoveringIndex != null) {
@@ -78,8 +80,12 @@ class Hover {
             hoveringWidget
           )
 
-          if (movingWidget.activeType === this.movingIndex) {
-            movingWidget.activeType = 0
+          if (movingWidget.activeType == this.movingIndex) {
+            if (movingWidget.activeType > 0) {
+              movingWidget.activeType = movingWidget.activeType - 1
+            } else {
+              movingWidget.activeType = 0
+            }
           }
         }
       }
@@ -103,14 +109,10 @@ class Hover {
     this.wasStartedMoving = false
   }
 
-  init() {
-    this.moveBoundHandler = this.updateMouse.bind(this)
-    this.upBoundHandler = this.updateClick.bind(this)
-    window.addEventListener("mousemove", this.moveBoundHandler)
-    window.addEventListener("mouseup", this.upBoundHandler)
-  }
-
   updateMouse(event: MouseEvent) {
+    this.hoveringID = null
+    this.hoveringIndex = null
+
     this.mouseX = event.clientX
     this.mouseY = event.clientY
     if (!this.isMoving) return
@@ -140,11 +142,51 @@ class Hover {
 
   updateClick(event: MouseEvent) {
     this.stopMoving()
+
+    const target = event.target as HTMLElement
+
+    if (!(target.closest(".context-menu") || target.closest(".keepOpened"))) {
+      this.closeContextMenu()
+    }
   }
 
+  updateKey(event: KeyboardEvent) {
+    if (event.key === "Escape") this.closeContextMenu()
+  }
+
+  // CONTEXT MENU
+
+  openedContextMenuID: string | null = $state(null)
+  openedContextMenuIndex: number | null = $state(null)
+
+  openContextMenu(id: string, index: number) {
+    this.openedContextMenuID = id
+    this.openedContextMenuIndex = index
+  }
+
+  closeContextMenu() {
+    this.openedContextMenuID = null
+    this.openedContextMenuIndex = null
+  }
+
+  isContextOpened(id: string, index: number) {
+    return (
+      this.openedContextMenuID == id && this.openedContextMenuIndex == index
+    )
+  }
+
+  init() {
+    this.moveBoundHandler = this.updateMouse.bind(this)
+    this.upBoundHandler = this.updateClick.bind(this)
+    this.keyBoundHandler = this.updateKey.bind(this)
+    window.addEventListener("mousemove", this.moveBoundHandler)
+    window.addEventListener("mouseup", this.upBoundHandler)
+    window.addEventListener("keydown", this.keyBoundHandler)
+  }
   destroy() {
     window.removeEventListener("mousemove", this.moveBoundHandler)
     window.removeEventListener("mouseup", this.upBoundHandler)
+    window.removeEventListener("keydown", this.keyBoundHandler)
   }
 }
 

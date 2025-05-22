@@ -89,43 +89,6 @@
   <VerticalReversed />
 </button>
 
-<SelectInput
-  type={""}
-  startValue={m.types[m.activeType].type}
-  bind:currentValue={m.types[m.activeType].type}
-  value={m.types[m.activeType].type}
-  possibleValues={allWidgetTypes}
-  isValid={true}
-  alwaysValid={true}
-></SelectInput>
-{#if m.types[m.activeType].type == WidgetTypes.CUSTOM}
-  <SelectInput
-    type={""}
-    startValue={m.types[m.activeType].pluginID}
-    bind:currentValue={m.types[m.activeType].pluginID}
-    value={m.types[m.activeType].pluginID}
-    possibleValues={[...info.plugins.map((it) => it.id), "none"]}
-    isValid={true}
-    alwaysValid={true}
-  ></SelectInput>
-  {#if m.types[m.activeType].pluginID != "none"}
-    <SelectInput
-      type={""}
-      startValue={m.types[m.activeType].pageID}
-      bind:currentValue={m.types[m.activeType].pageID}
-      value={m.types[m.activeType].pageID}
-      possibleValues={[
-        ...info.plugins
-          .find((it) => it.id == m.types[m.activeType].pluginID)
-          .pages.map((it) => it.id),
-        "none",
-      ]}
-      isValid={true}
-      alwaysValid={true}
-    ></SelectInput>
-  {/if}
-{/if}
-
 <style>
   button {
     background-color: transparent;

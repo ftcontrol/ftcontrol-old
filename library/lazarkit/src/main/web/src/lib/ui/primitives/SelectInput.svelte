@@ -11,6 +11,7 @@
     possibleValues,
     type = "ENUM",
     alwaysValid = false,
+    keepOpened = false,
   }: {
     startValue: string
     currentValue: string
@@ -19,6 +20,7 @@
     possibleValues: string[]
     type?: string
     alwaysValid?: boolean
+    keepOpened?: boolean
   } = $props()
 
   $effect(() => {
@@ -47,10 +49,12 @@
     <Portal>
       <div
         class="select"
+        class:keepOpened
         style={`top: ${buttonElement.getBoundingClientRect().bottom}px; left: ${buttonElement.getBoundingClientRect().left}px;`}
       >
         {#each possibleValues.filter((it) => it != currentValue) as v, index}
           <button
+            class:keepOpened
             class:first={index == 0}
             onclick={() => {
               if (socket.state == "closed" && !alwaysValid) return

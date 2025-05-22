@@ -1,129 +1,76 @@
 <script lang="ts">
-  import { gamepads, info, notifications } from "$lib"
-  import GamepadDrawing from "$ui/GamepadDrawing.svelte"
-  import PluginPage from "$ui/PluginPage.svelte"
+  import { info, notifications } from "$lib"
   import Section from "$ui/primitives/Section.svelte"
-  import Configurables from "$ui/widgets/configurables/Configurables.svelte"
-  import GameField from "$ui/widgets/fields/GameField.svelte"
-  import Graph from "$ui/widgets/Graph.svelte"
-  import OpModeControl from "$ui/widgets/OpModeControl.svelte"
-  import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
-  import Telemetry from "$ui/widgets/Telemetry.svelte"
-  import { Grid, WidgetTypes, type Module } from "./grid.svelte"
+  import SelectInput from "$ui/primitives/SelectInput.svelte"
+  import BaseWidgetContent from "./BaseWidgetContent.svelte"
+  import BaseWidgetTab from "./BaseWidgetTab.svelte"
+  import { allWidgetTypes, Grid, WidgetTypes, type Module } from "./grid.svelte"
   import GridControls from "./GridControls.svelte"
   import { hover } from "./hover.svelte"
 
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
-
-  let isMoving = $derived(hover.movingID == m.id && hover.isMoving)
 </script>
 
 <Section>
   <nav>
     {#each m.types as t, index}
-      {#if hover.showExtra(m.id, index, m.types.length)}
+      {#if hover.showExtra(m.id, index)}
         <div class="extra-small" data-id={m.id} data-index={index}>
           {index}
         </div>
       {/if}
       {#if hover.showLabel(m.id, index)}
-        <button
-          class="base"
-          class:selected={index == m.activeType}
-          onclick={() => {
-            m.activeType = index
-          }}
-          onmousedown={(event: MouseEvent) => {
-            hover.startMoving(event.clientX, event.clientY, index, m.id)
-          }}
-        >
-          {t.type}
-        </button>
+        <BaseWidgetTab {m} {index} />
       {/if}
     {/each}
-    {#if hover.showExtra(m.id, m.types.length, m.types.length)}
-      <div class="extra" data-id={m.id} data-index={m.types.length}>
+    {#if hover.showExtra(m.id, m.types.length) || true}
+      <div
+        class="extra"
+        role="button"
+        tabindex={0}
+        data-id={m.id}
+        data-index={m.types.length}
+        oncontextmenu={(event: MouseEvent) => {
+          event.preventDefault()
+          hover.openContextMenu(m.id, -1)
+        }}
+      >
         {m.types.length}
+        {#if hover.isContextOpened(m.id, -1)}
+          <div class="context-menu">
+            <button
+              onclick={() => {
+                m.types.push({
+                  pluginID: "none",
+                  pageID: "none",
+                  type: WidgetTypes.TEST,
+                })
+                console.log(m)
+                hover.closeContextMenu()
+              }}>Add tab</button
+            >
+
+            <button
+              onclick={() => {
+                gridManager.remove(m.id)
+              }}
+            >
+              Remove Widget
+            </button>
+          </div>
+        {/if}
       </div>
     {/if}
   </nav>
-  <div class="bar">
+  {#if info.showEdit}
     <div class="controls">
-      {#each m.types as t, index}
-        {#if hover.showLabel(m.id, index)}
-          <button
-            class="base"
-            class:selected={index == m.activeType}
-            onclick={() => {
-              m.activeType = index
-            }}
-            onmousedown={(event: MouseEvent) => {
-              hover.startMoving(event.clientX, event.clientY, index, m.id)
-            }}
-            >{t.type}
-          </button>
-        {/if}
-        {#if info.showEdit && m.types.length > 1}
-          <button
-            onclick={() => {
-              if (m.types.length <= 1) {
-                notifications.add("Cannot remove last widget.")
-                return
-              }
-              m.types = m.types.filter((_, i) => i !== index)
-              m.activeType--
-              if (m.activeType < 0) m.activeType = 0
-            }}>x</button
-          >
-        {/if}
-      {/each}
-      {#if info.showEdit}
-        <button
-          onclick={() => {
-            m.types.push({
-              pluginID: "none",
-              pageID: "none",
-              type: WidgetTypes.TEST,
-            })
-            console.log(m)
-          }}>+</button
-        >
-      {/if}
+      <GridControls {m} {gridManager} />
     </div>
-    {#if info.showEdit}
-      <div class="controls">
-        <GridControls {m} {gridManager} />
-      </div>
-    {/if}
-  </div>
+  {/if}
 
   {#each m.types as item, index}
     <div class="content" class:shown={index == m.activeType}>
-      {#if item.type == WidgetTypes.CONTROLS}
-        <OpModeControl />
-      {:else if item.type == WidgetTypes.GAMEPAD}
-        <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-      {:else if item.type == WidgetTypes.FIELD}
-        <GameField />
-      {:else if item.type == WidgetTypes.TELEMETRY}
-        <Telemetry />
-      {:else if item.type == WidgetTypes.CONFIGURABLES}
-        <Configurables />
-      {:else if item.type == WidgetTypes.GRAPH}
-        <Graph />
-      {:else if item.type == WidgetTypes.CAPTURE}
-        <PlaybackHistory />
-      {:else if item.type == WidgetTypes.CUSTOM}
-        {#if item.pluginID && item.pageID}
-          <PluginPage pluginID={item.pluginID} pageID={item.pageID} />
-        {:else}
-          <p style="padding: 1rem;">CUSTOM not valid</p>
-        {/if}
-      {:else}
-        <p style="padding: 1rem;">
-          This is an unknown widget of type "{item.type}"
-        </p>
-      {/if}
+      <BaseWidgetContent {item} />
     </div>
   {/each}
 
@@ -140,6 +87,17 @@
 </Section>
 
 <style>
+  .context-menu {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--text);
+    padding: 0.5rem;
+    z-index: 1000;
+    position: absolute;
+    left: 0;
+    top: 2rem;
+    min-width: 100%;
+  }
   nav {
     display: flex;
     flex-wrap: wrap;
@@ -149,12 +107,10 @@
   .extra {
     flex-grow: 1;
     background-color: blue;
+
+    position: relative;
   }
-  .extra.empty {
-    background-color: red;
-    width: 100%;
-    height: 16px;
-  }
+
   .extra-small {
     background-color: blue;
     width: 16px;
