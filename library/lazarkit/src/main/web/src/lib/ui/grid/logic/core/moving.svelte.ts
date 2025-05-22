@@ -1,4 +1,6 @@
+import { settings } from "$lib/settings.svelte"
 import { GenericModularDependency } from "../modular.svelte"
+import type { WidgetGroup } from "../types"
 
 export class MovingManager extends GenericModularDependency {
   movingModule: WidgetGroup | null = $state(null)
@@ -16,10 +18,6 @@ export class MovingManager extends GenericModularDependency {
 
     this.xTile = Math.ceil(((x - box.x) / box.width) * m.sizes.x) - 1
     this.yTile = Math.ceil(((y - box.y) / box.height) * m.sizes.y) - 1
-  }
-
-  showWidget(x: number, y: number) {
-    return this.canResize(x, y) || this.canMov(x, y)
   }
 
   canMov(newX: number, newY: number) {
@@ -42,8 +40,8 @@ export class MovingManager extends GenericModularDependency {
           dy > settings.currentGrid.cellsY ||
           dx < 1 ||
           dy < 1 ||
-          (settings.currentGrid.modulesMap[dy][dx] != null &&
-            settings.currentGrid.modulesMap[dy][dx] != this.movingModule.id)
+          (settings.currentGrid.widgetsMap[dy][dx] != null &&
+            settings.currentGrid.widgetsMap[dy][dx] != this.movingModule.id)
         ) {
           return false
         }
@@ -52,7 +50,7 @@ export class MovingManager extends GenericModularDependency {
     return true
   }
 
-  private moveMouse(event: MouseEvent) {
+  onMouseMove(event: MouseEvent): void {
     if (this.movingModule != null) {
       const elements = document.elementsFromPoint(event.clientX, event.clientY)
       const el = elements.filter(
@@ -82,11 +80,11 @@ export class MovingManager extends GenericModularDependency {
       }
     }
   }
-
-  stopMov(event: MouseEvent) {
-    this.moveMouse(event)
+  onClick(event: MouseEvent): void {
+    this.onMouseMove(event)
     this.movingModule = null
     this.xTile = null
     this.yTile = null
   }
+  onKey(event: KeyboardEvent): void {}
 }

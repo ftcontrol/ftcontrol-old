@@ -1,4 +1,6 @@
+import { settings } from "$lib/settings.svelte"
 import { GenericModularDependency } from "../modular.svelte"
+import type { WidgetGroup } from "../types"
 
 export class ResizingManager extends GenericModularDependency {
   resizingModule: WidgetGroup | null = $state(null)
@@ -7,11 +9,6 @@ export class ResizingManager extends GenericModularDependency {
 
   startResizing(m: WidgetGroup) {
     this.resizingModule = m
-  }
-
-  stopResizing(event: MouseEvent) {
-    this.resizingMouse(event)
-    this.resizingModule = null
   }
 
   canResize(newX: number, newY: number) {
@@ -25,8 +22,8 @@ export class ResizingManager extends GenericModularDependency {
           dy > settings.currentGrid.cellsY ||
           dx < 1 ||
           dy < 1 ||
-          (settings.currentGrid.modulesMap[dy][dx] != null &&
-            settings.currentGrid.modulesMap[dy][dx] != this.resizingModule.id)
+          (settings.currentGrid.widgetsMap[dy][dx] != null &&
+            settings.currentGrid.widgetsMap[dy][dx] != this.resizingModule.id)
         ) {
           return false
         }
@@ -35,7 +32,7 @@ export class ResizingManager extends GenericModularDependency {
     return true
   }
 
-  private resizingMouse(event: MouseEvent) {
+  onMouseMove(event: MouseEvent): void {
     if (this.resizingModule != null) {
       const elements = document.elementsFromPoint(event.clientX, event.clientY)
       const el = elements.filter(
@@ -62,8 +59,13 @@ export class ResizingManager extends GenericModularDependency {
           y: y - this.resizingModule.start.y + 1,
         }
       }
-
-      // [data-id="${this.resizingModule.id}"]
     }
+  }
+  onClick(event: MouseEvent): void {
+    this.onMouseMove(event)
+    this.resizingModule = null
+  }
+  onKey(event: KeyboardEvent): void {
+    throw new Error("Method not implemented.")
   }
 }

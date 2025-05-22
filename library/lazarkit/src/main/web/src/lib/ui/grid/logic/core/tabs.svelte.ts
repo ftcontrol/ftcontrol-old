@@ -1,3 +1,4 @@
+import { settings } from "$lib/settings.svelte"
 import { GenericModularDependency } from "../modular.svelte"
 
 export class TabsManager extends GenericModularDependency {
@@ -48,39 +49,6 @@ export class TabsManager extends GenericModularDependency {
     return false
   }
 
-  stopMoving() {
-    if (this.hoveringID != null && this.hoveringIndex != null) {
-      const movingWidget = settings.currentGrid.modules.find(
-        (it) => it.id == this.movingID
-      )
-      const hoveringWidget = settings.currentGrid.modules.find(
-        (it) => it.id == this.hoveringID
-      )
-      if (movingWidget && hoveringWidget && this.movingIndex != null) {
-        const movingType = movingWidget.types[this.movingIndex]
-        if (movingType) {
-          movingWidget.types.splice(this.movingIndex, 1)
-          hoveringWidget.types.splice(this.hoveringIndex, 0, movingType)
-
-          if (movingWidget.activeType == this.movingIndex) {
-            if (movingWidget.activeType > 0) {
-              movingWidget.activeType = movingWidget.activeType - 1
-            } else {
-              movingWidget.activeType = 0
-            }
-          }
-        }
-      }
-    }
-    this.wasStartedMoving = false
-    this.startX = null
-    this.startY = null
-    this.movingIndex = null
-    this.movingID = null
-    this.hoveringID = null
-    this.hoveringIndex = null
-  }
-
   startMoving(x: number, y: number, index: number, id: string) {
     this.startX = x
     this.startY = y
@@ -120,9 +88,36 @@ export class TabsManager extends GenericModularDependency {
     }
   }
   onClick(event: MouseEvent): void {
-    throw new Error("Method not implemented.")
+    if (this.hoveringID != null && this.hoveringIndex != null) {
+      const movingWidget = settings.currentGrid.widgets.find(
+        (it) => it.id == this.movingID
+      )
+      const hoveringWidget = settings.currentGrid.widgets.find(
+        (it) => it.id == this.hoveringID
+      )
+      if (movingWidget && hoveringWidget && this.movingIndex != null) {
+        const movingType = movingWidget.widgets[this.movingIndex]
+        if (movingType) {
+          movingWidget.widgets.splice(this.movingIndex, 1)
+          hoveringWidget.widgets.splice(this.hoveringIndex, 0, movingType)
+
+          if (movingWidget.activeWidgetID == this.movingIndex) {
+            if (movingWidget.activeWidgetID > 0) {
+              movingWidget.activeWidgetID = movingWidget.activeWidgetID - 1
+            } else {
+              movingWidget.activeWidgetID = 0
+            }
+          }
+        }
+      }
+    }
+    this.wasStartedMoving = false
+    this.startX = null
+    this.startY = null
+    this.movingIndex = null
+    this.movingID = null
+    this.hoveringID = null
+    this.hoveringIndex = null
   }
-  onKey(event: KeyboardEvent): void {
-    throw new Error("Method not implemented.")
-  }
+  onKey(event: KeyboardEvent): void {}
 }

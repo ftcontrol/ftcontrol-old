@@ -1,3 +1,8 @@
+import { ContextMenuManager } from "./core/context.svelte"
+import { MovingManager } from "./core/moving.svelte"
+import { ResizingManager } from "./core/resizing.svelte"
+import { TabsManager } from "./core/tabs.svelte"
+
 export abstract class GenericModularDependency {
   mouseX: number = $state(0)
   mouseY: number = $state(0)
@@ -8,11 +13,17 @@ export abstract class GenericModularDependency {
 }
 
 class ModularManager {
-  private dependencies: GenericModularDependency[]
+  context = new ContextMenuManager()
+  moving = new MovingManager()
+  resizing = new ResizingManager()
+  tabs = new TabsManager()
 
-  constructor(...dependencies: GenericModularDependency[]) {
-    this.dependencies = dependencies
-  }
+  private dependencies: GenericModularDependency[] = [
+    this.context,
+    this.moving,
+    this.resizing,
+    this.tabs,
+  ]
 
   private moveBoundHandler!: (event: MouseEvent) => void
   private upBoundHandler!: (event: MouseEvent) => void
@@ -50,6 +61,10 @@ class ModularManager {
     window.removeEventListener("mousemove", this.moveBoundHandler)
     window.removeEventListener("mouseup", this.upBoundHandler)
     window.removeEventListener("keydown", this.keyBoundHandler)
+  }
+
+  showWidget(x: number, y: number) {
+    return this.resizing.canResize(x, y) || this.moving.canMov(x, y)
   }
 }
 
