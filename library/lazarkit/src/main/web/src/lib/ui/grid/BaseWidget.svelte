@@ -19,18 +19,37 @@
 </script>
 
 <Section>
-  <nav></nav>
-
+  <nav>
+    {#each m.types as t, index}
+      {#if hover.showExtra(m.id, index, m.types.length)}
+        <div class="extra-small" data-id={m.id} data-index={index}>
+          {index}
+        </div>
+      {/if}
+      {#if hover.showLabel(m.id, index)}
+        <button
+          class="base"
+          class:selected={index == m.activeType}
+          onclick={() => {
+            m.activeType = index
+          }}
+          onmousedown={(event: MouseEvent) => {
+            hover.startMoving(event.clientX, event.clientY, index, m.id)
+          }}
+        >
+          {t.type}
+        </button>
+      {/if}
+    {/each}
+    {#if hover.showExtra(m.id, m.types.length, m.types.length)}
+      <div class="extra" data-id={m.id} data-index={m.types.length}>
+        {m.types.length}
+      </div>
+    {/if}
+  </nav>
   <div class="bar">
     <div class="controls">
       {#each m.types as t, index}
-        {#if index <= m.types.length - 1}
-          {#if hover.showExtra(m.id, index, m.types.length)}
-            <div class="extra-small" data-id={m.id} data-index={index}>
-              {index}
-            </div>
-          {/if}
-        {/if}
         {#if hover.showLabel(m.id, index)}
           <button
             class="base"
@@ -58,11 +77,6 @@
           >
         {/if}
       {/each}
-      {#if hover.showExtra(m.id, m.types.length, m.types.length)}
-        <div class="extra" data-id={m.id} data-index={m.types.length}>
-          {m.types.length}
-        </div>
-      {/if}
       {#if info.showEdit}
         <button
           onclick={() => {
@@ -80,10 +94,6 @@
       <div class="controls">
         <GridControls {m} {gridManager} />
       </div>
-    {/if}
-
-    {#if m.types.length == 0 && hover.showExtra(m.id, 0, m.types.length)}
-      <div class="extra empty" data-id={m.id} data-index={0} />
     {/if}
   </div>
 
@@ -130,6 +140,12 @@
 </Section>
 
 <style>
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
   .extra {
     flex-grow: 1;
     background-color: blue;
