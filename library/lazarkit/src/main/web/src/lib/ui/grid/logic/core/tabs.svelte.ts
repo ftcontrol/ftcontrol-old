@@ -41,15 +41,9 @@ export class TabsManager extends GenericModularDependency {
   showExtra(id: string, index: number) {
     if (!this.isMoving) return false
 
-    // if (this.type == TabsManagerTypes.PRESETS) {
-    //   if (this.movingIndex == index) return false
-    //   return true
-    // }
-
     if (this.movingID != id) return true
     if (this.movingIndex == index) return false
     if (this.movingIndex == index - 1) return false
-
     if (this.movingIndex != index) return true
 
     return false
@@ -57,10 +51,7 @@ export class TabsManager extends GenericModularDependency {
 
   showLabel(id: string, index: number) {
     if (!this.isMoving) return true
-    // if (this.type == TabsManagerTypes.PRESETS) {
-    //   if (this.movingIndex == index) return false
-    //   return true
-    // }
+
     if (this.movingID != id) return true
     if (this.movingIndex != index) return true
     return false
@@ -104,6 +95,21 @@ export class TabsManager extends GenericModularDependency {
       }
     }
   }
+
+  private moveItem<T>(
+    fromList: T[],
+    toList: T[],
+    fromIndex: number,
+    toIndex: number
+  ): void {
+    if (fromIndex < toIndex && fromList === toList) {
+      toIndex -= 1
+    }
+
+    const [item] = fromList.splice(fromIndex, 1)
+    toList.splice(toIndex, 0, item)
+  }
+
   onClick(event: MouseEvent): void {
     if (this.hoveringID != null && this.hoveringIndex != null) {
       if (this.type == TabsManagerTypes.WIDGETS) {
@@ -116,14 +122,12 @@ export class TabsManager extends GenericModularDependency {
         if (movingWidget && hoveringWidget && this.movingIndex != null) {
           const movingType = movingWidget.widgets[this.movingIndex]
           if (movingType) {
-            let fromIndex = this.movingIndex
-            let toIndex = this.hoveringIndex
-            if (fromIndex < toIndex) {
-              toIndex -= 1
-            }
-
-            movingWidget.widgets.splice(fromIndex, 1)
-            hoveringWidget.widgets.splice(toIndex, 0, movingType)
+            this.moveItem(
+              movingWidget.widgets,
+              hoveringWidget.widgets,
+              this.movingIndex,
+              this.hoveringIndex
+            )
 
             if (movingWidget.activeWidgetID == this.movingIndex) {
               if (movingWidget.activeWidgetID > 0) {
@@ -136,18 +140,11 @@ export class TabsManager extends GenericModularDependency {
         }
       } else if (this.type == TabsManagerTypes.PRESETS) {
         if (this.movingIndex != null && this.hoveringIndex != null) {
-          const result = [...settings.presets]
+          const presets = [...settings.presets]
 
-          let fromIndex = this.movingIndex
-          let toIndex = this.hoveringIndex
-          if (fromIndex < toIndex) {
-            toIndex -= 1
-          }
+          this.moveItem(presets, presets, this.movingIndex, this.hoveringIndex)
 
-          const [item] = result.splice(fromIndex, 1)
-          result.splice(toIndex, 0, item)
-
-          settings.presets = result
+          settings.presets = presets
         }
       }
     }
