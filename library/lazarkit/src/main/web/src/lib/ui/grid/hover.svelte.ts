@@ -109,7 +109,7 @@ class Hover {
     this.wasStartedMoving = false
   }
 
-  updateMouse(event: MouseEvent) {
+  private tabsMouse(event: MouseEvent) {
     this.hoveringID = null
     this.hoveringIndex = null
 
@@ -140,8 +140,17 @@ class Hover {
     }
   }
 
+  updateMouse(event: MouseEvent) {
+    this.tabsMouse(event)
+    this.resizingMouse(event)
+  }
+
   updateClick(event: MouseEvent) {
     this.stopMoving()
+
+    this.stopResizing()
+
+    // context
 
     const target = event.target as HTMLElement
 
@@ -173,6 +182,61 @@ class Hover {
     return (
       this.openedContextMenuID == id && this.openedContextMenuIndex == index
     )
+  }
+
+  // RESIZING
+  resizingID: string | null = $state(null)
+
+  rstartX: number | null = $state(null)
+  rstartY: number | null = $state(null)
+
+  startResizing(id: string, x: number, y: number) {
+    this.resizingID = id
+    this.rstartX = x
+    this.rstartY = y
+  }
+
+  stopResizing() {
+    if (
+      this.resizingID != null &&
+      this.rstartX != null &&
+      this.rstartY != null
+    ) {
+      const deltaX = this.mouseX - this.rstartX
+      const deltaY = this.mouseY - this.rstartY
+      console.log(deltaX, deltaY)
+
+      const widgetElement = document.querySelector(
+        `.widget[data-id="${this.resizingID}"]`
+      )
+
+      if (widgetElement) {
+        console.log("Got widget", widgetElement)
+      }
+    }
+    this.resizingID = null
+    this.rstartX = null
+    this.rstartY = null
+  }
+
+  private resizingMouse(event: MouseEvent) {
+    if (
+      this.resizingID != null &&
+      this.rstartX != null &&
+      this.rstartY != null
+    ) {
+      const deltaX = this.mouseX - this.rstartX
+      const deltaY = this.mouseY - this.rstartY
+      console.log(deltaX, deltaY)
+
+      const widgetElement = document.querySelector(
+        `.widget[data-id="${this.resizingID}"]`
+      )
+
+      if (widgetElement) {
+        console.log("Got widget", widgetElement)
+      }
+    }
   }
 
   init() {

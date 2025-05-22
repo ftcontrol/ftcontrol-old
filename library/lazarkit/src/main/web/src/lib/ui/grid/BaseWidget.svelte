@@ -3,15 +3,14 @@
   import Section from "$ui/primitives/Section.svelte"
   import BaseWidgetContent from "./BaseWidgetContent.svelte"
   import BaseWidgetTab from "./BaseWidgetTab.svelte"
-  import ContextMenu from "./ContextMenu.svelte"
-  import { Grid, WidgetTypes, type Module } from "./grid.svelte"
-  import GridControls from "./GridControls.svelte"
+  import { Grid, type Module } from "./grid.svelte"
   import { hover } from "./hover.svelte"
+  import WidgetContextMenu from "./WidgetContextMenu.svelte"
 
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
-<Section>
+<Section widgetID={m.id}>
   <nav>
     {#each m.types as t, index}
       {#if hover.showExtra(m.id, index)}
@@ -37,38 +36,11 @@
       >
         {m.types.length}
         {#if hover.isContextOpened(m.id, -1)}
-          <ContextMenu>
-            <button
-              class="button"
-              onclick={() => {
-                m.types.push({
-                  pluginID: "none",
-                  pageID: "none",
-                  type: WidgetTypes.TEST,
-                })
-                console.log(m)
-                hover.closeContextMenu()
-              }}>Add tab</button
-            >
-
-            <button
-              class="button"
-              onclick={() => {
-                gridManager.remove(m.id)
-              }}
-            >
-              Remove Widget
-            </button>
-          </ContextMenu>
+          <WidgetContextMenu {m} {gridManager} />
         {/if}
       </div>
     {/if}
   </nav>
-  {#if info.showEdit}
-    <div class="controls">
-      <GridControls {m} {gridManager} />
-    </div>
-  {/if}
 
   {#each m.types as item, index}
     <div class="content" class:shown={index == m.activeType}>
@@ -78,12 +50,10 @@
 
   <button
     class="resizer"
-    onmousedown={() => {
-      info.showEdit = true
+    onmousedown={(event: MouseEvent) => {
+      hover.startResizing(m.id, event.clientX, event.clientY)
     }}
-    onmouseup={() => {
-      info.showEdit = false
-    }}
+    onmouseup={() => {}}
   >
   </button>
 </Section>
@@ -115,9 +85,6 @@
     right: 0;
     bottom: 0;
   }
-  .bar {
-    margin-bottom: 1rem;
-  }
   .content {
     display: none;
     overflow-y: auto;
@@ -132,24 +99,5 @@
     padding: 1rem;
     padding-bottom: 0;
     gap: 0.5rem;
-  }
-
-  button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: inherit;
-  }
-  button.base {
-    outline: 1px solid var(--text);
-    opacity: 0.5;
-    padding: 0.25rem 0.5rem;
-  }
-  button.base.selected {
-    opacity: 1;
   }
 </style>

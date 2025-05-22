@@ -61,7 +61,7 @@
     {/each}
   </section>
 
-  {#if gridManager.isMoving}
+  {#if gridManager.isMoving || true}
     <section
       role="button"
       tabindex="0"
@@ -86,7 +86,9 @@
           ]}
         <p
           class="overlay-item"
-          class:isEmpty={id != null && id != gridManager.selectedWidgetId}
+          class:isEmpty={id != null &&
+            id != gridManager.selectedWidgetId &&
+            false}
           onfocus={() => {}}
           onmouseover={() => {
             console.log(index)

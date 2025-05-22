@@ -12,4 +12,10 @@
   })
 </script>
 
+<p>
+  resizingID: {hover.resizingID}<br />
+  startX: {hover.rstartX}<br />
+  startY: {hover.rstartY}<br />
+</p>
+
 <WidgetEditor gridManager={settings.currentGrid} />

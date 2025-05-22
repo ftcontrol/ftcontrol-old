@@ -47,36 +47,35 @@
       <SelectInput
         keepOpened={true}
         type={""}
-        startValue={m.types[m.activeType].type}
-        bind:currentValue={m.types[m.activeType].type}
-        value={m.types[m.activeType].type}
+        startValue={m.types[index].type}
+        bind:currentValue={m.types[index].type}
+        value={m.types[index].type}
         possibleValues={allWidgetTypes}
         isValid={true}
         alwaysValid={true}
       ></SelectInput>
-      {#if m.types[m.activeType].type == WidgetTypes.CUSTOM}
+      {#if m.types[index].type == WidgetTypes.CUSTOM}
         <SelectInput
           keepOpened={true}
           type={""}
-          startValue={m.types[m.activeType].pluginID}
-          bind:currentValue={m.types[m.activeType].pluginID}
-          value={m.types[m.activeType].pluginID}
+          startValue={m.types[index].pluginID}
+          bind:currentValue={m.types[index].pluginID}
+          value={m.types[index].pluginID}
           possibleValues={[...info.plugins.map((it) => it.id), "none"]}
           isValid={true}
           alwaysValid={true}
         ></SelectInput>
-        {#if m.types[m.activeType].pluginID != "none"}
+        {#if m.types[index].pluginID != "none"}
           <SelectInput
             keepOpened={true}
             type={""}
-            startValue={m.types[m.activeType].pageID}
-            bind:currentValue={m.types[m.activeType].pageID}
-            value={m.types[m.activeType].pageID}
+            startValue={m.types[index].pageID}
+            bind:currentValue={m.types[index].pageID}
+            value={m.types[index].pageID}
             possibleValues={[
               ...(
-                info.plugins.find(
-                  (it) => it.id == m.types[m.activeType].pluginID
-                )?.pages ?? []
+                info.plugins.find((it) => it.id == m.types[index].pluginID)
+                  ?.pages ?? []
               ).map((it) => it.id),
               "none",
             ]}
@@ -90,26 +89,6 @@
 </div>
 
 <style>
-  .context-menu {
-    background: var(--card);
-    color: var(--text);
-    border: 1px solid var(--text);
-    padding: 0.5rem;
-    z-index: 1000;
-    position: absolute;
-    left: 0;
-    top: 2rem;
-    min-width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .context-menu button {
-    width: 100%;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--text);
-  }
-
   button {
     background-color: transparent;
     border: none;
