@@ -19,10 +19,19 @@
 </script>
 
 <Section>
+  <nav></nav>
+
   <div class="bar">
     <div class="controls">
       {#each m.types as t, index}
-        {#if !hover.isMoving || hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != index)}
+        {#if index <= m.types.length - 1}
+          {#if hover.showExtra(m.id, index, m.types.length)}
+            <div class="extra-small" data-id={m.id} data-index={index}>
+              {index}
+            </div>
+          {/if}
+        {/if}
+        {#if hover.showLabel(m.id, index)}
           <button
             class="base"
             class:selected={index == m.activeType}
@@ -48,14 +57,11 @@
             }}>x</button
           >
         {/if}
-        {#if index < m.types.length - 1}
-          {#if hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != index))}
-            <div class="extra-small" data-id={m.id} data-index={index} />
-          {/if}
-        {/if}
       {/each}
-      {#if hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != m.types.length))}
-        <div class="extra" data-id={m.id} data-index={m.types.length} />
+      {#if hover.showExtra(m.id, m.types.length, m.types.length)}
+        <div class="extra" data-id={m.id} data-index={m.types.length}>
+          {m.types.length}
+        </div>
       {/if}
       {#if info.showEdit}
         <button
@@ -76,7 +82,7 @@
       </div>
     {/if}
 
-    {#if m.types.length == 0 && hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != m.types.length))}
+    {#if m.types.length == 0 && hover.showExtra(m.id, 0, m.types.length)}
       <div class="extra empty" data-id={m.id} data-index={0} />
     {/if}
   </div>

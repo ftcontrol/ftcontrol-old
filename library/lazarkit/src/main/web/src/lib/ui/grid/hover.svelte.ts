@@ -15,6 +15,25 @@ class Hover {
 
   wasStartedMoving = $state(false)
 
+  showExtra(id: string, index: number, size: number) {
+    if (!this.isMoving) return false
+
+    if (this.movingID != id) return true
+    if (this.movingIndex == index) return false
+    if (this.movingIndex == index - 1) return false
+
+    if (this.movingIndex != index) return true
+
+    return false
+  }
+
+  showLabel(id: string, index: number) {
+    if (!this.isMoving) return true
+    if (this.movingID != id) return true
+    if (this.movingIndex != index) return true
+    return false
+  }
+
   isMoving = $derived.by(() => {
     if (!this.startX || !this.startY) {
       return false
