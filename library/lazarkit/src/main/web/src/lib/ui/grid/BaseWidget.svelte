@@ -9,7 +9,7 @@
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
-<Section widgetID={m.id}>
+<Section>
   <nav>
     <button
       onmousedown={(event: MouseEvent) => {

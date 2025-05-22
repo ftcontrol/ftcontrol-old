@@ -37,20 +37,6 @@
   </button>
 
   <button
-    onmousedown={() => {
-      gridManager.startMoving(m.id)
-    }}
-  >
-    <MoveIcon />
-  </button>
-  <button
-    onclick={() => {
-      gridManager.remove(m.id)
-    }}
-  >
-    <Remove />
-  </button>
-  <button
     onclick={() => {
       if (gridManager.canExpandRight(m)) {
         m.sizes.x++

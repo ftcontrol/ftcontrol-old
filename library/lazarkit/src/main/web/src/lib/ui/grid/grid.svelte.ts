@@ -187,57 +187,6 @@ export class Grid {
   name = $state("Default")
   id = $state("")
 
-  isMoving = $state(false)
-
-  selectedCellX = $state(-1)
-  selectedCellY = $state(-1)
-
-  selectedWidgetId = $state("")
-
-  selectedWidget = $derived(this.getWidgetById(this.selectedWidgetId))
-
-  canPlace = $derived(this.checkPlace(this.selectedWidget))
-
-  checkIndex(index: number): boolean {
-    return this.coreCheckPlace(
-      (index % this.cellsX) + 1,
-      Math.floor(index / this.cellsX) + 1,
-      this.selectedWidget
-    )
-  }
-
-  coreCheckPlace(newX: number, newY: number, selected: Module | null) {
-    if (selected == null) return false
-    for (let dx = 0; dx < selected.sizes.x; dx++) {
-      for (let dy = 0; dy < selected.sizes.y; dy++) {
-        const x = newX + dx
-        const y = newY + dy
-        if (
-          x > this.cellsX ||
-          y > this.cellsY ||
-          x < 1 ||
-          y < 1 ||
-          (this.modulesMap[y][x] != null &&
-            this.modulesMap[y][x] != selected.id)
-        ) {
-          return false
-        }
-      }
-    }
-    return true
-  }
-
-  private checkPlace(selected: Module | null): boolean {
-    return this.coreCheckPlace(this.selectedCellX, this.selectedCellY, selected)
-  }
-
-  private getWidgetById(id: string) {
-    for (const w of this.modules) {
-      if (w.id == id) return w
-    }
-    return null
-  }
-
   modules = $state<Module[]>([])
 
   modulesMap: any[][] = $derived(this.updateMap(this.modules))
@@ -290,34 +239,6 @@ export class Grid {
     this.modules = preset.modules
   }
 
-  startMoving(id: string) {
-    this.isMoving = true
-    this.selectedWidgetId = id
-    for (const w of this.modules) {
-      if (w.id == id) {
-        this.selectedCellX = w.start.x - 1
-        this.selectedCellY = w.start.y - 1
-      }
-    }
-  }
-
-  stopMoving(error: string | null) {
-    if (error != "" && error != null) notifications.add(error)
-    this.isMoving = false
-    this.selectedWidgetId = ""
-    return
-  }
-
-  performMove() {
-    if (this.selectedWidget == null) return
-    for (const w of this.modules) {
-      if (w.id == this.selectedWidgetId) {
-        w.start.x = this.selectedCellX
-        w.start.y = this.selectedCellY
-      }
-    }
-  }
-
   private canExpand(w: Module, dx: number, dy: number): boolean {
     const { x: startX, y: startY } = w.start
     const { x: width, y: height } = w.sizes
@@ -357,6 +278,19 @@ export class Grid {
 
   remove(id: string) {
     this.modules = this.modules.filter((it) => it.id != id)
+  }
+
+  addNewAnywhere() {
+    for (let y = 1; y <= this.cellsY; y++) {
+      for (let x = 1; x <= this.cellsX; x++) {
+        if (this.modulesMap[y]?.[x] == null) {
+          this.addNew(x, y)
+          return
+        }
+      }
+    }
+
+    notifications.add("No available space in the grid.")
   }
 
   addNew(x: number, y: number) {

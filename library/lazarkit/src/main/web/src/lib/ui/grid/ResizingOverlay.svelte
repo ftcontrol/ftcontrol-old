@@ -9,28 +9,38 @@
   {@const x = (index % gridManager.cellsX) + 1}
   {@const id = gridManager.modulesMap[y][x]}
   {#if id == null || hover.resizingModule?.id == id || hover.movingModule?.id == id}
-    <p
+    <div
       class="overlay-item"
-      class:isShown={hover.showWidget(x, y) || id == null}
+      class:isShown={hover.showWidget(x, y)}
+      class:isEmpty={id == null && !hover.isMov && !hover.isResizing}
       data-x={x}
       data-y={y}
       style="grid-row: {y} / span 1; grid-column: {x} / span 1;"
-    ></p>
+    >
+      <div class="color"></div>
+    </div>
   {/if}
 {/each}
 
 <style>
   .overlay-item {
-    border: 1px solid var(--primary);
-    border-radius: 16px;
-    margin: 0;
     z-index: 100;
-    opacity: 0;
+    padding: 0.25rem;
   }
-  .overlay-item:hover {
-    background-color: blue;
+  .color {
+    width: 100%;
+    height: 100%;
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
+    border-radius: 16px;
   }
-  .overlay-item.isShown {
-    opacity: 1;
+  .overlay-item:hover .color {
+    background-color: var(--primary);
+  }
+  .overlay-item.isShown .color {
+    background-color: transparent;
+  }
+  .overlay-item.isEmpty {
+    display: none;
   }
 </style>
