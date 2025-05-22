@@ -62,8 +62,8 @@ export function defaultModuled(): Preset {
   return {
     id: uuidv4(),
     name: "Default",
-    xSize: 10,
-    ySize: 10,
+    xSize: 20,
+    ySize: 20,
     groups: [
       {
         id: uuidv4(),
@@ -78,8 +78,8 @@ export function defaultModuled(): Preset {
           y: 1,
         },
         sizes: {
-          x: 3,
-          y: 2,
+          x: 6,
+          y: 5,
         },
       },
       {
@@ -91,12 +91,12 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 4,
+          x: 7,
           y: 1,
         },
         sizes: {
-          x: 3,
-          y: 4,
+          x: 6,
+          y: 8,
         },
       },
       {
@@ -109,28 +109,11 @@ export function defaultModuled(): Preset {
         ],
         start: {
           x: 1,
-          y: 3,
-        },
-        sizes: {
-          x: 3,
-          y: 2,
-        },
-      },
-      {
-        id: uuidv4(),
-        activeWidgetID: 0,
-        widgets: [
-          {
-            type: WidgetTypes.FIELD,
-          },
-        ],
-        start: {
-          x: 1,
-          y: 5,
-        },
-        sizes: {
-          x: 3,
           y: 6,
+        },
+        sizes: {
+          x: 6,
+          y: 5,
         },
       },
       {
@@ -145,12 +128,29 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 4,
-          y: 5,
+          x: 1,
+          y: 11,
         },
         sizes: {
-          x: 3,
-          y: 6,
+          x: 6,
+          y: 10,
+        },
+      },
+      {
+        id: uuidv4(),
+        activeWidgetID: 0,
+        widgets: [
+          {
+            type: WidgetTypes.FIELD,
+          },
+        ],
+        start: {
+          x: 7,
+          y: 9,
+        },
+        sizes: {
+          x: 6,
+          y: 12,
         },
       },
       {
@@ -162,12 +162,12 @@ export function defaultModuled(): Preset {
           },
         ],
         start: {
-          x: 7,
+          x: 13,
           y: 1,
         },
         sizes: {
-          x: 4,
-          y: 10,
+          x: 8,
+          y: 20,
         },
       },
     ],
