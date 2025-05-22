@@ -73,9 +73,11 @@
             bind:currentValue={m.types[m.activeType].pageID}
             value={m.types[m.activeType].pageID}
             possibleValues={[
-              ...info.plugins
-                .find((it) => it.id == m.types[m.activeType].pluginID)
-                .pages.map((it) => it.id),
+              ...(
+                info.plugins.find(
+                  (it) => it.id == m.types[m.activeType].pluginID
+                )?.pages ?? []
+              ).map((it) => it.id),
               "none",
             ]}
             isValid={true}
