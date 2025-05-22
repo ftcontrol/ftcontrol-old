@@ -11,7 +11,6 @@
   import Telemetry from "$ui/widgets/Telemetry.svelte"
   import { Grid, WidgetTypes, type Module } from "./grid.svelte"
   import GridControls from "./GridControls.svelte"
-  import Portal from "svelte-portal"
   import { hover } from "./hover.svelte"
 
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
@@ -19,13 +18,7 @@
   let isMoving = $derived(hover.movingID == m.id && hover.isMoving)
 </script>
 
-<Portal>
-  <button class="hover">{m.types[m.activeType].type}</button>
-</Portal>
 <Section>
-  <p>
-    isMoving: {isMoving}
-  </p>
   <div class="bar">
     <div class="controls">
       {#each m.types as t, index}
@@ -82,6 +75,10 @@
         <GridControls {m} {gridManager} />
       </div>
     {/if}
+
+    {#if m.types.length == 0 && hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != m.types.length))}
+      <div class="extra empty" data-id={m.id} data-index={0} />
+    {/if}
   </div>
 
   {#each m.types as item, index}
@@ -127,14 +124,14 @@
 </Section>
 
 <style>
-  .hover {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
   .extra {
     flex-grow: 1;
     background-color: blue;
+  }
+  .extra.empty {
+    background-color: red;
+    width: 100%;
+    height: 16px;
   }
   .extra-small {
     background-color: blue;

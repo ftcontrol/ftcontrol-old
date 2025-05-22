@@ -16,5 +16,9 @@
   movingID: {hover.movingID}
   movingIndex: {hover.movingIndex}
 </p>
+<p>
+  hoveringID: {hover.hoveringID}
+  hoveringIndex: {hover.hoveringIndex}
+</p>
 
 <WidgetEditor gridManager={settings.currentGrid} />

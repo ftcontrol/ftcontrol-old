@@ -30,16 +30,35 @@ class Hover {
   private upBoundHandler!: (event: MouseEvent) => void
 
   stopMoving() {
-    //perform move
-    if (this.hoveringID && this.hoveringIndex) {
+    if (this.hoveringID != null && this.hoveringIndex != null) {
+      console.log("Try moving", this.hoveringID, this.hoveringIndex)
+      console.log("Try moving", this.movingID, this.movingIndex)
       const movingWidget = settings.currentGrid.modules.find(
         (it) => it.id == this.movingID
       )
       const hoveringWidget = settings.currentGrid.modules.find(
         (it) => it.id == this.hoveringID
       )
-      if (movingWidget && hoveringWidget) {
-        console.log("Performed move", movingWidget, hoveringWidget)
+      console.log("Found", movingWidget, hoveringWidget)
+      if (movingWidget && hoveringWidget && this.movingIndex != null) {
+        console.log("Got here")
+        const movingType = movingWidget.types[this.movingIndex]
+        if (movingType) {
+          movingWidget.types.splice(this.movingIndex, 1)
+          hoveringWidget.types.splice(this.hoveringIndex, 0, movingType)
+          console.log(
+            "Performed move",
+            movingType,
+            "from",
+            movingWidget,
+            "to",
+            hoveringWidget
+          )
+
+          if (movingWidget.activeType === this.movingIndex) {
+            movingWidget.activeType = 0
+          }
+        }
       }
     }
     this.startX = null
@@ -82,10 +101,11 @@ class Hover {
     for (const el of matchingElements) {
       const id = el.getAttribute("data-id")
       const indexString = el.getAttribute("data-index")
+      console.log(indexString)
       if (!indexString) continue
       const index = parseInt(indexString)
-      //   console.log("Hovered element:", { id, index, el })
-      if (id && index) {
+      console.log("Hovered element:", { id, index, el })
+      if (id != null && index != null) {
         this.hoveringID = id
         this.hoveringIndex = index
         return
