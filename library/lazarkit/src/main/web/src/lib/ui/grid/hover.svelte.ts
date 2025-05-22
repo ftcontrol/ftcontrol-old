@@ -198,6 +198,27 @@ class Hover {
     this.resizingModule = null
   }
 
+  canResize(newX: number, newY: number) {
+    if (this.resizingModule == null) return false
+    // if (newX == selected.start.x) return false
+    // if (newY == selected.start.y) return false
+    for (let dx = this.resizingModule.start.x; dx <= newX; dx++) {
+      for (let dy = this.resizingModule.start.y; dy <= newY; dy++) {
+        if (
+          dx > settings.currentGrid.cellsX ||
+          dy > settings.currentGrid.cellsY ||
+          dx < 1 ||
+          dy < 1 ||
+          (settings.currentGrid.modulesMap[dy][dx] != null &&
+            settings.currentGrid.modulesMap[dy][dx] != this.resizingModule.id)
+        ) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+
   private resizingMouse(event: MouseEvent) {
     if (this.resizingModule != null) {
       const elements = document.elementsFromPoint(event.clientX, event.clientY)
@@ -218,6 +239,19 @@ class Hover {
 
       // [data-id="${this.resizingModule.id}"]
     }
+  }
+
+  // MOVING
+  movingModule: Module | null = $state(null)
+
+  isMov = $derived(this.movingModule != null)
+
+  startMov(m: Module) {
+    this.movingModule = m
+  }
+
+  stopMov() {
+    this.movingModule = null
   }
 
   init() {

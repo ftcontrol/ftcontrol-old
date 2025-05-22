@@ -8,13 +8,17 @@
   {@const y = Math.floor(index / gridManager.cellsX) + 1}
   {@const x = (index % gridManager.cellsX) + 1}
   {@const id = gridManager.modulesMap[y][x]}
-  {#if id == null || hover.resizingModule?.id == id}
+  {#if id == null || hover.resizingModule?.id == id || hover.isResizing}
     <p
       class="overlay-item"
+      class:isShown={hover.canResize(x, y)}
       data-x={x}
       data-y={y}
       style="grid-row: {y} / span 1; grid-column: {x} / span 1;"
-    ></p>
+    >
+      {x}
+      {y}
+    </p>
   {/if}
 {/each}
 
@@ -24,5 +28,9 @@
     border-radius: 16px;
     margin: 0;
     z-index: 100;
+    opacity: 0;
+  }
+  .overlay-item.isShown {
+    opacity: 1;
   }
 </style>
