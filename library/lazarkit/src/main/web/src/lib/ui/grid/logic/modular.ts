@@ -1,20 +1,22 @@
 import { ContextMenuManager } from "./core/context.svelte"
 import { MovingManager } from "./core/moving.svelte"
 import { ResizingManager } from "./core/resizing.svelte"
-import { TabsManager } from "./core/tabs.svelte"
+import { TabsManager, TabsManagerTypes } from "./core/tabs.svelte"
 import type { GenericModularDependency } from "./generic.svelte"
 
 class ModularManager {
   context = new ContextMenuManager()
   moving = new MovingManager()
   resizing = new ResizingManager()
-  tabs = new TabsManager()
+  tabs = new TabsManager(TabsManagerTypes.WIDGETS)
+  sidebarTabs = new TabsManager(TabsManagerTypes.PRESETS)
 
   private dependencies: GenericModularDependency[] = [
     this.context,
     this.moving,
     this.resizing,
     this.tabs,
+    this.sidebarTabs,
   ]
 
   private moveBoundHandler!: (event: MouseEvent) => void

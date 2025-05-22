@@ -1,7 +1,15 @@
 import { settings } from "$lib/settings.svelte"
 import { GenericModularDependency } from "../generic.svelte"
-
+export enum TabsManagerTypes {
+  WIDGETS = "widgets",
+  PRESETS = "presets",
+}
 export class TabsManager extends GenericModularDependency {
+  type: TabsManagerTypes
+  constructor(type: TabsManagerTypes) {
+    super()
+    this.type = type
+  }
   movingIndex: number | null = $state(null)
   movingID: string | null = $state(null)
 
@@ -33,6 +41,11 @@ export class TabsManager extends GenericModularDependency {
   showExtra(id: string, index: number) {
     if (!this.isMoving) return false
 
+    // if (this.type == TabsManagerTypes.PRESETS) {
+    //   if (this.movingIndex == index) return false
+    //   return true
+    // }
+
     if (this.movingID != id) return true
     if (this.movingIndex == index) return false
     if (this.movingIndex == index - 1) return false
@@ -44,6 +57,10 @@ export class TabsManager extends GenericModularDependency {
 
   showLabel(id: string, index: number) {
     if (!this.isMoving) return true
+    // if (this.type == TabsManagerTypes.PRESETS) {
+    //   if (this.movingIndex == index) return false
+    //   return true
+    // }
     if (this.movingID != id) return true
     if (this.movingIndex != index) return true
     return false
@@ -89,28 +106,52 @@ export class TabsManager extends GenericModularDependency {
   }
   onClick(event: MouseEvent): void {
     if (this.hoveringID != null && this.hoveringIndex != null) {
-      const movingWidget = settings.currentGrid.widgets.find(
-        (it) => it.id == this.movingID
-      )
-      const hoveringWidget = settings.currentGrid.widgets.find(
-        (it) => it.id == this.hoveringID
-      )
-      if (movingWidget && hoveringWidget && this.movingIndex != null) {
-        const movingType = movingWidget.widgets[this.movingIndex]
-        if (movingType) {
-          movingWidget.widgets.splice(this.movingIndex, 1)
-          hoveringWidget.widgets.splice(this.hoveringIndex, 0, movingType)
+      if (this.type == TabsManagerTypes.WIDGETS) {
+        const movingWidget = settings.currentGrid.widgets.find(
+          (it) => it.id == this.movingID
+        )
+        const hoveringWidget = settings.currentGrid.widgets.find(
+          (it) => it.id == this.hoveringID
+        )
+        if (movingWidget && hoveringWidget && this.movingIndex != null) {
+          const movingType = movingWidget.widgets[this.movingIndex]
+          if (movingType) {
+            let fromIndex = this.movingIndex
+            let toIndex = this.hoveringIndex
+            if (fromIndex < toIndex) {
+              toIndex -= 1
+            }
 
-          if (movingWidget.activeWidgetID == this.movingIndex) {
-            if (movingWidget.activeWidgetID > 0) {
-              movingWidget.activeWidgetID = movingWidget.activeWidgetID - 1
-            } else {
-              movingWidget.activeWidgetID = 0
+            movingWidget.widgets.splice(fromIndex, 1)
+            hoveringWidget.widgets.splice(toIndex, 0, movingType)
+
+            if (movingWidget.activeWidgetID == this.movingIndex) {
+              if (movingWidget.activeWidgetID > 0) {
+                movingWidget.activeWidgetID = movingWidget.activeWidgetID - 1
+              } else {
+                movingWidget.activeWidgetID = 0
+              }
             }
           }
         }
+      } else if (this.type == TabsManagerTypes.PRESETS) {
+        if (this.movingIndex != null && this.hoveringIndex != null) {
+          const result = [...settings.presets]
+
+          let fromIndex = this.movingIndex
+          let toIndex = this.hoveringIndex
+          if (fromIndex < toIndex) {
+            toIndex -= 1
+          }
+
+          const [item] = result.splice(fromIndex, 1)
+          result.splice(toIndex, 0, item)
+
+          settings.presets = result
+        }
       }
     }
+
     this.wasStartedMoving = false
     this.startX = null
     this.startY = null
