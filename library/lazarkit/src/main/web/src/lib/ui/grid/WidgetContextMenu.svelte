@@ -5,10 +5,12 @@
   import VerticalIcon from "$ui/icons/VerticalIcon.svelte"
   import VerticalReversed from "$ui/icons/VerticalReversed.svelte"
   import ContextMenu from "./ContextMenu.svelte"
-  import { WidgetTypes, type Grid, type Module } from "./grid.svelte"
-  import { hover } from "./hover.svelte"
+  import { modular } from "./logic/modular"
+  import type { PresetManager } from "./logic/preset.svelte"
+  import { WidgetTypes, type WidgetGroup } from "./logic/types"
 
-  let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
+  let { m, gridManager }: { m: WidgetGroup; gridManager: PresetManager } =
+    $props()
 </script>
 
 <ContextMenu id={m.id}>
@@ -23,13 +25,11 @@
   <button
     class="button"
     onclick={() => {
-      m.types.push({
-        pluginID: "none",
-        pageID: "none",
+      m.widgets.push({
         type: WidgetTypes.TEST,
       })
       console.log(m)
-      hover.closeContextMenu()
+      modular.context.closeContextMenu()
     }}>Add tab</button
   >
 
@@ -37,7 +37,7 @@
     class="button"
     onclick={() => {
       gridManager.addNewAnywhere()
-      hover.closeContextMenu()
+      modular.context.closeContextMenu()
     }}>Add widget</button
   >
 

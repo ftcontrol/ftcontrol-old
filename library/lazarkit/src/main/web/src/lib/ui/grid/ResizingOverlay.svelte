@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { Grid } from "./grid.svelte"
-  import { hover } from "./hover.svelte"
-  let { gridManager }: { gridManager: Grid } = $props()
+  import { modular } from "./logic/modular"
+  import type { PresetManager } from "./logic/preset.svelte"
+
+  let { gridManager }: { gridManager: PresetManager } = $props()
 </script>
 
 {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY } ) as _, index}
   {@const y = Math.floor(index / gridManager.cellsX) + 1}
   {@const x = (index % gridManager.cellsX) + 1}
-  {@const id = gridManager.modulesMap[y][x]}
-  {#if id == null || hover.resizingModule?.id == id || hover.movingModule?.id == id}
+  {@const id = gridManager.widgetsMap[y][x]}
+  {#if id == null || modular.resizing.resizingModule?.id == id || modular.moving.movingModule?.id == id}
     <div
       class="overlay-item"
-      class:isShown={hover.showWidget(x, y)}
-      class:isEmpty={id == null && !hover.isMov && !hover.isResizing}
+      class:isShown={modular.showWidget(x, y)}
       data-x={x}
       data-y={y}
       style="grid-row: {y} / span 1; grid-column: {x} / span 1;"
@@ -26,6 +26,10 @@
   .overlay-item {
     z-index: 100;
     padding: 0.25rem;
+    display: none;
+  }
+  .overlay-item.isShown {
+    display: block;
   }
   .color {
     width: 100%;
@@ -33,14 +37,5 @@
     border: 1px solid var(--primary);
     background-color: var(--primary);
     border-radius: 16px;
-  }
-  .overlay-item:hover .color {
-    background-color: var(--primary);
-  }
-  .overlay-item.isShown .color {
-    background-color: transparent;
-  }
-  .overlay-item.isEmpty {
-    display: none;
   }
 </style>

@@ -1,4 +1,4 @@
-import { GenericModularDependency } from "../modular.svelte"
+import { GenericModularDependency } from "../generic.svelte"
 
 export class ContextMenuManager extends GenericModularDependency {
   openedContextMenuID: string | null = $state(null)

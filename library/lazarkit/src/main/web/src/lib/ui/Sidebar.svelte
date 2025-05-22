@@ -8,8 +8,9 @@
   import { tick } from "svelte"
   import StringInput from "./primitives/StringInput.svelte"
   import { stringValidator } from "./primitives/validators"
-  import { defaultModuled, Grid } from "./grid/grid.svelte"
   import Remove from "./icons/Remove.svelte"
+  import { defaultModuled } from "./grid/logic/types"
+  import { PresetManager } from "./grid/logic/preset.svelte"
   let isCovering = $state(false)
 
   let newNameValue = $state("")
@@ -124,7 +125,7 @@
             }
             var newPreset = structuredClone(defaultModuled())
             newPreset.name = newNameValue
-            settings.presets.push(new Grid(newPreset))
+            settings.presets.push(new PresetManager(newPreset))
             newNameValue = ""
           }}
         >

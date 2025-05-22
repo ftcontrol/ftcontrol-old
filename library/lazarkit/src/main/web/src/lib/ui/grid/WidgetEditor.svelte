@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Grid } from "./grid.svelte"
   import BaseWidget from "./BaseWidget.svelte"
+  import type { PresetManager } from "./logic/preset.svelte"
   import ResizingOverlay from "./ResizingOverlay.svelte"
 
-  let { gridManager }: { gridManager: Grid } = $props()
+  let { gridManager }: { gridManager: PresetManager } = $props()
 </script>
 
 <section style="--cellsX:{gridManager.cellsX} ;--cellsY: {gridManager.cellsY};">
-  {#each gridManager.modules as w}
+  {#each gridManager.widgets as w}
     <div
       class="widget"
       data-id={w.id}

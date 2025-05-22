@@ -2,15 +2,7 @@ import { ContextMenuManager } from "./core/context.svelte"
 import { MovingManager } from "./core/moving.svelte"
 import { ResizingManager } from "./core/resizing.svelte"
 import { TabsManager } from "./core/tabs.svelte"
-
-export abstract class GenericModularDependency {
-  mouseX: number = $state(0)
-  mouseY: number = $state(0)
-
-  abstract onMouseMove(event: MouseEvent): void
-  abstract onClick(event: MouseEvent): void
-  abstract onKey(event: KeyboardEvent): void
-}
+import type { GenericModularDependency } from "./generic.svelte"
 
 class ModularManager {
   context = new ContextMenuManager()
@@ -39,7 +31,7 @@ class ModularManager {
 
   onClick(event: MouseEvent) {
     for (const dep of this.dependencies) {
-      dep.onMouseMove(event)
+      dep.onClick(event)
     }
   }
 

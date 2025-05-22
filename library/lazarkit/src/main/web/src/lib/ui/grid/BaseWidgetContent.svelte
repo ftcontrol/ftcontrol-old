@@ -8,9 +8,9 @@
   import OpModeControl from "$ui/widgets/OpModeControl.svelte"
   import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
   import Telemetry from "$ui/widgets/Telemetry.svelte"
-  import { WidgetTypes, type ModuleType } from "./grid.svelte"
+  import { WidgetTypes, type Widget } from "./logic/types"
 
-  let { item }: { item: ModuleType } = $props()
+  let { item }: { item: Widget } = $props()
 </script>
 
 {#if item.type == WidgetTypes.CONTROLS}

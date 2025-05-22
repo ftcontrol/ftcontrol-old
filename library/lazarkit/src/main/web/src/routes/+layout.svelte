@@ -8,7 +8,7 @@
   let { children } = $props()
 
   import "./global.css"
-  import { hover } from "$ui/grid/hover.svelte"
+  import { modular } from "$ui/grid/logic/modular"
 
   onMount(() => {
     socket.init()
@@ -17,11 +17,11 @@
       info.loop()
     }, 100)
 
-    hover.init()
+    modular.init()
 
     return () => {
       clearInterval(interval)
-      hover.destroy()
+      modular.destroy()
     }
   })
 </script>

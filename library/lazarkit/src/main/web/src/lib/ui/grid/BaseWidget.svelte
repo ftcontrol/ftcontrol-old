@@ -2,53 +2,56 @@
   import Section from "$ui/primitives/Section.svelte"
   import BaseWidgetContent from "./BaseWidgetContent.svelte"
   import BaseWidgetTab from "./BaseWidgetTab.svelte"
-  import { Grid, type Module } from "./grid.svelte"
-  import { hover } from "./hover.svelte"
+  import { modular } from "./logic/modular"
+  import type { PresetManager } from "./logic/preset.svelte"
+  import type { WidgetGroup } from "./logic/types"
   import WidgetContextMenu from "./WidgetContextMenu.svelte"
 
-  let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
+  let { m, gridManager }: { m: WidgetGroup; gridManager: PresetManager } =
+    $props()
 </script>
 
 <Section>
   <nav>
     <button
+      class="mover"
       onmousedown={(event: MouseEvent) => {
-        hover.startMov(m, event.clientX, event.clientY)
+        modular.moving.startMov(m, event.clientX, event.clientY)
       }}
       aria-label="Mover"
     ></button>
-    {#each m.types as t, index}
-      {#if hover.showExtra(m.id, index)}
+    {#each m.widgets as t, index}
+      {#if modular.tabs.showExtra(m.id, index)}
         <div class="extra-small" data-id={m.id} data-index={index}>
           {index}
         </div>
       {/if}
-      {#if hover.showLabel(m.id, index)}
+      {#if modular.tabs.showLabel(m.id, index)}
         <BaseWidgetTab {m} {index} />
       {/if}
     {/each}
-    {#if hover.showExtra(m.id, m.types.length) || true}
+    {#if modular.tabs.showExtra(m.id, m.widgets.length) || true}
       <div
         class="extra"
         role="button"
         tabindex={0}
         data-id={m.id}
-        data-index={m.types.length}
+        data-index={m.widgets.length}
         oncontextmenu={(event: MouseEvent) => {
           event.preventDefault()
-          hover.openContextMenu(m.id, -1)
+          modular.context.openContextMenu(m.id, -1)
         }}
       >
-        {m.types.length}
-        {#if hover.isContextOpened(m.id, -1)}
+        {m.widgets.length}
+        {#if modular.context.isContextOpened(m.id, -1)}
           <WidgetContextMenu {m} {gridManager} />
         {/if}
       </div>
     {/if}
   </nav>
 
-  {#each m.types as item, index}
-    <div class="content" class:shown={index == m.activeType}>
+  {#each m.widgets as item, index}
+    <div class="content" class:shown={index == m.activeWidgetID}>
       <BaseWidgetContent {item} />
     </div>
   {/each}
@@ -56,7 +59,7 @@
   <button
     class="resizer"
     onmousedown={() => {
-      hover.startResizing(m)
+      modular.resizing.startResizing(m)
     }}
   >
     Resize
@@ -64,13 +67,20 @@
 </Section>
 
 <style>
+  .mover {
+    cursor: grab;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    left: 25%;
+    height: 8px;
+  }
   nav {
     display: flex;
     flex-wrap: wrap;
     padding: 1rem;
     gap: 0.5rem;
     background-color: green;
-    cursor: grab;
   }
   .extra {
     flex-grow: 1;
@@ -98,13 +108,5 @@
   }
   .content.shown {
     display: block;
-  }
-  .controls {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1rem;
-    padding-bottom: 0;
-    gap: 0.5rem;
   }
 </style>

@@ -1,5 +1,5 @@
 import { settings } from "$lib/settings.svelte"
-import { GenericModularDependency } from "../modular.svelte"
+import { GenericModularDependency } from "../generic.svelte"
 import type { WidgetGroup } from "../types"
 
 export class MovingManager extends GenericModularDependency {
@@ -28,6 +28,12 @@ export class MovingManager extends GenericModularDependency {
 
     const newStartX = newX - this.xTile
     const newStartY = newY - this.yTile
+
+    if (
+      newStartX == this.movingModule.start.x &&
+      newStartY == this.movingModule.start.y
+    )
+      return false
 
     for (let dx = newStartX; dx < newStartX + this.movingModule.sizes.x; dx++) {
       for (

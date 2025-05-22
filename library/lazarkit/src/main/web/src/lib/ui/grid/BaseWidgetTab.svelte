@@ -3,21 +3,26 @@
 
   import { info } from "$lib"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
-  import { allWidgetTypes, WidgetTypes, type Module } from "./grid.svelte"
-  import { hover } from "./hover.svelte"
+  import {
+    allWidgetTypes,
+    WidgetTypes,
+    type Widget,
+    type WidgetGroup,
+  } from "./logic/types"
+  import { modular } from "./logic/modular"
 
-  let { m, index }: { m: Module; index: number } = $props()
-  let t = $derived(m.types[index])
+  let { m, index }: { m: WidgetGroup; index: number } = $props()
+  let t = $derived(m.widgets[index])
 
   function removeType() {
-    hover.closeContextMenu()
+    modular.context.closeContextMenu()
 
-    m.types.splice(index, 1)
-    if (m.activeType == index) {
-      if (m.activeType > 0) {
-        m.activeType = m.activeType - 1
+    m.widgets.splice(index, 1)
+    if (m.activeWidgetID == index) {
+      if (m.activeWidgetID > 0) {
+        m.activeWidgetID = m.activeWidgetID - 1
       } else {
-        m.activeType = 0
+        m.activeWidgetID = 0
       }
     }
   }
@@ -29,59 +34,66 @@
   tabindex={index}
   oncontextmenu={(event: MouseEvent) => {
     event.preventDefault()
-    hover.openContextMenu(m.id, index)
+    modular.context.openContextMenu(m.id, index)
   }}
 >
   <button
     class="tab"
-    class:selected={index == m.activeType}
-    onclick={() => (m.activeType = index)}
+    class:selected={index == m.activeWidgetID}
+    onclick={() => (m.activeWidgetID = index)}
     onmousedown={(event: MouseEvent) => {
-      hover.startMoving(event.clientX, event.clientY, index, m.id)
+      modular.tabs.startMoving(event.clientX, event.clientY, index, m.id)
     }}>{t.type}</button
   >
-  {#if hover.isContextOpened(m.id, index)}
+  {#if modular.context.isContextOpened(m.id, index)}
     <ContextMenu id={m.id}>
       <button class="button" onclick={removeType}>Remove</button>
 
       <SelectInput
         keepOpened={true}
         type={""}
-        startValue={m.types[index].type}
-        bind:currentValue={m.types[index].type}
-        value={m.types[index].type}
+        startValue={m.widgets[index].type}
+        bind:currentValue={m.widgets[index].type}
+        value={m.widgets[index].type}
         possibleValues={allWidgetTypes}
         isValid={true}
         alwaysValid={true}
       ></SelectInput>
-      {#if m.types[index].type == WidgetTypes.CUSTOM}
-        <SelectInput
-          keepOpened={true}
-          type={""}
-          startValue={m.types[index].pluginID}
-          bind:currentValue={m.types[index].pluginID}
-          value={m.types[index].pluginID}
-          possibleValues={[...info.plugins.map((it) => it.id), "none"]}
-          isValid={true}
-          alwaysValid={true}
-        ></SelectInput>
-        {#if m.types[index].pluginID != "none"}
+      {#if m.widgets[index].type == WidgetTypes.CUSTOM}
+        {#if info.plugins.length == 0}
+          <p>No plugins found</p>
+        {:else}
           <SelectInput
             keepOpened={true}
             type={""}
-            startValue={m.types[index].pageID}
-            bind:currentValue={m.types[index].pageID}
-            value={m.types[index].pageID}
-            possibleValues={[
-              ...(
-                info.plugins.find((it) => it.id == m.types[index].pluginID)
-                  ?.pages ?? []
-              ).map((it) => it.id),
-              "none",
-            ]}
+            startValue={m.widgets[index].pluginID}
+            bind:currentValue={m.widgets[index].pluginID}
+            value={m.widgets[index].pluginID}
+            possibleValues={[...info.plugins.map((it) => it.id), "none"]}
             isValid={true}
             alwaysValid={true}
           ></SelectInput>
+          {#if m.widgets[index].pluginID != "none"}
+            <SelectInput
+              keepOpened={true}
+              type={""}
+              startValue={m.widgets[index].pageID}
+              bind:currentValue={m.widgets[index].pageID}
+              value={m.widgets[index].pageID}
+              possibleValues={[
+                ...(
+                  info.plugins.find(
+                    (it) =>
+                      m.widgets[index].type == WidgetTypes.CUSTOM &&
+                      it.id == m.widgets[index].pluginID
+                  )?.pages ?? []
+                ).map((it) => it.id),
+                "none",
+              ]}
+              isValid={true}
+              alwaysValid={true}
+            ></SelectInput>
+          {/if}
         {/if}
       {/if}
     </ContextMenu>

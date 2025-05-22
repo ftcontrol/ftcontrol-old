@@ -1,5 +1,5 @@
 import { settings } from "$lib/settings.svelte"
-import { GenericModularDependency } from "../modular.svelte"
+import { GenericModularDependency } from "../generic.svelte"
 
 export class TabsManager extends GenericModularDependency {
   movingIndex: number | null = $state(null)

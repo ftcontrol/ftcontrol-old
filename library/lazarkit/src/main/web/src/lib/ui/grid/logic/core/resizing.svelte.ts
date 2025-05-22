@@ -1,5 +1,5 @@
 import { settings } from "$lib/settings.svelte"
-import { GenericModularDependency } from "../modular.svelte"
+import { GenericModularDependency } from "../generic.svelte"
 import type { WidgetGroup } from "../types"
 
 export class ResizingManager extends GenericModularDependency {
@@ -15,6 +15,12 @@ export class ResizingManager extends GenericModularDependency {
     if (this.resizingModule == null) return false
     if (newX < this.resizingModule.start.x) return false
     if (newY < this.resizingModule.start.y) return false
+    if (
+      newX == this.resizingModule.start.x + this.resizingModule.sizes.x - 1 &&
+      newY == this.resizingModule.start.y + this.resizingModule.sizes.y - 1
+    )
+      return false
+
     for (let dx = this.resizingModule.start.x; dx <= newX; dx++) {
       for (let dy = this.resizingModule.start.y; dy <= newY; dy++) {
         if (
