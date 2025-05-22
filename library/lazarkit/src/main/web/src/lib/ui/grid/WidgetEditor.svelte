@@ -4,6 +4,7 @@
   import Section from "$ui/primitives/Section.svelte"
   import Plus from "$ui/icons/Plus.svelte"
   import BaseWidget from "./BaseWidget.svelte"
+  import ResizingOverlay from "./ResizingOverlay.svelte"
 
   let { gridManager }: { gridManager: Grid } = $props()
 </script>
@@ -14,7 +15,6 @@
 >
   <section>
     {#each gridManager.modules as w}
-      {@const activeType = w.types[w.activeType]}
       <div
         class="item"
         class:isOverlay={gridManager.selectedWidgetId == w.id}
@@ -59,82 +59,8 @@
         <Plus />
       </button>
     {/each}
+    <ResizingOverlay {gridManager} />
   </section>
-
-  {#if gridManager.isMoving || true}
-    <section
-      role="button"
-      tabindex="0"
-      onmouseup={() => {
-        if (gridManager.selectedWidget == null) {
-          return
-        }
-
-        if (!gridManager.canPlace) {
-          gridManager.stopMoving("Cannot move there.")
-          return
-        }
-
-        gridManager.performMove()
-        gridManager.stopMoving(null)
-      }}
-    >
-      {#each Array.from( { length: gridManager.cellsX * gridManager.cellsY } ) as _, index}
-        {@const id =
-          gridManager.modulesMap[Math.floor(index / gridManager.cellsX) + 1][
-            (index % gridManager.cellsX) + 1
-          ]}
-        <p
-          class="overlay-item"
-          class:isEmpty={id != null &&
-            id != gridManager.selectedWidgetId &&
-            false}
-          onfocus={() => {}}
-          onmouseover={() => {
-            console.log(index)
-            if (gridManager.selectedWidget == null) {
-              return
-            }
-
-            const selected = gridManager.selectedWidget
-
-            const newX = (index % gridManager.cellsX) + 1
-            const newY = Math.floor(index / gridManager.cellsX) + 1
-
-            const canPlaceBoth = gridManager.coreCheckPlace(
-              newX,
-              newY,
-              selected
-            )
-            const canPlaceX = gridManager.coreCheckPlace(
-              newX,
-              gridManager.selectedCellY,
-              selected
-            )
-            const canPlaceY = gridManager.coreCheckPlace(
-              gridManager.selectedCellX,
-              newY,
-              selected
-            )
-
-            console.log("canPlaceBoth", canPlaceBoth)
-
-            console.log("canPlaceX", canPlaceX)
-
-            console.log("canPlaceY", canPlaceY)
-
-            if (canPlaceX || canPlaceBoth) {
-              gridManager.selectedCellX = newX
-            }
-
-            if (canPlaceY || canPlaceBoth) {
-              gridManager.selectedCellY = newY
-            }
-          }}
-        ></p>
-      {/each}
-    </section>
-  {/if}
 </div>
 
 <style>
@@ -159,15 +85,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-  .overlay-item {
-    border: 1px solid var(--primary);
-    border-radius: 16px;
-    margin: 0;
-  }
-  .overlay-item.isEmpty {
-    opacity: 0;
   }
 
   .container {

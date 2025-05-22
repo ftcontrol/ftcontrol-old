@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { info } from "$lib"
   import Section from "$ui/primitives/Section.svelte"
   import BaseWidgetContent from "./BaseWidgetContent.svelte"
   import BaseWidgetTab from "./BaseWidgetTab.svelte"
@@ -10,7 +9,7 @@
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
-<Section widgetID={m.id}>
+<Section>
   <nav>
     {#each m.types as t, index}
       {#if hover.showExtra(m.id, index)}
@@ -50,11 +49,11 @@
 
   <button
     class="resizer"
-    onmousedown={(event: MouseEvent) => {
-      hover.startResizing(m.id, event.clientX, event.clientY)
+    onmousedown={() => {
+      hover.startResizing(m)
     }}
-    onmouseup={() => {}}
   >
+    Resize
   </button>
 </Section>
 

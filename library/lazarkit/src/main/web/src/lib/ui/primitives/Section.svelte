@@ -9,24 +9,16 @@
     maxHeight = false,
     isDisabled = false,
     isPrimary = false,
-    widgetID = "",
   }: {
     children?: Snippet
     title?: string
     maxHeight?: boolean
     isDisabled?: boolean
     isPrimary?: boolean
-    widgetID?: string
   } = $props()
 </script>
 
-<section
-  class="widget"
-  class:maxHeight
-  class:isDisabled
-  class:isPrimary
-  data-id={widgetID}
->
+<section class="widget" class:maxHeight class:isDisabled class:isPrimary>
   {#if title != ""}
     <Header>
       <Title>{title}</Title>

@@ -1,4 +1,5 @@
 import { settings } from "$lib/settings.svelte"
+import type { Module } from "./grid.svelte"
 
 class Hover {
   // TAB MOVING
@@ -185,57 +186,37 @@ class Hover {
   }
 
   // RESIZING
-  resizingID: string | null = $state(null)
+  resizingModule: Module | null = $state(null)
 
-  rstartX: number | null = $state(null)
-  rstartY: number | null = $state(null)
+  isResizing = $derived(this.resizingModule != null)
 
-  startResizing(id: string, x: number, y: number) {
-    this.resizingID = id
-    this.rstartX = x
-    this.rstartY = y
+  startResizing(m: Module) {
+    this.resizingModule = m
   }
 
   stopResizing() {
-    if (
-      this.resizingID != null &&
-      this.rstartX != null &&
-      this.rstartY != null
-    ) {
-      const deltaX = this.mouseX - this.rstartX
-      const deltaY = this.mouseY - this.rstartY
-      console.log(deltaX, deltaY)
-
-      const widgetElement = document.querySelector(
-        `.widget[data-id="${this.resizingID}"]`
-      )
-
-      if (widgetElement) {
-        console.log("Got widget", widgetElement)
-      }
-    }
-    this.resizingID = null
-    this.rstartX = null
-    this.rstartY = null
+    this.resizingModule = null
   }
 
   private resizingMouse(event: MouseEvent) {
-    if (
-      this.resizingID != null &&
-      this.rstartX != null &&
-      this.rstartY != null
-    ) {
-      const deltaX = this.mouseX - this.rstartX
-      const deltaY = this.mouseY - this.rstartY
-      console.log(deltaX, deltaY)
+    if (this.resizingModule != null) {
+      const elements = document.elementsFromPoint(event.clientX, event.clientY)
+      const el = elements.filter(
+        (el) =>
+          el instanceof HTMLElement &&
+          el.classList.contains("overlay-item") &&
+          el.hasAttribute("data-x") &&
+          el.hasAttribute("data-y")
+      )[0]
 
-      const widgetElement = document.querySelector(
-        `.widget[data-id="${this.resizingID}"]`
-      )
-
-      if (widgetElement) {
-        console.log("Got widget", widgetElement)
+      if (el != null) {
+        console.log("Got widget", el)
+        const x = el.getAttribute("data-x")
+        const y = el.getAttribute("data-y")
+        console.log(x, y)
       }
+
+      // [data-id="${this.resizingModule.id}"]
     }
   }
 
