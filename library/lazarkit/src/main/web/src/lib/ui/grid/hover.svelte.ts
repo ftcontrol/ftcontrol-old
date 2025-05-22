@@ -5,11 +5,37 @@ class Hover {
   mouseX: number = $state(0)
   mouseY: number = $state(0)
 
-  private boundHandler!: (event: MouseEvent) => void
+  startX: number | null = $state(null)
+  startY: number | null = $state(null)
+
+  isMoving = $derived.by(() => {
+    if (!this.startX || !this.startY) {
+      return false
+    }
+    let deltaX = Math.abs(this.mouseX - this.startX)
+    let deltaY = Math.abs(this.mouseY - this.startY)
+    let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    if (distance > 64) {
+      return true
+    }
+    return false
+  })
+
+  private moveBoundHandler!: (event: MouseEvent) => void
+  private upBoundHandler!: (event: MouseEvent) => void
+
+  startMoving(x: number, y: number, index: number, id: string) {
+    this.startX = x
+    this.startY = y
+    this.movingIndex = index
+    this.movingID = id
+  }
 
   init() {
-    this.boundHandler = this.updateMouse.bind(this)
-    window.addEventListener("mousemove", this.boundHandler)
+    this.moveBoundHandler = this.updateMouse.bind(this)
+    this.upBoundHandler = this.updateClick.bind(this)
+    window.addEventListener("mousemove", this.moveBoundHandler)
+    window.addEventListener("mouseup", this.upBoundHandler)
   }
 
   updateMouse(event: MouseEvent) {
@@ -17,8 +43,11 @@ class Hover {
     this.mouseY = event.clientY
   }
 
+  updateClick(event: MouseEvent) {}
+
   destroy() {
-    window.removeEventListener("mousemove", this.boundHandler)
+    window.removeEventListener("mousemove", this.moveBoundHandler)
+    window.removeEventListener("mouseup", this.upBoundHandler)
   }
 }
 

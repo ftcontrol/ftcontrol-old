@@ -16,26 +16,7 @@
 
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 
-  let startX: number | null = $state(null)
-  let startY: number | null = $state(null)
-  let movingIndex: number | null = $state(null)
-  let isMoving = $state(false)
-
-  $effect(() => {
-    if (!startX || !startY) {
-      isMoving = false
-      return
-    }
-    let deltaX = Math.abs(hover.mouseX - startX)
-    let deltaY = Math.abs(hover.mouseY - startY)
-    let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-    if (distance > 64) {
-      hover.movingID = m.id
-      hover.movingIndex = movingIndex
-      isMoving = true
-    }
-    isMoving = false
-  })
+  let isMoving = $derived(hover.movingID == m.id && hover.isMoving)
 </script>
 
 <Portal>
@@ -55,9 +36,7 @@
             m.activeType = index
           }}
           onmousedown={(event: MouseEvent) => {
-            startX = event.clientX
-            startY = event.clientY
-            movingIndex = index
+            hover.startMoving(event.clientX, event.clientY, index, m.id)
           }}
           >{t.type}
         </button>
