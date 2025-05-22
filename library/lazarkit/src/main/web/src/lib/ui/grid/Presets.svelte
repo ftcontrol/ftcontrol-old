@@ -50,7 +50,16 @@
             onclick={() => {
               var newPreset = structuredClone(defaultModuled())
               newPreset.name = "New Preset"
-              settings.presets.push(new PresetManager(newPreset))
+              const index = settings.presets.findIndex((p) => p.id === id)
+              if (index !== -1) {
+                settings.presets.splice(
+                  index + 1,
+                  0,
+                  new PresetManager(newPreset)
+                )
+              } else {
+                settings.presets.push(new PresetManager(newPreset))
+              }
               modular.context.closeContextMenu()
             }}
           >
