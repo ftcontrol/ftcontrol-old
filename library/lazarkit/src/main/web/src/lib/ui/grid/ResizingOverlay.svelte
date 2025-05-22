@@ -30,6 +30,7 @@
   }
   .overlay-item.isShown {
     display: block;
+    opacity: 0;
   }
   .color {
     width: 100%;

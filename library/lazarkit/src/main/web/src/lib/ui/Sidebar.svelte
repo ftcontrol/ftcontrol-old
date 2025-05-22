@@ -1,19 +1,13 @@
 <script lang="ts">
-  import { info, notifications, socket } from "$lib"
+  import { info, socket } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import { Logo, Arrow } from "./icons"
   import Button from "./primitives/Button.svelte"
   let isOpened = $state(true)
 
   import { tick } from "svelte"
-  import StringInput from "./primitives/StringInput.svelte"
-  import { stringValidator } from "./primitives/validators"
-  import Remove from "./icons/Remove.svelte"
-  import { defaultModuled } from "./grid/logic/types"
-  import { PresetManager } from "./grid/logic/preset.svelte"
+  import Presets from "./grid/Presets.svelte"
   let isCovering = $state(false)
-
-  let newNameValue = $state("")
 
   async function toggleTheme() {
     isCovering = true
@@ -63,84 +57,7 @@
 
       <h2>My Panels</h2>
 
-      {#each settings.allIDs as id}
-        {@const grid = settings.getPresetById(id)}
-        {#if grid != null}
-          {#if info.showEdit}
-            <div class="item controls">
-              <button
-                class="icon"
-                onclick={() => {
-                  settings.removePreset(id)
-                }}
-              >
-                <Remove />
-              </button>
-              <form
-                class="item"
-                onsubmit={() => {
-                  settings.savePresets()
-                  info.showEdit = false
-                }}
-              >
-                <StringInput
-                  value={grid.name}
-                  isValid={true}
-                  startValue={grid.name}
-                  bind:currentValue={grid.name}
-                  type={""}
-                  validate={stringValidator}
-                  alwaysValid={true}
-                />
-              </form>
-              {#if settings.selectedManagerID != id}
-                <a
-                  href="/?preset={id}"
-                  onclick={() => {
-                    settings.selectedManagerID = id
-                  }}
-                >
-                  <Arrow isOpened={false} isVertical={false} />
-                </a>
-              {/if}
-            </div>
-          {:else}
-            <a
-              href="/?preset={id}"
-              onclick={() => {
-                settings.selectedManagerID = id
-              }}>{grid?.name}</a
-            >
-          {/if}
-        {/if}
-      {/each}
-
-      {#if info.showEdit}
-        <form
-          class="item controls"
-          onsubmit={() => {
-            if (newNameValue == "") {
-              notifications.add("Cannot have an empty name.")
-              return
-            }
-            var newPreset = structuredClone(defaultModuled())
-            newPreset.name = newNameValue
-            settings.presets.push(new PresetManager(newPreset))
-            newNameValue = ""
-          }}
-        >
-          <StringInput
-            value={newNameValue}
-            isValid={true}
-            startValue={newNameValue}
-            bind:currentValue={newNameValue}
-            type={""}
-            validate={stringValidator}
-            alwaysValid={true}
-          />
-          <input type="submit" value="Create" disabled={newNameValue == ""} />
-        </form>
-      {/if}
+      <Presets />
 
       <h2>Developer</h2>
       <a href="/time">Global Time</a>
@@ -157,24 +74,6 @@
           info.showSettings = !info.showSettings
         }}>Settings</Button
       >
-      <Button
-        onclick={() => {
-          info.showEdit = !info.showEdit
-          if (settings.isGridEdited) {
-            settings.savePresets()
-          }
-        }}
-      >
-        {#if info.showEdit}
-          {#if settings.isGridEdited}
-            Save changes
-          {:else}
-            Disable Edit
-          {/if}
-        {:else}
-          Enable Edit
-        {/if}
-      </Button>
     </div>
   </nav>
 </section>
@@ -199,12 +98,6 @@
   }
   input[type="submit"]:disabled {
     opacity: 0.5;
-  }
-  button.icon {
-    all: unset;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
   }
   .cover {
     background-color: var(--bg);

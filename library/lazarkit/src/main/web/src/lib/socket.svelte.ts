@@ -153,7 +153,6 @@ export class InfoManager {
   plugins: Plugin[] = $state([])
 
   showSettings = $state(false)
-  showEdit = $state(false)
 
   time = $state("")
   opModes = $state<OpMode[]>([])

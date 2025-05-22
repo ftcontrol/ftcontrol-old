@@ -84,7 +84,6 @@ class Settings {
     this.presets = [new PresetManager(null)]
     this.initialPresets = [new PresetManager(null)]
     this.hasPresets = false
-    info.showEdit = false
   }
 
   removePreset(id: string) {
