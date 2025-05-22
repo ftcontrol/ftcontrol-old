@@ -1,11 +1,8 @@
 <script lang="ts">
   import { gamepads, info, notifications } from "$lib"
-  import { settings } from "$lib/settings.svelte"
   import GamepadDrawing from "$ui/GamepadDrawing.svelte"
   import PluginPage from "$ui/PluginPage.svelte"
-  import Header from "$ui/primitives/Header.svelte"
   import Section from "$ui/primitives/Section.svelte"
-  import Title from "$ui/primitives/Title.svelte"
   import Configurables from "$ui/widgets/configurables/Configurables.svelte"
   import GameField from "$ui/widgets/fields/GameField.svelte"
   import Graph from "$ui/widgets/Graph.svelte"
@@ -14,10 +11,40 @@
   import Telemetry from "$ui/widgets/Telemetry.svelte"
   import { Grid, WidgetTypes, type Module } from "./grid.svelte"
   import GridControls from "./GridControls.svelte"
+  import Portal from "svelte-portal"
+  import { hover } from "./hover.svelte"
+
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
+
+  let startX: number | null = $state(null)
+  let startY: number | null = $state(null)
+  let movingIndex: number | null = $state(null)
+  let isMoving = $state(false)
+
+  $effect(() => {
+    if (!startX || !startY) {
+      isMoving = false
+      return
+    }
+    let deltaX = Math.abs(hover.mouseX - startX)
+    let deltaY = Math.abs(hover.mouseY - startY)
+    let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    if (distance > 64) {
+      hover.movingID = m.id
+      hover.movingIndex = movingIndex
+      isMoving = true
+    }
+    isMoving = false
+  })
 </script>
 
+<Portal>
+  <button class="hover">{m.types[m.activeType].type}</button>
+</Portal>
 <Section>
+  <p>
+    isMoving: {isMoving}
+  </p>
   <div class="bar">
     <div class="controls">
       {#each m.types as t, index}
@@ -26,6 +53,11 @@
           class:selected={index == m.activeType}
           onclick={() => {
             m.activeType = index
+          }}
+          onmousedown={(event: MouseEvent) => {
+            startX = event.clientX
+            startY = event.clientY
+            movingIndex = index
           }}
           >{t.type}
         </button>
@@ -41,6 +73,9 @@
               if (m.activeType < 0) m.activeType = 0
             }}>x</button
           >
+        {/if}
+        {#if index < m.types.length - 1}
+          <div class="extra-small" />
         {/if}
       {/each}
       <div class="extra" />
@@ -108,6 +143,11 @@
 </Section>
 
 <style>
+  .hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
   .extra {
     flex-grow: 1;
     background-color: blue;

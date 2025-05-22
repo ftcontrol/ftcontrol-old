@@ -92,3 +92,4 @@ gradle.properties
 /test-codebase/.kotlin
 /lazarkit-website/dist
 /plugins/example/.kotlin
+*.afdesign~lock~

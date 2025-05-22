@@ -8,6 +8,7 @@
   let { children } = $props()
 
   import "./global.css"
+  import { hover } from "$ui/grid/hover.svelte"
 
   onMount(() => {
     socket.init()
@@ -16,8 +17,11 @@
       info.loop()
     }, 100)
 
+    hover.init()
+
     return () => {
       clearInterval(interval)
+      hover.destroy()
     }
   })
 </script>
