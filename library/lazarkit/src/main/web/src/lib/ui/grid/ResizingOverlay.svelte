@@ -15,10 +15,7 @@
       data-x={x}
       data-y={y}
       style="grid-row: {y} / span 1; grid-column: {x} / span 1;"
-    >
-      {x}
-      {y}
-    </p>
+    ></p>
   {/if}
 {/each}
 

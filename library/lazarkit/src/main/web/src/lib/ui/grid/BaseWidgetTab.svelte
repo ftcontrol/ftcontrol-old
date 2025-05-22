@@ -41,7 +41,7 @@
     }}>{t.type}</button
   >
   {#if hover.isContextOpened(m.id, index)}
-    <ContextMenu>
+    <ContextMenu id={m.id}>
       <button class="button" onclick={removeType}>Remove</button>
 
       <SelectInput

@@ -13,7 +13,7 @@
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
-<ContextMenu>
+<ContextMenu id={m.id}>
   <button
     class="button"
     onclick={() => {

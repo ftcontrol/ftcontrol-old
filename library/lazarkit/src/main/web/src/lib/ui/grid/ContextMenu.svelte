@@ -2,7 +2,7 @@
   import type { Snippet } from "svelte"
   import { onMount } from "svelte"
 
-  let { children }: { children?: Snippet } = $props()
+  let { children, id }: { children?: Snippet; id: string } = $props()
 
   let el: HTMLDivElement | null = null
 
@@ -10,7 +10,10 @@
     if (!el) return ""
 
     const rect = el.getBoundingClientRect()
-    const overflowX = rect.right > window.innerWidth - 16
+    const element = document.querySelectorAll(`.widget[data-id="${id}"]`)[0]
+    const rect2 = element.getBoundingClientRect()
+
+    const overflowX = rect.right > rect2.right - 8
 
     console.log(overflowX)
 
