@@ -9,28 +9,14 @@
   let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
 </script>
 
-<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 <Section widgetID={m.id}>
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <nav
-    onclick={(event: MouseEvent) => {
-      const x = event.clientX
-      const y = event.clientY
-      const element = document.querySelectorAll(`.widget[data-id="${m.id}"]`)[0]
-      const box = element.getBoundingClientRect()
-      m.sizes.x
-      box.x
-      box.width
-      // console.log(box.x, box.width, x)
-      // console.log(x, y, element)
-      const xTile =
-        m.start.x + Math.ceil(((x - box.x) / box.width) * m.sizes.x) - 1
-      const YTile =
-        m.start.y + Math.ceil(((y - box.y) / box.height) * m.sizes.y) - 1
-
-      console.log(xTile, YTile)
-    }}
-  >
+  <nav>
+    <button
+      onmousedown={(event: MouseEvent) => {
+        hover.startMov(m, event.clientX, event.clientY)
+      }}
+      aria-label="Mover"
+    ></button>
     {#each m.types as t, index}
       {#if hover.showExtra(m.id, index)}
         <div class="extra-small" data-id={m.id} data-index={index}>
