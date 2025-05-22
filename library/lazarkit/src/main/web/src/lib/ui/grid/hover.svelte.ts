@@ -13,14 +13,18 @@ class Hover {
   startX: number | null = $state(null)
   startY: number | null = $state(null)
 
+  wasStartedMoving = $state(false)
+
   isMoving = $derived.by(() => {
     if (!this.startX || !this.startY) {
       return false
     }
+    if (this.wasStartedMoving) return true
     let deltaX = Math.abs(this.mouseX - this.startX)
     let deltaY = Math.abs(this.mouseY - this.startY)
     let distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-    if (distance > 64) {
+    if (distance > 32) {
+      this.wasStartedMoving = true
       return true
     }
     return false
@@ -61,6 +65,7 @@ class Hover {
         }
       }
     }
+    this.wasStartedMoving = false
     this.startX = null
     this.startY = null
     this.movingIndex = null
@@ -76,6 +81,7 @@ class Hover {
     this.movingID = id
     this.hoveringID = null
     this.hoveringIndex = null
+    this.wasStartedMoving = false
   }
 
   init() {

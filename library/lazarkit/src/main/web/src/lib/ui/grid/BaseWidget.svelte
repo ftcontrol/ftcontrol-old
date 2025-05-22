@@ -140,8 +140,8 @@
   .resizer {
     background-color: red;
     cursor: grabbing;
-    width: 64px;
-    height: 64px;
+    width: 32px;
+    height: 32px;
     position: absolute;
     right: 0;
     bottom: 0;
