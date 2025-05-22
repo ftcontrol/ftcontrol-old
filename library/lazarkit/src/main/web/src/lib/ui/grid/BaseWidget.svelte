@@ -29,17 +29,19 @@
   <div class="bar">
     <div class="controls">
       {#each m.types as t, index}
-        <button
-          class="base"
-          class:selected={index == m.activeType}
-          onclick={() => {
-            m.activeType = index
-          }}
-          onmousedown={(event: MouseEvent) => {
-            hover.startMoving(event.clientX, event.clientY, index, m.id)
-          }}
-          >{t.type}
-        </button>
+        {#if !hover.isMoving || hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != index)}
+          <button
+            class="base"
+            class:selected={index == m.activeType}
+            onclick={() => {
+              m.activeType = index
+            }}
+            onmousedown={(event: MouseEvent) => {
+              hover.startMoving(event.clientX, event.clientY, index, m.id)
+            }}
+            >{t.type}
+          </button>
+        {/if}
         {#if info.showEdit && m.types.length > 1}
           <button
             onclick={() => {
@@ -54,11 +56,14 @@
           >
         {/if}
         {#if index < m.types.length - 1}
-          <div class="extra-small" />
+          {#if hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != index))}
+            <div class="extra-small" data-id={m.id} data-index={index} />
+          {/if}
         {/if}
       {/each}
-      <div class="extra" />
-
+      {#if hover.isMoving && (hover.movingID != m.id || (hover.movingID == m.id && hover.movingIndex != m.types.length))}
+        <div class="extra" data-id={m.id} data-index={m.types.length} />
+      {/if}
       {#if info.showEdit}
         <button
           onclick={() => {
@@ -130,6 +135,10 @@
   .extra {
     flex-grow: 1;
     background-color: blue;
+  }
+  .extra-small {
+    background-color: blue;
+    width: 16px;
   }
   .resizer {
     background-color: red;
