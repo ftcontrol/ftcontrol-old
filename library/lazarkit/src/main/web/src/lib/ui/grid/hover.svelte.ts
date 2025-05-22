@@ -57,29 +57,17 @@ class Hover {
 
   stopMoving() {
     if (this.hoveringID != null && this.hoveringIndex != null) {
-      console.log("Try moving", this.hoveringID, this.hoveringIndex)
-      console.log("Try moving", this.movingID, this.movingIndex)
       const movingWidget = settings.currentGrid.modules.find(
         (it) => it.id == this.movingID
       )
       const hoveringWidget = settings.currentGrid.modules.find(
         (it) => it.id == this.hoveringID
       )
-      console.log("Found", movingWidget, hoveringWidget)
       if (movingWidget && hoveringWidget && this.movingIndex != null) {
-        console.log("Got here")
         const movingType = movingWidget.types[this.movingIndex]
         if (movingType) {
           movingWidget.types.splice(this.movingIndex, 1)
           hoveringWidget.types.splice(this.hoveringIndex, 0, movingType)
-          console.log(
-            "Performed move",
-            movingType,
-            "from",
-            movingWidget,
-            "to",
-            hoveringWidget
-          )
 
           if (movingWidget.activeType == this.movingIndex) {
             if (movingWidget.activeType > 0) {
@@ -129,10 +117,8 @@ class Hover {
     for (const el of matchingElements) {
       const id = el.getAttribute("data-id")
       const indexString = el.getAttribute("data-index")
-      console.log(indexString)
       if (!indexString) continue
       const index = parseInt(indexString)
-      console.log("Hovered element:", { id, index, el })
       if (id != null && index != null) {
         this.hoveringID = id
         this.hoveringIndex = index
@@ -236,7 +222,6 @@ class Hover {
       )[0]
 
       if (el != null) {
-        console.log("Got widget", el)
         let stringX = el.getAttribute("data-x")
         let stringY = el.getAttribute("data-y")
 
@@ -246,7 +231,6 @@ class Hover {
         const y = parseInt(stringY)
 
         if (!this.canResize(x, y)) return
-        console.log(x, y)
         this.resizingModule.sizes = {
           x: x - this.resizingModule.start.x + 1,
           y: y - this.resizingModule.start.y + 1,
@@ -274,8 +258,6 @@ class Hover {
 
     this.xTile = Math.ceil(((x - box.x) / box.width) * m.sizes.x) - 1
     this.yTile = Math.ceil(((y - box.y) / box.height) * m.sizes.y) - 1
-
-    console.log(this.xTile, this.yTile)
   }
 
   showWidget(x: number, y: number) {
@@ -325,7 +307,6 @@ class Hover {
       )[0]
 
       if (el != null) {
-        console.log("Got widget", el)
         let stringX = el.getAttribute("data-x")
         let stringY = el.getAttribute("data-y")
 
@@ -336,7 +317,6 @@ class Hover {
         const y = parseInt(stringY)
 
         if (!this.canMov(x, y)) return
-        console.log(x, y)
         this.movingModule.start = {
           x: x - this.xTile,
           y: y - this.yTile,
