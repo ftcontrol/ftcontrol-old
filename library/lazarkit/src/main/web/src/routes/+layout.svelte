@@ -26,6 +26,10 @@
       modular.destroy()
     }
   })
+
+  $effect(() => {
+    if (settings.presets) settings.savePresets()
+  })
 </script>
 
 <Portal>
