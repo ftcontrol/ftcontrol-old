@@ -18,7 +18,7 @@ class GenericField(
         get() = reference.name
 
     fun debug() {
-        println("   DASH: Of type $type")
+        println("   PANELS: Of type $type")
     }
 
     val toJsonType: GenericTypeJson

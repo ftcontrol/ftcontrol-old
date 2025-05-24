@@ -36,7 +36,7 @@ class MyField(
         return try {
             get(parentField?.getValue(recursionDepth + 1))
         } catch (e: Exception) {
-            println("DASH: Could not get value for ${name}: ${e.message}")
+            println("PANELS: Could not get value for ${name}: ${e.message}")
             null
         }
     }
@@ -50,7 +50,7 @@ class MyField(
             set(parentField?.getValue(), newValue)
             true
         } catch (e: Exception) {
-            println("DASH: Could not set value for ${name}: ${e.message}")
+            println("PANELS: Could not set value for ${name}: ${e.message}")
             false
         }
     }

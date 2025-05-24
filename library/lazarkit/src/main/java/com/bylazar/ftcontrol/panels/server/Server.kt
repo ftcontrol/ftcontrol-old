@@ -87,18 +87,18 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
         try {
             val inputStream = assetManager.open(path)
-            println("DASH: success")
+            println("PANELS: success")
             return allowCors(newChunkedResponse(Response.Status.OK, mime, inputStream))
         } catch (e: Exception) {
-            println("DASH: Primary asset not found: $path — ${e.message}")
+            println("PANELS: Primary asset not found: $path — ${e.message}")
             e.printStackTrace()
 
             return try {
                 val fallbackStream = assetManager.open("web/index.html")
-                println("DASH: Fallback to index.html")
+                println("PANELS: Fallback to index.html")
                 allowCors(newChunkedResponse(Response.Status.OK, "text/html", fallbackStream))
             } catch (fallbackException: Exception) {
-                val message = "DASH: Fallback also failed: ${fallbackException.message}"
+                val message = "PANELS: Fallback also failed: ${fallbackException.message}"
                 println(message)
                 fallbackException.printStackTrace()
                 getResponse(message, status = Response.Status.INTERNAL_ERROR)
@@ -109,11 +109,11 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
     fun startServer() {
         start()
-        println("DASH: Server started on port 8001")
+        println("PANELS: Server started on port 8001")
     }
 
     fun stopServer() {
         stop()
-        println("DASH: Server stopped")
+        println("PANELS: Server stopped")
     }
 }

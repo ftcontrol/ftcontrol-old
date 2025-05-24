@@ -59,11 +59,11 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
                 @Suppress("UNCHECKED_CAST")
                 config = newConfig as T
 
-                println("DASH: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
+                println("PANELS: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
 
                 //TODO: handle multiple configs
             } catch (t: Throwable) {
-                println("DASH: Throwable caught while searching config: ${t::class.simpleName} - ${t.message}")
+                println("PANELS: Throwable caught while searching config: ${t::class.simpleName} - ${t.message}")
                 t.printStackTrace()
             }
         }
