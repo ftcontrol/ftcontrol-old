@@ -3,12 +3,7 @@
 
   import { info } from "$lib"
   import SelectInput from "$ui/primitives/SelectInput.svelte"
-  import {
-    allWidgetTypes,
-    WidgetTypes,
-    type Widget,
-    type WidgetGroup,
-  } from "./logic/types"
+  import { allWidgetTypes, WidgetTypes, type WidgetGroup } from "./logic/types"
   import { modular } from "./logic/modular"
 
   let { m, index }: { m: WidgetGroup; index: number } = $props()
