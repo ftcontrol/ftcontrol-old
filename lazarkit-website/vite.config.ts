@@ -55,6 +55,10 @@ const config = defineConfig({
                   title: "Changelog",
                   to: "/docs/changelog",
                 },
+                {
+                  title: "Future Plans",
+                  to: "/docs/plans",
+                },
               ],
             },
             {

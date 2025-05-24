@@ -112,7 +112,7 @@ publishing {
         maven(MavenPublication) {
             groupId = "com.bylazar"
             artifactId = "ftcontrol"
-            version = "0.5.9"
+            version = "0.6.2"
 
             pom {
                 description = "All in one toolbox for FTC."
