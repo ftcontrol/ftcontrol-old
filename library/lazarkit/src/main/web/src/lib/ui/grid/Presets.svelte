@@ -15,9 +15,13 @@
 {#each settings.allIDs as id, index}
   {@const grid = settings.getPresetById(id)}
   {#if modular.sidebarTabs.showExtra("", index)}
-    <div class="extra" data-id={""} data-index={index}>
-      {index}
-    </div>
+    <div
+      class="extra"
+      data-id={""}
+      data-index={index}
+      class:selected={"" == modular.sidebarTabs.hoveringID &&
+        index == modular.sidebarTabs.hoveringIndex}
+    ></div>
   {/if}
   {#if modular.sidebarTabs.showLabel("", index)}
     {#if grid == null}
@@ -109,7 +113,13 @@
       </Button> -->
 {/each}
 {#if modular.sidebarTabs.showExtra("", settings.allIDs.length)}
-  <div class="extra" data-id={""} data-index={settings.allIDs.length}></div>
+  <div
+    class="extra"
+    data-id={""}
+    data-index={settings.allIDs.length}
+    class:selected={"" == modular.sidebarTabs.hoveringID &&
+      settings.allIDs.length == modular.sidebarTabs.hoveringIndex}
+  ></div>
 {/if}
 
 <style>
@@ -117,9 +127,15 @@
     position: relative;
   }
   .extra {
-    background-color: red;
     width: 100%;
-    height: 16px;
+    height: 24px;
+    margin-bottom: 8px;
+    outline: 1px solid var(--text);
+    opacity: 0.5;
+  }
+
+  .extra.selected {
+    opacity: 1;
   }
 
   button {

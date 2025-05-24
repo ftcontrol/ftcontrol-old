@@ -16,6 +16,7 @@
   <nav>
     <button
       class="mover"
+      class:selected={modular.moving.movingModule?.id == m.id}
       onmousedown={(event: MouseEvent) => {
         modular.moving.startMov(m, event.clientX, event.clientY)
       }}
@@ -23,9 +24,13 @@
     ></button>
     {#each m.widgets as t, index}
       {#if modular.tabs.showExtra(m.id, index)}
-        <div class="extra-small" data-id={m.id} data-index={index}>
-          {index}
-        </div>
+        <div
+          class="extra-small"
+          data-id={m.id}
+          data-index={index}
+          class:selected={m.id == modular.tabs.hoveringID &&
+            index == modular.tabs.hoveringIndex}
+        ></div>
       {/if}
       {#if modular.tabs.showLabel(m.id, index)}
         <BaseWidgetTab {m} {index} />
@@ -38,12 +43,14 @@
         tabindex={0}
         data-id={m.id}
         data-index={m.widgets.length}
+        class:selected={(m.id == modular.tabs.hoveringID &&
+          m.widgets.length == modular.tabs.hoveringIndex) ||
+          modular.context.isContextOpened(m.id, -1)}
         oncontextmenu={(event: MouseEvent) => {
           event.preventDefault()
           modular.context.openContextMenu(m.id, -1)
         }}
       >
-        {m.widgets.length}
         {#if modular.context.isContextOpened(m.id, -1)}
           <WidgetContextMenu {m} {gridManager} />
         {/if}
@@ -75,6 +82,11 @@
     width: 50%;
     left: 25%;
     height: 8px;
+    opacity: 0.25;
+  }
+  .mover.selected,
+  .mover:hover {
+    opacity: 1;
   }
   nav {
     display: flex;
@@ -84,14 +96,22 @@
   }
   .extra {
     flex-grow: 1;
-    background-color: blue;
+    outline: 1px solid var(--text);
+    opacity: 0.5;
+    min-height: 24px;
 
     position: relative;
   }
 
   .extra-small {
-    background-color: blue;
+    outline: 1px solid var(--text);
+    opacity: 0.5;
     width: 16px;
+  }
+  .extra.selected,
+  .extra-small.selected,
+  .extra:hover {
+    opacity: 1;
   }
   .resizer {
     all: unset;

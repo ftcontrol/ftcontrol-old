@@ -32,19 +32,14 @@
   {@const id = gridManager.widgetsMap[y][x]}
   {#if id == null || modular.resizing.resizingModule?.id == id || modular.moving.movingModule?.id == id || false}
     {@const isShown = modular.showWidget(x, y)}
-    {@const closest = getClosest(x, y)}
     <div
       class="overlay-item"
-      class:other={!isShown}
-      class:isShown={modular.moving.isMov || modular.resizing.isResizing}
-      data-x={closest.x}
-      data-y={closest.y}
+      class:isShown
+      data-x={x}
+      data-y={y}
       style="grid-row: {y} / span 1; grid-column: {x} / span 1;"
     >
-      <div class="color">
-        {closest.x}
-        {closest.y}
-      </div>
+      <div class="color"></div>
     </div>
   {/if}
 {/each}
@@ -57,7 +52,7 @@
   }
   .overlay-item.isShown {
     display: block;
-    opacity: 0;
+    opacity: 0.25;
   }
   .color {
     width: 100%;
