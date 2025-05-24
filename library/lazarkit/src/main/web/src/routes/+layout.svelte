@@ -42,6 +42,17 @@
         ?.widgets[modular.tabs.movingIndex].type}
     </button>
   {/if}
+
+  {#if modular.sidebarTabs.wasStartedMoving && modular.sidebarTabs.movingIndex != null}
+    <button
+      class="overlay"
+      class:selected={settings.selectedManagerID ==
+        settings.allIDs[modular.sidebarTabs.movingIndex]}
+      style="top: {modular.tabs.mouseY}px;left: {modular.tabs.mouseX}px;"
+    >
+      {settings.presets[modular.sidebarTabs.movingIndex].name}
+    </button>
+  {/if}
 </Portal>
 
 <Gamepads />
