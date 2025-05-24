@@ -1,5 +1,6 @@
 import { info, notifications } from "$lib"
-import { Grid, type Preset } from "$ui/grid/grid.svelte"
+import { PresetManager } from "$ui/grid/logic/preset.svelte"
+import type { Preset } from "$ui/grid/logic/types"
 import { deleteCookie, getCookie, setCookie } from "./cookies"
 type AnimationSpeed = "instant" | "fast" | "normal" | "slow"
 type PrimaryColor = "blue" | "red"
@@ -61,17 +62,17 @@ class Settings {
     setCookie("fieldShowCoordinates", newState)
   }
 
-  getInitialGrids(): Grid[] {
+  getInitialPresetManagers(): PresetManager[] {
     const raw = getCookie("presets")
     const parsed = raw ? JSON.parse(raw) : [null]
 
-    const grids: Grid[] = []
+    const grids: PresetManager[] = []
     for (const [key, value] of Object.entries(parsed)) {
-      grids.push(Grid.fromJSON(value as Preset))
+      grids.push(PresetManager.fromJSON(value as Preset))
     }
 
     if (grids.length < 1) {
-      return [new Grid(null)]
+      return [new PresetManager(null)]
     }
 
     return grids
@@ -80,55 +81,54 @@ class Settings {
   resetPresets() {
     this.selectedManagerID = "default"
     deleteCookie("presets")
-    this.gridManagers = [new Grid(null)]
-    this.initialGrids = [new Grid(null)]
+    this.presets = [new PresetManager(null)]
+    this.initialPresets = [new PresetManager(null)]
     this.hasPresets = false
-    info.showEdit = false
   }
 
   removePreset(id: string) {
-    if (this.gridManagers.length == 1) {
+    if (this.presets.length == 1) {
       notifications.add("Cannot remove last preset.")
       return
     }
-    this.gridManagers = this.gridManagers.filter((it) => it.id != id)
+    this.presets = this.presets.filter((it) => it.id != id)
   }
 
   hasPresets = $state(getCookie("presets") ? true : false)
 
   selectedManagerID = $state("default")
 
-  initialGrids = $state(this.getInitialGrids())
+  initialPresets = $state(this.getInitialPresetManagers())
 
-  gridManagers: Grid[] = $state(this.getInitialGrids())
+  presets: PresetManager[] = $state(this.getInitialPresetManagers())
 
   isGridEdited = $derived(
-    JSON.stringify(this.initialGrids) != JSON.stringify(this.gridManagers)
+    JSON.stringify(this.initialPresets) != JSON.stringify(this.presets)
   )
 
-  getGridById(id: string): Grid | null {
-    for (const grid of this.gridManagers) {
+  getPresetById(id: string): PresetManager | null {
+    for (const grid of this.presets) {
       if (grid.id == id) return grid
     }
     return null
   }
 
   currentGrid = $derived.by(() => {
-    const grid = this.getGridById(this.selectedManagerID)
+    const grid = this.getPresetById(this.selectedManagerID)
     if (grid != null) return grid
-    this.selectedManagerID = this.gridManagers[0].id
-    return this.gridManagers[0]
+    this.selectedManagerID = this.presets[0].id
+    return this.presets[0]
   })
 
   savePresets() {
-    const serialized = this.gridManagers.map((it) => it.toJSON())
+    const serialized = this.presets.map((it) => it.toJSON())
 
     setCookie("presets", JSON.stringify(serialized))
     this.hasPresets = true
-    this.initialGrids = this.gridManagers
+    this.initialPresets = this.presets
   }
 
-  allIDs: string[] = $derived(this.gridManagers.map((it) => it.id))
+  allIDs: string[] = $derived(this.presets.map((it) => it.id))
 }
 
 export const settings = new Settings()
