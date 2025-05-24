@@ -8,6 +8,9 @@
   let { children } = $props()
 
   import "./global.css"
+  import { modular } from "$ui/grid/logic/modular"
+  import Portal from "svelte-portal"
+  import { settings } from "$lib/settings.svelte"
 
   onMount(() => {
     socket.init()
@@ -16,11 +19,45 @@
       info.loop()
     }, 100)
 
+    modular.init()
+
     return () => {
       clearInterval(interval)
+      modular.destroy()
     }
   })
+
+  $effect(() => {
+    if (settings.presets) settings.savePresets()
+  })
 </script>
+
+<Portal>
+  {#if modular.tabs.wasStartedMoving && modular.tabs.movingIndex != null}
+    <button
+      class="overlay"
+      class:selected={modular.tabs.movingIndex ==
+        settings.currentGrid.widgets.find(
+          (it) => it.id == modular.tabs.movingID
+        )?.activeWidgetID}
+      style="top: {modular.tabs.mouseY}px;left: {modular.tabs.mouseX}px;"
+    >
+      {settings.currentGrid.widgets.find((it) => it.id == modular.tabs.movingID)
+        ?.widgets[modular.tabs.movingIndex].type}
+    </button>
+  {/if}
+
+  {#if modular.sidebarTabs.wasStartedMoving && modular.sidebarTabs.movingIndex != null}
+    <button
+      class="overlay"
+      class:selected={settings.selectedManagerID ==
+        settings.allIDs[modular.sidebarTabs.movingIndex]}
+      style="top: {modular.tabs.mouseY}px;left: {modular.tabs.mouseX}px;"
+    >
+      {settings.presets[modular.sidebarTabs.movingIndex].name}
+    </button>
+  {/if}
+</Portal>
 
 <Gamepads />
 <Notifications />
@@ -34,6 +71,23 @@
 <Settings />
 
 <style>
+  .overlay {
+    all: unset;
+    background-color: var(--card);
+    outline: 1px solid var(--text);
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%) translateY(-50%);
+    pointer-events: none;
+    padding: 0.25rem 0.5rem;
+    opacity: 0.5;
+  }
+  .overlay.selected {
+    opacity: 1;
+  }
+
   div {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -41,9 +95,5 @@
   }
   section {
     overflow-y: auto;
-  }
-  p {
-    margin: 1rem;
-    text-align: center;
   }
 </style>

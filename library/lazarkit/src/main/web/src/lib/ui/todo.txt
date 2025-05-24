@@ -1,2 +1,0 @@
-widgets handle different sizes
-standard grid increments

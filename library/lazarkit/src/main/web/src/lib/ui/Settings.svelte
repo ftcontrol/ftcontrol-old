@@ -2,7 +2,6 @@
   import { info } from "$lib"
   import { settings } from "$lib/settings.svelte"
   import Arrow from "./icons/Arrow.svelte"
-  import BooleanInput from "./primitives/BooleanInput.svelte"
   import Button from "./primitives/Button.svelte"
   import Content from "./primitives/Content.svelte"
   import Header from "./primitives/Header.svelte"

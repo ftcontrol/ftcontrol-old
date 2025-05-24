@@ -1,101 +1,127 @@
 <script lang="ts">
-  import { gamepads, info, notifications } from "$lib"
-  import GamepadDrawing from "$ui/GamepadDrawing.svelte"
-  import PluginPage from "$ui/PluginPage.svelte"
-  import Header from "$ui/primitives/Header.svelte"
+  import ResizerIcon from "$ui/icons/ResizerIcon.svelte"
   import Section from "$ui/primitives/Section.svelte"
-  import Title from "$ui/primitives/Title.svelte"
-  import Configurables from "$ui/widgets/configurables/Configurables.svelte"
-  import GameField from "$ui/widgets/fields/GameField.svelte"
-  import Graph from "$ui/widgets/Graph.svelte"
-  import OpModeControl from "$ui/widgets/OpModeControl.svelte"
-  import PlaybackHistory from "$ui/widgets/PlaybackHistory.svelte"
-  import Telemetry from "$ui/widgets/Telemetry.svelte"
-  import { Grid, WidgetTypes, type Module } from "./grid.svelte"
-  import GridControls from "./GridControls.svelte"
-  let { m, gridManager }: { m: Module; gridManager: Grid } = $props()
+  import BaseWidgetContent from "./BaseWidgetContent.svelte"
+  import BaseWidgetTab from "./BaseWidgetTab.svelte"
+  import { modular } from "./logic/modular"
+  import type { PresetManager } from "./logic/preset.svelte"
+  import type { WidgetGroup } from "./logic/types"
+  import WidgetContextMenu from "./WidgetContextMenu.svelte"
+
+  let { m, gridManager }: { m: WidgetGroup; gridManager: PresetManager } =
+    $props()
 </script>
 
 <Section>
-  <div class="bar">
-    <div class="controls">
-      {#each m.types as t, index}
-        <button
-          class="base"
-          class:selected={index == m.activeType}
-          onclick={() => {
-            m.activeType = index
-          }}
-          >{t.type}
-        </button>
-        {#if info.showEdit && m.types.length > 1}
-          <button
-            onclick={() => {
-              if (m.types.length <= 1) {
-                notifications.add("Cannot remove last widget.")
-                return
-              }
-              m.types = m.types.filter((_, i) => i !== index)
-              m.activeType--
-              if (m.activeType < 0) m.activeType = 0
-            }}>x</button
-          >
-        {/if}
-      {/each}
-      {#if info.showEdit}
-        <button
-          onclick={() => {
-            m.types.push({
-              pluginID: "none",
-              pageID: "none",
-              type: WidgetTypes.TEST,
-            })
-            console.log(m)
-          }}>+</button
-        >
+  <nav>
+    <button
+      class="mover"
+      class:selected={modular.moving.movingModule?.id == m.id}
+      onmousedown={(event: MouseEvent) => {
+        modular.moving.startMov(m, event.clientX, event.clientY)
+      }}
+      aria-label="Mover"
+    ></button>
+    {#each m.widgets as t, index}
+      {#if modular.tabs.showExtra(m.id, index)}
+        <div
+          class="extra-small"
+          data-id={m.id}
+          data-index={index}
+          class:selected={m.id == modular.tabs.hoveringID &&
+            index == modular.tabs.hoveringIndex}
+        ></div>
       {/if}
-    </div>
-    {#if info.showEdit}
-      <div class="controls">
-        <GridControls {m} {gridManager} />
+      {#if modular.tabs.showLabel(m.id, index)}
+        <BaseWidgetTab {m} {index} />
+      {/if}
+    {/each}
+    {#if modular.tabs.showExtra(m.id, m.widgets.length) || true}
+      <div
+        class="extra"
+        role="button"
+        tabindex={0}
+        data-id={m.id}
+        data-index={m.widgets.length}
+        class:selected={(m.id == modular.tabs.hoveringID &&
+          m.widgets.length == modular.tabs.hoveringIndex) ||
+          modular.context.isContextOpened(m.id, -1)}
+        oncontextmenu={(event: MouseEvent) => {
+          event.preventDefault()
+          modular.context.openContextMenu(m.id, -1)
+        }}
+      >
+        {#if modular.context.isContextOpened(m.id, -1)}
+          <WidgetContextMenu {m} {gridManager} />
+        {/if}
       </div>
     {/if}
-  </div>
+  </nav>
 
-  {#each m.types as item, index}
-    <div class="content" class:shown={index == m.activeType}>
-      {#if item.type == WidgetTypes.CONTROLS}
-        <OpModeControl />
-      {:else if item.type == WidgetTypes.GAMEPAD}
-        <GamepadDrawing gamepad={gamepads.gamepads[0]} />
-      {:else if item.type == WidgetTypes.FIELD}
-        <GameField />
-      {:else if item.type == WidgetTypes.TELEMETRY}
-        <Telemetry />
-      {:else if item.type == WidgetTypes.CONFIGURABLES}
-        <Configurables />
-      {:else if item.type == WidgetTypes.GRAPH}
-        <Graph />
-      {:else if item.type == WidgetTypes.CAPTURE}
-        <PlaybackHistory />
-      {:else if item.type == WidgetTypes.CUSTOM}
-        {#if item.pluginID && item.pageID}
-          <PluginPage pluginID={item.pluginID} pageID={item.pageID} />
-        {:else}
-          <p style="padding: 1rem;">CUSTOM not valid</p>
-        {/if}
-      {:else}
-        <p style="padding: 1rem;">
-          This is an unknown widget of type "{item.type}"
-        </p>
-      {/if}
+  {#each m.widgets as item, index}
+    <div class="content" class:shown={index == m.activeWidgetID}>
+      <BaseWidgetContent {item} />
     </div>
   {/each}
+
+  <button
+    class="resizer"
+    onmousedown={() => {
+      modular.resizing.startResizing(m)
+    }}
+  >
+    <ResizerIcon />
+  </button>
 </Section>
 
 <style>
-  .bar {
-    margin-bottom: 1rem;
+  .mover {
+    cursor: grab;
+    position: absolute;
+    top: -4px;
+    width: 50%;
+    left: 25%;
+    height: 8px;
+    opacity: 0.25;
+  }
+  .mover.selected,
+  .mover:hover {
+    opacity: 1;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  .extra {
+    flex-grow: 1;
+    outline: 1px solid var(--text);
+    opacity: 0.5;
+    min-height: 24px;
+
+    position: relative;
+  }
+
+  .extra-small {
+    outline: 1px solid var(--text);
+    opacity: 0.5;
+    width: 16px;
+  }
+  .extra.selected,
+  .extra-small.selected,
+  .extra:hover {
+    opacity: 1;
+  }
+  .resizer {
+    all: unset;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
+    cursor: grabbing;
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
   }
   .content {
     display: none;
@@ -103,32 +129,5 @@
   }
   .content.shown {
     display: block;
-  }
-  .controls {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1rem;
-    padding-bottom: 0;
-    gap: 0.5rem;
-  }
-
-  button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: inherit;
-  }
-  button.base {
-    outline: 1px solid var(--text);
-    opacity: 0.5;
-    padding: 0.25rem 0.5rem;
-  }
-  button.base.selected {
-    opacity: 1;
   }
 </style>

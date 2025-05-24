@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.2
+- Improved responsive grid system
+- Right click context menu
+- Generic drag manager
+> Requires presets reset after update, other UI improvements will come later.
+
 ## v0.6.0
 - Renamed log cat prefix to `PANELS`
 - Improved logs
