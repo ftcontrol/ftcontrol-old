@@ -20,7 +20,7 @@
       gridManager.remove(m.id)
     }}
   >
-    Remove Widget
+    Remove Widget Group
   </button>
   <button
     class="button"
@@ -31,14 +31,6 @@
       console.log(m)
       modular.context.closeContextMenu()
     }}>Add tab</button
-  >
-
-  <button
-    class="button"
-    onclick={() => {
-      gridManager.addNewAnywhere()
-      modular.context.closeContextMenu()
-    }}>Add widget</button
   >
 
   <button
@@ -57,7 +49,7 @@
       notifications.add("Not enough space to expand horizontally.")
     }}
   >
-    <HorizontalIcon />
+    <HorizontalIcon /> Expand horizontally
   </button>
   <button
     onclick={() => {
@@ -68,7 +60,7 @@
       }
     }}
   >
-    <HorizontalReversed />
+    <HorizontalReversed /> Shrink horizontally
   </button>
   <button
     onclick={() => {
@@ -86,7 +78,7 @@
       notifications.add("Not enough space to expand vertically.")
     }}
   >
-    <VerticalIcon />
+    <VerticalIcon /> Expand vertically
   </button>
   <button
     onclick={() => {
@@ -97,6 +89,21 @@
       }
     }}
   >
-    <VerticalReversed />
+    <VerticalReversed /> Shrink vertically
   </button>
 </ContextMenu>
+
+<style>
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    color: inherit;
+    outline: 1px solid var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 24px;
+  }
+</style>

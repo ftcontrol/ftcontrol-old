@@ -53,6 +53,13 @@
         {#if modular.context.isContextOpened(id, 0)}
           <ContextMenu {id}>
             <button
+              class="button"
+              onclick={() => {
+                settings.currentGrid.addNewAnywhere()
+                modular.context.closeContextMenu()
+              }}>New widget group</button
+            >
+            <button
               class="icon"
               onclick={() => {
                 settings.removePreset(id)
@@ -60,15 +67,18 @@
             >
               <Remove /> Remove Preset
             </button>
-            <StringInput
-              value={grid.name}
-              isValid={true}
-              startValue={grid.name}
-              bind:currentValue={grid.name}
-              type={""}
-              validate={stringValidator}
-              alwaysValid={true}
-            />
+            <div class="flex">
+              <p>Name</p>
+              <StringInput
+                value={grid.name}
+                isValid={true}
+                startValue={grid.name}
+                bind:currentValue={grid.name}
+                type={""}
+                validate={stringValidator}
+                alwaysValid={true}
+              />
+            </div>
             <button
               onclick={() => {
                 var newPreset = structuredClone(defaultModuled())
@@ -123,6 +133,13 @@
 {/if}
 
 <style>
+  p {
+    margin: 0;
+  }
+  .flex {
+    display: flex;
+    justify-content: space-between;
+  }
   div {
     position: relative;
   }
@@ -160,5 +177,18 @@
 
   .tab.selected {
     opacity: 1;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    color: inherit;
+    outline: 1px solid var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 24px;
   }
 </style>
