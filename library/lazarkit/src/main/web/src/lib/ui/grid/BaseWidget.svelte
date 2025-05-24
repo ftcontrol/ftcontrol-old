@@ -1,4 +1,5 @@
 <script lang="ts">
+  import ResizerIcon from "$ui/icons/ResizerIcon.svelte"
   import Section from "$ui/primitives/Section.svelte"
   import BaseWidgetContent from "./BaseWidgetContent.svelte"
   import BaseWidgetTab from "./BaseWidgetTab.svelte"
@@ -62,7 +63,7 @@
       modular.resizing.startResizing(m)
     }}
   >
-    Resize
+    <ResizerIcon />
   </button>
 </Section>
 
@@ -70,7 +71,7 @@
   .mover {
     cursor: grab;
     position: absolute;
-    top: 0;
+    top: -4px;
     width: 50%;
     left: 25%;
     height: 8px;
@@ -93,13 +94,14 @@
     width: 16px;
   }
   .resizer {
-    background-color: red;
+    all: unset;
+    background-color: transparent;
+    width: 20px;
+    height: 20px;
     cursor: grabbing;
-    width: 32px;
-    height: 32px;
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 0.5rem;
+    bottom: 0.5rem;
   }
   .content {
     display: none;

@@ -49,6 +49,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-height: 90px;
+    overflow-y: auto;
   }
   .context-menu :global(.button) {
     width: 100%;

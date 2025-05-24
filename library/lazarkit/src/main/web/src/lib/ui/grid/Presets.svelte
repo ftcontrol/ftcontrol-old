@@ -23,8 +23,9 @@
     {#if grid == null}
       <p>Not found</p>
     {:else}
-      <div class="widget" data-id={id}>
+      <div class="widget base" data-id={id}>
         <button
+          class="tab"
           oncontextmenu={(event: MouseEvent) => {
             event.preventDefault()
             modular.context.openContextMenu(id, 0)
@@ -33,6 +34,7 @@
             goto(`/?preset=${id}`)
             settings.selectedManagerID = id
           }}
+          class:selected={settings.selectedManagerID == id}
           onmousedown={(event: MouseEvent) => {
             modular.sidebarTabs.startMoving(
               event.clientX,
@@ -118,5 +120,29 @@
     background-color: red;
     width: 100%;
     height: 16px;
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    color: inherit;
+    width: 100%;
+    text-align: left;
+  }
+
+  .base {
+    outline: 1px solid var(--text);
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .tab {
+    padding: 0.25rem 0.5rem;
+    opacity: 0.5;
+  }
+
+  .tab.selected {
+    opacity: 1;
   }
 </style>

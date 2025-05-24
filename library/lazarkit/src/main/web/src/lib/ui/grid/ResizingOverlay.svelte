@@ -30,13 +30,13 @@
   }
   .overlay-item.isShown {
     display: block;
-    opacity: 0;
+    opacity: 0.5;
   }
   .color {
     width: 100%;
     height: 100%;
     border: 1px solid var(--primary);
     background-color: var(--primary);
-    border-radius: 16px;
+    border-radius: 4px;
   }
 </style>
