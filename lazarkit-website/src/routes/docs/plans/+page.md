@@ -23,6 +23,8 @@ You can suggest a new feature via the [official email](mailto:ftcontrol@bylazar.
 * Versioning system for compatibility management
 * Use fat JARs to include dependencies
 
+## Hardware Map Integration
+
 ## Logs
 
 * Improved logging system within the UI
