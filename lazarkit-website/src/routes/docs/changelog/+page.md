@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.6.4
+- Configurables properly handle JSON Errors
+- Limit max recursion to `32`
+
+## v0.6.3
+- Published because `v0.6.2` missed the canges from `v0.6.0`
+
 ## v0.6.2
 - Improved responsive grid system
 - Right click context menus

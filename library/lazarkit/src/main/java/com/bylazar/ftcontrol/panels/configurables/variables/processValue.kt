@@ -7,7 +7,7 @@ import com.bylazar.ftcontrol.panels.configurables.variables.instances.RecursionR
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.UnknownVariable
 import java.lang.reflect.Array
 
-const val MAX_RECURSION_DEPTH = 1024
+const val MAX_RECURSION_DEPTH = 32
 
 class RecursionDetectedException(val fieldName: String) : RuntimeException()
 

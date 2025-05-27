@@ -113,7 +113,7 @@ publishing {
             groupId = "com.bylazar"
             artifactId = "ftcontrol"
 
-            version = "0.6.2"
+            version = "0.6.4"
 
             pom {
                 description = "All in one toolbox for FTC."

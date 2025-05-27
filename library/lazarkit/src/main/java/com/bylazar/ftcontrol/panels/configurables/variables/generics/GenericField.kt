@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.configurables.variables.generics
 
 import com.bylazar.ftcontrol.panels.configurables.variables.convertToMyField
 import com.bylazar.ftcontrol.panels.configurables.variables.getType
+import com.bylazar.ftcontrol.panels.configurables.variables.instances.JSONErrorVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.processValue
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
@@ -22,5 +23,12 @@ class GenericField(
     }
 
     val toJsonType: GenericTypeJson
-        get() = value.toJsonType
+        get() {
+            try {
+                val json = value.toJsonType
+                return json
+            } catch (t: Throwable) {
+                return JSONErrorVariable(className, reference.name).toJsonType
+            }
+        }
 }

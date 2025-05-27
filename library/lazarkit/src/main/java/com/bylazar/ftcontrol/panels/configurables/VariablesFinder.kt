@@ -27,6 +27,33 @@ class VariablesFinder(
         }
     }
 
+
+    private val excludedPackages: Set<String> = HashSet(
+        mutableListOf(
+            "com.google",
+            "com.sun",
+            "sun",
+            "com.qualcomm",
+            "org.opencv",
+            "android",
+            "com.android",
+            "dalvik",
+            "org.intellij",
+            "org.firstinspires",
+            "org.slf4j",
+            "org.threeten",
+            "org.w3c",
+            "org.xmlpull",
+            "org.java_websocket",
+            "com.journeyapps",
+            "dk.sgjesse",
+            "com.jakewharton",
+            "org.openftc",
+            "org.xml",
+            "org.jetbrains"
+        )
+    )
+
     private fun MutableList<GenericField>.addFieldsFromClass(
         clazz: Class<*>,
         originalClassName: String
@@ -51,10 +78,16 @@ class VariablesFinder(
 
             val isJvmField = !isFinal && isStatic && !isIgnored
 
-            if (isJvmField) {
+            val fieldTypeName = field.type.canonicalName ?: ""
+            val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
+
+            println("PANELS: CONFIGURABLES: Field of $fieldTypeName")
+
+            if (isJvmField && !isInExcludedPackage) {
                 val displayClassName =
                     if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
                 val genericField = GenericField(className = displayClassName, reference = field)
+                println("PANELS: CONFIGURABLES: Adding field $genericField / ${genericField.type}")
                 add(genericField)
             }
         }

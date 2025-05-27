@@ -11,6 +11,7 @@ enum class BaseTypes {
 
     UNKNOWN,
     RECURSION_REACHED,
+    JSON_ERROR,
 
     CUSTOM,
     ARRAY,

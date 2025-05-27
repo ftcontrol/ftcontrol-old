@@ -37,6 +37,7 @@ class MyField(
             get(parentField?.getValue(recursionDepth + 1))
         } catch (e: Exception) {
             println("PANELS: Could not get value for ${name}: ${e.message}")
+            throw RuntimeException("PANELS: Could not get value for $name", e)
             null
         }
     }
