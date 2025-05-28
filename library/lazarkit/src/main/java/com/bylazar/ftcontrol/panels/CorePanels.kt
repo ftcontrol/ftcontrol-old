@@ -50,7 +50,7 @@ class CorePanels {
         }
 
         try {
-            ConfigurablesManager.init()
+            ConfigurablesManager.init(context)
         }catch (t: Throwable){
             Logger.configurablesLog("Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
