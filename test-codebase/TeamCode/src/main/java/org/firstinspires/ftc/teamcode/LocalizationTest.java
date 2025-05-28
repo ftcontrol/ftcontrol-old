@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.ftcontrol.panels.Panels;
-import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable;
+import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager;
 import com.bylazar.ftcontrol.panels.json.Look;
 import com.pedropathing.follower.Follower;

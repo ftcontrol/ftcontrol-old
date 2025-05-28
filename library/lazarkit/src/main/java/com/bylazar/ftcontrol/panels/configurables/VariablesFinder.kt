@@ -1,30 +1,30 @@
-package com.bylazar.ftcontrol.panels.configurablesOld
+package com.bylazar.ftcontrol.panels.configurables
 
-import com.bylazar.ftcontrol.panels.configurablesOld.annotations.IgnoreConfigurable
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericField
+import com.bylazar.ftcontrol.panels.Logger
+import com.bylazar.ftcontrol.panels.configurables.ClassFinder
+import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
 import java.lang.reflect.Modifier
 
-class VariablesFinder(
-    private val allClasses: () -> List<ClassFinder.ClassEntry>
-) {
+class VariablesFinder() {
 
-    private val jvmFields: List<GenericField> by lazy {
-        mutableListOf<GenericField>().apply {
-            allClasses().forEach { entry ->
+    fun updateJvmFields(allClasses: List<ClassFinder.ClassEntry>) {
+        val output = mutableListOf<GenericField>()
+        allClasses.forEach { entry ->
+            try {
+                val clazz = Class.forName(entry.className)
+                output.addFieldsFromClass(clazz, entry.className)
                 try {
-                    val clazz = Class.forName(entry.className)
-                    addFieldsFromClass(clazz, entry.className)
-                    try {
-                        val companionClazz = Class.forName("${entry.className}\$Companion")
-                        addFieldsFromClass(companionClazz, entry.className)
-                    } catch (e: ClassNotFoundException) {
-                        // no companion found
-                    }
-                } catch (e: Exception) {
-                    println("PANELS: CONFIGURABLES: Error inspecting class ${entry.className}: ${e.message}")
+                    val companionClazz = Class.forName("${entry.className}\$Companion")
+                    output.addFieldsFromClass(companionClazz, entry.className)
+                } catch (e: ClassNotFoundException) {
+                    // no companion found
                 }
+            } catch (e: Exception) {
+                Logger.configurablesError("Error inspecting class ${entry.className}: ${e.message}")
             }
         }
+        jvmFields = output
     }
 
 
@@ -88,18 +88,17 @@ class VariablesFinder(
             val fieldTypeName = field.type.canonicalName ?: ""
             val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
 
-            println("PANELS: CONFIGURABLES: Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
+            Logger.configurablesLog("Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
 
             if (isJvmField && !isInExcludedPackage) {
                 val displayClassName =
                     if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
                 val genericField = GenericField(className = displayClassName, reference = field)
-                println("PANELS: CONFIGURABLES: Adding field $genericField / ${genericField.type} / ${genericField.value} / ${genericField.isNull}")
+                Logger.configurablesLog("Adding field $genericField / ${genericField.type} / ${genericField.value} / ${genericField.isNull}")
                 add(genericField)
             }
         }
     }
 
-    val getJvmFields: List<GenericField>
-        get() = jvmFields
+    var jvmFields: List<GenericField> = listOf()
 }

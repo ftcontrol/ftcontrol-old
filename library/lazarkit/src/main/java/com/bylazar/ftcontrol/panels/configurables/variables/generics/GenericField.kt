@@ -1,10 +1,11 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables.generics
+package com.bylazar.ftcontrol.panels.configurables.variables.generics
 
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.convertToMyField
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.getType
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.JSONErrorVariable
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.processValue
+import com.bylazar.ftcontrol.panels.Logger
+import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurables.variables.convertToMyField
+import com.bylazar.ftcontrol.panels.configurables.variables.getType
+import com.bylazar.ftcontrol.panels.configurables.variables.instances.JSONErrorVariable
+import com.bylazar.ftcontrol.panels.configurables.variables.processValue
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
 
@@ -23,7 +24,8 @@ class GenericField(
         get() = reference.name
 
     fun debug() {
-        println("   PANELS: Of type $type")
+        Logger.configurablesLog("Debug for $className / ${reference.name}")
+        Logger.configurablesLog("Of type $type")
     }
 
     val toJsonType: GenericTypeJson

@@ -1,7 +1,7 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables
+package com.bylazar.ftcontrol.panels.configurables.variables
 
-import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
+import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
 import java.lang.reflect.Type
@@ -28,7 +28,7 @@ class MyField(
 
     init {
         if (ref != null) ref.isAccessible = true
-        Configurables.fieldsMap[id] = this
+        ConfigurablesManager.fieldsMap[id] = this
     }
 
     fun getValue(recursionDepth: Int = 0): Any? {

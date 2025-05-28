@@ -1,7 +1,7 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables.instances
+package com.bylazar.ftcontrol.panels.configurables.variables.instances
 
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
-import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 
 class UnsupportedVariable(

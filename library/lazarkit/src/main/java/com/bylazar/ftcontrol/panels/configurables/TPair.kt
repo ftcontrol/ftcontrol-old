@@ -1,6 +1,6 @@
-package com.bylazar.ftcontrol.panels.configurablesOld
+package com.bylazar.ftcontrol.panels.configurables
 
-import com.bylazar.ftcontrol.panels.configurablesOld.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 
 open class TPair<T, V>(
     @field:IgnoreConfigurable

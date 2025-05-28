@@ -1,4 +1,4 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables
+package com.bylazar.ftcontrol.panels.configurables.variables
 
 enum class BaseTypes {
     INT,

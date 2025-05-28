@@ -1,4 +1,4 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables
+package com.bylazar.ftcontrol.panels.configurables.variables
 
 fun convertValue(value: String, type: BaseTypes, enumConstants: Array<out Any>?): Any? {
     return when (type) {

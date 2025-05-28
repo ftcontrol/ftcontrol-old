@@ -1,7 +1,7 @@
 package com.bylazar.ftcontrol.panels.server
 
 import com.bylazar.ftcontrol.panels.GlobalData
-import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
+import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.json.ActiveOpMode
 import com.bylazar.ftcontrol.panels.json.BatteryVoltage
@@ -235,8 +235,8 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedInitialJvmFields(Configurables.initialJvmFields))
-            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
+            send(ReceivedInitialJvmFields(ConfigurablesManager.initialJvmFields))
+            send(ReceivedJvmFields(ConfigurablesManager.jvmFields.map { it.toJsonType }))
         }
 
         fun sendAllPlugins() {
@@ -281,7 +281,7 @@ class Socket(
 
                         decoded.fields.forEach {
                             println("PANELS: Field id: ${it.id}, New value: ${it.newValueString}")
-                            val generalRef = Configurables.fieldsMap[it.id] ?: return
+                            val generalRef = ConfigurablesManager.fieldsMap[it.id] ?: return
                             generalRef.setValue(it.newValueString)
                         }
 

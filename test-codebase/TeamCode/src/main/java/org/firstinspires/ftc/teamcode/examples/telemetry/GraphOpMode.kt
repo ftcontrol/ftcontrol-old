@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.examples.telemetry
 
 import com.bylazar.ftcontrol.LoopTimer
 import com.bylazar.ftcontrol.panels.Panels
-import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable
+import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
 import com.bylazar.ftcontrol.panels.integration.TelemetryManager
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp

@@ -1,6 +1,6 @@
 package com.bylazar.ftcontrol.panels.plugins
 
-import com.bylazar.ftcontrol.panels.configurablesOld.utils.extractClassNamesFromDex
+import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.ZipFile

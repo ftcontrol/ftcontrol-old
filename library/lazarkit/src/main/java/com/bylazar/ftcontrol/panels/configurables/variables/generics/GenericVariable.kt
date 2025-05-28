@@ -1,4 +1,4 @@
-package com.bylazar.ftcontrol.panels.configurablesOld.variables.generics
+package com.bylazar.ftcontrol.panels.configurables.variables.generics
 
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 

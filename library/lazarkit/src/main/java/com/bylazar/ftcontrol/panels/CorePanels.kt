@@ -3,7 +3,6 @@ package com.bylazar.ftcontrol.panels
 import android.content.Context
 import android.view.Menu
 import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
-import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
 import com.bylazar.ftcontrol.panels.integration.MenuManager
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.integration.OpModeRegistrar
@@ -44,14 +43,14 @@ class CorePanels {
             println("PANELS: Failed to start webservers: " + e.message)
         }
 
-        if (Preferences.isEnabled){
+        if (Preferences.isEnabled) {
             socket.startServer()
             server.startServer()
         }
 
         try {
             ConfigurablesManager.init(context)
-        }catch (t: Throwable){
+        } catch (t: Throwable) {
             Logger.configurablesLog("Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
@@ -81,20 +80,20 @@ class CorePanels {
 
         try {
             PluginManager.loadPlugins(context)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             println("PANELS: Failed to load plugins: ${e.message}")
             e.printStackTrace()
-        }  catch (t: Throwable) {
+        } catch (t: Throwable) {
             println("PANELS: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
             PluginManager.onRegister(this)
-        }catch(e: Exception){
+        } catch (e: Exception) {
             println("PANELS: Failed to register plugins: ${e.message}")
             e.printStackTrace()
-        }  catch (t: Throwable) {
+        } catch (t: Throwable) {
             println("PANELS: Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
