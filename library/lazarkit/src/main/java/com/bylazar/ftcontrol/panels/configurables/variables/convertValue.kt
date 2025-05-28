@@ -1,5 +1,7 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
+import com.bylazar.ftcontrol.panels.Logger
+
 fun convertValue(value: String, type: BaseTypes, enumConstants: Array<out Any>?): Any? {
     return when (type) {
         BaseTypes.INT -> {
@@ -59,7 +61,7 @@ fun convertValue(value: String, type: BaseTypes, enumConstants: Array<out Any>?)
                 val enumType = enumConstants.first()::class.java
                 return enumType.enumConstants.find { it.toString() == value }
             } catch (e: Exception) {
-                println("PANELS: Error converting to enum: ${e.message}")
+                Logger.configurablesError("Error converting to enum: ${e.message}")
                 return null
             }
         }

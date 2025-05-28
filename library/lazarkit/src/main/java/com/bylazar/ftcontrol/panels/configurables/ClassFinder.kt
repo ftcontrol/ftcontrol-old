@@ -112,14 +112,11 @@ class ClassFinder {
                 }
             }
         } catch (e: IOException) {
-            println("PANELS: CONFIGURABLES: IOException occurred: ${e.message}")
-            e.printStackTrace()
+            Logger.configurablesError("IOException occurred: ${e.message}")
         } catch (e: IllegalArgumentException) {
-            println("PANELS: CONFIGURABLES: IllegalArgumentException occurred: ${e.message}")
-            e.printStackTrace()
+            Logger.configurablesError("IllegalArgumentException occurred: ${e.message}")
         } catch (t: Throwable) {
-            println("PANELS: CONFIGURABLES: C Throwable caught: ${t::class.simpleName} - ${t.message}")
-            t.printStackTrace()
+            Logger.configurablesError("Throwable caught: ${t::class.simpleName} - ${t.message}")
         }
         classes = classSet.toList()
     }

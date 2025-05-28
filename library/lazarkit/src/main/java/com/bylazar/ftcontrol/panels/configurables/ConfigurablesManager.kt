@@ -36,6 +36,8 @@ object ConfigurablesManager {
 
         Logger.configurablesLog("Stage 2: Searching for configurables variables...")
 
+        variables.updateJvmFields(classFinder.classes)
+
         Logger.configurablesLog("Found ${variables.jvmFields.size} configurable variables:")
         variables.jvmFields.forEach { info ->
             Logger.configurablesLog("${info.className}.${info.reference.name}")

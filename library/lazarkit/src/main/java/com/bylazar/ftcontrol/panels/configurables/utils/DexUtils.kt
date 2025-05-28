@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables.utils
 
+import com.bylazar.ftcontrol.panels.Logger
 import java.nio.ByteBuffer
 
 fun ByteBuffer.extractClassNamesFromDex(): List<String> {
@@ -70,7 +71,7 @@ fun ByteBuffer.extractClassNamesFromDex(): List<String> {
                 classNames.add(className)
             }
         } catch (e: Exception) {
-            println("PANELS: CONFIGURABLES: Error processing class descriptor at index $i: ${e.message}")
+            Logger.configurablesError("Error processing class descriptor at index $i: ${e.message}")
         } finally {
             this.position(originalPosition)
         }

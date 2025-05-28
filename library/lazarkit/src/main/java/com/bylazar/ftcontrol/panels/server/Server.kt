@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.server
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.plugins.PluginManager
 import fi.iki.elonen.NanoHTTPD
 import java.io.File
@@ -87,20 +88,18 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
         try {
             val inputStream = assetManager.open(path)
-            println("PANELS: success")
+            Logger.serverLog("Success")
             return allowCors(newChunkedResponse(Response.Status.OK, mime, inputStream))
         } catch (e: Exception) {
-            println("PANELS: Primary asset not found: $path — ${e.message}")
-            e.printStackTrace()
+            Logger.serverLog("Primary asset not found: $path — ${e.message}")
 
             return try {
                 val fallbackStream = assetManager.open("web/index.html")
-                println("PANELS: Fallback to index.html")
+                Logger.serverLog("Fallback to index.html")
                 allowCors(newChunkedResponse(Response.Status.OK, "text/html", fallbackStream))
             } catch (fallbackException: Exception) {
-                val message = "PANELS: Fallback also failed: ${fallbackException.message}"
-                println(message)
-                fallbackException.printStackTrace()
+                val message = "Fallback also failed: ${fallbackException.message}"
+                Logger.serverLog(message)
                 getResponse(message, status = Response.Status.INTERNAL_ERROR)
             }
         }
@@ -109,11 +108,11 @@ class Server(var context: Context) : NanoHTTPD(8001) {
 
     fun startServer() {
         start()
-        println("PANELS: Server started on port 8001")
+        Logger.serverLog("Server started on port 8001")
     }
 
     fun stopServer() {
         stop()
-        println("PANELS: Server stopped")
+        Logger.serverLog("Server stopped")
     }
 }

@@ -4,6 +4,7 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.bylazar.ftcontrol.panels.GlobalData
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.json.OpModeInfo
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes
@@ -68,7 +69,7 @@ class OpModeData(
 
             onListChanged(opModeList)
 
-            println("PANELS OPMODES: ${GlobalData.opModeList.joinToString(", ")}")
+            Logger.coreLog("OpModes: ${GlobalData.opModeList.joinToString(", ")}")
         }
     }
 }

@@ -2,6 +2,7 @@ package com.bylazar.ftcontrol.panels.plugins
 
 import android.content.Context
 import com.bylazar.ftcontrol.panels.CorePanels
+import com.bylazar.ftcontrol.panels.Logger
 import dalvik.system.DexClassLoader
 
 object PluginManager {
@@ -13,27 +14,27 @@ object PluginManager {
     fun onRegister(corePanels: CorePanels) {
         val modContext = ModContext()
         plugins.forEach { (id, plugin) ->
-            println("PANELS: Plugin pages count: ${plugin.pages.size}")
+            Logger.pluginsLog("Plugin pages count: ${plugin.pages.size}")
             try {
                 plugin.onRegister(modContext)
                 plugin.cachedPages = plugin.pages.map { it.toJson }
-                println("PANELS: Registered plugin $id")
+                Logger.pluginsLog("Registered plugin $id")
             } catch (e: Exception) {
-                println("PANELS: Failed to register plugin $id, ${e.message}")
+                Logger.pluginsError("Failed to register plugin $id, ${e.message}")
                 e.printStackTrace()
             }
         }
-        println("PANELS: Registered ${plugins.size} plugins.")
+        Logger.pluginsLog("Registered ${plugins.size} plugins.")
     }
 
     fun loadPlugins(context: Context) {
-        println("PANELS: Loading plugins...")
+        Logger.pluginsLog("Loading plugins...")
         allPlugins.clear()
         finder.apkPath = context.packageCodePath
 
         val foundClasses = finder.getAllClasses
 
-        println("PANELS: Found ${foundClasses.size} classes:")
+        Logger.pluginsLog("Found ${foundClasses.size} classes:")
 
         foundClasses.forEach {
             try {
@@ -43,7 +44,7 @@ object PluginManager {
                 if (pack != null && pack.name.startsWith("com.bylazar.ftcontrol")) return@forEach
 
                 if (PanelsPlugin::class.java.isAssignableFrom(clazz)) {
-                    println("PANELS: Found plugin implementation: ${clazz.name}")
+                    Logger.pluginsLog("Found plugin implementation: ${clazz.name}")
                     val constructor = clazz.getDeclaredConstructor()
                     val pluginInstance = constructor.newInstance() as PanelsPlugin<*>
 
@@ -52,7 +53,7 @@ object PluginManager {
                     var suffix = 1
 
                     while (allPlugins.containsKey(uniqueId)) {
-                        println("PANELS: Plugin ID '$originalId' is already registered. Renaming...")
+                        Logger.pluginsLog("Plugin ID '$originalId' is already registered. Renaming...")
                         uniqueId = "$originalId${suffix++}"
                     }
 
@@ -62,30 +63,25 @@ object PluginManager {
 
                     allPlugins[uniqueId] = pluginInstance
 
-                    println("PANELS: Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
+                    Logger.pluginsLog("Successfully registered plugin: ${clazz.name} with ID '$uniqueId'")
 
                 }
             } catch (e: NoClassDefFoundError) {
-                println("PANELS: Skipping plugin '${it.className}' due to missing class: ${e.message}")
-                e.printStackTrace()
+                Logger.pluginsError("Skipping plugin '${it.className}' due to missing class: ${e.message}")
             } catch (e: ClassNotFoundException) {
-                println("PANELS: Class not found: ${it.className}")
-                e.printStackTrace()
+                Logger.pluginsError("Class not found: ${it.className}")
             } catch (e: ClassCastException) {
-                println("PANELS: Class does not implement PanelsPlugin: ${it.className}")
-                e.printStackTrace()
+                Logger.pluginsError("Class does not implement PanelsPlugin: ${it.className}")
             } catch (e: Exception) {
-                println("PANELS: Unexpected error loading plugin class: ${it.className}")
-                e.printStackTrace()
+                Logger.pluginsError("Unexpected error loading plugin class: ${it.className}")
             } catch(t: Throwable) {
-                println("PANELS: Throwable caught: ${t::class.simpleName} - ${t.message}")
-                t.printStackTrace()
+                Logger.pluginsError("Throwable caught: ${t::class.simpleName} - ${t.message}")
             }
         }
 
-        println("PANELS: Plugins map contents: ${allPlugins.keys}")
+        Logger.pluginsLog("Plugins map contents: ${allPlugins.keys}")
 
-        println("PANELS: Loaded ${allPlugins.size} plugins.")
+        Logger.pluginsLog("Loaded ${allPlugins.size} plugins.")
 
     }
 }

@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
@@ -36,7 +37,7 @@ class MyField(
         return try {
             get(parentField?.getValue(recursionDepth + 1))
         } catch (e: Exception) {
-            println("PANELS: Could not get value for ${name}: ${e.message}")
+            Logger.configurablesError("Error getting value for $name: ${e.message}")
             throw RuntimeException("PANELS: Could not get value for $name", e)
             null
         }
@@ -51,7 +52,7 @@ class MyField(
             set(parentField?.getValue(), newValue)
             true
         } catch (e: Exception) {
-            println("PANELS: Could not set value for ${name}: ${e.message}")
+            Logger.configurablesError("Error setting value for $name: ${e.message}")
             false
         }
     }

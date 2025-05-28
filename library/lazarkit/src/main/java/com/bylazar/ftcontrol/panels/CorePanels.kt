@@ -34,13 +34,13 @@ class CorePanels {
         )
 
     fun attachWebServer(context: Context, webServer: WebServer) {
-        println("PANELS: Preferences.isEnabled: ${Preferences.isEnabled}")
+        Logger.coreLog("Preferences.isEnabled: ${Preferences.isEnabled}")
 
         try {
             server = Server(context)
             socket = Socket(this::initOpMode, this::startOpMode, this::stopOpMode)
         } catch (e: Exception) {
-            println("PANELS: Failed to start webservers: " + e.message)
+            Logger.coreLog("Failed to start webservers: " + e.message)
         }
 
         if (Preferences.isEnabled) {
@@ -56,45 +56,33 @@ class CorePanels {
         }
 
 
-//        try {
-//            println("PANELS: CONFIGURABLES: Finding configurables")
-//            Configurables.findConfigurables(context)
-//        } catch(e: Exception){
-//            println("PANELS: CONFIGURABLES: Failed to find configurables: ${e.message}")
-//            e.printStackTrace()
-//        } catch (t: Throwable) {
-//            println("PANELS: CONFIGURABLES: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
-//            t.printStackTrace()
-//        }
-//
-//        try {
-//            println("PANELS: CONFIGURABLES: Sending configurables")
-//            socket.sendConfigurables()
-//        } catch(e: Exception){
-//            println("PANELS: CONFIGURABLES: Failed to send configurables: ${e.message}")
-//            e.printStackTrace()
-//        } catch (t: Throwable) {
-//            println("PANELS: CONFIGURABLES: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
-//            t.printStackTrace()
-//        }
+        try {
+            socket.sendConfigurables()
+        } catch(e: Exception){
+            Logger.configurablesError("Failed to send configurables: ${e.message}")
+            e.printStackTrace()
+        } catch (t: Throwable) {
+            Logger.configurablesError("Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
+            t.printStackTrace()
+        }
 
         try {
             PluginManager.loadPlugins(context)
         } catch (e: Exception) {
-            println("PANELS: Failed to load plugins: ${e.message}")
+            Logger.pluginsError("Failed to load plugins: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("PANELS: Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
+            Logger.pluginsError("Plugins Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
         try {
             PluginManager.onRegister(this)
         } catch (e: Exception) {
-            println("PANELS: Failed to register plugins: ${e.message}")
+            Logger.pluginsError("Failed to register plugins: ${e.message}")
             e.printStackTrace()
         } catch (t: Throwable) {
-            println("PANELS: Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
+            Logger.pluginsError("Plugins Register Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
     }
@@ -159,19 +147,19 @@ class CorePanels {
         telemetryManager.resetGraphs()
         GlobalGamepad.reset()
         opModeManager?.initOpMode(name) ?: run {
-            println("PANELS: opModeManager is null")
+            Logger.coreError("opModeManager is null")
         }
     }
 
     fun startOpMode() {
         opModeManager?.startActiveOpMode() ?: run {
-            println("PANELS: opModeManager is null")
+            Logger.coreError("opModeManager is null")
         }
     }
 
     fun stopOpMode() {
         opModeManager?.stopActiveOpMode() ?: run {
-            println("PANELS: opModeManager is null")
+            Logger.coreError("opModeManager is null")
         }
     }
 }

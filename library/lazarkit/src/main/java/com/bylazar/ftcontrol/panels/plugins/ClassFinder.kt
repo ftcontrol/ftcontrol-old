@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.plugins
 
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -86,11 +87,9 @@ class ClassFinder {
                     }
                 }
             } catch (e: Exception) {
-                println("PANELS: Exception occurred: ${e.message}")
-                e.printStackTrace()
+                Logger.pluginsLog("Exception occurred: ${e.message}")
             } catch (e: IllegalArgumentException) {
-                println("PANELS: IllegalArgumentException occurred: ${e.message}")
-                e.printStackTrace()
+                Logger.pluginsLog("IllegalArgumentException occurred: ${e.message}")
             }
         }
     }

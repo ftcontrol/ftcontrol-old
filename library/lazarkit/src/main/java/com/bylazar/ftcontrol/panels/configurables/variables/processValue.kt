@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.CustomVariable
@@ -23,20 +24,20 @@ fun processValue(
     recursionItems: MutableList<String> = mutableListOf(),
 ): GenericVariable {
     try {
-        println("PANELS: Unsupported package ${reference.genericType?.javaClass?.packageName}")
+        Logger.configurablesLog("Package ${reference.genericType?.javaClass?.packageName}")
 
         if (reference.type == HardwareMap::class.java) {
             return UnsupportedVariable(className, reference.name)
         }
 
         if (recursionItems.contains("this\$0") && reference.name == "this\$0") {
-            println("PANELS: Detected self-reference or cycle: $recursionItems")
+            Logger.configurablesLog("Detected self-reference or cycle: $recursionItems")
             throw RecursionDetectedException(reference.name)
         }
 
         recursionItems.add(reference.name)
         if (recursionDepth > MAX_RECURSION_DEPTH) {
-            println("PANELS: Recursion depth exceeded: $recursionItems")
+            Logger.configurablesLog("Recursion depth exceeded: $recursionItems")
             return UnknownVariable(className, reference.name)
             throw RecursionDetectedException(reference.name)
         }
@@ -91,7 +92,7 @@ fun processValue(
                         componentType
                     }
 
-                    println("PANELS: Array type: $itemType")
+                    Logger.configurablesLog("Array type: $itemType")
 
                     val currentElementReference = MyField(
                         name = i.toString(),
@@ -139,7 +140,7 @@ fun processValue(
                         reference.type.componentType
                     }
 
-                    println("PANELS: Array type: $itemType")
+                    Logger.configurablesLog("Array type: $itemType")
 
                     val currentElementReference = MyField(
                         name = index.toString(),
@@ -175,9 +176,9 @@ fun processValue(
         if (type == BaseTypes.MAP) {
             val mapInstance = currentManager.getValue() as? MutableMap<*, *>
             if (mapInstance != null) {
-                println("   PANELS: Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
+                Logger.configurablesLog("Map keys: ${mapInstance.map { (key, value) -> "$key.$value" }}")
                 val mapValues: List<GenericVariable> = mapInstance.map { (key, _) ->
-                    println("   PANELS: Map key: $key")
+                    Logger.configurablesLog("Map key: $key")
                     val itemType = getType(mapInstance[key]?.javaClass)
                     val currentElementReference = MyField(
                         name = key.toString(),
@@ -202,7 +203,7 @@ fun processValue(
                     )
                 }
 
-                println("   PANELS: Map keys2: ${mapValues.map { it.toJsonType }}")
+                Logger.configurablesLog("Map keys2: ${mapValues.map { it.toJsonType }}")
 
 
                 return CustomVariable(reference.name, className, mapValues, BaseTypes.MAP)
@@ -212,7 +213,7 @@ fun processValue(
         return UnknownVariable(className, reference.name)
     } catch (e: RecursionDetectedException) {
         if (recursionDepth == 0) {
-            println("PANELS: Recursion detected and aborted at top-level.")
+            Logger.configurablesError("Recursion detected and aborted at top-level.")
             return RecursionReachedVariable(className, reference.name)
         } else {
             throw e

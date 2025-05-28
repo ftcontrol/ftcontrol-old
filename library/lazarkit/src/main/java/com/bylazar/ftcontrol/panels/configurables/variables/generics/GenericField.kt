@@ -32,9 +32,10 @@ class GenericField(
         get() {
             try {
                 val json = value.toJsonType
+                val json = value.toJsonType
                 return json
             } catch (t: Throwable) {
-                println("PANELS: CONFIGURABLES: JSON Error for $className / ${reference.name}: ${t.message}")
+                Logger.configurablesError("Error getting JSON for $className / ${reference.name}: ${t.message}")
                 return JSONErrorVariable(className, reference.name).toJsonType
             }
         }
