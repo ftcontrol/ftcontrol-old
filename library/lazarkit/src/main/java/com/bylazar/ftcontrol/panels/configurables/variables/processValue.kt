@@ -5,6 +5,8 @@ import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVari
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.CustomVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.RecursionReachedVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.UnknownVariable
+import com.bylazar.ftcontrol.panels.configurables.variables.instances.UnsupportedVariable
+import com.qualcomm.robotcore.hardware.HardwareMap
 import java.lang.reflect.Array
 
 const val MAX_RECURSION_DEPTH = 32
@@ -20,7 +22,11 @@ fun processValue(
     recursionItems: MutableList<String> = mutableListOf(),
 ): GenericVariable {
     try {
+        println("PANELS: Unsupported package ${reference.genericType?.javaClass?.packageName}")
 
+        if (reference.type == HardwareMap::class.java) {
+            return UnsupportedVariable(className, reference.name)
+        }
 
         if (recursionItems.contains("this\$0") && reference.name == "this\$0") {
             println("PANELS: Detected self-reference or cycle: $recursionItems")

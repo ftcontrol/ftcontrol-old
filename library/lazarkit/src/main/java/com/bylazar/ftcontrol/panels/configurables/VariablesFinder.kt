@@ -39,7 +39,6 @@ class VariablesFinder(
             "com.android",
             "dalvik",
             "org.intellij",
-            "org.firstinspires",
             "org.slf4j",
             "org.threeten",
             "org.w3c",
@@ -50,7 +49,15 @@ class VariablesFinder(
             "com.jakewharton",
             "org.openftc",
             "org.xml",
-            "org.jetbrains"
+            "org.jetbrains",
+            "org.firstinspires.ftc.robotcore",
+            "org.firstinspires.inspection",
+            "org.firstinspires.ftc.robotserver",
+            "org.firstinspires.ftc.ftccommon",
+            "org.firstinspires.ftc.robotcontroller",
+            "org.firstinspires.ftc.onbotjava",
+            "org.firstinspires.ftc.vision",
+            "org.firstinspires.ftc.apriltag",
         )
     )
 
@@ -81,13 +88,13 @@ class VariablesFinder(
             val fieldTypeName = field.type.canonicalName ?: ""
             val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
 
-            println("PANELS: CONFIGURABLES: Field of $fieldTypeName")
+            println("PANELS: CONFIGURABLES: Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
 
             if (isJvmField && !isInExcludedPackage) {
                 val displayClassName =
                     if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
                 val genericField = GenericField(className = displayClassName, reference = field)
-                println("PANELS: CONFIGURABLES: Adding field $genericField / ${genericField.type}")
+                println("PANELS: CONFIGURABLES: Adding field $genericField / ${genericField.type} / ${genericField.value} / ${genericField.isNull}")
                 add(genericField)
             }
         }
