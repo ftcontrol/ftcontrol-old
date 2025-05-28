@@ -8,10 +8,12 @@ import java.lang.reflect.Modifier
 class VariablesFinder() {
 
     fun updateJvmFields(allClasses: List<ClassFinder.ClassEntry>) {
+        Logger.configurablesLog("Updating JVM fields")
         val output = mutableListOf<GenericField>()
         allClasses.forEach { entry ->
             try {
                 val clazz = Class.forName(entry.className)
+                Logger.configurablesLog("Inspecting class ${entry.className}")
                 output.addFieldsFromClass(clazz, entry.className)
                 try {
                     val companionClazz = Class.forName("${entry.className}\$Companion")
@@ -67,6 +69,7 @@ class VariablesFinder() {
         val fields = clazz.declaredFields
         fields.forEach { field ->
             try {
+
                 val annotations = field.annotations.map { it.toString() }
 
                 val isFinal = Modifier.isFinal(field.modifiers)
@@ -88,7 +91,7 @@ class VariablesFinder() {
                 val fieldTypeName = field.type.canonicalName ?: ""
                 val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
 
-                Logger.configurablesLog("Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
+                Logger.configurablesLog("Found field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
 
                 if (isJvmField && !isInExcludedPackage) {
                     val displayClassName =
