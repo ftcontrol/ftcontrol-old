@@ -24,7 +24,7 @@ fun processValue(
     recursionItems: MutableList<String> = mutableListOf(),
 ): GenericVariable {
     try {
-        Logger.configurablesLog("Package ${reference.genericType?.javaClass?.packageName}")
+//        Logger.configurablesLog("Package ${reference.genericType?.javaClass?.packageName}")
 
         if (reference.type == HardwareMap::class.java) {
             return UnsupportedVariable(className, reference.name)
