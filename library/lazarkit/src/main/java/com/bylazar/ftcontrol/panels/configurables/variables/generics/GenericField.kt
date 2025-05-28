@@ -32,7 +32,6 @@ class GenericField(
         get() {
             try {
                 val json = value.toJsonType
-                val json = value.toJsonType
                 return json
             } catch (t: Throwable) {
                 Logger.configurablesError("Error getting JSON for $className / ${reference.name}: ${t.message}")

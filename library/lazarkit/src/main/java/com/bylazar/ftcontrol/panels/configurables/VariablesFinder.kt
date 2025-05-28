@@ -1,7 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables
 
 import com.bylazar.ftcontrol.panels.Logger
-import com.bylazar.ftcontrol.panels.configurables.ClassFinder
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
 import java.lang.reflect.Modifier
@@ -67,11 +66,12 @@ class VariablesFinder() {
     ) {
         val fields = clazz.declaredFields
         fields.forEach { field ->
-            val annotations = field.annotations.map { it.toString() }
+            try {
+                val annotations = field.annotations.map { it.toString() }
 
-            val isFinal = Modifier.isFinal(field.modifiers)
-            val isStatic = Modifier.isStatic(field.modifiers)
-            val isIgnored = field.isAnnotationPresent(IgnoreConfigurable::class.java)
+                val isFinal = Modifier.isFinal(field.modifiers)
+                val isStatic = Modifier.isStatic(field.modifiers)
+                val isIgnored = field.isAnnotationPresent(IgnoreConfigurable::class.java)
 
 //            val isPrivate = Modifier.isPrivate(field.modifiers)
 //            val isNull = try {
@@ -83,19 +83,22 @@ class VariablesFinder() {
 //                false
 //            }
 
-            val isJvmField = !isFinal && isStatic && !isIgnored
+                val isJvmField = !isFinal && isStatic && !isIgnored
 
-            val fieldTypeName = field.type.canonicalName ?: ""
-            val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
+                val fieldTypeName = field.type.canonicalName ?: ""
+                val isInExcludedPackage = excludedPackages.any { fieldTypeName.startsWith(it) }
 
-            Logger.configurablesLog("Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
+                Logger.configurablesLog("Field of $fieldTypeName / $isJvmField / $isInExcludedPackage / shown: ${isJvmField && !isInExcludedPackage}")
 
-            if (isJvmField && !isInExcludedPackage) {
-                val displayClassName =
-                    if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
-                val genericField = GenericField(className = displayClassName, reference = field)
-                Logger.configurablesLog("Adding field $genericField / ${genericField.type} / ${genericField.value} / ${genericField.isNull}")
-                add(genericField)
+                if (isJvmField && !isInExcludedPackage) {
+                    val displayClassName =
+                        if (clazz.name.endsWith("\$Companion")) originalClassName else clazz.name
+                    val genericField = GenericField(className = displayClassName, reference = field)
+                    Logger.configurablesLog("Adding field $genericField / ${genericField.type} / ${genericField.value} / ${genericField.isNull}")
+                    add(genericField)
+                }
+            } catch (t: Throwable) {
+                Logger.configurablesError("Error inspecting field ${field.name} in $clazz: ${t.message}")
             }
         }
     }
