@@ -14,6 +14,7 @@ You can suggest a new feature via the [official email](mailto:ftcontrol@bylazar.
 
 ## Configurables
 
+* Handle OpModes for Configurables by reloading undefined fields.
 * Ability to register a configurable variable at runtime
 * Change the order of classes from the UI
 * Configurable groups through annotations

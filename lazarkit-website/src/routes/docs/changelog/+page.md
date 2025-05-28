@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.6.5
+- Improved logs with generic Logger & callerClassName
+- Configurables bug fixes
+
 ## v0.6.4
 - Configurables properly handle JSON Errors
 - Limit max recursion to `32`
