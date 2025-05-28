@@ -1,8 +1,8 @@
-package com.bylazar.ftcontrol.panels.configurables
+package com.bylazar.ftcontrol.panels.configurablesOld
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
-import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurablesOld.utils.extractClassNamesFromDex
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

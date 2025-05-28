@@ -1,10 +1,10 @@
-package com.bylazar.ftcontrol.panels.configurables.variables.generics
+package com.bylazar.ftcontrol.panels.configurablesOld.variables.generics
 
-import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
-import com.bylazar.ftcontrol.panels.configurables.variables.convertToMyField
-import com.bylazar.ftcontrol.panels.configurables.variables.getType
-import com.bylazar.ftcontrol.panels.configurables.variables.instances.JSONErrorVariable
-import com.bylazar.ftcontrol.panels.configurables.variables.processValue
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.convertToMyField
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.getType
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.JSONErrorVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.processValue
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
 

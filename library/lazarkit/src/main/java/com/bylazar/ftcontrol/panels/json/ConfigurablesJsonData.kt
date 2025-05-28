@@ -2,7 +2,7 @@ package com.bylazar.ftcontrol.panels.json
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
 
 
 @Serializable

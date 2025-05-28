@@ -1,11 +1,11 @@
-package com.bylazar.ftcontrol.panels.configurables.variables
+package com.bylazar.ftcontrol.panels.configurablesOld.variables
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
-import com.bylazar.ftcontrol.panels.configurables.variables.instances.CustomVariable
-import com.bylazar.ftcontrol.panels.configurables.variables.instances.RecursionReachedVariable
-import com.bylazar.ftcontrol.panels.configurables.variables.instances.UnknownVariable
-import com.bylazar.ftcontrol.panels.configurables.variables.instances.UnsupportedVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.CustomVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.RecursionReachedVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.UnknownVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.instances.UnsupportedVariable
 import com.qualcomm.robotcore.hardware.HardwareMap
 import java.lang.reflect.Array
 

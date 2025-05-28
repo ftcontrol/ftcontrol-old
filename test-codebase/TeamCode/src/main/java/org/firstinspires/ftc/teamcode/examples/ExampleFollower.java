@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.examples;
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable;
 
 @Configurable
 public class ExampleFollower {

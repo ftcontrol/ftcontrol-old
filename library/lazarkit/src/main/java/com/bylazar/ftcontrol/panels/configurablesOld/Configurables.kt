@@ -1,8 +1,8 @@
-package com.bylazar.ftcontrol.panels.configurables
+package com.bylazar.ftcontrol.panels.configurablesOld
 
 import android.content.Context
-import com.bylazar.ftcontrol.panels.configurables.variables.MyField
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.MyField
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericField
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 
 object Configurables {

@@ -2,7 +2,8 @@ package com.bylazar.ftcontrol.panels
 
 import android.content.Context
 import android.view.Menu
-import com.bylazar.ftcontrol.panels.configurables.Configurables
+import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
+import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
 import com.bylazar.ftcontrol.panels.integration.MenuManager
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.integration.OpModeRegistrar
@@ -16,7 +17,6 @@ import com.qualcomm.ftccommon.FtcEventLoop
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl
 import com.qualcomm.robotcore.util.WebServer
-import java.io.IOException
 
 class CorePanels {
     var uiManager = UIManager()
@@ -50,26 +50,34 @@ class CorePanels {
         }
 
         try {
-            println("PANELS: CONFIGURABLES: Finding configurables")
-            Configurables.findConfigurables(context)
-        } catch(e: Exception){
-            println("PANELS: CONFIGURABLES: Failed to find configurables: ${e.message}")
-            e.printStackTrace()
-        } catch (t: Throwable) {
-            println("PANELS: CONFIGURABLES: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+            ConfigurablesManager.init()
+        }catch (t: Throwable){
+            Logger.configurablesLog("Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
 
-        try {
-            println("PANELS: CONFIGURABLES: Sending configurables")
-            socket.sendConfigurables()
-        } catch(e: Exception){
-            println("PANELS: CONFIGURABLES: Failed to send configurables: ${e.message}")
-            e.printStackTrace()
-        } catch (t: Throwable) {
-            println("PANELS: CONFIGURABLES: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
-            t.printStackTrace()
-        }
+
+//        try {
+//            println("PANELS: CONFIGURABLES: Finding configurables")
+//            Configurables.findConfigurables(context)
+//        } catch(e: Exception){
+//            println("PANELS: CONFIGURABLES: Failed to find configurables: ${e.message}")
+//            e.printStackTrace()
+//        } catch (t: Throwable) {
+//            println("PANELS: CONFIGURABLES: Configurables Throwable caught: ${t::class.simpleName} - ${t.message}")
+//            t.printStackTrace()
+//        }
+//
+//        try {
+//            println("PANELS: CONFIGURABLES: Sending configurables")
+//            socket.sendConfigurables()
+//        } catch(e: Exception){
+//            println("PANELS: CONFIGURABLES: Failed to send configurables: ${e.message}")
+//            e.printStackTrace()
+//        } catch (t: Throwable) {
+//            println("PANELS: CONFIGURABLES: Configurables Send Throwable caught: ${t::class.simpleName} - ${t.message}")
+//            t.printStackTrace()
+//        }
 
         try {
             PluginManager.loadPlugins(context)

@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.examples;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable;
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 

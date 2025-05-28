@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode.examples.configurables
 
-import com.bylazar.ftcontrol.panels.configurables.TPair
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
-import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
+import com.bylazar.ftcontrol.panels.configurablesOld.TPair
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.GenericValue
 
 @Configurable
 object ClawConfig {

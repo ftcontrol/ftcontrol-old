@@ -1,7 +1,6 @@
-package com.bylazar.ftcontrol.panels.configurables.variables
+package com.bylazar.ftcontrol.panels.configurablesOld.variables
 
-import com.bylazar.ftcontrol.panels.configurables.Configurables
-import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.GenericValue
 import java.lang.reflect.ParameterizedType
 
 private val typeMapping = mapOf(

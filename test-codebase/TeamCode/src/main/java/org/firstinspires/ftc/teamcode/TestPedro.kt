@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
-import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.Configurable
 import com.bylazar.ftcontrol.panels.json.Look
 import com.pedropathing.geometry.BezierCurve
 import com.pedropathing.geometry.Pose

@@ -1,10 +1,10 @@
-package com.bylazar.ftcontrol.panels.configurables.variables.instances
+package com.bylazar.ftcontrol.panels.configurablesOld.variables.instances
 
-import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 
-class RecursionReachedVariable(
+class JSONErrorVariable(
     override val className: String,
     val name: String
 ) : GenericVariable(className) {
@@ -13,7 +13,7 @@ class RecursionReachedVariable(
             id = "",
             className = className,
             fieldName = name,
-            type = BaseTypes.RECURSION_REACHED,
+            type = BaseTypes.JSON_ERROR,
             valueString = "",
             newValueString = "",
         )

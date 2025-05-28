@@ -1,7 +1,7 @@
-package com.bylazar.ftcontrol.panels.configurables
+package com.bylazar.ftcontrol.panels.configurablesOld
 
-import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
+import com.bylazar.ftcontrol.panels.configurablesOld.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericField
 import java.lang.reflect.Modifier
 
 class VariablesFinder(

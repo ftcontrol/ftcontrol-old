@@ -1,7 +1,7 @@
 package com.bylazar.ftcontrol.panels.server
 
 import com.bylazar.ftcontrol.panels.GlobalData
-import com.bylazar.ftcontrol.panels.configurables.Configurables
+import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.json.ActiveOpMode
 import com.bylazar.ftcontrol.panels.json.BatteryVoltage

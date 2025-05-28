@@ -1,10 +1,10 @@
-package com.bylazar.ftcontrol.panels.configurables.variables.instances
+package com.bylazar.ftcontrol.panels.configurablesOld.variables.instances
 
-import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.BaseTypes
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 
-class JSONErrorVariable(
+class UnknownVariable(
     override val className: String,
     val name: String
 ) : GenericVariable(className) {
@@ -13,7 +13,7 @@ class JSONErrorVariable(
             id = "",
             className = className,
             fieldName = name,
-            type = BaseTypes.JSON_ERROR,
+            type = BaseTypes.UNKNOWN,
             valueString = "",
             newValueString = "",
         )

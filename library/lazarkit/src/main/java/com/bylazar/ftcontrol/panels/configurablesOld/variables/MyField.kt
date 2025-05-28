@@ -1,7 +1,7 @@
-package com.bylazar.ftcontrol.panels.configurables.variables
+package com.bylazar.ftcontrol.panels.configurablesOld.variables
 
-import com.bylazar.ftcontrol.panels.configurables.Configurables
-import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
+import com.bylazar.ftcontrol.panels.configurablesOld.Configurables
+import com.bylazar.ftcontrol.panels.configurablesOld.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
 import java.lang.reflect.Type
