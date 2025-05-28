@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.configurables
 
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.configurables.annotations.Configurable
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 import com.bylazar.ftcontrol.panels.configurables.utils.extractClassNamesFromDex
@@ -9,7 +10,7 @@ import java.nio.ByteOrder
 import java.util.zip.ZipFile
 
 class ClassFinder {
-    private val ignored: Set<String> = HashSet(
+    private val ignoredPackages: Set<String> = HashSet(
         mutableListOf(
             "com.google",
             "com.sun",
@@ -58,74 +59,68 @@ class ClassFinder {
         val className: String,
     )
 
-    lateinit var apkPath: String
-
-    private val allClasses: List<ClassEntry> by lazy {
-        mutableListOf<ClassEntry>().apply {
-            try {
-                ZipFile(apkPath).use { zipFile ->
-                    val entries = zipFile.entries()
-                    while (entries.hasMoreElements()) {
-                        val entry = entries.nextElement()
-                        if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
-                            println("PANELS: CONFIGURABLES: Checking ${entry.name}")
-                            zipFile.getInputStream(entry).use { inputStream ->
-                                val dexBytes = inputStream.readBytes()
-                                val dexBuffer =
-                                    ByteBuffer.wrap(dexBytes).order(ByteOrder.LITTLE_ENDIAN)
-                                val classNames = dexBuffer.extractClassNamesFromDex()
-                                val filteredClassNames = classNames.filter { className ->
-                                    val isNotIgnored =
-                                        ignored.none { prefix -> className.startsWith(prefix) }
-                                    return@filter isNotIgnored
-                                }
-                                println("PANELS: CONFIGURABLES: Found ${filteredClassNames.size} classes in ${entry.name}")
-                                val processedClassNames = filteredClassNames.mapNotNull {
-                                    try {
-                                        val clazz = Class.forName(it)
-                                        val hasConfigurable =
-                                            clazz.isAnnotationPresent(Configurable::class.java)
-                                        val hasIgnoreConfigurable =
-                                            clazz.isAnnotationPresent(IgnoreConfigurable::class.java)
-                                        val shouldKeep =
-                                            hasConfigurable && !hasIgnoreConfigurable
-                                        if (!shouldKeep) {
-                                            return@mapNotNull null
-                                        }
-                                        ClassEntry(
-                                            className = it,
-                                        )
-                                    } catch (e: ClassNotFoundException) {
-                                        println("PANELS: CONFIGURABLES: Class not found: $it")
-                                        null
-                                    } catch (e: Exception) {
-                                        println("PANELS: CONFIGURABLES: Error loading class $it: ${e.message}")
-                                        null
-                                    } catch (t: Throwable) {
-                                        println("PANELS: CONFIGURABLES: C1 Throwable caught: ${t::class.simpleName} - ${t.message}")
-                                        null
-                                    }
-                                }
-                                println("PANELS:  CONFIGURABLES: Found ${processedClassNames.size} processed classes in ${entry.name}")
-                                addAll(processedClassNames)
+    fun updateClasses(apkPath: String) {
+        val classSet = LinkedHashSet<ClassEntry>()
+        try {
+            ZipFile(apkPath).use { zipFile ->
+                val entries = zipFile.entries()
+                while (entries.hasMoreElements()) {
+                    val entry = entries.nextElement()
+                    if (entry.name.startsWith("classes") && entry.name.endsWith(".dex")) {
+                        Logger.configurablesLog("Checking ${entry.name}")
+                        zipFile.getInputStream(entry).use { inputStream ->
+                            val dexBytes = inputStream.readBytes()
+                            val dexBuffer =
+                                ByteBuffer.wrap(dexBytes).order(ByteOrder.LITTLE_ENDIAN)
+                            val classNames = dexBuffer.extractClassNamesFromDex()
+                            val filteredClassNames = classNames.filter { className ->
+                                val isNotIgnored =
+                                    ignoredPackages.none { prefix -> className.startsWith(prefix) }
+                                return@filter isNotIgnored
                             }
+                            Logger.configurablesLog("Found ${filteredClassNames.size} classes in ${entry.name}")
+                            val processedClassNames = filteredClassNames.mapNotNull {
+                                try {
+                                    val clazz = Class.forName(it)
+                                    val hasConfigurable =
+                                        clazz.isAnnotationPresent(Configurable::class.java)
+                                    val hasIgnoreConfigurable =
+                                        clazz.isAnnotationPresent(IgnoreConfigurable::class.java)
+                                    val shouldKeep =
+                                        hasConfigurable && !hasIgnoreConfigurable
+                                    if (!shouldKeep) {
+                                        return@mapNotNull null
+                                    }
+                                    ClassEntry(
+                                        className = it,
+                                    )
+                                } catch (e: ClassNotFoundException) {
+                                    Logger.configurablesError("Class not found: $it")
+                                    null
+                                } catch (e: Exception) {
+                                    Logger.configurablesError("Error loading class $it: ${e.message}")
+                                    null
+                                } catch (t: Throwable) {
+                                    Logger.configurablesError("Throwable caught: ${t::class.simpleName} - ${t.message}")
+                                    null
+                                }
+                            }
+                            Logger.configurablesLog("Found ${processedClassNames.size} processed classes in ${entry.name}")
+                            classSet.addAll(processedClassNames)
                         }
                     }
                 }
-            } catch (e: IOException) {
-                println("PANELS: CONFIGURABLES: IOException occurred: ${e.message}")
-                e.printStackTrace()
-            } catch (e: IllegalArgumentException) {
-                println("PANELS: CONFIGURABLES: IllegalArgumentException occurred: ${e.message}")
-                e.printStackTrace()
-            } catch (t: Throwable) {
-                println("PANELS: CONFIGURABLES: C Throwable caught: ${t::class.simpleName} - ${t.message}")
-                t.printStackTrace()
             }
+        } catch (e: IOException) {
+            Logger.configurablesError("IOException occurred: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            Logger.configurablesError("IllegalArgumentException occurred: ${e.message}")
+        } catch (t: Throwable) {
+            Logger.configurablesError("Throwable caught: ${t::class.simpleName} - ${t.message}")
         }
+        classes = classSet.toList()
     }
 
 
-    val getAllClasses: List<ClassEntry>
-        get() = allClasses
+    var classes: List<ClassEntry> = listOf()
 }

@@ -10,6 +10,7 @@ enum class BaseTypes {
     ENUM,
 
     UNKNOWN,
+    UNSUPPORTED,
     RECURSION_REACHED,
     JSON_ERROR,
 

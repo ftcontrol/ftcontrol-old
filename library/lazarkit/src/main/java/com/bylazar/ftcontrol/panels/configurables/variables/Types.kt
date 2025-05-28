@@ -1,8 +1,9 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
-import com.bylazar.ftcontrol.panels.configurables.Configurables
 import com.bylazar.ftcontrol.panels.configurables.annotations.GenericValue
 import java.lang.reflect.ParameterizedType
+import java.lang.reflect.TypeVariable
+import kotlin.collections.get
 
 private val typeMapping = mapOf(
     Int::class.java to BaseTypes.INT,
@@ -58,7 +59,7 @@ private fun resolveGenericType(reference: MyField?, parentReference: MyField?): 
     val genericType = reference.ref?.genericType
 
     val isGeneric =
-        genericType is ParameterizedType || genericType is java.lang.reflect.TypeVariable<*>
+        genericType is ParameterizedType || genericType is TypeVariable<*>
 
     if (!isGeneric) return BaseTypes.CUSTOM
 
@@ -68,7 +69,7 @@ private fun resolveGenericType(reference: MyField?, parentReference: MyField?): 
 
     if (genericType is ParameterizedType) return BaseTypes.GENERIC
 
-    if (genericType is java.lang.reflect.TypeVariable<*>) {
+    if (genericType is TypeVariable<*>) {
         val resolvedType = when (genericType.name) {
             "T" -> genericAnnotation.tParam
             "V" -> genericAnnotation.vParam

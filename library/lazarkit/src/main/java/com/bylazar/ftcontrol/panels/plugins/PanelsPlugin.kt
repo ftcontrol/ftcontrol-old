@@ -1,5 +1,6 @@
 package com.bylazar.ftcontrol.panels.plugins
 
+import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.plugins.html.HTMLElement
 import com.bylazar.ftcontrol.panels.plugins.html.primitives.Text
 import com.qualcomm.ftccommon.FtcEventLoop
@@ -59,11 +60,11 @@ abstract class PanelsPlugin<T : BasePluginConfig>(baseConfig: T) {
                 @Suppress("UNCHECKED_CAST")
                 config = newConfig as T
 
-                println("PANELS: Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
+                Logger.pluginsLog("Found config class: $clazz / $isConfig / $pluginPackage / $clazzPackage")
 
                 //TODO: handle multiple configs
             } catch (t: Throwable) {
-                println("PANELS: Throwable caught while searching config: ${t::class.simpleName} - ${t.message}")
+                Logger.pluginsError("Throwable caught while searching config: ${t::class.simpleName} - ${t.message}")
                 t.printStackTrace()
             }
         }

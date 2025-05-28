@@ -8,4 +8,10 @@ public class ExampleFollower {
     public static boolean useCentripetal = true;
     public static boolean useHeading = true;
     public static boolean useDrive = true;
+
+    public static ErrorProducer producer = new ErrorProducer();
+
+    void init(){
+        producer.init();
+    }
 }

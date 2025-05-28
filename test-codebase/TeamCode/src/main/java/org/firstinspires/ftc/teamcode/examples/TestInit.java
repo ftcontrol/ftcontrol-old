@@ -15,6 +15,8 @@ public class TestInit extends OpMode {
     @Override
     public void init() {
         robot = new ExampleFollower();
+        robot.init();
+
     }
 
     @Override

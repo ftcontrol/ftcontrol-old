@@ -13,6 +13,14 @@ class CustomVariable(
 
     override val toJsonType: GenericTypeJson
         get() {
+            val valuesList: MutableList<GenericTypeJson> = mutableListOf()
+            values.forEach {
+                try{
+                    valuesList.add(it.toJsonType)
+                }catch (t: Throwable){
+                    //skip
+                }
+            }
             return GenericTypeJson(
                 id = "",
                 className = className,
@@ -20,7 +28,7 @@ class CustomVariable(
                 type = type,
                 valueString = "",
                 newValueString = "",
-                customValues = values.map { it.toJsonType }
+                customValues = valuesList
             )
         }
 

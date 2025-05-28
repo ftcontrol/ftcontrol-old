@@ -1,7 +1,8 @@
 package com.bylazar.ftcontrol.panels.server
 
 import com.bylazar.ftcontrol.panels.GlobalData
-import com.bylazar.ftcontrol.panels.configurables.Configurables
+import com.bylazar.ftcontrol.panels.Logger
+import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
 import com.bylazar.ftcontrol.panels.integration.OpModeData
 import com.bylazar.ftcontrol.panels.json.ActiveOpMode
 import com.bylazar.ftcontrol.panels.json.BatteryVoltage
@@ -58,7 +59,7 @@ class Socket(
             try {
                 client.send(data)
             } catch (e: IOException) {
-                println("PANELS: Error sending message to client: ${e.message}")
+                Logger.socketError("Error sending message to client: ${e.message}")
             }
         }
     }
@@ -71,7 +72,7 @@ class Socket(
             try {
                 client.sendActiveOpMode()
             } catch (e: IOException) {
-                println("PANELS: Error sending message to client: ${e.message}")
+                Logger.socketError("Error sending message to client: ${e.message}")
             }
         }
     }
@@ -86,7 +87,7 @@ class Socket(
 
     fun sendConfigurables(){
         if (!isAlive) return
-        println("PANELS: CONFIGURABLES: Sent configurables")
+        Logger.socketLog("Sent configurables")
         for (client in clients) {
             client.sendJvmFields()
         }
@@ -96,7 +97,7 @@ class Socket(
         lines: MutableList<String>
     ) {
         if (!isAlive) return
-        println("PANELS: sent lines")
+        Logger.socketLog("Sent lines")
         for (client in clients) {
             client.send(TelemetryLinesPacket(lines, System.currentTimeMillis()))
         }
@@ -106,7 +107,7 @@ class Socket(
         graph: MutableMap<String, MutableList<GraphPacket>>
     ) {
         if (!isAlive) return
-        println("PANELS: sent graph")
+        Logger.socketLog("Sent graph")
         for (client in clients) {
             client.send(TelemetryGraphPacket(graph, System.currentTimeMillis()))
         }
@@ -116,7 +117,7 @@ class Socket(
         canvas: Canvas,
     ) {
         if (!isAlive) return
-        println("PANELS: sent canvas")
+        Logger.socketLog("Sent canvas")
         for (client in clients) {
             client.send(TelemetryCanvasPacket(canvas, System.currentTimeMillis()))
         }
@@ -131,7 +132,7 @@ class Socket(
             try {
                 send(data.toJson())
             } catch (e: IOException) {
-                println("PANELS: Error sending message to client: ${e.message}")
+                Logger.socketError("Error sending message to client: ${e.message}")
             }
         }
 
@@ -209,7 +210,7 @@ class Socket(
             reason: String,
             initiatedByRemote: Boolean
         ) {
-            println("PANELS: WebSocket closed: $code, reason: $reason")
+            Logger.socketError("WebSocket closed: $code, reason: $reason")
             stopTimer()
             ping?.cancel();
 
@@ -235,8 +236,8 @@ class Socket(
         }
 
         fun sendJvmFields() {
-            send(ReceivedInitialJvmFields(Configurables.initialJvmFields))
-            send(ReceivedJvmFields(Configurables.jvmFields.map { it.toJsonType }))
+            send(ReceivedInitialJvmFields(ConfigurablesManager.initialJvmFields))
+            send(ReceivedJvmFields(ConfigurablesManager.jvmFields.map { it.toJsonType }))
         }
 
         fun sendAllPlugins() {
@@ -244,7 +245,7 @@ class Socket(
         }
 
         override fun onMessage(message: WebSocketFrame) {
-            println("PANELS: Received message: ${message.textPayload}")
+            Logger.socketLog("Received message: ${message.textPayload}")
             try {
                 val decoded = json.decodeFromString(
                     PolymorphicSerializer(JSONData::class),
@@ -276,12 +277,11 @@ class Socket(
                     }
 
                     is UpdatedJvmFields -> {
-                        println("PANELS: Received JvmFields: ${decoded.fields}")
-
+                        Logger.socketLog("Received JvmFields: ${decoded.fields}")
 
                         decoded.fields.forEach {
-                            println("PANELS: Field id: ${it.id}, New value: ${it.newValueString}")
-                            val generalRef = Configurables.fieldsMap[it.id] ?: return
+                            Logger.socketLog("Field id: ${it.id}, New value: ${it.newValueString}")
+                            val generalRef = ConfigurablesManager.fieldsMap[it.id] ?: return
                             generalRef.setValue(it.newValueString)
                         }
 
@@ -297,11 +297,11 @@ class Socket(
                     }
 
                     else -> {
-                        println("PANELS: Unknown message type: ${decoded::class.simpleName}")
+                        Logger.socketError("Unknown message type: ${decoded::class.simpleName}")
                     }
                 }
             } catch (e: Exception) {
-                println("PANELS: Error decoding JSON: ${e.message}")
+                Logger.socketError("Error decoding JSON: ${e.message}")
                 close(
                     WebSocketFrame.CloseCode.InternalServerError,
                     "Error in message handling",
@@ -319,11 +319,11 @@ class Socket(
 
     fun startServer() {
         start()
-        println("PANELS: Socket started on port 8002")
+        Logger.socketLog("Socket started on port 8002")
     }
 
     fun stopServer() {
         stop()
-        println("PANELS: Socket stopped")
+        Logger.socketLog("Socket stopped")
     }
 }

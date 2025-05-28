@@ -1,5 +1,7 @@
 package com.bylazar.ftcontrol.panels.configurables.variables.generics
 
+import com.bylazar.ftcontrol.panels.Logger
+import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
 import com.bylazar.ftcontrol.panels.configurables.variables.convertToMyField
 import com.bylazar.ftcontrol.panels.configurables.variables.getType
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.JSONErrorVariable
@@ -15,11 +17,15 @@ class GenericField(
     val type = getType(reference.type, convertToMyField(reference), null)
     val value: GenericVariable = processValue(0, className, type, convertToMyField(reference), null)
 
+    val isNull: Boolean
+        get() = toJsonType.type == BaseTypes.JSON_ERROR
+
     val name: String
         get() = reference.name
 
     fun debug() {
-        println("   PANELS: Of type $type")
+        Logger.configurablesLog("Debug for $className / ${reference.name}")
+        Logger.configurablesLog("Of type $type")
     }
 
     val toJsonType: GenericTypeJson
@@ -28,6 +34,7 @@ class GenericField(
                 val json = value.toJsonType
                 return json
             } catch (t: Throwable) {
+                Logger.configurablesError("Error getting JSON for $className / ${reference.name}: ${t.message}")
                 return JSONErrorVariable(className, reference.name).toJsonType
             }
         }
