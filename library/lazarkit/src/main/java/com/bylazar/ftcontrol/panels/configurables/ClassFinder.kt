@@ -60,7 +60,7 @@ class ClassFinder {
     )
 
     fun updateClasses(apkPath: String) {
-        var newClasses = mutableListOf<ClassEntry>()
+        val classSet = LinkedHashSet<ClassEntry>()
         try {
             ZipFile(apkPath).use { zipFile ->
                 val entries = zipFile.entries()
@@ -106,7 +106,7 @@ class ClassFinder {
                                 }
                             }
                             Logger.configurablesLog("Found ${processedClassNames.size} processed classes in ${entry.name}")
-                            newClasses.addAll(processedClassNames)
+                            classSet.addAll(processedClassNames)
                         }
                     }
                 }
@@ -121,7 +121,7 @@ class ClassFinder {
             println("PANELS: CONFIGURABLES: C Throwable caught: ${t::class.simpleName} - ${t.message}")
             t.printStackTrace()
         }
-        classes = newClasses
+        classes = classSet.toList()
     }
 
 
