@@ -10,6 +10,11 @@ import com.bylazar.ftcontrol.panels.configurables.variables.BaseTypes
 data object GetJvmFieldsRequest : JSONData()
 
 @Serializable
+@SerialName("refetchJvmFieldsRequest")
+data object RefetchJvmFieldsRequest : JSONData()
+
+
+@Serializable
 @SerialName("jvmFields")
 data class ReceivedJvmFields(
     var fields: List<GenericTypeJson>

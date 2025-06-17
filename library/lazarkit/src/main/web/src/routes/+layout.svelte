@@ -128,6 +128,18 @@
   onMount(() => {
     detectSWUpdate()
     registerInterval()
+
+    const i = setInterval(() => {
+      if (info.activeOpModeStatus == "stopped") return
+      if (info.activeOpMode == "$Stop$Robot$") return
+      socket.sendMessage({
+        kind: "refetchJvmFieldsRequest",
+      })
+    }, 1000)
+
+    return () => {
+      clearInterval(i)
+    }
   })
 
   onDestroy(() => {
@@ -135,15 +147,6 @@
   })
 </script>
 
-<button
-  onclick={() => {
-    socket.sendMessage({
-      kind: "getJvmFieldsRequest",
-    })
-  }}
->
-  Refetch
-</button>
 <Portal>
   {#if modular.tabs.wasStartedMoving && modular.tabs.movingIndex != null}
     <button

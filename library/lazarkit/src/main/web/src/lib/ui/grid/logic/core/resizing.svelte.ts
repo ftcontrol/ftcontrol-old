@@ -71,7 +71,5 @@ export class ResizingManager extends GenericModularDependency {
     this.onMouseMove(event)
     this.resizingModule = null
   }
-  onKey(event: KeyboardEvent): void {
-    throw new Error("Method not implemented.")
-  }
+  onKey(event: KeyboardEvent): void {}
 }

@@ -19,6 +19,7 @@ import com.bylazar.ftcontrol.panels.json.ReceivedInitialJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedJvmFields
 import com.bylazar.ftcontrol.panels.json.ReceivedOpModes
 import com.bylazar.ftcontrol.panels.json.ReceivedPlugins
+import com.bylazar.ftcontrol.panels.json.RefetchJvmFieldsRequest
 import com.bylazar.ftcontrol.panels.json.StartActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.StopActiveOpModeRequest
 import com.bylazar.ftcontrol.panels.json.TelemetryCanvasPacket
@@ -85,7 +86,7 @@ class Socket(
         send(ReceivedOpModes(GlobalData.opModeList))
     }
 
-    fun sendConfigurables(){
+    fun sendConfigurables() {
         if (!isAlive) return
         Logger.socketLog("Sent configurables")
         for (client in clients) {
@@ -274,6 +275,10 @@ class Socket(
 
                     is GetJvmFieldsRequest -> {
                         sendJvmFields()
+                    }
+
+                    is RefetchJvmFieldsRequest -> {
+                        send(ReceivedJvmFields(ConfigurablesManager.jvmFields.map { it.toJsonType }))
                     }
 
                     is UpdatedJvmFields -> {

@@ -27,6 +27,7 @@ val json = Json {
             subclass(ReceivedJvmFields::class)
             subclass(ReceivedInitialJvmFields::class)
             subclass(UpdatedJvmFields::class)
+            subclass(RefetchJvmFieldsRequest::class)
             subclass(BatteryVoltage::class)
             subclass(ReceivedPlugins::class)
             subclass(PluginsUpdate::class)

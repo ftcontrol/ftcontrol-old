@@ -115,13 +115,42 @@ socket.addMessageHandler("telemetryCanvasPacket", (data: GenericData) => {
 })
 
 socket.addMessageHandler("jvmFields", (data: GenericData) => {
-  info.jvmFields = data.fields
+  if (info.jvmFields.length == 0) {
+    console.log("Initial Configurables")
+    info.jvmFields = data.fields
 
-  const process = (field: GenericTypeJson) => {
-    field.isShown = true
+    const process = (field: GenericTypeJson) => {
+      field.isShown = true
+    }
+
+    forAll(info.jvmFields, process, process)
+  } else {
+    console.log("Refetched values")
+
+    const refetchProcess = (existing: GenericTypeJson) => {
+      console.log()
+      const newField: GenericTypeJson | undefined = (
+        data.fields as GenericTypeJson[]
+      ).find((f) => f.id === existing.id)
+
+      if (newField) {
+        if (existing.valueString != newField.valueString) {
+          console.log(
+            "Different value",
+            existing.valueString,
+            newField.valueString
+          )
+          if (existing.newValueString == existing.valueString) {
+            existing.newValueString = newField.valueString
+            existing.value = newField.valueString
+          }
+          existing.valueString = newField.valueString
+        }
+      }
+    }
+
+    forAll(info.jvmFields, refetchProcess, () => {})
   }
-
-  forAll(info.jvmFields, process, process)
 })
 
 socket.addMessageHandler("initialJvmFields", (data: GenericData) => {
@@ -142,7 +171,6 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
     (f) => {
       for (const u of data.fields as ChangeJson[]) {
         if (f.id == u.id) {
-          f.valueString = u.newValueString
           f.valueString = u.newValueString
           f.value = u.newValueString
           f.isValid = true
