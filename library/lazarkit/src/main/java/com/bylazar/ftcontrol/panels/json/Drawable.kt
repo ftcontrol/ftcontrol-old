@@ -9,10 +9,8 @@ enum class CanvasRotation {
     DEG_270
 }
 
-enum class CanvasPresets {
-    PANELS,
-    PEDRO_PATHING,
-    ROAD_RUNNER
+fun interface CanvasPreset {
+    fun apply(canvas: Canvas)
 }
 
 @Serializable
@@ -60,20 +58,8 @@ class Canvas(
         return this
     }
 
-    fun withOffsetPreset(preset: CanvasPresets): Canvas{
-        when(preset){
-            CanvasPresets.PANELS -> {
-                //no need
-            }
-            CanvasPresets.PEDRO_PATHING -> {
-                this.offsetX = -24.0 * 3
-                this.offsetY = 24.0 * 3
-                this.rotation = CanvasRotation.DEG_270
-            }
-            CanvasPresets.ROAD_RUNNER -> {
-                //no need
-            }
-        }
+    fun withOffsetPreset(preset: CanvasPreset): Canvas {
+        preset.apply(this)
         return this
     }
 

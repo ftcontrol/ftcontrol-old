@@ -1,7 +1,7 @@
 package com.bylazar.ftcontrol.panels.integration
 
 import com.bylazar.ftcontrol.panels.json.Canvas
-import com.bylazar.ftcontrol.panels.json.CanvasPresets
+import com.bylazar.ftcontrol.panels.json.CanvasPreset
 import com.bylazar.ftcontrol.panels.json.CanvasRotation
 import com.bylazar.ftcontrol.panels.json.Drawable
 import com.bylazar.ftcontrol.panels.json.GraphPacket
@@ -42,14 +42,14 @@ class TelemetryManager(
     val shouldUpdateCanvas: Boolean
         get() = timeSinceLastCanvasUpdate >= canvasUpdateInterval
 
-    fun resetGraphs(){
+    fun resetGraphs() {
         graph.clear()
         graphUpdates.clear()
     }
 
     private fun graph(key: String, data: String) {
-        if(graphUpdates[key] == null) graphUpdates[key] = 0
-        if(System.currentTimeMillis() - graphUpdates[key]!! < graphUpdateInterval) return
+        if (graphUpdates[key] == null) graphUpdates[key] = 0
+        if (System.currentTimeMillis() - graphUpdates[key]!! < graphUpdateInterval) return
         val currentTime = System.currentTimeMillis()
         val oneMinuteAgo = currentTime - 60_000
 
@@ -84,6 +84,7 @@ class TelemetryManager(
                     lastZIndex++
                     canvas.add(it)
                 }
+
                 is Canvas -> {
                     it.lines.forEach { line ->
                         line.zIndex = lastZIndex + if (line.zIndex > 0) line.zIndex else 0
@@ -91,7 +92,8 @@ class TelemetryManager(
                         canvas.add(line)
                     }
                     it.rectangles.forEach { rectangle ->
-                        rectangle.zIndex = lastZIndex + if (rectangle.zIndex > 0) rectangle.zIndex else 0
+                        rectangle.zIndex =
+                            lastZIndex + if (rectangle.zIndex > 0) rectangle.zIndex else 0
                         lastZIndex++
                         canvas.add(rectangle)
                     }
@@ -107,9 +109,9 @@ class TelemetryManager(
         }
     }
 
-    fun sendCanvas(c: Canvas){
-        if(c.isEmpty) return
-        if (shouldUpdateCanvas){
+    fun sendCanvas(c: Canvas) {
+        if (c.isEmpty) return
+        if (shouldUpdateCanvas) {
             sendCanvasSocket(c)
             lastCanvasUpdate = System.currentTimeMillis()
         }
@@ -146,19 +148,27 @@ class TelemetryManager(
         update()
     }
 
-    fun setOffsets(offsetX: Double, offsetY: Double, rotation: CanvasRotation = CanvasRotation.DEG_0){
+    fun setOffsets(
+        offsetX: Double,
+        offsetY: Double,
+        rotation: CanvasRotation = CanvasRotation.DEG_0
+    ) {
         canvas = canvas.withOffsets(offsetX, offsetY, rotation)
     }
-    fun setOffsetX(offsetX: Double){
+
+    fun setOffsetX(offsetX: Double) {
         canvas = canvas.withOffsetX(offsetX)
     }
-    fun setOffsetY(offsetY: Double){
+
+    fun setOffsetY(offsetY: Double) {
         canvas = canvas.withOffsetY(offsetY)
     }
-    fun setRotation(rotation: CanvasRotation){
+
+    fun setRotation(rotation: CanvasRotation) {
         canvas = canvas.withRotation(rotation)
     }
-    fun setOffsetPreset(preset: CanvasPresets){
+
+    fun setOffsetPreset(preset: CanvasPreset) {
         canvas = canvas.withOffsetPreset(preset)
     }
 }
