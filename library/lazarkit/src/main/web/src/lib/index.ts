@@ -201,6 +201,20 @@ socket.addMessageHandler("pluginsUpdate", (data: GenericData) => {
   }
 })
 
+function retryConfigurables() {
+  if (info.initialJvmFields.entries.length == 0) {
+    console.log("Refetching Configurables")
+    socket.sendMessage({
+      kind: "getJvmFieldsRequest",
+    })
+    setTimeout(() => {
+      retryConfigurables()
+    }, 1000)
+  }
+}
+
+retryConfigurables()
+
 export const gamepads = new GamepadManager()
 
 export const notifications = new NotificationsManager()

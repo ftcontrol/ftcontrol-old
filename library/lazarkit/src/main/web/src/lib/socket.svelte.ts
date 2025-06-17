@@ -20,6 +20,7 @@ export class SocketManager {
   }
 
   init(): Promise<void> {
+    this.messageQueue = []
     console.log("ran init")
     return new Promise((resolve, reject) => {
       if (this.socket) return
