@@ -11,12 +11,14 @@ export class SocketManager {
   private readonly messageHandlers: Record<string, Handler> = {}
   private reconnectInterval: number = 1000
   private messageQueue: string[] = []
+  private onConnect: () => void
 
   state: SocketState = $state("closed")
 
-  constructor() {
+  constructor(onConnect: () => void) {
     this.messageQueue = []
     this.messageHandlers = {}
+    this.onConnect = onConnect
   }
 
   init(): Promise<void> {
@@ -32,6 +34,7 @@ export class SocketManager {
         console.log("Connected to WebSocket.")
         resolve()
         this.flushQueue()
+        this.onConnect()
       }
 
       this.socket.onmessage = (event) => {

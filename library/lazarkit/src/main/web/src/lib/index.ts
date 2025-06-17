@@ -16,7 +16,14 @@ import { forAll } from "$ui/widgets/configurables/utils"
 import type { Graph, TelemetryFullPacket } from "./socket.svelte"
 import type { Canvas } from "$ui/widgets/fields/canvas"
 
-export const socket = new SocketManager()
+export const info = new InfoManager()
+
+export const socket = new SocketManager(() => {
+  info.jvmFields = []
+  socket.sendMessage({
+    kind: "refetchJvmFieldsRequest",
+  })
+})
 
 socket.addMessageHandler("time", (data: GenericData) => {
   info.time = data.time
@@ -28,8 +35,6 @@ socket.addMessageHandler("activeOpMode", (data: GenericData) => {
   info.activeOpMode = data.opMode.name
   info.activeOpModeStatus = data.status as "init" | "running" | "stopped"
 })
-
-export const info = new InfoManager()
 
 var lastLines: string[] = []
 var lastGraph: Graph = {}
@@ -154,6 +159,10 @@ socket.addMessageHandler("jvmFields", (data: GenericData) => {
 })
 
 socket.addMessageHandler("initialJvmFields", (data: GenericData) => {
+  info.jvmFields = []
+  socket.sendMessage({
+    kind: "refetchJvmFieldsRequest",
+  })
   const initialFields = data.fields
 
   const initialMap = new Map<string, string>()
@@ -202,7 +211,7 @@ socket.addMessageHandler("pluginsUpdate", (data: GenericData) => {
 })
 
 function retryConfigurables() {
-  if (info.initialJvmFields.entries.length == 0) {
+  if (info.jvmFields.length == 0) {
     console.log("Refetching Configurables")
     socket.sendMessage({
       kind: "getJvmFieldsRequest",
