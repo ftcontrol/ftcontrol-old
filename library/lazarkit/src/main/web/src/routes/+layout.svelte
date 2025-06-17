@@ -72,7 +72,6 @@
     interval = setInterval(async () => {
       try {
         const version = await getVersion()
-        console.log(version, Date.now(), toldTimestamp)
         if (
           version != PANELS_VERSION &&
           Date.now() - toldTimestamp > DURATION &&
@@ -112,6 +111,14 @@
           )
           toldTimestamp = Date.now()
         }
+        if (version == PANELS_VERSION) {
+          hasActive = false
+          clearInterval(interval)
+          setTimeout(() => {
+            detectSWUpdate()
+          }, DURATION)
+          console.log(`Latest version is ${version}`)
+        }
       } catch {
         console.log("Failed to fetch latest version")
       }
@@ -128,6 +135,15 @@
   })
 </script>
 
+<button
+  onclick={() => {
+    socket.sendMessage({
+      kind: "getJvmFieldsRequest",
+    })
+  }}
+>
+  Refetch
+</button>
 <Portal>
   {#if modular.tabs.wasStartedMoving && modular.tabs.movingIndex != null}
     <button
