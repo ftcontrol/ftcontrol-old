@@ -11,6 +11,8 @@ class TestChangingConfigurable : OpMode() {
     companion object {
         @JvmField
         var timestamp = 0L
+        @JvmField
+        var smallValue = 0.000001
     }
 
     private val panelsTelemetry = Panels.getTelemetry()

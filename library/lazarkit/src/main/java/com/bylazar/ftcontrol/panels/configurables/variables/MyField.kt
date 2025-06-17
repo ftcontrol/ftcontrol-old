@@ -6,7 +6,9 @@ import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVari
 import com.bylazar.ftcontrol.panels.json.GenericTypeJson
 import java.lang.reflect.Field
 import java.lang.reflect.Type
+import java.util.Locale
 import java.util.UUID
+import kotlin.text.*
 
 class MyField(
     val name: String,
@@ -59,7 +61,11 @@ class MyField(
 
     override val toJsonType: GenericTypeJson
         get() {
-            val value = getValue().toString()
+            val rawValue = getValue()
+            val value = when (rawValue) {
+                is Float, is Double -> String.format(Locale.US, "%.10f", rawValue).trimEnd('0').trimEnd('.')
+                else -> rawValue.toString()
+            }
             return GenericTypeJson(
                 id = id,
                 className = className,
