@@ -3,12 +3,15 @@
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
   import Settings from "$ui/Settings.svelte"
+  import { info, notifications, socket } from "$lib"
+  import { onDestroy, onMount } from "svelte"
   let { children } = $props()
 
   import "./global.css"
   import { modular } from "$ui/grid/logic/modular"
   import Portal from "svelte-portal"
   import { settings } from "$lib/settings.svelte"
+  import { PANELS_VERSION } from "$lib/globals"
 
   onMount(() => {
     socket.init()
@@ -44,8 +47,53 @@
       })
     })
   }
+
+  async function getVersion() {
+    try {
+      const response = await fetch(
+        "https://mymaven.bylazar.com/api/maven/latest/version/releases/com/bylazar/ftcontrol"
+      )
+      if (!response.ok) throw new Error("Failed to fetch")
+      const text = await response.json()
+      return text.version
+    } catch (err) {
+      throw err
+    }
+  }
+
+  let interval: ReturnType<typeof setInterval>
+
+  let toldTimestamp = 0
+
+  function registerInterval() {
+    interval = setInterval(async () => {
+      try {
+        const version = await getVersion()
+        console.log(version, Date.now(), toldTimestamp)
+        if (
+          version != PANELS_VERSION &&
+          Date.now() - toldTimestamp > 1000 * 36
+        ) {
+          notifications.add("New version of Panels available")
+          toldTimestamp = Date.now()
+          clearInterval(interval)
+          setTimeout(() => {
+            detectSWUpdate()
+          }, 3600)
+        }
+      } catch {
+        console.log("Failed to fetch latest version")
+      }
+    }, 1000)
+  }
+
   onMount(() => {
     detectSWUpdate()
+    registerInterval()
+  })
+
+  onDestroy(() => {
+    clearInterval(interval)
   })
 </script>
 
