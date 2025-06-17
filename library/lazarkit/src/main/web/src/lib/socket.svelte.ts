@@ -210,6 +210,7 @@ export class InfoManager {
   configurablesState = $state(ConfigurablesStates.NORMAL)
 
   batteryVoltage = $state<number>(-1.0)
+  minVoltage = $state<number>(1000)
 }
 
 export enum ConfigurablesStates {

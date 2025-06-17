@@ -51,7 +51,16 @@
     <div>
       <a href="/"><Logo /></a>
       <p>{socket.state == "opened" ? "Connected to server" : "Disconnected"}</p>
-      <p>{info.batteryVoltage}V</p>
+      {#if info.batteryVoltage != -1}
+        <p>
+          {info.batteryVoltage.toFixed(2)}V
+          {#if info.minVoltage != 1000}
+            / Min {info.minVoltage.toFixed(2)}
+          {/if}
+        </p>
+      {:else}
+        <p>Waiting for battery</p>
+      {/if}
 
       <div class="gap"></div>
 

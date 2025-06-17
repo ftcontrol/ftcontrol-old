@@ -20,6 +20,8 @@ export const info = new InfoManager()
 
 export const socket = new SocketManager(() => {
   info.jvmFields = []
+  info.batteryVoltage = -1
+  info.minVoltage = 1000
   socket.sendMessage({
     kind: "refetchJvmFieldsRequest",
   })
@@ -192,6 +194,8 @@ socket.addMessageHandler("updatedJvmFields", (data: GenericData) => {
 
 socket.addMessageHandler("batteryVoltage", (data: GenericData) => {
   info.batteryVoltage = data.value
+  if (info.batteryVoltage != -1)
+    info.minVoltage = Math.min(info.minVoltage, info.batteryVoltage)
 })
 
 socket.addMessageHandler("plugins", (data: GenericData) => {
