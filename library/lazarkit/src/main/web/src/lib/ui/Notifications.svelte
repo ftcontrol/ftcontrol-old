@@ -38,6 +38,7 @@
           <Button
             onclick={() => {
               action.task()
+              notifications.data = notifications.data.filter((n) => n !== notif)
             }}
           >
             {action.text}
