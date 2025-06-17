@@ -1,6 +1,7 @@
 package com.bylazar.ftcontrol.panels.integration
 
 import com.bylazar.ftcontrol.panels.json.Canvas
+import com.bylazar.ftcontrol.panels.json.CanvasPresets
 import com.bylazar.ftcontrol.panels.json.CanvasRotation
 import com.bylazar.ftcontrol.panels.json.Drawable
 import com.bylazar.ftcontrol.panels.json.GraphPacket
@@ -156,5 +157,8 @@ class TelemetryManager(
     }
     fun setRotation(rotation: CanvasRotation){
         canvas = canvas.withRotation(rotation)
+    }
+    fun setOffsetPreset(preset: CanvasPresets){
+        canvas = canvas.withOffsetPreset(preset)
     }
 }

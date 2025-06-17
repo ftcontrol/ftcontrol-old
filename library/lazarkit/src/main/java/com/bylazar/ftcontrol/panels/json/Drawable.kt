@@ -9,6 +9,12 @@ enum class CanvasRotation {
     DEG_270
 }
 
+enum class CanvasPresets {
+    PANELS,
+    PEDRO_PATHING,
+    ROAD_RUNNER
+}
+
 @Serializable
 class Canvas(
     var lines: MutableList<Line> = mutableListOf(),
@@ -51,6 +57,23 @@ class Canvas(
         this.offsetX = offsetX
         this.offsetY = offsetY
         this.rotation = rotation
+        return this
+    }
+
+    fun withOffsetPreset(preset: CanvasPresets): Canvas{
+        when(preset){
+            CanvasPresets.PANELS -> {
+                //no need
+            }
+            CanvasPresets.PEDRO_PATHING -> {
+                this.offsetX = -24.0 * 3
+                this.offsetY = 24.0 * 3
+                this.rotation = CanvasRotation.DEG_270
+            }
+            CanvasPresets.ROAD_RUNNER -> {
+                //no need
+            }
+        }
         return this
     }
 
