@@ -50,10 +50,10 @@ dependencies {
     implementation ("com.acmerobotics.roadrunner:core:1.0.1")
     implementation("com.acmerobotics.roadrunner:actions:1.0.1")
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.16'
-
+//
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-
-    implementation 'com.pedropathing:dev:1.1.0-devlocal5'
+//
+//    implementation 'com.pedropathing:dev:1.1.0-devlocal5'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }

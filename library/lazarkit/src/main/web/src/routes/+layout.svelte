@@ -3,8 +3,6 @@
   import Notifications from "$lib/ui/Notifications.svelte"
   import Sidebar from "$lib/ui/Sidebar.svelte"
   import Settings from "$ui/Settings.svelte"
-  import { info, socket } from "$lib"
-  import { onMount } from "svelte"
   let { children } = $props()
 
   import "./global.css"
@@ -29,6 +27,25 @@
 
   $effect(() => {
     if (settings.presets) settings.savePresets()
+  })
+
+  async function detectSWUpdate() {
+    const registration = await navigator.serviceWorker.ready
+
+    registration.addEventListener("updatefound", () => {
+      const newSW = registration.installing
+      newSW?.addEventListener("statechange", () => {
+        if (newSW.state == "installed") {
+          if (confirm("New update available! Ready to update?")) {
+            newSW.postMessage({ type: "SKIP_WAITING" })
+            window.location.reload()
+          }
+        }
+      })
+    })
+  }
+  onMount(() => {
+    detectSWUpdate()
   })
 </script>
 
