@@ -1,1 +1,1 @@
-export const PANELS_VERSION = "0.6.51"
+export const PANELS_VERSION = "0.6.5"

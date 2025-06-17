@@ -64,6 +64,9 @@
   let interval: ReturnType<typeof setInterval>
 
   let toldTimestamp = 0
+  let hasActive = false
+
+  const DURATION = 1000 * 0
 
   function registerInterval() {
     interval = setInterval(async () => {
@@ -72,19 +75,47 @@
         console.log(version, Date.now(), toldTimestamp)
         if (
           version != PANELS_VERSION &&
-          Date.now() - toldTimestamp > 1000 * 36
+          Date.now() - toldTimestamp > DURATION &&
+          !hasActive
         ) {
-          notifications.add("New version of Panels available")
+          hasActive = true
+          notifications.addAction(
+            `New version of Panels available: ${version}`,
+            [
+              {
+                text: "Update now",
+                task: () => {
+                  window
+                    .open(
+                      "https://ftcontrol.bylazar.com/docs/changelog/",
+                      "_blank"
+                    )
+                    ?.focus()
+                  hasActive = false
+                  clearInterval(interval)
+                  setTimeout(() => {
+                    detectSWUpdate()
+                  }, DURATION)
+                },
+              },
+              {
+                text: "Remind me later",
+                task: () => {
+                  hasActive = false
+                  clearInterval(interval)
+                  setTimeout(() => {
+                    detectSWUpdate()
+                  }, DURATION)
+                },
+              },
+            ]
+          )
           toldTimestamp = Date.now()
-          clearInterval(interval)
-          setTimeout(() => {
-            detectSWUpdate()
-          }, 3600)
         }
       } catch {
         console.log("Failed to fetch latest version")
       }
-    }, 1000)
+    }, 1500)
   }
 
   onMount(() => {
