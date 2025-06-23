@@ -10,18 +10,18 @@ object ConfigurablesManager {
     var fieldsMap = mutableMapOf<String, MyField>()
     var configurableClasses: List<ClassFinder.ClassEntry> = listOf()
 
-    var jvmFields = listOf<GenericField>()
-    var initialJvmFields = listOf<GenericTypeJson>()
+    var jvmFields = mutableListOf<GenericField>()
+    var initialJvmFields = mutableListOf<GenericTypeJson>()
 
-    private var classFinder = ClassFinder()
-    private var variables = VariablesFinder()
+    var classFinder = ClassFinder()
+    var variables = VariablesFinder()
 
     fun init(context: Context) {
         Logger.configurablesLog("Initializing configurables")
 
         fieldsMap = mutableMapOf()
         configurableClasses = listOf()
-        jvmFields = listOf()
+        jvmFields = mutableListOf()
 
         Logger.configurablesLog("Stage 1: Searching for configurables classes...")
 
@@ -45,7 +45,7 @@ object ConfigurablesManager {
         }
 
         Logger.configurablesLog("Stage 3: Converting to JSON...")
-        jvmFields = variables.jvmFields
-        initialJvmFields = jvmFields.map { it.toJsonType }
+        jvmFields.addAll(variables.jvmFields)
+        initialJvmFields = jvmFields.map { it.toJsonType }.toMutableList()
     }
 }

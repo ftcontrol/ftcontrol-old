@@ -14,6 +14,42 @@ class Server(var context: Context) : NanoHTTPD(8001) {
         //TODO: files /data/data/com.qualcomm.ftcrobotcontroller
         val file = File(context.filesDir, "myfile.txt")
         file.writeText("Hello, world!")
+
+        var files = listWebFiles("web")
+
+        files.forEach {
+            Logger.serverLog("Found file: $it")
+        }
+
+        files = listWebFiles("web2")
+
+        files.forEach {
+            Logger.serverLog("Found file2: $it")
+        }
+    }
+
+    fun listWebFiles(path: String = "web"): List<String> {
+        val fileList = mutableListOf<String>()
+
+        fun listFilesRecursive(currentPath: String) {
+            try {
+                val files = assetManager.list(currentPath) ?: return
+                for (file in files) {
+                    val fullPath = if (currentPath.isEmpty()) file else "$currentPath/$file"
+                    val subFiles = assetManager.list(fullPath)
+                    if (subFiles == null || subFiles.isEmpty()) {
+                        fileList.add(fullPath)
+                    } else {
+                        listFilesRecursive(fullPath)
+                    }
+                }
+            } catch (e: Exception) {
+                Logger.serverLog("Error listing files at $currentPath: ${e.message}")
+            }
+        }
+
+        listFilesRecursive(path)
+        return fileList
     }
 
     fun allowCors(response: Response): Response {

@@ -106,5 +106,5 @@ class VariablesFinder() {
         }
     }
 
-    var jvmFields: List<GenericField> = listOf()
+    var jvmFields: MutableList<GenericField> = mutableListOf()
 }

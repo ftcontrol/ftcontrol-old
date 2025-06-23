@@ -1,7 +1,9 @@
 package com.bylazar.ftcontrol.panels.configurables.variables
 
 import com.bylazar.ftcontrol.panels.Logger
+import com.bylazar.ftcontrol.panels.configurables.ConfigurablesManager
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
+import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.CustomVariable
 import com.bylazar.ftcontrol.panels.configurables.variables.instances.RecursionReachedVariable
@@ -55,6 +57,32 @@ fun processValue(
             val customValues = reference.type.declaredFields.mapNotNull { field ->
                 field.isAccessible = true
                 if (field.isAnnotationPresent(IgnoreConfigurable::class.java)) return@mapNotNull null
+
+                if (field.type == reference.type && field.name == reference.name) {
+                    Logger.configurablesLog("Ignored inner instance of same type: ${field.name}")
+                    return@mapNotNull null
+                }
+
+//                if (field.type == reference.type){
+//                    ConfigurablesManager.jvmFields.add(GenericField(reference.type.toString(), field))
+//                    Logger.configurablesLog("Moved field to global configurable:${reference.name} ${reference.type} ${field.name}")
+//                    return@mapNotNull null
+//                }
+                if (field.type == reference.type) {
+                    val newField = GenericField(reference.type.toString(), field)
+                    val alreadyExists = ConfigurablesManager.jvmFields.any {
+                        it.className == newField.className && it.reference.name == newField.reference.name
+                    }
+
+                    if (!alreadyExists) {
+                        ConfigurablesManager.jvmFields.add(newField)
+                        Logger.configurablesLog("Moved field to global configurable: ${reference.name} ${reference.type} ${field.name}")
+                    } else {
+                        Logger.configurablesLog("Skipped duplicate configurable: ${reference.name} ${reference.type} ${field.name}")
+                    }
+
+                    return@mapNotNull null
+                }
 
                 val customNewField = convertToMyField(field)
 

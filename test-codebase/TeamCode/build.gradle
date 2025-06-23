@@ -53,7 +53,7 @@ dependencies {
 //
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 //
-//    implementation 'com.pedropathing:dev:1.1.0-devlocal5'
+    implementation 'com.pedropathing:dev:1.1.0-dev8'
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
