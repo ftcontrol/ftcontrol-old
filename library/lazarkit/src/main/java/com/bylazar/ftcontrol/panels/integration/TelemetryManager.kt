@@ -21,21 +21,21 @@ class TelemetryManager(
     var graphUpdates: MutableMap<String, Long> = mutableMapOf()
 
 
-    var linesUpdateInterval = 50L
+    var linesUpdateInterval = 75L
     var lastLinesUpdate = 0L
     val timeSinceLastLinesUpdate: Long
         get() = System.currentTimeMillis() - lastLinesUpdate
     val shouldUpdateLines: Boolean
         get() = timeSinceLastLinesUpdate >= linesUpdateInterval
 
-    var graphUpdateInterval = 10L
+    var graphUpdateInterval = 15L
     var lastGraphUpdate = 0L
     val timeSinceLastGraphUpdate: Long
         get() = System.currentTimeMillis() - lastGraphUpdate
     val shouldUpdateGraph: Boolean
         get() = timeSinceLastGraphUpdate >= graphUpdateInterval
 
-    var canvasUpdateInterval = 50L
+    var canvasUpdateInterval = 75L
     var lastCanvasUpdate = 0L
     val timeSinceLastCanvasUpdate: Long
         get() = System.currentTimeMillis() - lastCanvasUpdate

@@ -98,7 +98,7 @@ class Socket(
         lines: MutableList<String>
     ) {
         if (!isAlive) return
-        Logger.socketLog("Sent lines")
+//        Logger.socketLog("Sent lines")
         for (client in clients) {
             client.send(TelemetryLinesPacket(lines, System.currentTimeMillis()))
         }
@@ -108,7 +108,7 @@ class Socket(
         graph: MutableMap<String, MutableList<GraphPacket>>
     ) {
         if (!isAlive) return
-        Logger.socketLog("Sent graph")
+//        Logger.socketLog("Sent graph")
         for (client in clients) {
             client.send(TelemetryGraphPacket(graph, System.currentTimeMillis()))
         }
@@ -118,7 +118,7 @@ class Socket(
         canvas: Canvas,
     ) {
         if (!isAlive) return
-        Logger.socketLog("Sent canvas")
+//        Logger.socketLog("Sent canvas")
         for (client in clients) {
             client.send(TelemetryCanvasPacket(canvas, System.currentTimeMillis()))
         }
