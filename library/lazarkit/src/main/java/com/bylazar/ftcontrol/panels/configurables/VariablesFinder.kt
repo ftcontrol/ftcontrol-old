@@ -4,8 +4,28 @@ import com.bylazar.ftcontrol.panels.Logger
 import com.bylazar.ftcontrol.panels.configurables.annotations.IgnoreConfigurable
 import com.bylazar.ftcontrol.panels.configurables.variables.generics.GenericField
 import java.lang.reflect.Modifier
+import java.util.Map.entry
 
 class VariablesFinder() {
+
+    fun updateClass(className: String){
+        val output = mutableListOf<GenericField>()
+        try {
+            val clazz = Class.forName(className)
+            Logger.configurablesLog("Inspecting class $className")
+            output.addFieldsFromClass(clazz, className)
+            try {
+                val companionClazz = Class.forName("${className}\$Companion")
+                output.addFieldsFromClass(companionClazz, className)
+            } catch (e: ClassNotFoundException) {
+                // no companion found
+            }
+        } catch (e: Exception) {
+            Logger.configurablesError("Error inspecting class ${className}: ${e.message}")
+        }
+
+        jvmFields.addAll(output)
+    }
 
     fun updateJvmFields(allClasses: List<ClassFinder.ClassEntry>) {
         Logger.configurablesLog("Updating JVM fields")

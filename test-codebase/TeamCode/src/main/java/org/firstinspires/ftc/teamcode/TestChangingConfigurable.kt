@@ -7,6 +7,10 @@ import com.pedropathing.paths.PathConstraints
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
+class NullElement{
+    var test = "lazar"
+}
+
 @Configurable
 @TeleOp(name = "TestChangingConfigurable")
 class TestChangingConfigurable : OpMode() {
@@ -19,12 +23,15 @@ class TestChangingConfigurable : OpMode() {
         var constants: FollowerConstants = FollowerConstants()
         @JvmField
         var constraints: PathConstraints = PathConstraints.defaultConstraints
+        @JvmField
         var constraints2: PathConstraints = PathConstraints.defaultConstraints
+        lateinit var nullElement: NullElement
     }
 
     private val panelsTelemetry = Panels.getTelemetry()
 
     override fun init() {
+        nullElement = NullElement()
     }
 
     override fun loop() {
