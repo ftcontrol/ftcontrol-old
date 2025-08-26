@@ -1,3 +1,5 @@
+This is an old release. All development was moved to https://github.com/ftcontrol/ftcontrol-panels.
+
 # FTControl
 
 ![dashboard](./dash3.png)
